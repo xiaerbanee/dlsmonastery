@@ -5,12 +5,15 @@ import net.myspring.tool.modules.vivo.domain.SProductItemLendM13e00;
 import net.myspring.tool.modules.vivo.dto.SCustomerDto;
 import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDetailDto;
 import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDto;
+import net.myspring.tool.modules.vivo.dto.VivoCustomerSaleImeiDto;
 import net.myspring.tool.modules.vivo.service.IDvivoPushService;
 import net.myspring.tool.modules.vivo.service.VivoPushService;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +33,7 @@ public class vivoPushController {
         vivoPushService.pushVivoZonesData();
         //客户数据
         List<SCustomerDto> futureCustomerDtoList = vivoPushService.getVivoCustomersData(date);
-        vivoPushService.saveVivoPushSCustomers(futureCustomerDtoList,date);
+        vivoPushService.pushVivoPushSCustomersData(futureCustomerDtoList,date);
         //库存汇总数据
         Map<String,String> productColorMap = vivoPushService.getProductColorMap();
         List<SPlantCustomerStockDto> sPlantCustomerStockDtoList = vivoPushService.getCustomerStockData(date);
@@ -39,8 +42,13 @@ public class vivoPushController {
         List<SPlantCustomerStockDetailDto> sPlantCustomerStockDetailDtoList = vivoPushService.getCustomerStockDetailData(date);
         vivoPushService.pushCustomerStockDetailData(sPlantCustomerStockDetailDtoList,productColorMap,date);
         //演示机数据
-        List<SProductItemLendM13e00> sProductItemLendM13e00List = vivoPushService.findDemoPhones(date);
-        vivoPushService.pushDemoPhones(sProductItemLendM13e00List,productColorMap,date);
+        List<SProductItemLendM13e00> sProductItemLendM13e00List = vivoPushService.getDemoPhonesData(date);
+        vivoPushService.pushDemoPhonesData(sProductItemLendM13e00List,productColorMap,date);
+        //核销记录数据
+        List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList = vivoPushService.getProductImeSaleData(date);
+        vivoPushService.pushProductImeSaleData(vivoCustomerSaleImeiDtoList,productColorMap,date);
+        //一代仓库上抛
+        vivoPushService.pushSStoreData();
     }
 
 
@@ -48,7 +56,18 @@ public class vivoPushController {
     public void pushIDvivoData(String date){
         //同步机构数据
         DbContextHolder.get().setCompanyName("IDVIVO");
-//        idvivoPushService.pushIDvivoZonesData();
+        idvivoPushService.pushIDvivoZonesData();
+        //同步客户数据
+        List<SCustomerDto> sCustomerDtos=idvivoPushService.getVivoCustomersData(date);
+        idvivoPushService.pushIDVivoSCustomersData(sCustomerDtos);
+        //同步库存数据
+        Map<String,String> productColorMap = idvivoPushService.getProductColorMap();
+        List<SPlantCustomerStockDto> sPlantCustomerStockDtoList = idvivoPushService.getCustomerStockData(date);
+        idvivoPushService.pushCustomerStockData(sPlantCustomerStockDtoList,productColorMap,date);
+       //同步库存明细数据
+       List<SPlantCustomerStockDetailDto>  sPlantCustomerStockDetailDtoList=idvivoPushService.getCustomerStockDetailData(date);
+       idvivoPushService.pushCustomerStockDetailData(sPlantCustomerStockDetailDtoList,productColorMap,date);
+
     }
 
 }

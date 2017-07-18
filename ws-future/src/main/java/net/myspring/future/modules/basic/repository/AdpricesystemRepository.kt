@@ -1,9 +1,9 @@
 package net.myspring.future.modules.basic.repository
 
 
+import net.myspring.common.constant.CharConstant
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.AdPricesystem
-import net.myspring.future.modules.basic.domain.AdPricesystemDetail
 import net.myspring.future.modules.basic.dto.AdPricesystemDto
 import net.myspring.future.modules.basic.web.query.AdPricesystemQuery
 import net.myspring.util.repository.MySQLDialect
@@ -16,15 +16,10 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
-import javax.persistence.EntityManager
-
-//import kotlin.collections.HashMap
 
 /**
  * Created by zhangyf on 2017/5/24.
@@ -84,7 +79,7 @@ class AdpricesystemRepositoryImpl @Autowired constructor(val namedParameterJdbcT
             INSERT INTO crm_ad_pricesystem_office (ad_pricesystem_id,office_id) VALUES
         """)
         for(officeId in officeIdList){
-            sb.append("("+adPricesystemId+","+officeId+"),")
+            sb.append("("+adPricesystemId+CharConstant.COMMA+officeId+"),")
         }
         sb.deleteCharAt(sb.length-1)
         return namedParameterJdbcTemplate.update(sb.toString(),HashMap<String,Any>())

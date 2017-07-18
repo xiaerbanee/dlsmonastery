@@ -33,6 +33,8 @@ const accountAuthorityForm= r => require.ensure([], () => r(require('pages/basic
 
 const unitsOfficeForm= r => require.ensure([], () => r(require('pages/basic/hr/unitsOfficeForm.vue')));
 const batchUnitsForm= r => require.ensure([], () => r(require('pages/basic/hr/batchUnitsForm.vue')));
+const accountWeixinList= r => require.ensure([], () => r(require('pages/basic/hr/accountWeixinList.vue')));
+
 
 
 
@@ -71,6 +73,8 @@ let routes = [
 
   {path:'/basic/hr/unitsOfficeForm',component:unitsOfficeForm,name:'unitsOfficeForm'},
   {path:'/basic/hr/batchUnitsForm',component:batchUnitsForm,name:'batchUnitsForm'},
+  {path:'/basic/hr/accountWeixinList',component:accountWeixinList,name:'accountWeixinList'},
+
 
 
 ];

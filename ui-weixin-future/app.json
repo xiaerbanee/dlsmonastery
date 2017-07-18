@@ -52,7 +52,7 @@
     "page/crm/officeDataReport/officeDataReport",
     "page/crm/productDataReport/productDataReport",
     "page/crm/productSearch/productSearch"
-  ],
+    ],
   "window": {
     "navigationBarTextStyle": "#fff",
     "navigationBarTitleText": "OA",

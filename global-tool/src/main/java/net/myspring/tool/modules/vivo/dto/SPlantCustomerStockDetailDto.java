@@ -1,19 +1,23 @@
 package net.myspring.tool.modules.vivo.dto;
 
+import net.myspring.util.cahe.annotation.CacheInput;
+
 public class SPlantCustomerStockDetailDto {
-    private String AreaId;
+    private String areaId;
     private String productId;
     private String ime;
     private String storeId;
     private String customerId;
     private Integer customerLevel;
+    @CacheInput(inputKey = "offices",inputInstance = "areaId" ,outputInstance = "agentCode")
+    private String agentCode;
 
     public String getAreaId() {
-        return AreaId;
+        return areaId;
     }
 
     public void setAreaId(String areaId) {
-        AreaId = areaId;
+        this.areaId = areaId;
     }
 
     public String getProductId() {
@@ -54,5 +58,13 @@ public class SPlantCustomerStockDetailDto {
 
     public void setCustomerLevel(Integer customerLevel) {
         this.customerLevel = customerLevel;
+    }
+
+    public String getAgentCode() {
+        return agentCode;
+    }
+
+    public void setAgentCode(String agentCode) {
+        this.agentCode = agentCode;
     }
 }

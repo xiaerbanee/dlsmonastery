@@ -16,71 +16,68 @@ class SPlantCustomerStockDetailRepository @Autowired constructor(val namedParame
         map.put("dateEnd",dateEnd)
         val sb = StringBuilder()
         sb.append("""
-            SELECT
-                de.area_id AS areaId,
-                im.product_id AS productId,
-                im.ime AS ime,
-                im.depot_id AS storeID,
-                im.depot_id AS customerID,
-                1 AS customerLevel
-            FROM
+            select
+                de.area_id as areaId,
+                im.product_id as productId,
+                im.ime as ime,
+                im.depot_id as storeId,
+                im.depot_id as customerId,
+                1 as customerLevel
+            from
                 crm_product_ime im,
                 crm_depot de,
                 crm_depot_store de1
-            WHERE
-                im.depot_id IS NOT NULL
-                AND im.depot_id = de.id
-                AND im.created_date >= :dateStart
-                AND im.created_date <  :dateEnd
-                AND (
-                        im.retail_date IS NULL
-                        OR im.retail_date > :dateEnd
+            where
+                im.depot_id is not null
+                and im.depot_id = de.id
+                and im.created_date >= :dateStart
+                and im.created_date <  :dateEnd
+                and (
+                        im.retail_date is null
+                        or im.retail_date > :dateEnd
                     )
-                AND im.enabled = 1
-                AND de.enabled = 1
-                AND de.id = de1.depot_id
-                AND de1.joint_level = '一级'
-
+                and im.enabled = 1
+                and de.enabled = 1
+                and de.id = de1.depot_id
+                and de1.joint_level = '一级'
             union all
-            SELECT
-                de.area_id AS areaId,
-                im.product_id AS productId,
-                im.ime AS ime,
-                de.area_id AS storeID,
-                de.area_id AS customerID,
-                2 AS customerLevel
-            FROM
+            select
+                de.area_id as areaId,
+                im.product_id as productId,
+                im.ime as ime,
+                de.area_id as storeId,
+                de.area_id as customerId,
+                2 as customerLevel
+            from
                 crm_product_ime im,
                 crm_depot de,
                 crm_depot_store de1
-            WHERE
-                im.depot_id IS NOT NULL
-                AND im.depot_id = de.id
-                AND im.created_date >= :dateStart
-                AND im.created_date <  :dateEnd
-                AND (
-                        im.retail_date IS NULL
-                        OR im.retail_date > :dateEnd
+            where
+                im.depot_id is not null
+                and im.depot_id = de.id
+                and im.created_date >= :dateStart
+                and im.created_date <  :dateEnd
+                and (
+                        im.retail_date is null
+                        or im.retail_date > :dateEnd
                     )
-                AND im.enabled = 1
-                AND de.enabled = 1
-                AND de.id = de1.depot_id
-                AND de1.joint_level = '二级'
-
+                and im.enabled = 1
+                and de.enabled = 1
+                and de.id = de1.depot_id
+                and de1.joint_level = '二级'
             union all
-
-            SELECT
+            select
                 de.area_id as areaId,
                 im.product_id as productId,
                 im.ime as ime,
                 de.area_id as storeID,
                 de.id as customerID,
                 3 as customerLevel
-            FROM
+            from
                 crm_product_ime im,
                 crm_depot de,
                 crm_depot_shop shop
-            WHERE
+            where
                 im.created_date >= :dateStart
                 and im.created_date < :dateEnd
                 and (
