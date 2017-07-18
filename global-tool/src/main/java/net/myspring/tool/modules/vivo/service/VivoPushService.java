@@ -60,13 +60,13 @@ public class VivoPushService {
     @Autowired
     private SProductItem000M13e00Repository sProductItem000M13e00Repository;
     @Autowired
-    private VivoCustomerDemoPhoneRepository vivoCustomerDemoPhoneRepository;
-    @Autowired
     private SProductItemLendM13e00Repository sProductItemLendM13e00Repository;
     @Autowired
     private VivoCustomerSaleImeiRepository vivoCustomerSaleImeiRepository;
     @Autowired
     private SPlantEndProductSaleM13e00Repository sPlantEndProductSaleM13e00Repository;
+    @Autowired
+    private SStoresM13e00Repository sStoresM13e00Repository;
     @Autowired
     private CacheUtils cacheUtils;
 
@@ -82,11 +82,7 @@ public class VivoPushService {
         for(OfficeEntity officeEntity:officeEntityList){
             SZonesM13e00 sZonesM13e00 = new SZonesM13e00();
             sZonesM13e00.setZoneId(getZoneId(mainCode,officeEntity.getId()));
-            if (officeEntity.getName().length() > 10){
-                sZonesM13e00.setZoneName(officeEntity.getName().substring(0,10));
-            } else {
-                sZonesM13e00.setZoneName(officeEntity.getName());
-            }
+            sZonesM13e00.setZoneName(officeEntity.getName());
             sZonesM13e00.setShortcut(mainCode);
             String[] parentIds = officeEntity.getParentIds().split(CharConstant.COMMA);
             sZonesM13e00.setZoneDepth(parentIds.length);
@@ -117,7 +113,7 @@ public class VivoPushService {
 
     @FactoryDataSource
     @Transactional
-    public void saveVivoPushSCustomers(List<SCustomerDto> futureCustomerDtoList,String date){
+    public void pushVivoPushSCustomersData(List<SCustomerDto> futureCustomerDtoList,String date){
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
         List<SCustomersM13e00> sCustomersM13e00List = Lists.newArrayList();
         for(SCustomerDto futureCustomerDto :futureCustomerDtoList){
@@ -290,19 +286,22 @@ public class VivoPushService {
     }
 
     @FutureDataSource
-    public List<SProductItemLendM13e00> findDemoPhonesDate(String date){
+    public List<SProductItemLendM13e00> getDemoPhonesData(String date){
         if (StringUtils.isBlank(date)){
             date = LocalDateUtils.format(LocalDate.now());
         }
         String dateStart = date;
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        return vivoCustomerDemoPhoneRepository.findDemoPhones(dateStart,dateEnd);
+        return sProductItemLendM13e00Repository.findDemoPhones(dateStart,dateEnd);
     }
 
     @FactoryDataSource
     @Transactional
-    public void pushDemoPhones(List<SProductItemLendM13e00> sProductItemLendM13e00List,Map<String,String> productColorMap,String date){
+    public void pushDemoPhonesData(List<SProductItemLendM13e00> sProductItemLendM13e00List,Map<String,String> productColorMap,String date){
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
+        if (StringUtils.isBlank(date)){
+            date = LocalDateUtils.format(LocalDate.now());
+        }
         String dateStart = date;
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<SProductItemLendM13e00> sProductItemLendM13e00s = Lists.newArrayList();
@@ -327,7 +326,7 @@ public class VivoPushService {
     }
 
     @FutureDataSource
-    public List<VivoCustomerSaleImeiDto> findProductImeSaleDate(String date){
+    public List<VivoCustomerSaleImeiDto> getProductImeSaleData(String date){
         if (StringUtils.isBlank(date)){
             date = LocalDateUtils.format(LocalDate.now());
         }
@@ -338,7 +337,7 @@ public class VivoPushService {
 
     @FactoryDataSource
     @Transactional
-    public void pushProductImeSale(List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList,Map<String,String> productColorMap,String date){
+    public void pushProductImeSaleData(List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList,Map<String,String> productColorMap,String date){
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
         if (StringUtils.isBlank(date)){
             date = LocalDateUtils.format(LocalDate.now());
@@ -361,10 +360,24 @@ public class VivoPushService {
             sPlantEndProductSaleM13e00.setCreatedTime(LocalDateTimeUtils.format(LocalDateTime.now()));
             sPlantEndProductSaleM13e00List.add(sPlantEndProductSaleM13e00);
         }
-        logger.info("开始上抛核销记录数据"+LocalDateTime.now());
+        logger.info("开始上抛核销记录数据:"+LocalDateTime.now());
         sPlantEndProductSaleM13e00Repository.deleteByBillDate(dateStart,dateEnd);
         sPlantEndProductSaleM13e00Repository.batchSave(sPlantEndProductSaleM13e00List);
-        logger.info("上抛核销记录数据结束"+LocalDateTime.now());
+        logger.info("上抛核销记录数据结束:"+LocalDateTime.now());
+    }
+
+    @FactoryDataSource
+    public void pushSStoreData(){
+        String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
+        List<SStoresM13e00> sStoresM13e00List = Lists.newArrayList();
+        SStoresM13e00 sStoresM13e00 = new SStoresM13e00();
+        sStoresM13e00.setStoreID(mainCode + "K0000");
+        sStoresM13e00.setStoreName(mainCode + "大库");
+        sStoresM13e00List.add(sStoresM13e00);
+        logger.info("开始上抛一代仓库数据:"+LocalDateTime.now());
+        sStoresM13e00Repository.deleteAll();
+        sStoresM13e00Repository.batchSave(sStoresM13e00List);
+        logger.info("上抛一代仓库数据结束:"+LocalDateTime.now());
     }
 
     @LocalDataSource

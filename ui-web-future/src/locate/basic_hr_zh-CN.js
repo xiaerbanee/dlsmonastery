@@ -151,6 +151,18 @@ export default {
     delete: "删除",
     audit: "审核",
   },
+  accountWeixinList:{
+    name: "名称",
+    filter: "过滤",
+    likeSearch: "模糊搜索",
+    delete: "删除",
+    operation: "操作",
+    areaName: "办事处",
+    officeName:"机构",
+    openId:"openId",
+    loading: "拼命加载中",
+    sure: "确定",
+  },
   auditFileDetail: {
     auditFileDetail: "文件审批详细",
     createdBy: "创建人",
