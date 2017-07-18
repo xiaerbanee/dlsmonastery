@@ -11,6 +11,7 @@ import java.util.List;
 public class OfficeQuery extends BaseQuery {
     private String id;
     private String name;
+    private String sort = "id,ASC";
 
     public String getId() {
         return id;

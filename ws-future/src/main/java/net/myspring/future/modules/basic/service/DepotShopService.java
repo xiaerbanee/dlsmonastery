@@ -84,16 +84,16 @@ public class DepotShopService {
         Map<String, ShopDepositDto> scbzjMap = Maps.newHashMap();
         Map<String, ShopDepositDto> xxbzjMap = Maps.newHashMap();
         if (CollectionUtil.isNotEmpty(page.getContent())) {
-            List<ShopDeposit> scbzjList = shopDepositRepository.findByTypeAndShopIdIn(ShopDepositTypeEnum.市场保证金.name(), CollectionUtil.extractToList(page.getContent(), "id"));
-            List<ShopDeposit> xxbzjList = shopDepositRepository.findByTypeAndShopIdIn(ShopDepositTypeEnum.形象保证金.name(), CollectionUtil.extractToList(page.getContent(), "id"));
+            List<ShopDeposit> scbzjList = shopDepositRepository.findByTypeAndShopIdIn(ShopDepositTypeEnum.市场保证金.name(), CollectionUtil.extractToList(page.getContent(), "depotId"));
+            List<ShopDeposit> xxbzjList = shopDepositRepository.findByTypeAndShopIdIn(ShopDepositTypeEnum.形象保证金.name(), CollectionUtil.extractToList(page.getContent(), "depotId"));
             xxbzjMap = CollectionUtil.extractToMap(BeanUtil.map(xxbzjList,ShopDepositDto.class), "shopId");
             scbzjMap = CollectionUtil.extractToMap(BeanUtil.map(scbzjList,ShopDepositDto.class), "shopId");
+            for (DepotShopDto depotShopDto : page.getContent()) {
+                depotShopDto.getDepositMap().put("xxbzj", xxbzjMap.get(depotShopDto.getId()) == null ? BigDecimal.ZERO : xxbzjMap.get(depotShopDto.getId()).getAmount());
+                depotShopDto.getDepositMap().put("scbzj", scbzjMap.get(depotShopDto.getId()) == null ? BigDecimal.ZERO : scbzjMap.get(depotShopDto.getId()).getAmount());
+            }
+            cacheUtils.initCacheInput(page.getContent());
         }
-        for (DepotShopDto depotShopDto : page.getContent()) {
-            depotShopDto.getDepositMap().put("xxbzj", xxbzjMap.get(depotShopDto.getId()) == null ? BigDecimal.ZERO : xxbzjMap.get(depotShopDto.getId()).getAmount());
-            depotShopDto.getDepositMap().put("scbzj", scbzjMap.get(depotShopDto.getId()) == null ? BigDecimal.ZERO : scbzjMap.get(depotShopDto.getId()).getAmount());
-        }
-        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
@@ -104,6 +104,13 @@ public class DepotShopService {
             cacheUtils.initCacheInput(depotShopForm);
         }
         return depotShopForm;
+    }
+
+    public List<DepotShopDto> findByOfficeId(String officeId){
+        List<String> officeIdList=officeClient.getSameAreaByOfficeId(officeId);
+        List<DepotShop> depotShopList=depotShopRepository.findByOfficeIdIn(officeIdList);
+        List<DepotShopDto> depotShopDtoList=BeanUtil.map(depotShopList,DepotShopDto.class);
+        return depotShopDtoList;
     }
 
     public DepotShopDto findOne(String id){
