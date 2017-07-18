@@ -12,9 +12,12 @@ import net.myspring.basic.modules.hr.repository.AccountRepository;
 import net.myspring.basic.modules.hr.repository.EmployeeRepository;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
+import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.Permission;
+import net.myspring.basic.modules.sys.dto.AccountCommonDto;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.basic.modules.sys.manager.RoleManager;
+import net.myspring.basic.modules.sys.repository.OfficeRepository;
 import net.myspring.basic.modules.sys.repository.PermissionRepository;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
@@ -58,10 +61,26 @@ public class AccountService {
     @Autowired
     private OfficeManager officeManager;
     @Autowired
+    private OfficeRepository officeRepository;
+    @Autowired
     private AccountPermissionRepository accountPermissionRepository;
 
     public Account findOne(String id) {
         Account account = accountRepository.findOne(id);
+        return account;
+    }
+
+    public List<AccountDto> findByOfficeId(String officeId){
+        List<AccountDto> accountDtoList=Lists.newArrayList();
+        List<Office> officeList=officeRepository.findSameAreaByOfficeId(officeId);
+        List<String> officeIdList=CollectionUtil.extractToList(officeList,"id");
+        List<Account> accountList=accountRepository.findByOfficeIds(officeIdList);
+        accountDtoList=BeanUtil.map(accountList,AccountDto.class);
+        return accountDtoList;
+    }
+
+    public Account findByEmployeeIdAndType(String employeeId,String type){
+        Account account=accountRepository.findByEmployeeIdAndType(employeeId,type);
         return account;
     }
 

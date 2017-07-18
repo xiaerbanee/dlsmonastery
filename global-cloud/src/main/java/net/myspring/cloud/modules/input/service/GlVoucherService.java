@@ -55,9 +55,8 @@ public class GlVoucherService {
                 glVoucherDto.getExtendType(),
                 KingdeeFormIdEnum.GL_VOUCHER.name(),
                 glVoucherDto.getJson(),
-                kingdeeBook) {
-        };
-        kingdeeManager.save(kingdeeSynDto);
+                kingdeeBook);
+        kingdeeSynDto = kingdeeManager.save(kingdeeSynDto);
         if (!kingdeeSynDto.getSuccess()){
             throw new ServiceException("凭证录入失败："+kingdeeSynDto.getResult());
         }

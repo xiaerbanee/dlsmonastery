@@ -13,4 +13,8 @@ public interface AccountClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/hr/account/findByLoginNameList")
     List<AccountCommonDto> findByLoginNameList(@RequestParam(value = "loginNameList") List<String> loginNameList);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/hr/account/findByEmployeeId")
+    AccountCommonDto findByEmployeeId(@RequestParam(value = "employeeId") String employeeId);
+
 }

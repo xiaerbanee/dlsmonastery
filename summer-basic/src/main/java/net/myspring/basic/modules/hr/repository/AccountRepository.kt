@@ -31,8 +31,11 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
     @Cacheable
     override fun findOne(id: String): Account
 
+
     @CachePut(key = "#p0.id")
     fun save(account: Account): Account
+
+    fun findByEmployeeIdAndType(employeeId:String,type:String):Account
 
     @Query("""
         SELECT t

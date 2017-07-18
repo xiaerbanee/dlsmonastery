@@ -151,9 +151,9 @@ public class StkTransferDirectManager {
 
     public KingdeeSynReturnDto synForAfterSale(List<AfterSaleStoreAllotForm> afterSaleStoreAllotFormList){
         StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
-        transferDirectDto.setExtendId("--");
+        transferDirectDto.setExtendId("");
         transferDirectDto.setExtendType(ExtendTypeEnum.售后调拨.name());
-        transferDirectDto.setNote("");
+        transferDirectDto.setNote("售后调拨");
         transferDirectDto.setDate(LocalDate.now());
         List<String> materialIdList = afterSaleStoreAllotFormList.stream().map(AfterSaleStoreAllotForm::getProductId).collect(Collectors.toList());
         Map<String, Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(materialIdList).stream().collect(Collectors.toMap(Product::getId, Product->Product));
