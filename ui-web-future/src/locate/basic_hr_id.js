@@ -151,6 +151,18 @@ export default {
     delete: "hapus",
     audit: "periksa"
   },
+  accountWeixinList:{
+    name: "nama",
+    filter: "saring",
+    likeSearch: "pencarian",
+    delete: "hapus",
+    operation: "operasi",
+    areaName: "nama area",
+    officeName:"departemmen",
+    openId:"openId",
+    loading: "memuat",
+    sure: "yakin",
+  },
   auditFileDetail: {
     auditFileDetail: "Rincian persetujuan dokumen",
     createdBy: "dibuat oleh",
