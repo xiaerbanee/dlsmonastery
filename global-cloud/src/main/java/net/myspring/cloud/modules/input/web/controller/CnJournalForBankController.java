@@ -14,6 +14,7 @@ import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeSynService;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,19 +50,23 @@ public class CnJournalForBankController {
 
     @RequestMapping(value = "save")
     public RestResponse save(CnJournalForBankForm cnJournalForBankForm) {
-        RestResponse restResponse = new RestResponse("开单失败",null);
-        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        if (accountKingdeeBook != null) {
-            KingdeeSynDto kingdeeSynDto = cnJournalForBankService.save(cnJournalForBankForm, kingdeeBook, accountKingdeeBook);
-            kingdeeSynService.save(BeanUtil.map(kingdeeSynDto, KingdeeSyn.class));
-            if (kingdeeSynDto.getSuccess()) {
-                restResponse = new RestResponse("銀行存取款日记账成功：" + kingdeeSynDto.getBillNo(), null, true);
+        try {
+            RestResponse restResponse = new RestResponse("开单失败",null);
+            KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            if (accountKingdeeBook != null) {
+                KingdeeSynDto kingdeeSynDto = cnJournalForBankService.save(cnJournalForBankForm, kingdeeBook, accountKingdeeBook);
+                kingdeeSynService.save(BeanUtil.map(kingdeeSynDto, KingdeeSyn.class));
+                if (kingdeeSynDto.getSuccess()) {
+                    restResponse = new RestResponse("銀行存取款日记账成功：" + kingdeeSynDto.getBillNo(), null, true);
+                }
+            }else {
+                restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
             }
-        }else {
-            restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
+            return restResponse;
+        }catch (Exception e){
+            return new RestResponse(e.getMessage(), ResponseCodeEnum.invalid.name(), false);
         }
-        return restResponse;
     }
 
     @RequestMapping(value = "saveForWS", method= RequestMethod.POST)

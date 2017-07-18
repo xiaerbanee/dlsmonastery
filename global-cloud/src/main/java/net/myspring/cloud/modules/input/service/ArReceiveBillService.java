@@ -14,9 +14,11 @@ import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.input.web.form.ArReceiveBillForm;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
+import net.myspring.cloud.modules.kingdee.domain.BdSettleType;
 import net.myspring.cloud.modules.kingdee.domain.CnBankAcnt;
 import net.myspring.cloud.modules.kingdee.repository.BdCustomerRepository;
 import net.myspring.cloud.modules.kingdee.repository.BdDepartmentRepository;
+import net.myspring.cloud.modules.kingdee.repository.BdSettleTypeRepository;
 import net.myspring.cloud.modules.kingdee.repository.CnBankAcntRepository;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
@@ -54,6 +56,8 @@ public class ArReceiveBillService {
     private BdDepartmentRepository bdDepartmentRepository;
     @Autowired
     private CnBankAcntRepository cnBankAcntRepository;
+    @Autowired
+    private BdSettleTypeRepository bdSettleTypeRepository;
 
     private KingdeeSynDto save(ArReceiveBillDto arReceiveBillDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
@@ -126,15 +130,13 @@ public class ArReceiveBillService {
             String remarks = HandsontableUtils.getValue(row, 5);
             String billKey = "";
             if ("电汇".equals(settleType)) {
-                billKey = customerName + CharConstant.COMMA + bankAcntName + CharConstant.COMMA + billDate + CharConstant.COMMA + amount + CharConstant.COMMA + remarks;
+                billKey = customerName + CharConstant.COMMA + bankAcntName + CharConstant.COMMA + billDate + CharConstant.COMMA + remarks;
                 if (!refundBillForBankMap.containsKey(billKey)) {
                     ArReceiveBillDto arRefundBill = new ArReceiveBillDto();
-                    arRefundBill.setExtendType(ExtendTypeEnum.收款退款单_k3.name());
+                    arRefundBill.setExtendType(ExtendTypeEnum.收款单_k3.name());
                     arRefundBill.setCreator(accountKingdeeBook.getUsername());
-//                    arRefundBill.setKingdeeName(kingdeeBook.getName());
                     arRefundBill.setCustomerNumber(customerNameMap.get(customerName));
                     arRefundBill.setDate(billDate);
-//                    arRefundBill.setAmount(amount);
                     arRefundBill.setDepartmentNumber(customerNameToDepartmentNumberMap.get(customerName));
                     ArReceiveBillEntryDto arRefundBillEntityDto = new ArReceiveBillEntryDto();
                     arRefundBillEntityDto.setAmount(amount);
@@ -142,35 +144,25 @@ public class ArReceiveBillService {
                     if (StringUtils.isNotBlank(bankAcntName)){
                         arRefundBillEntityDto.setBankAcntNumber(bankAcntNameMap.get(bankAcntName));
                     }
-//                    arRefundBillEntityDto.setNote(remarks);
                     arRefundBill.setArReceiveBillEntryDtoList(Lists.newArrayList(arRefundBillEntityDto));
                     refundBillForBankMap.put(billKey, arRefundBill);
-                } else {
-//                    refundBillForBankMap.get(billKey).setAmount(amount.add(amount));
                 }
             } else {
-                billKey = customerName + CharConstant.COMMA + billDate + CharConstant.COMMA + amount + CharConstant.COMMA + remarks;
+                billKey = customerName + CharConstant.COMMA + billDate + CharConstant.COMMA + remarks;
                 if (!refundBillForCashMap.containsKey(billKey)) {
                     ArReceiveBillDto arRefundBill = new ArReceiveBillDto();
                     arRefundBill.setExtendType(ExtendTypeEnum.收款单_k3.name());
                     arRefundBill.setCreator(accountKingdeeBook.getUsername());
-//                    arRefundBill.setKingdeeName(kingdeeBook.getName());
                     arRefundBill.setCustomerNumber(customerNameMap.get(customerName));
                     arRefundBill.setDate(billDate);
-//                    arRefundBill.setAmount(amount);
                     arRefundBill.setDepartmentNumber(customerNameToDepartmentNumberMap.get(customerName));
                     ArReceiveBillEntryDto arRefundBillEntityDto = new ArReceiveBillEntryDto();
                     arRefundBillEntityDto.setAmount(amount);
-//                    arRefundBillEntityDto.setNote(remarks);
                     arRefundBillEntityDto.setFSettleTypeIdNumber("JSFS01_SYS");//现金
-//                    arRefundBillEntityDto.setAccountNumber("1001");//库存现金
                     arRefundBill.setArReceiveBillEntryDtoList(Lists.newArrayList(arRefundBillEntityDto));
                     refundBillForCashMap.put(billKey, arRefundBill);
-                } else {
-//                    refundBillForCashMap.get(billKey).setAmount(amount.add(amount));
                 }
             }
-
         }
         List<ArReceiveBillDto> billList = Lists.newArrayList(refundBillForBankMap.values());
         List<KingdeeSynDto> kingdeeSynDtoList = save(billList,kingdeeBook,accountKingdeeBook);
@@ -192,5 +184,15 @@ public class ArReceiveBillService {
             }
         }
         return save(arReceiveBillDtoList,kingdeeBook,accountKingdeeBook);
+    }
+
+    public ArReceiveBillForm getForm(){
+        Map<String,Object> map = Maps.newHashMap();
+        ArReceiveBillForm arRefundBillForm = new ArReceiveBillForm();
+        map.put("banAcntNameList",cnBankAcntRepository.findAll().stream().map(CnBankAcnt::getFName).collect(Collectors.toList()));
+        map.put("customerNameList",bdCustomerRepository.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList()));
+        map.put("settleTypeNameList",bdSettleTypeRepository.findAllForDefault().stream().map(BdSettleType::getFName).collect(Collectors.toList()));
+        arRefundBillForm.setExtra(map);
+        return arRefundBillForm;
     }
 }
