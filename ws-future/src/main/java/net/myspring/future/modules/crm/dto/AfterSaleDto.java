@@ -49,8 +49,9 @@ public class AfterSaleDto extends DataDto<AfterSale> {
     public boolean getDeleted() {
         if (getFromAreaToFinance() || getToAreaToFinance() || getFromCompanyToFinance() || getToCompanyToFinance()) {
             return false;
+        }else {
+            return true;
         }
-        return deleted;
     }
 
     public void setDeleted(boolean deleted) {
@@ -287,5 +288,9 @@ public class AfterSaleDto extends DataDto<AfterSale> {
 
     public void setDepotId(String depotId) {
         this.depotId = depotId;
+    }
+
+    public Boolean getSyn() {
+        return getFromAreaToFinance() || getToAreaToFinance() || getFromCompanyToFinance() || getToCompanyToFinance();
     }
 }

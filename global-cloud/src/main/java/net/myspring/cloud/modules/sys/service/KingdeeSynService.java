@@ -65,24 +65,14 @@ public class KingdeeSynService {
     @Transactional
     public void save(KingdeeSyn kingdeeSyn) {
         if(kingdeeSyn != null) {
-            if(kingdeeSyn.getSuccess()){
-                kingdeeSynRepository.save(kingdeeSyn);
-            }else {
-                throw new ServiceException(kingdeeSyn.getResult());
-            }
+           kingdeeSynRepository.save(kingdeeSyn);
         }
     }
 
     @Transactional
     public void save(List<KingdeeSyn> kingdeeSynList) {
         if(CollectionUtil.isNotEmpty(kingdeeSynList)) {
-           for (KingdeeSyn kingdeeSyn :kingdeeSynList){
-               if(kingdeeSyn.getSuccess()){
-                   kingdeeSynRepository.save(kingdeeSyn);
-               }else {
-                   throw new ServiceException(kingdeeSyn.getResult());
-               }
-           }
+            kingdeeSynRepository.save(kingdeeSynList);
         }
     }
 

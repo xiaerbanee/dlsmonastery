@@ -64,7 +64,7 @@ public class SalReturnStockService {
                 salReturnStockDto.getJson(),
                 kingdeeBook,
                 KingdeeFormIdEnum.AR_receivable.name());
-        kingdeeManager.save(kingdeeSynExtendDto);
+        kingdeeSynExtendDto = kingdeeManager.save(kingdeeSynExtendDto);
         if (!kingdeeSynExtendDto.getSuccess()){
             throw new ServiceException("销售退货单："+kingdeeSynExtendDto.getResult());
         }

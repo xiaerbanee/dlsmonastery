@@ -73,7 +73,7 @@ public class PriceChangeImeController {
     }
 
     @RequestMapping(value = "imageUpload")
-    @PreAuthorize("hasPermission(null,'crm:priceChangeIme:edit')")
+    @PreAuthorize("hasPermission(null,'crm:priceChangeIme:upload')")
     public RestResponse imageUpload(PriceChangeImeForm priceChangeImeForm,BindingResult bindingResult) {
         priceChangeImeValidator.validate(priceChangeImeForm,bindingResult);
         if(bindingResult.hasErrors()){

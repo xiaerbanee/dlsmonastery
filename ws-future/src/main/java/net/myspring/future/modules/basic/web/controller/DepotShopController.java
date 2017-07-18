@@ -74,9 +74,6 @@ public class DepotShopController {
     @RequestMapping(method = RequestMethod.GET)
     public Page<DepotShopDto> list(Pageable pageable, DepotShopQuery depotShopQuery){
         Page<DepotShopDto> page = depotShopService.findPage(pageable,depotShopQuery);
-        for(DepotShopDto depotShopDto:page.getContent()){
-            setOperationStatus(depotShopDto);
-        }
         return page;
     }
     @RequestMapping(value = "getQuery")
@@ -197,10 +194,6 @@ public class DepotShopController {
         SimpleExcelBook simpleExcelBook = depotShopService.findSimpleExcelSheet(depotShopQuery);
         ExcelView excelView = new ExcelView();
         return new ModelAndView(excelView,"simpleExcelBook",simpleExcelBook);
-    }
-
-    private void setOperationStatus(DepotShopDto depotShopDto) {
-
     }
 
 }

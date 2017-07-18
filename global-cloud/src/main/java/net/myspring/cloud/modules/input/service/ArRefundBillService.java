@@ -65,9 +65,8 @@ public class ArRefundBillService {
                 arRefundBillDto.getExtendType(),
                 KingdeeFormIdEnum.AR_REFUNDBILL.name(),
                 arRefundBillDto.getJson(),
-                kingdeeBook) {
-        };
-        kingdeeManager.save(kingdeeSynDto);
+                kingdeeBook);
+        kingdeeSynDto = kingdeeManager.save(kingdeeSynDto);
         if (!kingdeeSynDto.getSuccess()){
             throw new ServiceException("收款退款单失败："+kingdeeSynDto.getResult());
         }
@@ -184,8 +183,6 @@ public class ArRefundBillService {
         kingdeeSynDtoList.addAll(save(cashBillList,kingdeeBook,accountKingdeeBook));
         return kingdeeSynDtoList;
     }
-
-
 
     public ArRefundBillForm getForm(){
         Map<String,Object> map = Maps.newHashMap();

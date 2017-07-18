@@ -52,7 +52,7 @@ public class StkInStockService {
                 stkInStockDto.getJson(),
                 kingdeeBook) {
         };
-        kingdeeManager.save(kingdeeSynDto);
+        kingdeeSynDto = kingdeeManager.save(kingdeeSynDto);
         if (!kingdeeSynDto.getSuccess()){
             throw new ServiceException("采购入库失败："+kingdeeSynDto.getResult());
         }

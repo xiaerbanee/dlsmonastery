@@ -1,20 +1,23 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.modules.sys.dto.AccountCommonDto;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.AccountClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.manager.DepotManager;
+import net.myspring.future.modules.crm.domain.GoodsOrder;
+import net.myspring.future.modules.crm.domain.GoodsOrderIme;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.domain.ProductImeUpload;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
 import net.myspring.future.modules.crm.dto.ProductImeUploadDto;
-import net.myspring.future.modules.crm.repository.ProductImeRepository;
-import net.myspring.future.modules.crm.repository.ProductImeSaleRepository;
-import net.myspring.future.modules.crm.repository.ProductImeUploadRepository;
+import net.myspring.future.modules.crm.repository.*;
 import net.myspring.future.modules.crm.web.form.ProductImeBatchUploadForm;
 import net.myspring.future.modules.crm.web.form.ProductImeUploadForm;
 import net.myspring.future.modules.crm.web.query.ProductImeUploadQuery;
@@ -33,7 +36,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +56,12 @@ public class ProductImeUploadService {
     private OfficeClient officeClient;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private GoodsOrderImeRepository goodsOrderImeRepository;
+    @Autowired
+    private GoodsOrderRepository goodsOrderRepository;
+    @Autowired
+    private AccountClient accountClient;
 
 
     public Page<ProductImeUploadDto> findPage(Pageable pageable, ProductImeUploadQuery productImeUploadQuery) {
@@ -107,6 +115,11 @@ public class ProductImeUploadService {
         String employeeId = RequestUtils.getEmployeeId();
 
         List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
+        List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByEnabledIsTrueAndProductImeIdIn(CollectionUtil.extractToList(productImeList,"id"));
+        Map<String, GoodsOrderIme> goodsOrderImeMap = CollectionUtil.extractToMap(goodsOrderImeList,"product_ime_id");
+        Map<String, GoodsOrder> goodsOrderMap = goodsOrderRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"goods_order_id"));
+        String accountShopIds = getAccountShopIds(productImeUploadForm.getEmployeeId());
+
         for (ProductIme productIme : productImeList) {
             if(productIme.getProductImeUploadId()!=null){
                 continue;
@@ -120,18 +133,12 @@ public class ProductImeUploadService {
             productImeUpload.setProductImeId(productIme.getId());
             productImeUpload.setStatus(AuditStatusEnum.申请中.name());
 
-//            TODO 需要设置下面的字段
-//            if(depotId==null){
-//                productImeUpload.setGoodsOrderShop(null);
-//            }else{
-//                productImeUpload.setGoodsOrderShop(depotDao.findOne(depotId));
-//            }
-//            if(employee==null){
-//                productImeUpload.setAccountShopIds(null);
-//            }else{
-//                productImeUpload.setAccountShopIds(employee.getDepotIds());
-//            }
-
+            if(goodsOrderImeMap.get(productIme.getId())!=null && goodsOrderMap.get(goodsOrderImeMap.get(productIme.getId()).getGoodsOrderId())!=null){
+                productImeUpload.setGoodsOrderShopId(goodsOrderMap.get(goodsOrderImeMap.get(productIme.getId()).getGoodsOrderId()).getShopId());
+            }else{
+                productImeUpload.setGoodsOrderShopId(null);
+            }
+            productImeUpload.setAccountShopIds(accountShopIds);
             productImeUploadRepository.save(productImeUpload);
 
             productIme.setProductImeUploadId(productImeUpload.getId());
@@ -139,6 +146,18 @@ public class ProductImeUploadService {
             productImeRepository.save(productIme);
 
         }
+    }
+
+    private String getAccountShopIds(String employeeId) {
+        AccountCommonDto accountCommonDto = accountClient.findByEmployeeId(employeeId);
+        String accountShopIds = null;
+        if(accountCommonDto !=null && StringUtils.isNotBlank(accountCommonDto.getId())){
+            List depotIds = depotManager.filterDepotIds(accountCommonDto.getId());
+            if(CollectionUtil.isNotEmpty(depotIds)){
+                accountShopIds = StringUtils.join(depotIds, CharConstant.COMMA);
+            }
+        }
+        return accountShopIds;
     }
 
     public String checkForUploadBack(List<String> imeList) {

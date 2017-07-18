@@ -126,6 +126,7 @@ public class StkInStockDto {
             detail.put("FPrice", entry.getPrice());
             detail.put("FAmount", new BigDecimal(entry.getQty()).multiply(entry.getPrice()));
             detail.put("FStockId", CollectionUtil.getMap("FNumber", entry.getStockNumber()));
+            //库存状态--可用
             detail.put("FStockStatusId", CollectionUtil.getMap("FNumber", "KCZT01_SYS"));
             // 是否赠品
             detail.put("FGiveAway", entry.getPrice().compareTo(BigDecimal.ZERO) == 0 ? 1 : 0);

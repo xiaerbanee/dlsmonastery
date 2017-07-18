@@ -24,6 +24,24 @@ public class ProductImeUpload extends DataEntity<ProductImeUpload> {
 
     private String productTypeId;
     private String saleShopId;
+    private String goodsOrderShopId;
+    private String accountShopIds;
+
+    public String getGoodsOrderShopId() {
+        return goodsOrderShopId;
+    }
+
+    public void setGoodsOrderShopId(String goodsOrderShopId) {
+        this.goodsOrderShopId = goodsOrderShopId;
+    }
+
+    public String getAccountShopIds() {
+        return accountShopIds;
+    }
+
+    public void setAccountShopIds(String accountShopIds) {
+        this.accountShopIds = accountShopIds;
+    }
 
     public String getSaleShopId() {
         return saleShopId;
