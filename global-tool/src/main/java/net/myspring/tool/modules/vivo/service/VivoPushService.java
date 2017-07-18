@@ -59,6 +59,10 @@ public class VivoPushService {
     @Autowired
     private SProductItem000M13e00Repository sProductItem000M13e00Repository;
     @Autowired
+    private VivoCustomerDemoPhoneRepository vivoCustomerDemoPhoneRepository;
+    @Autowired
+    private SProductItemLendM13e00Repository sProductItemLendM13e00Repository;
+    @Autowired
     private CacheUtils cacheUtils;
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
@@ -141,6 +145,7 @@ public class VivoPushService {
         LocalDate dateStart = LocalDateUtils.parse(date).minusYears(1);
         LocalDate dateEnd = LocalDateUtils.parse(date).plusDays(1);
         List<SPlantCustomerStockDto> sPlantCustomerStockDtoList = sPlantCustomerStockRepository.findCustomerStockData(dateStart,dateEnd);
+        cacheUtils.initCacheInput(sPlantCustomerStockDtoList);
         return sPlantCustomerStockDtoList;
     }
 
@@ -279,6 +284,43 @@ public class VivoPushService {
         logger.info("同步库存串码明细数据完成:"+LocalDateTime.now());
     }
 
+    @FutureDataSource
+    public List<SProductItemLendM13e00> findDemoPhones(String date){
+        if (StringUtils.isBlank(date)){
+            date = LocalDateUtils.format(LocalDate.now());
+        }
+        String dateStart = date;
+        String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
+        return vivoCustomerDemoPhoneRepository.findDemoPhones(dateStart,dateEnd);
+    }
+
+    @FactoryDataSource
+    @Transactional
+    public void pushDemoPhones(List<SProductItemLendM13e00> sProductItemLendM13e00List,Map<String,String> productColorMap,String date){
+        String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
+        String dateStart = date;
+        String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
+        List<SProductItemLendM13e00> sProductItemLendM13e00s = Lists.newArrayList();
+
+        for (SProductItemLendM13e00 sProductItemLendM13e00 : sProductItemLendM13e00List){
+            String productId=sProductItemLendM13e00.getProductID();
+            if (StringUtils.isBlank(productColorMap.get(productId))){
+                continue;
+            }
+            sProductItemLendM13e00.setStatusInfo(StringUtils.getFormatId(sProductItemLendM13e00.getCompanyID(),"C","00000"));
+            sProductItemLendM13e00.setCompanyID(mainCode);
+            sProductItemLendM13e00.setProductID(productColorMap.get(productId));
+            sProductItemLendM13e00.setStoreID(mainCode+"K0000");
+            sProductItemLendM13e00.setStatus("借机出库");
+            sProductItemLendM13e00s.add(sProductItemLendM13e00);
+        }
+
+        logger.info("开始上抛借机数据:"+LocalDateTime.now());
+        sProductItemLendM13e00Repository.deleteByUpdateTime(dateStart,dateEnd);
+        sProductItemLendM13e00Repository.batchSave(sProductItemLendM13e00s);
+        logger.info("上抛借机数据结束:"+LocalDateTime.now());
+    }
+
     @LocalDataSource
     public Map<String,String> getProductColorMap(){
         List<VivoPlantProducts> vivoPlantProductList= vivoPlantProductsRepository.findAllByProductId();
@@ -302,7 +344,5 @@ public class VivoPushService {
     private String getZoneId(String mainCode,String id){
         return StringUtils.getFormatId(id,mainCode,"0000");
     }
-
-
 
 }
