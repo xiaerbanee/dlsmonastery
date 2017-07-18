@@ -13,8 +13,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.orm.jpa.JpaDialect;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaDialect;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.ClassUtils;
@@ -62,7 +64,14 @@ public class JdbcConfig {
         localContainerEntityManagerFactoryBean.getJpaPropertyMap().put("hibernate.physical_naming_strategy", "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy");
         HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
         localContainerEntityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter);
+        localContainerEntityManagerFactoryBean.setJpaDialect(jpaDialect());
         return localContainerEntityManagerFactoryBean;
+    }
+
+    @Bean
+    @Primary
+    public JpaDialect jpaDialect() {
+        return new HibernateJpaDialect();
     }
 
     @Bean
@@ -72,7 +81,9 @@ public class JdbcConfig {
 
     @Bean
     public PlatformTransactionManager transactionManager() {
-        return new JpaTransactionManager(entityManagerFactory());
+        JpaTransactionManager jpaTransactionManager =new JpaTransactionManager(entityManagerFactory());
+        jpaTransactionManager.setJpaDialect(jpaDialect());
+        return jpaTransactionManager;
     }
 
     @Bean
