@@ -146,7 +146,8 @@ public class CnJournalForBankDto {
             entity.add(detail);
             if (entityForBankDto.getDebitAmount() != null){
                 debitAmounts = debitAmounts.add(entityForBankDto.getDebitAmount());
-            }else if (entityForBankDto.getCreditAmount() != null){
+            }
+            if (entityForBankDto.getCreditAmount() != null){
                 creditAmounts = creditAmounts.add(entityForBankDto.getCreditAmount());
             }
         }

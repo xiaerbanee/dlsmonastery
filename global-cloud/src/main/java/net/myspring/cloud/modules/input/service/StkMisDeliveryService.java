@@ -53,7 +53,7 @@ public class StkMisDeliveryService {
                 KingdeeFormIdEnum.STK_MisDelivery.name(),
                 stkMisDeliveryDto.getJson(),
                 kingdeeBook);
-        kingdeeManager.save(kingdeeSynDto);
+        kingdeeSynDto = kingdeeManager.save(kingdeeSynDto);
         if (!kingdeeSynDto.getSuccess()){
             throw new ServiceException("其他出库单失败："+kingdeeSynDto.getResult());
         }
