@@ -8,6 +8,7 @@ import net.myspring.basic.modules.hr.web.query.DutyWorktimeQuery
 import net.myspring.basic.modules.sys.dto.BackendDto
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
+import net.myspring.util.text.StringUtils
 import org.springframework.data.repository.query.Param
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -77,12 +78,12 @@ class DutyWorktimeRepositoryImpl  @Autowired constructor(val jdbcTemplate: JdbcT
                    AND t1.duty_date < :dutyDateEnd
                 """);
         }
-        if(dutyWorktimeQuery.accountId!=null){
+        if(StringUtils.isNotBlank(dutyWorktimeQuery.accountId)){
             sql.append("""
                     and t1.employee_id in (
                     select t2.id
                     from hr_employee t2
-                    where t2.account_id = :accountId
+                    where t2.account_id = :accountId )
                 """);
         }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sql.toString(),pageable)

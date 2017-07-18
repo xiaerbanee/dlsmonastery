@@ -4,7 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopAdType:edit'">{{$t('shopAdTypeList.add')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:shopAdType:view'">{{$t('shopAdTypeList.filter')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopAdType:view'">{{$t('shopAdTypeList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('shopAdTypeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -52,7 +52,6 @@
             extra:{}
         },
         initPromise:{},
-        pickerDateOption:util.pickerDateOption,
         formLabelWidth: '28%',
         formVisible: false,
         pageLoading: false
@@ -66,7 +65,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("shopAdTypeList",submitData);
         axios.get('/api/ws/future/basic/shopAdType?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
@@ -97,11 +96,11 @@
         });
       }
     },created () {
-      var that = this;
+      let that = this;
       that.pageHeight = window.outerHeight -320;
-      that.initPromise = axios.get('/api/ws/future/basic/shopAdType/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(this.$route.query,that.formData);
+      this.initPromise = axios.get('/api/ws/future/basic/shopAdType/getQuery').then((response) =>{
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{
