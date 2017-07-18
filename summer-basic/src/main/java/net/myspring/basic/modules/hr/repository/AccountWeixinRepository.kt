@@ -55,7 +55,7 @@ class AccountWeixinRepositoryImpl @Autowired constructor(val namedParameterJdbcT
         """)
         if (accountWeixinQuery.accountName != null) {
             sb.append("""
-                and t3.login_name =:accountName
+                and t3.login_name LIKE CONCAT ('%',:accountName,'%')
             """)
         }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
