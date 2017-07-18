@@ -7,10 +7,12 @@ import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDetailDto;
 import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDto;
 import net.myspring.tool.modules.vivo.service.IDvivoPushService;
 import net.myspring.tool.modules.vivo.service.VivoPushService;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +47,18 @@ public class vivoPushController {
     public void pushIDvivoData(String date){
         //同步机构数据
         DbContextHolder.get().setCompanyName("IDVIVO");
-//        idvivoPushService.pushIDvivoZonesData();
+        idvivoPushService.pushIDvivoZonesData();
+        //同步客户数据
+        List<SCustomerDto> sCustomerDtos=idvivoPushService.getVivoCustomersData(date);
+        idvivoPushService.pushIDVivoSCustomersData(sCustomerDtos);
+        //同步库存数据
+        Map<String,String> productColorMap = idvivoPushService.getProductColorMap();
+        List<SPlantCustomerStockDto> sPlantCustomerStockDtoList = idvivoPushService.getCustomerStockData(date);
+        idvivoPushService.pushCustomerStockData(sPlantCustomerStockDtoList,productColorMap,date);
+       //同步库存明细数据
+       List<SPlantCustomerStockDetailDto>  sPlantCustomerStockDetailDtoList=idvivoPushService.getCustomerStockDetailData(date);
+       idvivoPushService.pushCustomerStockDetailData(sPlantCustomerStockDetailDtoList,productColorMap,date);
+
     }
 
 }
