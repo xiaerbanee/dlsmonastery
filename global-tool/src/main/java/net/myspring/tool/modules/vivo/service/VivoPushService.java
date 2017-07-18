@@ -60,8 +60,6 @@ public class VivoPushService {
     @Autowired
     private SProductItem000M13e00Repository sProductItem000M13e00Repository;
     @Autowired
-    private VivoCustomerDemoPhoneRepository vivoCustomerDemoPhoneRepository;
-    @Autowired
     private SProductItemLendM13e00Repository sProductItemLendM13e00Repository;
     @Autowired
     private VivoCustomerSaleImeiRepository vivoCustomerSaleImeiRepository;
@@ -294,7 +292,7 @@ public class VivoPushService {
         }
         String dateStart = date;
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        return vivoCustomerDemoPhoneRepository.findDemoPhones(dateStart,dateEnd);
+        return sProductItemLendM13e00Repository.findDemoPhones(dateStart,dateEnd);
     }
 
     @FactoryDataSource
