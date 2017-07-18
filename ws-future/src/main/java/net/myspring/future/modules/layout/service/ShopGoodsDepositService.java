@@ -2,16 +2,11 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.cloud.common.enums.BillTypeEnum;
-import net.myspring.cloud.common.enums.ExtendTypeEnum;
-import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
-import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopGoodsDepositStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.manager.ArOtherRecAbleManager;
 import net.myspring.future.modules.basic.manager.CnJournalBankManager;
 import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
@@ -35,8 +30,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -162,7 +155,8 @@ public class ShopGoodsDepositService {
         }
     }
 
-private void syn(ShopGoodsDeposit shopGoodsDeposit) {
+    @Transactional
+    private void syn(ShopGoodsDeposit shopGoodsDeposit) {
         //TODO 同步金蝶
         if(StringUtils.isNotBlank(shopGoodsDeposit.getOutBillType()) && BillTypeEnum.手工日记账.name().equals(shopGoodsDeposit.getOutBillType())){
             KingdeeSynReturnDto kingdeeSynReturnDto = cnJournalBankManager.synForShopGoodsDeposit(shopGoodsDeposit,shopGoodsDeposit.getDepartMent());

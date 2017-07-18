@@ -7,14 +7,14 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.manager.DepotManager;
+import net.myspring.future.modules.crm.domain.GoodsOrder;
+import net.myspring.future.modules.crm.domain.GoodsOrderIme;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.domain.ProductImeUpload;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
 import net.myspring.future.modules.crm.dto.ProductImeUploadDto;
-import net.myspring.future.modules.crm.repository.ProductImeRepository;
-import net.myspring.future.modules.crm.repository.ProductImeSaleRepository;
-import net.myspring.future.modules.crm.repository.ProductImeUploadRepository;
+import net.myspring.future.modules.crm.repository.*;
 import net.myspring.future.modules.crm.web.form.ProductImeBatchUploadForm;
 import net.myspring.future.modules.crm.web.form.ProductImeUploadForm;
 import net.myspring.future.modules.crm.web.query.ProductImeUploadQuery;
@@ -33,7 +33,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +53,10 @@ public class ProductImeUploadService {
     private OfficeClient officeClient;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private GoodsOrderImeRepository goodsOrderImeRepository;
+    @Autowired
+    private GoodsOrderRepository goodsOrderRepository;
 
 
     public Page<ProductImeUploadDto> findPage(Pageable pageable, ProductImeUploadQuery productImeUploadQuery) {
@@ -107,6 +110,10 @@ public class ProductImeUploadService {
         String employeeId = RequestUtils.getEmployeeId();
 
         List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
+        List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByEnabledIsTrueAndProductImeIdIn(CollectionUtil.extractToList(productImeList,"id"));
+        Map<String, GoodsOrderIme> goodsOrderImeMap = CollectionUtil.extractToMap(goodsOrderImeList,"product_ime_id");
+        Map<String, GoodsOrder> goodsOrderMap = goodsOrderRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"goods_order_id"));
+
         for (ProductIme productIme : productImeList) {
             if(productIme.getProductImeUploadId()!=null){
                 continue;
@@ -120,16 +127,16 @@ public class ProductImeUploadService {
             productImeUpload.setProductImeId(productIme.getId());
             productImeUpload.setStatus(AuditStatusEnum.申请中.name());
 
-//            TODO 需要设置下面的字段
-//            if(depotId==null){
-//                productImeUpload.setGoodsOrderShop(null);
+            if(goodsOrderImeMap.get(productIme.getId())!=null && goodsOrderMap.get(goodsOrderImeMap.get(productIme.getId()).getGoodsOrderId())!=null){
+                productImeUpload.setGoodsOrderShopId(goodsOrderMap.get(goodsOrderImeMap.get(productIme.getId()).getGoodsOrderId()).getShopId());
+            }else{
+                productImeUpload.setGoodsOrderShopId(null);
+            }
+//            List depotIds = depotManager.filterDepotIds(RequestUtils.getAccountId());
+//            if(CollectionUtil.isNotEmpty(depotIds)){
+//                productImeUpload.setAccountShopIds(StringUtils.join(depotIds, CharConstant.COMMA));
 //            }else{
-//                productImeUpload.setGoodsOrderShop(depotDao.findOne(depotId));
-//            }
-//            if(employee==null){
 //                productImeUpload.setAccountShopIds(null);
-//            }else{
-//                productImeUpload.setAccountShopIds(employee.getDepotIds());
 //            }
 
             productImeUploadRepository.save(productImeUpload);
