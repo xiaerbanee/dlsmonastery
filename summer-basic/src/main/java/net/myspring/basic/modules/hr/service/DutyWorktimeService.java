@@ -285,7 +285,7 @@ public class DutyWorktimeService {
                 String key = employeeId + CharConstant.ENTER + LocalDateUtils.format(date);
                 Employee employee = employeeMap.get(employeeId);
                 Account account = accountMap.get(employee.getAccountId());
-                if(account==null){
+                if (account == null) {
                     System.out.println(account.getId());
                 }
                 Office office = officeMap.get(account.getOfficeId());
@@ -354,6 +354,8 @@ public class DutyWorktimeService {
                         Account account = accountMap.get(loginName);
                         if (account != null) {
                             employeeId = account.getEmployeeId();
+                        }else {
+                            employeeId=null;
                         }
                     }
                 }
@@ -376,10 +378,10 @@ public class DutyWorktimeService {
                             LocalTime endTime = null;
                             if (StringUtils.isNotBlank(String.valueOf(worktime))) {
                                 if (worktime instanceof Date) {
-                                    Date date = (Date)worktime;
-                                    Instant instant = date.toInstant();
-                                    ZoneId zone = ZoneId.systemDefault();
-                                    LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zone);
+                                    Date date = (Date) worktime;
+                                    Calendar calendar = Calendar.getInstance();
+                                    calendar.setTime(date);
+                                    LocalDateTime localDateTime = LocalDateTime.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DATE), calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
                                     startTime = localDateTime.toLocalTime();
                                 } else {
                                     worktime = String.valueOf(worktime).trim().replace("：", ":");
@@ -474,7 +476,7 @@ public class DutyWorktimeService {
             excelColumnList.add(simpleExcelColumnList);
         }
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("考勤记录", excelColumnList);
-        ExcelUtils.doWrite(workbook,simpleExcelSheet);
+        ExcelUtils.doWrite(workbook, simpleExcelSheet);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "考勤记录" + month + ".xlsx", simpleExcelSheet);
         return simpleExcelBook;
     }
