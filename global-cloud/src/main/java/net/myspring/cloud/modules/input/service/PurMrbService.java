@@ -49,9 +49,8 @@ public class PurMrbService {
                 purMrbDto.getExtendType(),
                 KingdeeFormIdEnum.PUR_MRB.name(),
                 purMrbDto.getJson(),
-                kingdeeBook) {
-        };
-        kingdeeManager.save(kingdeeSynDto);
+                kingdeeBook);
+        kingdeeSynDto = kingdeeManager.save(kingdeeSynDto);
         if (!kingdeeSynDto.getSuccess()){
             throw new ServiceException("采购退料失败："+kingdeeSynDto.getResult());
         }

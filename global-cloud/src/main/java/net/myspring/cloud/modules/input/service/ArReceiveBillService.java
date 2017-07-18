@@ -41,9 +41,8 @@ public class ArReceiveBillService {
                 arReceiveBillDto.getExtendType(),
                 KingdeeFormIdEnum.AR_RECEIVEBILL.name(),
                 arReceiveBillDto.getJson(),
-                kingdeeBook) {
-        };
-        kingdeeManager.save(kingdeeSynDto);
+                kingdeeBook);
+        kingdeeSynDto = kingdeeManager.save(kingdeeSynDto);
         if (!kingdeeSynDto.getSuccess()){
             throw new ServiceException("收款单失败："+kingdeeSynDto.getResult());
         }

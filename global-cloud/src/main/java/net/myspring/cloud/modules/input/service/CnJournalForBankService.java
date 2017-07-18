@@ -62,9 +62,8 @@ public class CnJournalForBankService {
                     cnJournalForBankDto.getExtendType(),
                     KingdeeFormIdEnum.CN_JOURNAL.name(),
                     cnJournalForBankDto.getJson(),
-                    kingdeeBook) {
-        };
-        kingdeeManager.save(kingdeeSynDto);
+                    kingdeeBook);
+        kingdeeSynDto = kingdeeManager.save(kingdeeSynDto);
         if (!kingdeeSynDto.getSuccess()){
             throw new ServiceException("銀行存取款日记账失败："+kingdeeSynDto.getResult());
         }

@@ -59,9 +59,8 @@ public class ArOtherRecAbleService {
                 arOtherRecAbleDto.getExtendType(),
                 KingdeeFormIdEnum.AR_OtherRecAble.name(),
                 arOtherRecAbleDto.getJson(),
-                kingdeeBook) {
-            };
-            kingdeeManager.save(kingdeeSynDto);
+                kingdeeBook);
+        kingdeeSynDto = kingdeeManager.save(kingdeeSynDto);
         if (!kingdeeSynDto.getSuccess()) {
             throw new ServiceException("其他应收单失败："+kingdeeSynDto.getResult());
         }

@@ -61,7 +61,7 @@ public class ApPayBillService {
                 apPayBillDto.getJson(),
                 kingdeeBook) {
         };
-        kingdeeManager.save(kingdeeSynDto);
+        kingdeeSynDto = kingdeeManager.save(kingdeeSynDto);
         if (!kingdeeSynDto.getSuccess()){
             throw new ServiceException("付款单失败："+kingdeeSynDto.getResult());
         }
