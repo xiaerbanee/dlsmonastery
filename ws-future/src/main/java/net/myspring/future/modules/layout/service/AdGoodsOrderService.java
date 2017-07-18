@@ -108,8 +108,8 @@ public class AdGoodsOrderService {
     public void save(AdGoodsOrderForm adGoodsOrderForm) {
 
         Depot outShop = depotRepository.findOne(adGoodsOrderForm.getOutShopId());
-        Client clientDto = clientRepository.findByDepotId(outShop.getId());
-        if (clientDto == null || StringUtils.isBlank(clientDto.getOutId())) {
+        Client client = clientRepository.findByDepotId(outShop.getId());
+        if (client == null || StringUtils.isBlank(client.getOutId())) {
             throw new ServiceException(outShop.getName() + " 没有关联财务账号，不能申请");
         }
         AdGoodsOrder adGoodsOrder;
@@ -150,6 +150,7 @@ public class AdGoodsOrderService {
         }
     }
 
+    @Transactional
     private void startAndSaveProcessFlowInfo(AdGoodsOrder adGoodsOrder) {
 
         ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("柜台订货", adGoodsOrder.getId(), AdGoodsOrder.class.getSimpleName(), adGoodsOrder.getOutShopId()));
@@ -164,6 +165,7 @@ public class AdGoodsOrderService {
 
     }
 
+    @Transactional
     private void saveExpressOrderInfo(AdGoodsOrder adGoodsOrder, AdGoodsOrderForm adGoodsOrderForm) {
 
         ExpressOrder expressOrder;
@@ -196,6 +198,7 @@ public class AdGoodsOrderService {
 
     }
 
+    @Transactional
     private void saveAdGoodsOrderDetailInfo(AdGoodsOrder adGoodsOrder, List<AdGoodsOrderDetailForm> detailFormList) {
 
         List<AdGoodsOrderDetail> toBeSaved = new ArrayList<>();
@@ -357,7 +360,8 @@ public class AdGoodsOrderService {
         }
     }
 
-private List<AdGoodsOrderDetail> saveDetailInfoWhenBill(AdGoodsOrder adGoodsOrder, List<AdGoodsOrderBillDetailForm> detailFormList, Map<String, Product> productMap) {
+    @Transactional
+    private List<AdGoodsOrderDetail> saveDetailInfoWhenBill(AdGoodsOrder adGoodsOrder, List<AdGoodsOrderBillDetailForm> detailFormList, Map<String, Product> productMap) {
 
         Map<String, AdPricesystemDetail> priceMap = Maps.newHashMap();
         Depot depot = depotRepository.findOne(adGoodsOrder.getShopId());
@@ -409,7 +413,8 @@ private List<AdGoodsOrderDetail> saveDetailInfoWhenBill(AdGoodsOrder adGoodsOrde
         return toBeSaved;
     }
 
-private void splitAdGoodsOrder(AdGoodsOrder adGoodsOrder, AdGoodsOrderBillForm adGoodsOrderBillForm, List<AdGoodsOrderDetail> detailList) {
+    @Transactional
+    private void splitAdGoodsOrder(AdGoodsOrder adGoodsOrder, AdGoodsOrderBillForm adGoodsOrderBillForm, List<AdGoodsOrderDetail> detailList) {
 
         //开始保存拆分后的newAdGoodsOrder的基本信息
         AdGoodsOrder newAdGoodsOrder = new AdGoodsOrder();
@@ -472,7 +477,8 @@ private void splitAdGoodsOrder(AdGoodsOrder adGoodsOrder, AdGoodsOrderBillForm a
         adGoodsOrderRepository.save(newAdGoodsOrder);
     }
 
-private void synWhenBill(AdGoodsOrder adGoodsOrder, ExpressOrder expressOrder) {
+    @Transactional
+    private void synWhenBill(AdGoodsOrder adGoodsOrder, ExpressOrder expressOrder) {
         KingdeeSynReturnDto kingdeeSynReturnDto = salOutStockManager.synForAdGoodsOrder(adGoodsOrder);
 
         adGoodsOrder.setCloudSynId(kingdeeSynReturnDto.getId());
@@ -484,7 +490,8 @@ private void synWhenBill(AdGoodsOrder adGoodsOrder, ExpressOrder expressOrder) {
 
     }
 
-private ExpressOrder saveExpressOrderInfoWhenBill(AdGoodsOrder adGoodsOrder, AdGoodsOrderBillForm adGoodsOrderBillForm, List<AdGoodsOrderDetail> detailList) {
+    @Transactional
+    private ExpressOrder saveExpressOrderInfoWhenBill(AdGoodsOrder adGoodsOrder, AdGoodsOrderBillForm adGoodsOrderBillForm, List<AdGoodsOrderDetail> detailList) {
 
         ExpressOrder expressOrder = expressOrderRepository.findOne(adGoodsOrder.getExpressOrderId());
         expressOrder.setFromDepotId(adGoodsOrder.getStoreId());
@@ -542,7 +549,8 @@ private ExpressOrder saveExpressOrderInfoWhenBill(AdGoodsOrder adGoodsOrder, AdG
 
     }
 
-private void saveExpressOrderInfoWhenShip(AdGoodsOrder adGoodsOrder, AdGoodsOrderShipForm adGoodsOrderShipForm) {
+    @Transactional
+    private void saveExpressOrderInfoWhenShip(AdGoodsOrder adGoodsOrder, AdGoodsOrderShipForm adGoodsOrderShipForm) {
         ExpressOrder expressOrder = expressOrderRepository.findOne(adGoodsOrder.getExpressOrderId());
         expressOrder.setExpressCompanyId(adGoodsOrderShipForm.getExpressOrderExpressCompanyId());
         expressOrder.setExpressCodes(adGoodsOrderShipForm.getExpressOrderExpressCodes());
@@ -554,7 +562,8 @@ private void saveExpressOrderInfoWhenShip(AdGoodsOrder adGoodsOrder, AdGoodsOrde
         expressOrderManager.save(expressOrder.getExtendType(), expressOrder.getExtendId(), expressOrder.getExpressCodes(), expressOrder.getExpressCompanyId());
     }
 
-private boolean saveDetailInfoWhenShip(AdGoodsOrderShipForm adGoodsOrderShipForm) {
+    @Transactional
+    private boolean saveDetailInfoWhenShip(AdGoodsOrderShipForm adGoodsOrderShipForm) {
         Map<String, AdGoodsOrderShipDetailForm> adGoodsOrderShipFormMap = CollectionUtil.extractToMap(adGoodsOrderShipForm.getAdGoodsOrderDetailList(), "id");
         List<AdGoodsOrderDetail> adGoodsOrderDetailList = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrderShipForm.getId());
         boolean isAllShipped = true;
@@ -575,7 +584,8 @@ private boolean saveDetailInfoWhenShip(AdGoodsOrderShipForm adGoodsOrderShipForm
         return isAllShipped;
     }
 
-private void doAndSaveProcessInfo(AdGoodsOrder adGoodsOrder, boolean pass, String comment) {
+    @Transactional
+    private void doAndSaveProcessInfo(AdGoodsOrder adGoodsOrder, boolean pass, String comment) {
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
         activitiCompleteForm.setPass(pass);
         activitiCompleteForm.setComment(comment);
@@ -645,7 +655,6 @@ private void doAndSaveProcessInfo(AdGoodsOrder adGoodsOrder, boolean pass, Strin
 
         List<AdGoodsOrderDto> adGoodsOrderDtoList = findPage(new PageRequest(0, 10000), adGoodsOrderQuery).getContent();
         simpleExcelSheetList.add(new SimpleExcelSheet("订单数据", adGoodsOrderDtoList, adGoodsOrderColumnList));
-
 
         List<SimpleExcelColumn> adGoodsOrderDetailColumnList = Lists.newArrayList();
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderFormatId", "订单号"));
@@ -779,6 +788,5 @@ private void doAndSaveProcessInfo(AdGoodsOrder adGoodsOrder, boolean pass, Strin
             return null;
         }
         return list.get(0);
-
     }
 }

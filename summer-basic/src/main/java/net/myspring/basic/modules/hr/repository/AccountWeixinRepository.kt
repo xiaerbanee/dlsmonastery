@@ -44,7 +44,7 @@ class AccountWeixinRepositoryImpl @Autowired constructor(val namedParameterJdbcT
         var sb = StringBuilder()
         sb.append("""
             SELECT
-            t1.*,t3.login_name as accountName,t2.name as officeName,area.name as 'areaName'
+            t1.*,t3.login_name as accountName,office.name as officeName,area.name as 'areaName'
             FROM
             hr_account_weixin t1,sys_office office,hr_account t3,sys_office area
             WHERE
@@ -55,7 +55,7 @@ class AccountWeixinRepositoryImpl @Autowired constructor(val namedParameterJdbcT
         """)
         if (accountWeixinQuery.accountName != null) {
             sb.append("""
-                and t3.login_name =:accountName
+                and t3.login_name LIKE CONCAT ('%',:accountName,'%')
             """)
         }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);

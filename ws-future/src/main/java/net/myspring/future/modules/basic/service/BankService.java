@@ -5,9 +5,7 @@ import net.myspring.cloud.modules.kingdee.domain.CnBankAcnt;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
-import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Bank;
-import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.BankDto;
 import net.myspring.future.modules.basic.repository.BankRepository;
 import net.myspring.future.modules.basic.web.form.BankForm;
@@ -33,8 +31,6 @@ public class BankService {
     private BankRepository bankRepository;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private OfficeClient officeClient;
     @Autowired
     private CloudClient cloudClient;
 

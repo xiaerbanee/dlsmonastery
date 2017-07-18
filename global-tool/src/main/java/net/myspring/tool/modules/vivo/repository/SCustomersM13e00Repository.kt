@@ -49,7 +49,7 @@ class SCustomersM13e00Repository @Autowired constructor(val namedParameterJdbcTe
         return namedParameterJdbcTemplate.query("""
             SELECT
                 de.area_id AS customerId,
-                de. NAME AS customerName,
+                de.NAME AS customerName,
                 de.office_id AS zoneId,
                 :date AS recordDate,
                 1 AS customerLevel,
@@ -65,7 +65,7 @@ class SCustomersM13e00Repository @Autowired constructor(val namedParameterJdbcTe
             UNION
                 SELECT
                     de.id AS customerId,
-                    de. NAME AS CustomerName,
+                    de.NAME AS CustomerName,
                     de.area_id AS zoneId,
                     :date AS recordDate,
                     2 AS CustomerLevel,
