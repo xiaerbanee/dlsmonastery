@@ -217,6 +217,7 @@ public class VoucherService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<List<String>>  initData(VoucherDto voucherDto) {
         if (voucherDto.getId() != null) {
             List<List<String>> datas = Lists.newArrayList();

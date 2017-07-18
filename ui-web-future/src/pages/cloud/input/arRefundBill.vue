@@ -66,7 +66,12 @@
             }
             this.formData.json = JSON.stringify(this.formData.json);
             axios.post('/api/global/cloud/input/arRefundBill/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
-              this.$message(response.data.message);
+              if(response.data.success){
+                this.$message(response.data.message);
+              }else{
+                this.$alert(response.data.message);
+                this.submitDisabled = false;
+              }
             }).catch(function () {
               this.submitDisabled = false;
             });

@@ -11,6 +11,7 @@ import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeSynService;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,19 +44,23 @@ public class ArRefundBillController {
     @RequestMapping(value = "save")
     public RestResponse save(ArRefundBillForm arRefundBillForm) {
         RestResponse restResponse = new RestResponse("开单失败",null);
-        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynDto> kingdeeSynDtoList = arRefundBillService.save(arRefundBillForm,kingdeeBook,accountKingdeeBook);
-        kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
-        if (accountKingdeeBook != null) {
-            for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
-                if (kingdeeSynDto.getSuccess()) {
-                    restResponse = new RestResponse("收款退款单成功：" + kingdeeSynDto.getBillNo(), null, true);
+        try {
+            KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            List<KingdeeSynDto> kingdeeSynDtoList = arRefundBillService.save(arRefundBillForm,kingdeeBook,accountKingdeeBook);
+            kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
+            if (accountKingdeeBook != null) {
+                for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
+                    if (kingdeeSynDto.getSuccess()) {
+                        restResponse = new RestResponse("收款退款单成功：" + kingdeeSynDto.getBillNo(), null, true);
+                    }
                 }
+            }else {
+                restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
             }
-        }else {
-            restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
+            return restResponse;
+        }catch (Exception e) {
+            return new RestResponse(e.getMessage(), ResponseCodeEnum.invalid.name(), false);
         }
-        return restResponse;
     }
 }

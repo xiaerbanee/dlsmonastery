@@ -12,6 +12,7 @@ import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeSynService;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,21 +48,25 @@ public class SalReturnStockController {
 
     @RequestMapping(value = "save")
     public RestResponse save(SalStockForm salStockForm) {
-        RestResponse restResponse = new RestResponse("",null,true);;
-        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        if (accountKingdeeBook != null) {
-            List<KingdeeSynReturnDto> kingdeeSynExtendDtoList = salReturnStockService.save(salStockForm, kingdeeBook, accountKingdeeBook);
-            kingdeeSynService.save(BeanUtil.map(kingdeeSynExtendDtoList, KingdeeSyn.class));
-            for (KingdeeSynReturnDto kingdeeSynExtendDto : kingdeeSynExtendDtoList) {
-                if (kingdeeSynExtendDto.getSuccess()) {
-                    restResponse = new RestResponse("开单退货成功：" + kingdeeSynExtendDto.getNextBillNo(), null, true);
+        RestResponse restResponse = new RestResponse("",null,true);
+        try {
+            KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            if (accountKingdeeBook != null) {
+                List<KingdeeSynReturnDto> kingdeeSynExtendDtoList = salReturnStockService.save(salStockForm, kingdeeBook, accountKingdeeBook);
+                kingdeeSynService.save(BeanUtil.map(kingdeeSynExtendDtoList, KingdeeSyn.class));
+                for (KingdeeSynReturnDto kingdeeSynExtendDto : kingdeeSynExtendDtoList) {
+                    if (kingdeeSynExtendDto.getSuccess()) {
+                        restResponse = new RestResponse("开单退货成功：" + kingdeeSynExtendDto.getNextBillNo(), null, true);
+                    }
                 }
+            }else {
+                restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
             }
-        }else {
-            restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
+            return restResponse;
+        }catch (Exception e){
+            return new RestResponse(e.getMessage(), ResponseCodeEnum.invalid.name(), false);
         }
-        return restResponse;
     }
 
     @RequestMapping(value = "saveForXSTHD",method = RequestMethod.POST)
