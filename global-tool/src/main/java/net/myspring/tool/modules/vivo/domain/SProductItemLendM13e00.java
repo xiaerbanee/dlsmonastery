@@ -13,6 +13,8 @@ public class SProductItemLendM13e00 {
     private String isReturnProfit;
     private Integer isLock;
     private String remark;
+    private String updateTime;
+
 
     public String getCompanyID() {
         return companyID;
@@ -100,5 +102,13 @@ public class SProductItemLendM13e00 {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 }

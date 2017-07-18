@@ -1,7 +1,7 @@
 package net.myspring.tool.modules.vivo.web;
 
 import net.myspring.tool.common.dataSource.DbContextHolder;
-import net.myspring.tool.common.enums.DataSourceTypeEnum;
+import net.myspring.tool.modules.vivo.domain.SProductItemLendM13e00;
 import net.myspring.tool.modules.vivo.dto.SCustomerDto;
 import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDetailDto;
 import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDto;
@@ -38,6 +38,9 @@ public class vivoPushController {
         //库存串码明细
         List<SPlantCustomerStockDetailDto> sPlantCustomerStockDetailDtoList = vivoPushService.getCustomerStockDetailData(date);
         vivoPushService.pushCustomerStockDetailData(sPlantCustomerStockDetailDtoList,productColorMap,date);
+        //演示机数据
+        List<SProductItemLendM13e00> sProductItemLendM13e00List = vivoPushService.findDemoPhones(date);
+        vivoPushService.pushDemoPhones(sProductItemLendM13e00List,productColorMap,date);
     }
 
 
