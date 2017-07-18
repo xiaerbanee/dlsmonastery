@@ -185,8 +185,6 @@ public class ArRefundBillService {
         return kingdeeSynDtoList;
     }
 
-
-
     public ArRefundBillForm getForm(){
         Map<String,Object> map = Maps.newHashMap();
         ArRefundBillForm arRefundBillForm = new ArRefundBillForm();
