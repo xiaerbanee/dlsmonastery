@@ -52,13 +52,7 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
     """)
     fun findAccountPassword(id: String): String
 
-    @Query("""
-        SELECT t.id
-        FROM  #{#entityName} t
-        where t.enabled=1
-        and t.officeId IN ?1
-    """)
-    fun findByOfficeIds(officeIds: MutableList<String>): MutableList<Account>
+    fun findByOfficeIdIn(officeIds: MutableList<String>): MutableList<Account>
 
     @Query("""
         SELECT

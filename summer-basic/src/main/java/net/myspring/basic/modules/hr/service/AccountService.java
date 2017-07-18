@@ -74,7 +74,7 @@ public class AccountService {
         List<AccountDto> accountDtoList=Lists.newArrayList();
         List<Office> officeList=officeRepository.findSameAreaByOfficeId(officeId);
         List<String> officeIdList=CollectionUtil.extractToList(officeList,"id");
-        List<Account> accountList=accountRepository.findByOfficeIds(officeIdList);
+        List<Account> accountList=accountRepository.findByOfficeIdIn(officeIdList);
         accountDtoList=BeanUtil.map(accountList,AccountDto.class);
         return accountDtoList;
     }
