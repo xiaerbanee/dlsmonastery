@@ -2,7 +2,7 @@ spring:
   application:
     name: global-tool
   profiles:
-    active: vivo
+    active: dev
   cloud:
     config:
       uri: http://localhost:9900
