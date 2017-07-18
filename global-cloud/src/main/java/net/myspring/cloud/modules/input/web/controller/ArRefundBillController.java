@@ -41,11 +41,11 @@ public class ArRefundBillController {
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(ArRefundBillForm apPayBillForm) {
+    public RestResponse save(ArRefundBillForm arRefundBillForm) {
         RestResponse restResponse = new RestResponse("开单失败",null);
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynDto> kingdeeSynDtoList = arRefundBillService.save(apPayBillForm,kingdeeBook,accountKingdeeBook);
+        List<KingdeeSynDto> kingdeeSynDtoList = arRefundBillService.save(arRefundBillForm,kingdeeBook,accountKingdeeBook);
         kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
         if (accountKingdeeBook != null) {
             for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
