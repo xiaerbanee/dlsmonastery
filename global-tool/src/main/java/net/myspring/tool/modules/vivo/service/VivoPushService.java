@@ -68,6 +68,8 @@ public class VivoPushService {
     @Autowired
     private SPlantEndProductSaleM13e00Repository sPlantEndProductSaleM13e00Repository;
     @Autowired
+    private SStoresM13e00Repository sStoresM13e00Repository;
+    @Autowired
     private CacheUtils cacheUtils;
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
@@ -303,6 +305,9 @@ public class VivoPushService {
     @Transactional
     public void pushDemoPhones(List<SProductItemLendM13e00> sProductItemLendM13e00List,Map<String,String> productColorMap,String date){
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
+        if (StringUtils.isBlank(date)){
+            date = LocalDateUtils.format(LocalDate.now());
+        }
         String dateStart = date;
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<SProductItemLendM13e00> sProductItemLendM13e00s = Lists.newArrayList();
@@ -361,10 +366,23 @@ public class VivoPushService {
             sPlantEndProductSaleM13e00.setCreatedTime(LocalDateTimeUtils.format(LocalDateTime.now()));
             sPlantEndProductSaleM13e00List.add(sPlantEndProductSaleM13e00);
         }
-        logger.info("开始上抛核销记录数据"+LocalDateTime.now());
+        logger.info("开始上抛核销记录数据:"+LocalDateTime.now());
         sPlantEndProductSaleM13e00Repository.deleteByBillDate(dateStart,dateEnd);
         sPlantEndProductSaleM13e00Repository.batchSave(sPlantEndProductSaleM13e00List);
-        logger.info("上抛核销记录数据结束"+LocalDateTime.now());
+        logger.info("上抛核销记录数据结束:"+LocalDateTime.now());
+    }
+
+    @FactoryDataSource
+    public void pushSStore(){
+        String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
+        List<SStoresM13e00> sStoresM13e00List = Lists.newArrayList();
+        SStoresM13e00 sStoresM13e00 = new SStoresM13e00();
+        sStoresM13e00.setStoreID(mainCode + "K0000");
+        sStoresM13e00.setStoreName(mainCode + "大库");
+        sStoresM13e00List.add(sStoresM13e00);
+        logger.info("开始上抛一代仓库数据:"+LocalDateTime.now());
+        sStoresM13e00Repository.batchSave(sStoresM13e00List);
+        logger.info("上抛一代仓库数据结束:"+LocalDateTime.now());
     }
 
     @LocalDataSource
