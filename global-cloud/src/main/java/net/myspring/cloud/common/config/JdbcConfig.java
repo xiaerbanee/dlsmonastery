@@ -26,8 +26,8 @@ import java.util.Map;
 @Configuration
 public class JdbcConfig {
 
-     @Autowired
-     private Environment environment;
+    @Autowired
+    private Environment environment;
 
     @Bean
     public DynamicDataSource dynamicDataSource() {
