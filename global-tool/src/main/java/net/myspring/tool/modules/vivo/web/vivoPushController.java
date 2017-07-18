@@ -48,7 +48,7 @@ public class vivoPushController {
         List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList = vivoPushService.findProductImeSaleDate(date);
         vivoPushService.pushProductImeSale(vivoCustomerSaleImeiDtoList,productColorMap,date);
         //一代仓库上抛
-
+        vivoPushService.pushSStore();
     }
 
 
