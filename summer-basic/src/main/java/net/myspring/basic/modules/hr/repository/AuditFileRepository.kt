@@ -74,6 +74,9 @@ class AuditFileRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempl
         if (CollectionUtil.isNotEmpty(auditFileQuery.processTypeIdList)) {
             sb.append(" and process_type_id in (:processTypeIdList) ")
         }
+        if (CollectionUtil.isNotEmpty(auditFileQuery.officeIdList)) {
+            sb.append(" and office.id in (:officeIdList) ")
+        }
         if(StringUtils.isNotBlank(auditFileQuery.processStatus)){
             sb.append(" and process_status like concat('%',:processStatus,'%') ")
         }
@@ -87,7 +90,6 @@ class AuditFileRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempl
                 )
             """)
         }
-
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
         var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(auditFileQuery), BeanPropertyRowMapper(AuditFileDto::class.java));
