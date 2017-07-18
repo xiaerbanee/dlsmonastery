@@ -62,12 +62,13 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         sb.append("""
              SELECT
                  t1.*,t4.name as 'areaDepotName',t2.ime as 'badProductIme',t3.name as 'badProductName',
-                 t7.name as 'retailDepotName',t5.ime as 'toAreaProductIme',t8.name as 'fromCompanyProductName'
+                 t6.name as 'toAreaProductName',t7.name as 'retailDepotName',t5.ime as 'toAreaProductIme',t8.name as 'fromCompanyProductName'
              FROM
                 crm_after_sale  t1 left join crm_product_ime t2 on t1.bad_product_ime_id=t2.id
                 left join crm_product t3 on t2.product_id=t3.id
                 left join crm_depot t4 on t1.area_depot_id=t4.id
                 left join crm_product_ime t5 on t1.to_area_product_ime_id=t5.id
+                left join crm_product t6 on t5.product_id=t6.id
                 left join crm_depot t7 on t2.retail_shop_id=t7.id
                 left join crm_product t8 on t1.from_company_product_id=t8.id
              WHERE
@@ -97,9 +98,6 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (afterSaleQuery.fromCompanyDateEnd!= null) {
             sb.append("""  and t1.from_company_date  < :fromCompanyDateEnd """)
         }
-        if (StringUtils.isNotBlank(afterSaleQuery.badProductName)) {
-            sb.append("""  and t3.name like concat('%',:badProductName,'%') """)
-        }
         if (StringUtils.isNotBlank(afterSaleQuery.depotName)) {
             sb.append("""  and t4.name like concat('%',:depotName,'%') """)
         }
@@ -112,8 +110,11 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (CollectionUtil.isNotEmpty(afterSaleQuery.businessIdList)) {
             sb.append("""  and t1.business_id in (:businessIdList) """)
         }
-        if (afterSaleQuery.fromCompany) {
-            sb.append("""  and t1.from_company_date is  null """)
+        if (CollectionUtil.isNotEmpty(afterSaleQuery.officeIdList)) {
+            sb.append("""  and ( t4.office_id in (:officeIdList) or t7.office_id in (:officeIdList) )""")
+        }
+        if (CollectionUtil.isNotEmpty(afterSaleQuery.depotIdList)) {
+            sb.append("""  and ( t4.id in (:depotIdList) or t7.id in (:depotIdList) ) """)
         }
         print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(afterSaleQuery), BeanPropertyRowMapper(AfterSaleDto::class.java));
