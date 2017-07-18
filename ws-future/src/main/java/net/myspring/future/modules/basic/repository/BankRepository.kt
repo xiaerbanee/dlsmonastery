@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.repository
 
+import net.myspring.common.constant.CharConstant
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Bank
 import net.myspring.future.modules.basic.dto.BankDto
@@ -85,7 +86,7 @@ class BankRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: 
             INSERT INTO crm_account_bank(account_id,bank_id) values
         """)
         for(accountId in accountIdList){
-            sb.append("("+accountId+","+bankId+"),")
+            sb.append("("+accountId+CharConstant.COMMA+bankId+"),")
         }
         sb.deleteCharAt(sb.length -1)
         return namedParameterJdbcTemplate.update(sb.toString(),HashMap<String,Any>())
