@@ -54,7 +54,6 @@
           extra:{}
         },
         initPromise:{},
-        pickerDateOption:util.pickerDateOption,
         formLabelWidth: '25%',
         formVisible: false,
         pageLoading: false,
