@@ -1,10 +1,13 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.modules.sys.dto.AccountCommonDto;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.AccountClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
@@ -57,6 +60,8 @@ public class ProductImeUploadService {
     private GoodsOrderImeRepository goodsOrderImeRepository;
     @Autowired
     private GoodsOrderRepository goodsOrderRepository;
+    @Autowired
+    private AccountClient accountClient;
 
 
     public Page<ProductImeUploadDto> findPage(Pageable pageable, ProductImeUploadQuery productImeUploadQuery) {
@@ -113,6 +118,7 @@ public class ProductImeUploadService {
         List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByEnabledIsTrueAndProductImeIdIn(CollectionUtil.extractToList(productImeList,"id"));
         Map<String, GoodsOrderIme> goodsOrderImeMap = CollectionUtil.extractToMap(goodsOrderImeList,"product_ime_id");
         Map<String, GoodsOrder> goodsOrderMap = goodsOrderRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"goods_order_id"));
+        String accountShopIds = getAccountShopIds(productImeUploadForm.getEmployeeId());
 
         for (ProductIme productIme : productImeList) {
             if(productIme.getProductImeUploadId()!=null){
@@ -132,13 +138,7 @@ public class ProductImeUploadService {
             }else{
                 productImeUpload.setGoodsOrderShopId(null);
             }
-//            List depotIds = depotManager.filterDepotIds(RequestUtils.getAccountId());
-//            if(CollectionUtil.isNotEmpty(depotIds)){
-//                productImeUpload.setAccountShopIds(StringUtils.join(depotIds, CharConstant.COMMA));
-//            }else{
-//                productImeUpload.setAccountShopIds(null);
-//            }
-
+            productImeUpload.setAccountShopIds(accountShopIds);
             productImeUploadRepository.save(productImeUpload);
 
             productIme.setProductImeUploadId(productImeUpload.getId());
@@ -146,6 +146,18 @@ public class ProductImeUploadService {
             productImeRepository.save(productIme);
 
         }
+    }
+
+    private String getAccountShopIds(String employeeId) {
+        AccountCommonDto accountCommonDto = accountClient.findByEmployeeId(employeeId);
+        String accountShopIds = null;
+        if(accountCommonDto !=null && StringUtils.isNotBlank(accountCommonDto.getId())){
+            List depotIds = depotManager.filterDepotIds(accountCommonDto.getId());
+            if(CollectionUtil.isNotEmpty(depotIds)){
+                accountShopIds = StringUtils.join(depotIds, CharConstant.COMMA);
+            }
+        }
+        return accountShopIds;
     }
 
     public String checkForUploadBack(List<String> imeList) {
