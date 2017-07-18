@@ -12,12 +12,11 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.dto.ClientDto;
-import net.myspring.future.modules.basic.dto.CustomerDto;
-import net.myspring.future.modules.basic.dto.DepotAccountDto;
-import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.domain.DepotShop;
+import net.myspring.future.modules.basic.dto.*;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
@@ -70,6 +69,8 @@ public class DepotService {
     private ProductImeRepository productImeRepository;
     @Autowired
     private CloudClient cloudClient;
+    @Autowired
+    private OfficeClient officeClient;
 
 
     public List<DepotDto> findShopList(DepotQuery depotQuery) {
@@ -103,6 +104,13 @@ public class DepotService {
         DepotDto depotDto = depotRepository.findDto(id);
         cacheUtils.initCacheInput(depotDto);
         return depotDto;
+    }
+
+    public List<DepotDto> findByOfficeId(String officeId){
+        List<String> officeIdList=officeClient.getSameAreaByOfficeId(officeId);
+        List<Depot> depotList=depotRepository.findByOfficeIdIn(officeIdList);
+        List<DepotDto> depotDtos=BeanUtil.map(depotList,DepotDto.class);
+        return depotDtos;
     }
 
     public DepotDto findByDepotShopId(String depotShopId) {

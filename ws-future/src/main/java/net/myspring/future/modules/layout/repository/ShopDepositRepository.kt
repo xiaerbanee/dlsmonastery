@@ -21,7 +21,6 @@ import java.util.*
 
 interface ShopDepositRepository : BaseRepository<ShopDeposit,String>,ShopDepositRepositoryCustom {
 
-    fun findByTypeAndShopIdIn(type:String,shopIds: List<String>):MutableList<ShopDeposit>
 }
 
 interface ShopDepositRepositoryCustom{
@@ -34,9 +33,34 @@ interface ShopDepositRepositoryCustom{
     fun findForExport(limit: Int): List<ShopDepositDto>
 
     fun findShopDepositLatestDto(limit: Int): List<ShopDepositLatestDto>
+
+    fun findByTypeAndShopIdIn(type:String,shopIds: List<String>):MutableList<ShopDeposit>
 }
 
 class ShopDepositRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ShopDepositRepositoryCustom{
+    override fun findByTypeAndShopIdIn(type: String, shopIds: List<String>): MutableList<ShopDeposit> {
+        val sb = StringBuffer()
+        sb.append("""
+        SELECT
+        t1.*
+        FROM
+        crm_shop_deposit t1
+        where t1.id in (
+        SELECT
+        Max(id)
+        FROM
+        crm_shop_deposit
+        where `type`=:type
+        and shop_id in (:shopIds)
+        GROUP BY shop_id,type
+        )
+        """)
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("type", type)
+        paramMap.put("shopIds", shopIds)
+        return namedParameterJdbcTemplate.query(sb.toString(),paramMap, BeanPropertyRowMapper(ShopDeposit::class.java));
+    }
+
     override fun findShopDepositLatestDto(limit: Int): List<ShopDepositLatestDto> {
         return namedParameterJdbcTemplate.query("""
         SELECT

@@ -18,13 +18,38 @@ class SCustomersM13e00Repository @Autowired constructor(val namedParameterJdbcTe
         return namedParameterJdbcTemplate.update("DELETE FROM S_Customers_M13E00 WHERE 1=1",map)
     }
 
+    fun findIDvivoCustomerIDs():MutableList<String>{
+        val sql=("""
+                select
+                    distinct CustomerID
+                from
+                    S_Customers_R250082
+                union
+                select
+                    distinct CustomerID
+                from
+                    S_Customers_R2500821
+                union
+                select
+                        distinct CustomerID
+                from
+                    S_Customers_R2500822
+                union
+                select
+                        distinct CustomerID
+                from
+                    S_Customers_R2500823
+                """ )
+        return namedParameterJdbcTemplate.query(sql,BeanPropertyRowMapper(String::class.java))
+    }
+
     fun findVivoCustomers(date: LocalDate): MutableList<SCustomerDto> {
         val map = Maps.newHashMap<String, Any>()
         map.put("date",date)
         return namedParameterJdbcTemplate.query("""
             SELECT
                 de.area_id AS customerId,
-                de. NAME AS customerName,
+                de.NAME AS customerName,
                 de.office_id AS zoneId,
                 :date AS recordDate,
                 1 AS customerLevel,
@@ -40,7 +65,7 @@ class SCustomersM13e00Repository @Autowired constructor(val namedParameterJdbcTe
             UNION
                 SELECT
                     de.id AS customerId,
-                    de. NAME AS CustomerName,
+                    de.NAME AS CustomerName,
                     de.area_id AS zoneId,
                     :date AS recordDate,
                     2 AS CustomerLevel,

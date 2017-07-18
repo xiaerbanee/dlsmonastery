@@ -13,7 +13,7 @@ public class ArReceiveBillEntryDto {
     //备注
     private String comment;
     //结算方式
-    private String settleTypeNumber;
+    private String FSettleTypeIdNumber;
 
     public BigDecimal getAmount() {
         return amount;
@@ -39,11 +39,14 @@ public class ArReceiveBillEntryDto {
         this.comment = comment;
     }
 
-    public String getSettleTypeNumber() {
-        return settleTypeNumber;
+    public String getFSettleTypeIdNumber() {
+        return FSettleTypeIdNumber;
     }
 
-    public void setSettleTypeNumber(String settleTypeNumber) {
-        this.settleTypeNumber = settleTypeNumber;
+    public void setFSettleTypeIdNumber(String FSettleTypeIdNumber) {
+        this.FSettleTypeIdNumber = FSettleTypeIdNumber;
     }
 }
+
+
+

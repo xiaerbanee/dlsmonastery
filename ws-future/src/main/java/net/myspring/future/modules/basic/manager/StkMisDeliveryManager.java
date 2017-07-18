@@ -38,73 +38,79 @@ public class StkMisDeliveryManager {
     private DepotStoreRepository depotStoreRepository;
 
     public KingdeeSynReturnDto synTHForAfterSale(List<AfterSaleProductAllotForm> afterSaleProductAllotFormList){
-        StkMisDeliveryDto stkMisDeliveryDto = new StkMisDeliveryDto();
-        stkMisDeliveryDto.setExtendId("--");
-        stkMisDeliveryDto.setExtendType(ExtendTypeEnum.售后调拨.name());
-        stkMisDeliveryDto.setDate(LocalDate.now());
-        stkMisDeliveryDto.setMisDeliveryType(StkMisDeliveryTypeEnum.退货.name());
-        List<StkMisDeliveryFEntityDto> entityDtoList = Lists.newArrayList();
-        List<String> materialIdList = afterSaleProductAllotFormList.stream().map(AfterSaleProductAllotForm::getToProductId).collect(Collectors.toList());
-        Map<String, Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(materialIdList).stream().collect(Collectors.toMap(Product::getId, Product->Product));
-        List<String> storeIdList = afterSaleProductAllotFormList.stream().map(AfterSaleProductAllotForm::getStoreId).collect(Collectors.toList());
-        Map<String, DepotStore> depotStoreIdMap = depotStoreRepository.findByIds(storeIdList).stream().collect(Collectors.toMap(DepotStore::getId, DepotStore->DepotStore));
-        for (AfterSaleProductAllotForm detail : afterSaleProductAllotFormList){
-            if (detail.getToQty() != null && detail.getToQty() >0) {
-                StkMisDeliveryFEntityDto entityDto = new StkMisDeliveryFEntityDto();
-                Product product = productIdToOutCodeMap.get(detail.getToProductId());
-                if (product.getCode() != null) {
-                    entityDto.setMaterialNumber(product.getCode());
-                } else {
-                    throw new ServiceException(product.getName() + " 该货品没有编码，不能开单");
+        if (afterSaleProductAllotFormList.size()>0) {
+            StkMisDeliveryDto stkMisDeliveryDto = new StkMisDeliveryDto();
+            stkMisDeliveryDto.setExtendId(null);
+            stkMisDeliveryDto.setExtendType(ExtendTypeEnum.售后调拨.name());
+            stkMisDeliveryDto.setDate(LocalDate.now());
+            stkMisDeliveryDto.setMisDeliveryType(StkMisDeliveryTypeEnum.退货.name());
+            List<StkMisDeliveryFEntityDto> entityDtoList = Lists.newArrayList();
+            List<String> materialIdList = afterSaleProductAllotFormList.stream().map(AfterSaleProductAllotForm::getToProductId).collect(Collectors.toList());
+            Map<String, Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(materialIdList).stream().collect(Collectors.toMap(Product::getId, Product -> Product));
+            List<String> storeIdList = afterSaleProductAllotFormList.stream().map(AfterSaleProductAllotForm::getStoreId).collect(Collectors.toList());
+            Map<String, DepotStore> depotStoreIdMap = depotStoreRepository.findByIds(storeIdList).stream().collect(Collectors.toMap(DepotStore::getId, DepotStore -> DepotStore));
+            for (AfterSaleProductAllotForm detail : afterSaleProductAllotFormList) {
+                if (detail.getToQty() != null && detail.getToQty() > 0) {
+                    StkMisDeliveryFEntityDto entityDto = new StkMisDeliveryFEntityDto();
+                    Product product = productIdToOutCodeMap.get(detail.getToProductId());
+                    if (product.getCode() != null) {
+                        entityDto.setMaterialNumber(product.getCode());
+                    } else {
+                        throw new ServiceException(product.getName() + " 该货品没有编码，不能开单");
+                    }
+                    entityDto.setQty(detail.getToQty());
+                    DepotStore toDepotStore = depotStoreIdMap.get(detail.getStoreId());
+                    if (toDepotStore.getOutCode() != null) {
+                        entityDto.setStockNumber(toDepotStore.getOutCode());//调入仓库
+                    } else {
+                        throw new ServiceException(toDepotStore.getId() + " 该仓库（ID）没有编码，不能开单");
+                    }
+                    entityDto.setFEntryNote(detail.getAfterSaleId() + CharConstant.COMMA + detail.getRemarks());
+                    entityDtoList.add(entityDto);
                 }
-                entityDto.setQty(detail.getToQty());
-                DepotStore toDepotStore = depotStoreIdMap.get(detail.getStoreId());
-                if (toDepotStore.getOutCode() != null) {
-                    entityDto.setStockNumber(toDepotStore.getOutCode());//调入仓库
-                } else {
-                    throw new ServiceException(toDepotStore.getId() + " 该仓库（ID）没有编码，不能开单");
-                }
-                entityDto.setFEntryNote( detail.getAfterSaleId() + CharConstant.COMMA + detail.getRemarks());
-                entityDtoList.add(entityDto);
             }
+            stkMisDeliveryDto.setStkMisDeliveryFEntityDtoList(entityDtoList);
+            return cloudClient.synStkMisDelivery(stkMisDeliveryDto);
         }
-        stkMisDeliveryDto.setStkMisDeliveryFEntityDtoList(entityDtoList);
-        return cloudClient.synStkMisDelivery(stkMisDeliveryDto);
+        return null;
     }
 
     public KingdeeSynReturnDto synCKForAfterSale(List<AfterSaleProductAllotForm> afterSaleProductAllotFormList){
-        StkMisDeliveryDto stkMisDeliveryDto = new StkMisDeliveryDto();
-        stkMisDeliveryDto.setExtendId("--");
-        stkMisDeliveryDto.setExtendType(ExtendTypeEnum.售后调拨.name());
-        stkMisDeliveryDto.setDate(LocalDate.now());
-        stkMisDeliveryDto.setMisDeliveryType(StkMisDeliveryTypeEnum.出库.name());
-        List<StkMisDeliveryFEntityDto> entityDtoList = Lists.newArrayList();
-        List<String> materialIdList = afterSaleProductAllotFormList.stream().map(AfterSaleProductAllotForm::getFromProductId).collect(Collectors.toList());
-        Map<String, Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(materialIdList).stream().collect(Collectors.toMap(Product::getId, Product->Product));
-        List<String> storeIdList = afterSaleProductAllotFormList.stream().map(AfterSaleProductAllotForm::getStoreId).collect(Collectors.toList());
-        Map<String, DepotStore> depotStoreIdMap = depotStoreRepository.findByIds(storeIdList).stream().collect(Collectors.toMap(DepotStore::getId, DepotStore->DepotStore));
-        for (AfterSaleProductAllotForm detail : afterSaleProductAllotFormList){
-            if (detail.getFromQty() != null && detail.getFromQty() >0) {
-                StkMisDeliveryFEntityDto entityDto = new StkMisDeliveryFEntityDto();
-                Product product = productIdToOutCodeMap.get(detail.getFromProductId());
-                if (product.getCode() != null) {
-                    entityDto.setMaterialNumber(product.getCode());
-                } else {
-                    throw new ServiceException(product.getName() + " 该货品没有编码，不能开单");
+        if (afterSaleProductAllotFormList.size()>0) {
+            StkMisDeliveryDto stkMisDeliveryDto = new StkMisDeliveryDto();
+            stkMisDeliveryDto.setExtendId(null);
+            stkMisDeliveryDto.setExtendType(ExtendTypeEnum.售后调拨.name());
+            stkMisDeliveryDto.setDate(LocalDate.now());
+            stkMisDeliveryDto.setMisDeliveryType(StkMisDeliveryTypeEnum.出库.name());
+            List<StkMisDeliveryFEntityDto> entityDtoList = Lists.newArrayList();
+            List<String> materialIdList = afterSaleProductAllotFormList.stream().map(AfterSaleProductAllotForm::getFromProductId).collect(Collectors.toList());
+            Map<String, Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(materialIdList).stream().collect(Collectors.toMap(Product::getId, Product -> Product));
+            List<String> storeIdList = afterSaleProductAllotFormList.stream().map(AfterSaleProductAllotForm::getStoreId).collect(Collectors.toList());
+            Map<String, DepotStore> depotStoreIdMap = depotStoreRepository.findByIds(storeIdList).stream().collect(Collectors.toMap(DepotStore::getId, DepotStore -> DepotStore));
+            for (AfterSaleProductAllotForm detail : afterSaleProductAllotFormList) {
+                if (detail.getFromQty() != null && detail.getFromQty() > 0) {
+                    StkMisDeliveryFEntityDto entityDto = new StkMisDeliveryFEntityDto();
+                    Product product = productIdToOutCodeMap.get(detail.getFromProductId());
+                    if (product.getCode() != null) {
+                        entityDto.setMaterialNumber(product.getCode());
+                    } else {
+                        throw new ServiceException(product.getName() + " 该货品没有编码，不能开单");
+                    }
+                    entityDto.setQty(detail.getFromQty());
+                    DepotStore toDepotStore = depotStoreIdMap.get(detail.getStoreId());
+                    if (toDepotStore.getOutCode() != null) {
+                        entityDto.setStockNumber(toDepotStore.getOutCode());//调入仓库
+                    } else {
+                        throw new ServiceException(toDepotStore.getId() + " 该仓库（ID）没有编码，不能开单");
+                    }
+                    entityDto.setFEntryNote(detail.getAfterSaleId() + CharConstant.COMMA + detail.getRemarks());
+                    entityDtoList.add(entityDto);
                 }
-                entityDto.setQty(detail.getFromQty());
-                DepotStore toDepotStore = depotStoreIdMap.get(detail.getStoreId());
-                if (toDepotStore.getOutCode() != null) {
-                    entityDto.setStockNumber(toDepotStore.getOutCode());//调入仓库
-                } else {
-                    throw new ServiceException(toDepotStore.getId() + " 该仓库（ID）没有编码，不能开单");
-                }
-                entityDto.setFEntryNote( detail.getAfterSaleId() + CharConstant.COMMA + detail.getRemarks());
-                entityDtoList.add(entityDto);
             }
+            stkMisDeliveryDto.setStkMisDeliveryFEntityDtoList(entityDtoList);
+            return cloudClient.synStkMisDelivery(stkMisDeliveryDto);
         }
-        stkMisDeliveryDto.setStkMisDeliveryFEntityDtoList(entityDtoList);
-        return cloudClient.synStkMisDelivery(stkMisDeliveryDto);
+        return null;
     }
     
 }

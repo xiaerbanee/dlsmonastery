@@ -102,16 +102,17 @@
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("afterSaleList",submitData);
         axios.get('/api/ws/future/crm/afterSale',{params:submitData}).then((response) => {
+            console.log(response.data)
           this.page = response.data;
           this.pageLoading = false;
         })
       },pageChange(pageNumber,pageSize) {
-        this.formData.pageNumber = pageNumber;
-        this.formData.pageSize = pageSize;
+        this.formData.page = pageNumber;
+        this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getSort(column);
-        this.formData.pageNumber=0;
+        this.formData.sort=util.getSort(column);
+        this.formData.page=0;
         this.pageRequest();
       },search() {
         this.formVisible = false;

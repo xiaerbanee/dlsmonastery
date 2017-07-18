@@ -11,6 +11,7 @@ public class SPlantStockStoresM13e00 {
     private Integer useAbleStock;
     private Integer bad;
     private String accountDate;
+    private String agentCode;
 
     public String getCompanyId() {
         return companyId;
@@ -74,5 +75,13 @@ public class SPlantStockStoresM13e00 {
 
     public void setAccountDate(String accountDate) {
         this.accountDate = accountDate;
+    }
+
+    public String getAgentCode() {
+        return agentCode;
+    }
+
+    public void setAgentCode(String agentCode) {
+        this.agentCode = agentCode;
     }
 }
