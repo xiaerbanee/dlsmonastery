@@ -11,7 +11,7 @@
     data() {
       return {
         innerId: this.value,
-        itemList:[true, false],
+        itemList:[1, 0],
       };
     },methods:{
       handleChange(newVal) {

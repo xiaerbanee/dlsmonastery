@@ -9,6 +9,8 @@ public class SCustomerDto {
     private String customerName;
     @CacheInput(inputKey = "offices",inputInstance = "customerId" ,outputInstance = "name")
     private String areaName;
+    @CacheInput(inputKey = "offices",inputInstance = "customerId" ,outputInstance = "agentCode")
+    private String agentCode;
     private String zoneId;
     private String recordDate;
     private Integer customerLevel;
@@ -29,6 +31,14 @@ public class SCustomerDto {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    public String getAgentCode() {
+        return agentCode;
+    }
+
+    public void setAgentCode(String agentCode) {
+        this.agentCode = agentCode;
     }
 
     public String getZoneId() {

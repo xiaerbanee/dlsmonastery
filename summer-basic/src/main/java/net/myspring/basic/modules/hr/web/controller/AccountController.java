@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
+import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.dto.AccountMessageDto;
 import net.myspring.basic.modules.hr.dto.DutyDto;
@@ -14,6 +15,7 @@ import net.myspring.basic.modules.sys.dto.AccountCommonDto;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
 import net.myspring.basic.modules.sys.manager.RoleManager;
 import net.myspring.basic.modules.sys.service.MenuService;
+import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.basic.modules.sys.service.PermissionService;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.AuditTypeEnum;
@@ -70,6 +72,8 @@ public class AccountController {
     private PermissionService permissionService;
     @Autowired
     private RoleManager roleManager;
+    @Autowired
+    private OfficeService officeService;
 
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'hr:account:view')")
@@ -141,6 +145,11 @@ public class AccountController {
         return accountDtoList;
     }
 
+    @RequestMapping(value = "findByEmployeeId")
+    public AccountCommonDto findByEmployeeId(String employeeId) {
+        Account account = accountService.findByEmployeeIdAndType(employeeId,"主账号");
+        return BeanUtil.map(account,AccountCommonDto.class);
+    }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
     public ModelAndView export(AccountQuery accountQuery) throws IOException {
@@ -222,6 +231,15 @@ public class AccountController {
         Map<String,Object> map = Maps.newHashMap();
         map.put("accountId",RequestUtils.getAccountId());
         return map;
+    }
+
+    @RequestMapping(value = "findByOfficeId")
+    public List<AccountDto> findByOfficeId(String officeId) {
+        List<AccountDto> accountList=Lists.newArrayList();
+        if (StringUtils.isNotBlank(officeId)){
+            accountList=accountService.findByOfficeId(officeId);
+        }
+        return accountList;
     }
 
 }

@@ -56,9 +56,8 @@ public class CnJournalForCashService {
                 cnJournalForCashDto.getExtendType(),
                 KingdeeFormIdEnum.CN_JOURNAL.name(),
                 cnJournalForCashDto.getJson(),
-                kingdeeBook) {
-        };
-        kingdeeManager.save(kingdeeSynDto);
+                kingdeeBook);
+        kingdeeSynDto = kingdeeManager.save(kingdeeSynDto);
         if (!kingdeeSynDto.getSuccess()){
             throw new ServiceException("现金日记账失败："+kingdeeSynDto.getResult());
         }

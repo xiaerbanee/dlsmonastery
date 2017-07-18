@@ -132,9 +132,8 @@ public class ArRefundBillDto {
             detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", entityDto.getFSettleTypeIdNumber()));
             detail.put("FACCOUNTID", CollectionUtil.getMap("FNumber", entityDto.getBankAcntNumber()));
             detail.put("FPURPOSEID", CollectionUtil.getMap("FNumber", "SFKYT01_SYS"));
-            if (KingdeeNameEnum.WZOPPO.name().equals(getKingdeeName())) {
-                detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", entityDto.getAccountNumber()));
-            }
+            //对方科目代码
+            detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", entityDto.getAccountNumber()));
             detail.put("FREFUNDAMOUNTFOR", getAmount());
             detail.put("FREFUNDAMOUNTFOR_E", getAmount());
             detail.put("FREALREFUNDAMOUNTFOR_D", getAmount());

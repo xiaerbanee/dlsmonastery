@@ -1,9 +1,12 @@
 package net.myspring.tool.modules.vivo.dto;
 
+import net.myspring.util.cahe.annotation.CacheInput;
+
 public class SPlantCustomerStockDto {
     private String CustomerId;
     private String productId;
     private Integer useAbleStock;
+    @CacheInput(inputKey = "offices",inputInstance = "customerId" ,outputInstance = "agentCode")
     private String agentCode;
     private Integer customerLevel;
 

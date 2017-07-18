@@ -52,11 +52,11 @@ public class ArReceiveBillManager {
         ArReceiveBillEntryDto entityDto = new ArReceiveBillEntryDto();
         entityDto.setAmount(bankIn.getAmount());
         if (StringUtils.isBlank(bankIn.getBankId())) {
-            entityDto.setSettleTypeNumber(SettleTypeEnum.现金.getFNumber());
+            entityDto.setFSettleTypeIdNumber(SettleTypeEnum.现金.getFNumber());
         } else {
             Bank bank = bankRepository.findOne(bankIn.getBankId());
             entityDto.setBankAcntNumber(bank.getCode());
-            entityDto.setSettleTypeNumber(SettleTypeEnum.电汇.getFNumber());
+            entityDto.setFSettleTypeIdNumber(SettleTypeEnum.电汇.getFNumber());
         }
         entityDto.setComment("审：" + bankInAuditForm.getAuditRemarks() + "   申：" + bankIn.getRemarks());
         receiveBillDto.setArReceiveBillEntryDtoList(Collections.singletonList(entityDto));

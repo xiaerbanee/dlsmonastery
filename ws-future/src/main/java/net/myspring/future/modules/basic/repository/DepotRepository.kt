@@ -2,6 +2,7 @@ package net.myspring.future.modules.basic.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Depot
+import net.myspring.future.modules.basic.domain.DepotShop
 import net.myspring.future.modules.basic.dto.CustomerDto
 import net.myspring.future.modules.basic.dto.DepotAccountDto
 import net.myspring.future.modules.basic.dto.DepotDto
@@ -32,6 +33,8 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
     fun save(depot: Depot): Depot
 
     override fun findAll(): MutableList<Depot>
+
+    fun findByOfficeIdIn(officeIdList:MutableList<String>):MutableList<Depot>
 
     fun findByEnabledIsTrueAndIdIn(idList: MutableList<String>): MutableList<Depot>
 

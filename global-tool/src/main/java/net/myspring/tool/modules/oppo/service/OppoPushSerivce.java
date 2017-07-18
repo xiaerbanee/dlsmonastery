@@ -582,8 +582,6 @@ public class OppoPushSerivce {
     @FutureDataSource
     @Transactional(readOnly = true)
     public List<OppoCustomerSaleImei> getFutureOppoCustomerSaleImeis(String date){
-        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
-        DbContextHolder.get().setCompanyName(companyName);
         if(StringUtils.isEmpty(date)){
             date=LocalDateUtils.format(LocalDate.now());
         }
