@@ -3,8 +3,8 @@
     <head-tab active="employeePhoneList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:employeePhoneDeposit:edit'">{{$t('employeePhoneList.employeePhoneDepositList')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'hr:employeePhoneDeposit:view'">{{$t('employeePhoneList.filter')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:employeePhoneDepositList:view'">{{$t('employeePhoneList.employeePhoneDepositList')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'hr:employeePhone:view'">{{$t('employeePhoneList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('employeePhoneList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -43,7 +43,7 @@
         <el-table-column prop="remarks" label="备注"></el-table-column>
         <el-table-column fixed="right" :label="$t('employeePhoneList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'hr:employeePhone:edit'">修改</el-button>
           </template>
         </el-table-column>
       </el-table>
