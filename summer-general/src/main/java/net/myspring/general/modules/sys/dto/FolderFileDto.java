@@ -66,6 +66,6 @@ public class FolderFileDto extends DataDto<FolderFile> {
     }
 
     public String getUrl() {
-        return "/api/general/sys/folderFile/view?id=" + getId();
+        return "/api/general/sys/folderFile/download?id=" + getId();
     }
 }
