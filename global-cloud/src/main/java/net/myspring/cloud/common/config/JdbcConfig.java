@@ -69,7 +69,6 @@ public class JdbcConfig {
     }
 
     @Bean
-    @Primary
     public JpaDialect jpaDialect() {
         return new HibernateJpaDialect();
     }
