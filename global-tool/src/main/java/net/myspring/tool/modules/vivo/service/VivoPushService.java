@@ -84,11 +84,7 @@ public class VivoPushService {
         for(OfficeEntity officeEntity:officeEntityList){
             SZonesM13e00 sZonesM13e00 = new SZonesM13e00();
             sZonesM13e00.setZoneId(getZoneId(mainCode,officeEntity.getId()));
-            if (officeEntity.getName().length() > 10){
-                sZonesM13e00.setZoneName(officeEntity.getName().substring(0,10));
-            } else {
-                sZonesM13e00.setZoneName(officeEntity.getName());
-            }
+            sZonesM13e00.setZoneName(officeEntity.getName());
             sZonesM13e00.setShortcut(mainCode);
             String[] parentIds = officeEntity.getParentIds().split(CharConstant.COMMA);
             sZonesM13e00.setZoneDepth(parentIds.length);
