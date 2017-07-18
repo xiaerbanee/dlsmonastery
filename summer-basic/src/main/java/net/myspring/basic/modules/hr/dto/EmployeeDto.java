@@ -47,11 +47,6 @@ public class EmployeeDto extends DataDto<Employee> {
     private String leaderName;
     @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "name")
     private String positionName;
-    private boolean editable;
-
-    public void setEditable(boolean editable) {
-        this.editable = editable;
-    }
 
     public String getAreaName() {
         return areaName;
@@ -291,13 +286,5 @@ public class EmployeeDto extends DataDto<Employee> {
 
     public void setOriginName(String originName) {
         this.originName = originName;
-    }
-
-    public boolean getEditable(){
-        if(RequestUtils.getAdmin()){
-            return true;
-        }else {
-            return false;
-        }
     }
 }
