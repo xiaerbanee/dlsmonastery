@@ -119,7 +119,7 @@ public class VivoPushService {
 
     @FactoryDataSource
     @Transactional
-    public void saveVivoPushSCustomers(List<SCustomerDto> futureCustomerDtoList,String date){
+    public void pushVivoPushSCustomersDate(List<SCustomerDto> futureCustomerDtoList,String date){
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
         List<SCustomersM13e00> sCustomersM13e00List = Lists.newArrayList();
         for(SCustomerDto futureCustomerDto :futureCustomerDtoList){
@@ -303,7 +303,7 @@ public class VivoPushService {
 
     @FactoryDataSource
     @Transactional
-    public void pushDemoPhones(List<SProductItemLendM13e00> sProductItemLendM13e00List,Map<String,String> productColorMap,String date){
+    public void pushDemoPhonesDate(List<SProductItemLendM13e00> sProductItemLendM13e00List,Map<String,String> productColorMap,String date){
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
         if (StringUtils.isBlank(date)){
             date = LocalDateUtils.format(LocalDate.now());
@@ -343,7 +343,7 @@ public class VivoPushService {
 
     @FactoryDataSource
     @Transactional
-    public void pushProductImeSale(List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList,Map<String,String> productColorMap,String date){
+    public void pushProductImeSaleDate(List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList,Map<String,String> productColorMap,String date){
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
         if (StringUtils.isBlank(date)){
             date = LocalDateUtils.format(LocalDate.now());
@@ -373,7 +373,7 @@ public class VivoPushService {
     }
 
     @FactoryDataSource
-    public void pushSStore(){
+    public void pushSStoreDate(){
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
         List<SStoresM13e00> sStoresM13e00List = Lists.newArrayList();
         SStoresM13e00 sStoresM13e00 = new SStoresM13e00();
@@ -381,6 +381,7 @@ public class VivoPushService {
         sStoresM13e00.setStoreName(mainCode + "大库");
         sStoresM13e00List.add(sStoresM13e00);
         logger.info("开始上抛一代仓库数据:"+LocalDateTime.now());
+        sStoresM13e00Repository.deleteAll();
         sStoresM13e00Repository.batchSave(sStoresM13e00List);
         logger.info("上抛一代仓库数据结束:"+LocalDateTime.now());
     }
