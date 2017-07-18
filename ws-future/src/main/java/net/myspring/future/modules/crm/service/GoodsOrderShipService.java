@@ -411,6 +411,7 @@ public class GoodsOrderShipService {
         }
     }
 
+    @Transactional
     private void resetGoodsOrderDetailInfoWhenShipBack(String goodsOrderId) {
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderId);
         for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
@@ -419,6 +420,7 @@ public class GoodsOrderShipService {
         goodsOrderDetailRepository.save(goodsOrderDetailList);
     }
 
+    @Transactional
     private void resetProductImeWhenShipBack(GoodsOrder goodsOrder) {
         List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByEnabledIsTrueAndGoodsOrderId(goodsOrder.getId());
 
