@@ -33,7 +33,7 @@ public class vivoPushController {
         vivoPushService.pushVivoZonesData();
         //客户数据
         List<SCustomerDto> futureCustomerDtoList = vivoPushService.getVivoCustomersData(date);
-        vivoPushService.saveVivoPushSCustomers(futureCustomerDtoList,date);
+        vivoPushService.pushVivoPushSCustomersDate(futureCustomerDtoList,date);
         //库存汇总数据
         Map<String,String> productColorMap = vivoPushService.getProductColorMap();
         List<SPlantCustomerStockDto> sPlantCustomerStockDtoList = vivoPushService.getCustomerStockData(date);
@@ -43,12 +43,12 @@ public class vivoPushController {
         vivoPushService.pushCustomerStockDetailData(sPlantCustomerStockDetailDtoList,productColorMap,date);
         //演示机数据
         List<SProductItemLendM13e00> sProductItemLendM13e00List = vivoPushService.findDemoPhonesDate(date);
-        vivoPushService.pushDemoPhones(sProductItemLendM13e00List,productColorMap,date);
+        vivoPushService.pushDemoPhonesDate(sProductItemLendM13e00List,productColorMap,date);
         //核销记录数据
         List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList = vivoPushService.findProductImeSaleDate(date);
-        vivoPushService.pushProductImeSale(vivoCustomerSaleImeiDtoList,productColorMap,date);
+        vivoPushService.pushProductImeSaleDate(vivoCustomerSaleImeiDtoList,productColorMap,date);
         //一代仓库上抛
-
+        vivoPushService.pushSStoreDate();
     }
 
 
