@@ -76,7 +76,7 @@
         <el-table-column  :label="$t('priceChangeImeList.operation')" width="140">
           <template scope="scope">
             <div class="action" v-if="scope.row.status !== '已通过'&&scope.row.image !== null" v-permit="'crm:priceChangeIme:audit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('priceChangeImeList.audit')}}</el-button></div>
-            <div class="action" v-if="scope.row.status ==='申请中'" v-permit="'crm:priceChangeIme:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'upload')">{{$t('priceChangeImeList.upload')}}</el-button></div>
+            <div class="action" v-if="scope.row.status ==='申请中'" v-permit="'crm:priceChangeIme:upload'"><el-button size="small" @click.native="itemAction(scope.row.id,'upload')">{{$t('priceChangeImeList.upload')}}</el-button></div>
             <div class="action" v-permit="'crm:priceChangeIme:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('priceChangeImeList.detail')}}</el-button></div>
             <div class="action" v-if="scope.row.status ==='申请中'" v-permit="'crm:priceChangeIme:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('priceChangeImeList.delete')}}</el-button></div>
           </template>
