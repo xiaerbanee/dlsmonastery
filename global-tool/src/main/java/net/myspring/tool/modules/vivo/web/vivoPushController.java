@@ -5,6 +5,7 @@ import net.myspring.tool.modules.vivo.domain.SProductItemLendM13e00;
 import net.myspring.tool.modules.vivo.dto.SCustomerDto;
 import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDetailDto;
 import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDto;
+import net.myspring.tool.modules.vivo.dto.VivoCustomerSaleImeiDto;
 import net.myspring.tool.modules.vivo.service.IDvivoPushService;
 import net.myspring.tool.modules.vivo.service.VivoPushService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +40,11 @@ public class vivoPushController {
         List<SPlantCustomerStockDetailDto> sPlantCustomerStockDetailDtoList = vivoPushService.getCustomerStockDetailData(date);
         vivoPushService.pushCustomerStockDetailData(sPlantCustomerStockDetailDtoList,productColorMap,date);
         //演示机数据
-        List<SProductItemLendM13e00> sProductItemLendM13e00List = vivoPushService.findDemoPhones(date);
+        List<SProductItemLendM13e00> sProductItemLendM13e00List = vivoPushService.findDemoPhonesDate(date);
         vivoPushService.pushDemoPhones(sProductItemLendM13e00List,productColorMap,date);
+        //核销记录数据
+        List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList = vivoPushService.findProductImeSaleDate(date);
+        vivoPushService.pushProductImeSale(vivoCustomerSaleImeiDtoList,productColorMap,date);
     }
 
 
