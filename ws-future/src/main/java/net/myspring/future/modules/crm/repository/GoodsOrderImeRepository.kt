@@ -24,6 +24,8 @@ interface GoodsOrderImeRepository : BaseRepository<GoodsOrderIme, String>, Goods
 
     fun findByGoodsOrderIdIn(goodsOrderIdList: MutableList<String>): MutableList<GoodsOrderIme>
 
+    fun findByEnabledIsTrueAndProductImeIdIn(productImeIdList: MutableList<String>): MutableList<GoodsOrderIme>
+
 }
 
 

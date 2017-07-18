@@ -74,9 +74,6 @@ public class DepotShopController {
     @RequestMapping(method = RequestMethod.GET)
     public Page<DepotShopDto> list(Pageable pageable, DepotShopQuery depotShopQuery){
         Page<DepotShopDto> page = depotShopService.findPage(pageable,depotShopQuery);
-        for(DepotShopDto depotShopDto:page.getContent()){
-            setOperationStatus(depotShopDto);
-        }
         return page;
     }
     @RequestMapping(value = "getQuery")
@@ -199,8 +196,11 @@ public class DepotShopController {
         return new ModelAndView(excelView,"simpleExcelBook",simpleExcelBook);
     }
 
-    private void setOperationStatus(DepotShopDto depotShopDto) {
-
+    public List<DepotShopDto> findByOfficeId(String officeId){
+        List<DepotShopDto> depotShopDtoList=Lists.newArrayList();
+        if (StringUtils.isNotBlank(officeId)){
+            depotShopDtoList=depotShopService.findByOfficeId(officeId);
+        }
+        return depotShopDtoList;
     }
-
 }
