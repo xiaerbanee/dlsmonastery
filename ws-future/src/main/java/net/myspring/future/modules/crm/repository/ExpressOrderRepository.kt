@@ -63,6 +63,7 @@ class ExpressOrderRepositoryImpl @Autowired constructor( val namedParameterJdbcT
         if(StringUtils.isNotBlank(printConfigQuery.orderType)){
             sb.append("and t1.extend_type  in (:orderType)")
         }
+        sb.append("order by t1.extend_business_id")
         print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(printConfigQuery), BeanPropertyRowMapper(ExpressOrder::class.java));
     }
