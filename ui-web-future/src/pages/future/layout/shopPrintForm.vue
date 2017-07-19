@@ -49,10 +49,9 @@
 </template>
 
 <script>
-  import officeSelect from 'components/basic/office-select';
   import dictMapSelect from 'components/basic/dict-map-select';
   export default{
-    components:{officeSelect,dictMapSelect},
+    components:{dictMapSelect},
     data(){
       return this.getData();
     },
