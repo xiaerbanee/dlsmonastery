@@ -67,22 +67,32 @@ public class OppoController {
     public String pushFactoryData(String date) {
         String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
         DbContextHolder.get().setCompanyName(companyName);
+        //上抛oppo门店数据,只上抛二代和渠道门店
         oppoPushSerivce.getOppoCustomers(date);
+        //上抛运营商属性
         oppoPushSerivce.getOppoCustomerOperatortype(date);
+        //发货退货调拨数据上抛
         List<OppoCustomerAllot> oppoCustomerAllots=oppoPushSerivce.getFutureOppoCustomerAllot(date);
         oppoPushSerivce.getOppoCustomerAllot(oppoCustomerAllots,date);
+        //上抛一代二代库存数据,不包括门店数据
         List<OppoCustomerStock> oppoCustomerStocks=oppoPushSerivce.getFutureOppoCustomerStock(date);
         oppoPushSerivce.getOppoCustomerStock(oppoCustomerStocks,date);
+        //获取渠道串码收货数据
         List<OppoCustomerImeiStock> oppoCustomerImeiStocks=oppoPushSerivce.getFutureOppoCustomerImeiStock(date);
         oppoPushSerivce.getOppoCustomerImeiStock(oppoCustomerImeiStocks,date);
+        //获取店核销总数据
         List<OppoCustomerSale> oppoCustomerSales=oppoPushSerivce.getFutureOppoCustomerSale(date);
         oppoPushSerivce.getOppoCustomerSales(oppoCustomerSales,date);
+        //门店销售明细数据
         List<OppoCustomerSaleImei> oppoCustomerSaleImeis=oppoPushSerivce.getFutureOppoCustomerSaleImeis(date);
         oppoPushSerivce.getOppoCustomerSaleImes(oppoCustomerSaleImeis,date);
+        //门店销售数据汇总
         List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoPushSerivce.getFutureOppoCustomerSaleCounts(date);
         oppoPushSerivce.getOppoCustomerSaleCounts(oppoCustomerSaleCounts,date);
+        //门店售后退货汇总
         List<OppoCustomerAfterSaleImei>  oppoCustomerAfterSaleImeis=oppoPushSerivce.getFutureOppoCustomerAfterSaleImeis(date);
         oppoPushSerivce.getOppoCustomerAfterSaleImeis(oppoCustomerAfterSaleImeis,date);
+        //门店演示机汇总数据
         List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoPushSerivce.getFutureOppoCustomerDemoPhone(date);
         oppoPushSerivce.getOppoCustomerDemoPhone(oppoCustomerDemoPhones,date);
         return "OPPO同步成功";
