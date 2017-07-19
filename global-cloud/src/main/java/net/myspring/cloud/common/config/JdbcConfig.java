@@ -6,6 +6,7 @@ import net.myspring.cloud.GlobalCloudApplication;
 import net.myspring.cloud.common.dataSource.DynamicDataSource;
 import net.myspring.cloud.common.enums.DataSourceTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -23,19 +24,25 @@ import org.springframework.util.ClassUtils;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @Configuration
 public class JdbcConfig {
-
     @Autowired
     private Environment environment;
+    @Value("companyNames")
+    private String[] companyNames;
 
     @Bean
     public DynamicDataSource dynamicDataSource() {
         Map<Object, Object> targetDataSources = Maps.newHashMap();
+        List<String> companyNameList = Arrays.asList(companyNames);
+        for(String companyName:companyNameList) {
+            targetDataSources.put("KINGDEE_" + companyName,getDataSource("spring.datasource.kingdee." + companyName));
+        }
         targetDataSources.put(DataSourceTypeEnum.LOCAL.name(),getDataSource("spring.datasource.global-cloud"));
-        targetDataSources.put("KINGDEE_JXOPPO",getDataSource("spring.datasource.kingdee.JXOPPO"));
         DynamicDataSource dataSource = new DynamicDataSource();
         dataSource.setTargetDataSources(targetDataSources);
         return dataSource;
