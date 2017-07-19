@@ -34,9 +34,7 @@
   </div>
 </template>
 <script>
-  import officeSelect from 'components/basic/office-select'
   export default {
-    components:{officeSelect},
     data() {
       return {
         pageLoading: false,
