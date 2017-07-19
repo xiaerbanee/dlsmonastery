@@ -1,10 +1,16 @@
 package net.myspring.tool.modules.vivo.domain;
 
+import net.myspring.util.cahe.annotation.CacheInput;
+
 public class SStoresM13e00 {
     private String storeID;
     private String storeName;
     private String remark;
     private String shortCut;
+    @CacheInput(inputKey = "offices",inputInstance = "storeID" ,outputInstance = "agentCode")
+    private String agentCode;
+    @CacheInput(inputKey = "offices",inputInstance = "storeID" ,outputInstance = "jointLevel")
+    private String jointLevel;
 
     public String getStoreID() {
         return storeID;
@@ -36,5 +42,21 @@ public class SStoresM13e00 {
 
     public void setShortCut(String shortCut) {
         this.shortCut = shortCut;
+    }
+
+    public String getAgentCode() {
+        return agentCode;
+    }
+
+    public void setAgentCode(String agentCode) {
+        this.agentCode = agentCode;
+    }
+
+    public String getJointLevel() {
+        return jointLevel;
+    }
+
+    public void setJointLevel(String jointLevel) {
+        this.jointLevel = jointLevel;
     }
 }

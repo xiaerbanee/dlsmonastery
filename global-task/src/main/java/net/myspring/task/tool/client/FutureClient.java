@@ -13,5 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface FutureClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/third/factory/oppo/synIme")
-    String synIme(@RequestParam(value = "date") String date);
+    String synOppoIme(@RequestParam(value = "date") String date);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/third/factory/vivo/synIme")
+    String synVivoIme(@RequestParam(value = "date") String date);
+
 }

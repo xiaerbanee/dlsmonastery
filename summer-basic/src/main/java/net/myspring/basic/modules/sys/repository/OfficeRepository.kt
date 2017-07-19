@@ -195,25 +195,27 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
     }
 
     override fun findByFilter(officeQuery: OfficeQuery): MutableList<Office> {
-        var sb = StringBuilder();
+        val sb = StringBuilder()
         sb.append("""
-            select office.*
-            from
-            sys_office office
-            where
-            office.enabled=1
+          SELECT t1.*
+          FROM  sys_office t1
+                     LEFT JOIN sys_office_rule t2 ON t1.office_rule_id = t2.id
+          WHERE t1.enabled =1
         """)
         if(StringUtils.isNotBlank(officeQuery.name)) {
-            sb.append("  and office.name like concat('%',:name,'%')")
+            sb.append("  and t1.name like concat('%',:name,'%')")
+        }
+        if(StringUtils.isNotBlank(officeQuery.officeRuleName)) {
+            sb.append("  and t2.name = :officeRuleName")
         }
         if(StringUtils.isNotBlank(officeQuery.id)) {
-            sb.append(" and office.name = :id")
+            sb.append(" and t1.id = :id")
         }
         if(CollectionUtil.isNotEmpty(officeQuery.officeIdList)) {
-            sb.append(" and id IN (:officeIdList)");
+            sb.append(" and t1.id IN (:officeIdList)")
         }
         sb.append("""
-            order by office.name
+            order by t1.name
             limit 0,20
         """)
         return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(officeQuery), BeanPropertyRowMapper(Office::class.java))

@@ -13,6 +13,7 @@ public class SPlantEndProductSaleM13e00 {
     private String dealerID;
     private BigDecimal salePrice;
     private String createdTime;
+    private String agentCode;
 
     public String getCompanyID() {
         return companyID;
@@ -84,5 +85,13 @@ public class SPlantEndProductSaleM13e00 {
 
     public void setCreatedTime(String createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public String getAgentCode() {
+        return agentCode;
+    }
+
+    public void setAgentCode(String agentCode) {
+        this.agentCode = agentCode;
     }
 }

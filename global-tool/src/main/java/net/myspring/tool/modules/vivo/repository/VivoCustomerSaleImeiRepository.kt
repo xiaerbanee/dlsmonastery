@@ -16,6 +16,7 @@ class VivoCustomerSaleImeiRepository @Autowired constructor(val namedParameterJd
         val sb = StringBuilder()
         sb.append("""
              select
+                    de.province_id as provinceId,
                     im.ime as imei,
                     im.product_id as productId,
                     sa.shop_id as shopId,
@@ -36,6 +37,7 @@ class VivoCustomerSaleImeiRepository @Autowired constructor(val namedParameterJd
                     and sa.created_date < :dateEnd
                     and sa.product_ime_id = im.id
                     and sa.shop_id = de.id
+                    and de.province_id is not null
                     and sa.is_back = 0
                     and sa.enabled = 1
              order by sa.shop_id asc
