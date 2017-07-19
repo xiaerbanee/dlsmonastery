@@ -54,11 +54,7 @@ public class OfficeController {
 
     @RequestMapping(value = "search")
     public List<OfficeDto> search(OfficeQuery officeQuery) {
-        List<OfficeDto> officeDtos = Lists.newArrayList();
-        if (StringUtils.isNotBlank(officeQuery.getName())) {
-            officeDtos = officeService.findByFilter(officeQuery);
-        }
-        return officeDtos;
+        return officeService.findByFilter(officeQuery);
     }
 
     @RequestMapping(value = "getTopIdsByFilter")
@@ -132,7 +128,7 @@ public class OfficeController {
     }
 
     @RequestMapping(value = "findByIds")
-    public List<OfficeDto> findByIds(@RequestParam("idStr") List<String> ids){
+    public List<OfficeDto> findByIds(@RequestParam("ids") List<String> ids){
         List<OfficeDto> officeDtoList = officeService.findByIds(ids);
         return officeDtoList;
     }

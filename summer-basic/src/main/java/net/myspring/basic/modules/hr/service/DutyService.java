@@ -192,8 +192,8 @@ private Boolean restAudit(DutyRest dutyRest, String auditById, Boolean pass, Str
         if (pass) {
             Double restHour = 0.0;
             if (DutyRestTypeEnum.加班调休.toString().equals(dutyRest.getType())) {
-                LocalDate dateStart = LocalDate.now().minusMonths(3);
-                LocalDate dateEnd = dutyRest.getDutyDate();
+                LocalDate dateStart = LocalDateUtils.getFirstDayOfThisMonth(LocalDate.now().minusMonths(3));
+                LocalDate dateEnd = dutyRest.getDutyDate();;
                 List<DutyOvertime> overtimeList = dutyOvertimeRepository.findByDutyDateAndStatus(dutyRest.getEmployeeId(), dateStart, dateEnd, AuditTypeEnum.PASS.getValue());
                 List<DutyRestOvertime> dutyRestOvertimes = Lists.newArrayList();
                 restHour = dutyRest.getHour().doubleValue();

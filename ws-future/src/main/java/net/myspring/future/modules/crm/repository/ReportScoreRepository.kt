@@ -22,7 +22,7 @@ import java.util.*
 
 interface ReportScoreRepository : BaseRepository<ReportScore, String>, ReportScoreRepositoryCustom{
 
-    fun findByScoreDate(scoreDate : LocalDate): ReportScore?
+    fun findByEnabledIsTrueAndScoreDate(scoreDate : LocalDate): ReportScore?
 }
 
 

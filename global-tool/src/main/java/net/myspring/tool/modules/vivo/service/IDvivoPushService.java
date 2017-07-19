@@ -16,6 +16,7 @@ import net.myspring.tool.modules.vivo.domain.*;
 import net.myspring.tool.modules.vivo.dto.SCustomerDto;
 import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDetailDto;
 import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDto;
+import net.myspring.tool.modules.vivo.dto.VivoCustomerSaleImeiDto;
 import net.myspring.tool.modules.vivo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -59,6 +60,12 @@ public class IDvivoPushService {
     private SProductItemStocksM13e00Repository sProductItemStocksM13e00Repository;
     @Autowired
     private SProductItem000M13e00Repository sProductItem000M13e00Repository;
+    @Autowired
+    private SStoresM13e00Repository sStoresM13e00Repository;
+    @Autowired
+    private VivoCustomerSaleImeiRepository vivoCustomerSaleImeiRepository;
+    @Autowired
+    private SPlantEndProductSaleM13e00Repository sPlantEndProductSaleM13e00Repository;
     @Autowired
     private CacheUtils cacheUtils;
 
@@ -263,6 +270,7 @@ public class IDvivoPushService {
         LocalDate dateStart = LocalDateUtils.parse(date).minusYears(1);
         LocalDate dateEnd = LocalDateUtils.parse(date).plusDays(1);
         List<SPlantCustomerStockDetailDto> sPlantCustomerStockDetailDtoList = sPlantCustomerStockDetailRepository.findCustomerStockDetailData(dateStart,dateEnd);
+        cacheUtils.initCacheInput(sPlantCustomerStockDetailDtoList);
         return sPlantCustomerStockDetailDtoList;
     }
 
@@ -342,6 +350,90 @@ public class IDvivoPushService {
         }
         logger.info("IDVIVO:渠道串码明细数据上抛结束" + LocalDateTime.now());
     }
+
+    //获取仓库数据
+    @FutureDataSource
+    public List<SStoresM13e00> getCustomerStoreData(){
+        List<SStoresM13e00> sStoresM13e00sList= sStoresM13e00Repository.findIDvivoStore();
+        cacheUtils.initCacheInput(sStoresM13e00sList);
+        return sStoresM13e00sList;
+    }
+
+    //上抛仓库数据
+    @FactoryDataSource
+    @Transactional
+    public void pushCustomerStoresData(List<SStoresM13e00> sStoresM13e00sList){
+        Map<String,List<SStoresM13e00>> storeMap= Maps.newHashMap();
+        if(CollectionUtil.isNotEmpty(sStoresM13e00sList)){
+            for(SStoresM13e00 storesM13e00:sStoresM13e00sList){
+                String agentCode=storesM13e00.getAgentCode();
+                if(!storeMap.containsKey(agentCode)){
+                    List<SStoresM13e00> list = Lists.newArrayList();
+                    storeMap.put(agentCode,list);
+                }
+                storeMap.get(agentCode).add(storesM13e00);
+            }
+            logger.info("IDVIVO:仓库数据上抛开始" + LocalDateTime.now());
+            for(String agentCode:storeMap.keySet()){
+                sStoresM13e00Repository.deleteIDvivoStores(agentCode);
+                List<SStoresM13e00> sStoresM13e00List=storeMap.get(agentCode);
+                sStoresM13e00Repository.batchSave(sStoresM13e00List);
+            }
+            logger.info("IDVIVO:仓库数据上抛结束" + LocalDateTime.now());
+        }
+    }
+
+    //获取核销数据
+    @FutureDataSource
+    public List<VivoCustomerSaleImeiDto> getProductImeSaleData(String date){
+        if (StringUtils.isBlank(date)){
+            date = LocalDateUtils.format(LocalDate.now());
+        }
+        String dateStart = date;
+        String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
+        List<VivoCustomerSaleImeiDto>  vivoCustomerSaleImeiDtos= vivoCustomerSaleImeiRepository.findProductSaleImei(dateStart,dateEnd);
+        cacheUtils.initCacheInput(vivoCustomerSaleImeiDtos);
+        return vivoCustomerSaleImeiRepository.findProductSaleImei(dateStart,dateEnd);
+    }
+
+    @FactoryDataSource
+    @Transactional
+    public void pushProductImeSaleData(List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList,Map<String,String> productColorMap,String date){
+        if (StringUtils.isBlank(date)){
+            date = LocalDateUtils.format(LocalDate.now());
+        }
+        Map<String,List<SPlantEndProductSaleM13e00>> saleMap=Maps.newHashMap();
+        String dateStart = date;
+        String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
+        for (VivoCustomerSaleImeiDto vivoCustomerSaleImeiDto : vivoCustomerSaleImeiDtoList){
+            if (StringUtils.isBlank(productColorMap.get(vivoCustomerSaleImeiDto.getProductId()))){
+                continue;
+            }
+            String agentCode=vivoCustomerSaleImeiDto.getAgentCode();
+            SPlantEndProductSaleM13e00 sPlantEndProductSaleM13e00 = new SPlantEndProductSaleM13e00();
+            sPlantEndProductSaleM13e00.setCompanyID(agentCode);
+            sPlantEndProductSaleM13e00.setEndBillID(String.valueOf(System.currentTimeMillis()));
+            sPlantEndProductSaleM13e00.setProductID(productColorMap.get(vivoCustomerSaleImeiDto.getProductId()));
+            sPlantEndProductSaleM13e00.setSaleCount(1);
+            sPlantEndProductSaleM13e00.setImei(vivoCustomerSaleImeiDto.getImei());
+            sPlantEndProductSaleM13e00.setBillDate(vivoCustomerSaleImeiDto.getSaleTime());
+            sPlantEndProductSaleM13e00.setDealerID(StringUtils.getFormatId(vivoCustomerSaleImeiDto.getShopId(),agentCode+"C","00000"));
+            sPlantEndProductSaleM13e00.setCreatedTime(LocalDateTimeUtils.format(LocalDateTime.now()));
+            if(!saleMap.containsKey(agentCode)){
+                List<SPlantEndProductSaleM13e00> list=Lists.newArrayList();
+                saleMap.put(agentCode,list);
+            }
+            saleMap.get(agentCode).add(sPlantEndProductSaleM13e00);
+        }
+        logger.info("IDVIVO:开始上抛核销记录数据" + LocalDateTime.now());
+        for(String agentCode:saleMap.keySet()){
+            List<SPlantEndProductSaleM13e00> sPlantEndProduuctSaleImeiList=saleMap.get(agentCode);
+            sPlantEndProductSaleM13e00Repository.deleteIDvivoByBillDate(dateStart,dateEnd,agentCode);
+            sPlantEndProductSaleM13e00Repository.batchIDvivoSave(sPlantEndProduuctSaleImeiList);
+        }
+        logger.info("IDVIVO:上抛核销记录结束" + LocalDateTime.now());
+    }
+
 
     @LocalDataSource
     public Map<String,String> getProductColorMap(){

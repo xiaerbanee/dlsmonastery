@@ -17,13 +17,12 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('accountWeixinList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column prop="openId" :label="$t('accountWeixinList.openId')"></el-table-column>
-        <el-table-column prop="accountName" :label="$t('accountWeixinList.name')"></el-table-column>
         <el-table-column prop="areaName" :label="$t('accountWeixinList.areaName')"></el-table-column>
         <el-table-column prop="officeName" :label="$t('accountWeixinList.officeName')"></el-table-column>
+        <el-table-column prop="accountName" :label="$t('accountWeixinList.name')"></el-table-column>
         <el-table-column fixed="right" :label="$t('accountWeixinList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'sys:dictEnum:delete'">{{$t('accountWeixinList.delete')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" >{{$t('accountWeixinList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
