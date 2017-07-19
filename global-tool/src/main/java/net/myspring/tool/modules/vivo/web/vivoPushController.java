@@ -2,6 +2,7 @@ package net.myspring.tool.modules.vivo.web;
 
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.modules.vivo.domain.SProductItemLendM13e00;
+import net.myspring.tool.modules.vivo.domain.SStoresM13e00;
 import net.myspring.tool.modules.vivo.dto.SCustomerDto;
 import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDetailDto;
 import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDto;
@@ -67,7 +68,12 @@ public class vivoPushController {
        //同步库存明细数据
        List<SPlantCustomerStockDetailDto>  sPlantCustomerStockDetailDtoList=idvivoPushService.getCustomerStockDetailData(date);
        idvivoPushService.pushCustomerStockDetailData(sPlantCustomerStockDetailDtoList,productColorMap,date);
-
+       //同步仓库数据
+        List<SStoresM13e00> sStoresM13e00List=idvivoPushService.getCustomerStoreData();
+        idvivoPushService.pushCustomerStoresData(sStoresM13e00List);
+        //同步核销数据
+        List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList = vivoPushService.getProductImeSaleData(date);
+        vivoPushService.pushProductImeSaleData(vivoCustomerSaleImeiDtoList,productColorMap,date);
     }
 
 }

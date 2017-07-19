@@ -1,6 +1,7 @@
 package net.myspring.tool.modules.vivo.dto;
 
 public class VivoCustomerSaleImeiDto {
+    private String provinceId;
     private String imei;
     private String productId;
     private String shopId;
@@ -11,7 +12,15 @@ public class VivoCustomerSaleImeiDto {
     private String salePromoter;
     private String shopCode;
     private String shopName;
-    private String province;
+    private String agentCode;
+
+    public String getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
+    }
 
     public String getImei() {
         return imei;
@@ -93,11 +102,11 @@ public class VivoCustomerSaleImeiDto {
         this.shopName = shopName;
     }
 
-    public String getProvince() {
-        return province;
+    public String getAgentCode() {
+        return agentCode;
     }
 
-    public void setProvince(String province) {
-        this.province = province;
+    public void setAgentCode(String agentCode) {
+        this.agentCode = agentCode;
     }
 }
