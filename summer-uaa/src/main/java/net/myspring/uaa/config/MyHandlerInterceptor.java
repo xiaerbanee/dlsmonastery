@@ -16,19 +16,12 @@ import java.util.List;
  * Created by liuj on 2016-08-20.
  */
 public class MyHandlerInterceptor implements HandlerInterceptor {
-    @Value("${companyNames}")
-    private String[] companyNames;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        List<String> companyNameList = Arrays.asList(companyNames);
         String companyName = request.getParameter("companyName");
         if(StringUtils.isBlank(companyName)) {
-            if(companyNameList.contains(CompanyNameEnum.JXOPPO.name())) {
-                companyName = CompanyNameEnum.JXOPPO.name();
-            } else {
-                companyName = CompanyNameEnum.IDVIVO.name();
-            }
+            companyName = CompanyNameEnum.JXOPPO.name();
         }
         DbContextHolder.get().setCompanyName(companyName);
         return true;
