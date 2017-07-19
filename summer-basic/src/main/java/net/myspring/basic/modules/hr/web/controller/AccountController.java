@@ -234,12 +234,14 @@ public class AccountController {
     }
 
     @RequestMapping(value = "findByOfficeId")
-    public List<AccountDto> findByOfficeId(String officeId) {
-        List<AccountDto> accountList=Lists.newArrayList();
+    public Map<String,Object> findByOfficeId(String officeId) {
+        Map<String,Object> map=Maps.newHashMap();
         if (StringUtils.isNotBlank(officeId)){
-            accountList=accountService.findByOfficeId(officeId);
+            List<String> officeIdList=officeService.getSameAreaByOfficeId(officeId);
+            map.put("allAccount",accountService.findByOfficeIdList(officeIdList));
+            map.put("currentAccount",accountService.findByOfficeIdList(Lists.newArrayList(officeId)));
         }
-        return accountList;
+        return map;
     }
 
 }

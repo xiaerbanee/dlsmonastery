@@ -65,12 +65,9 @@ public class AccountService {
     @Autowired
     private AccountPermissionRepository accountPermissionRepository;
 
-    public List<AccountDto> findByOfficeId(String officeId){
-        List<AccountDto> accountDtoList=Lists.newArrayList();
-        List<Office> officeList=officeRepository.findSameAreaByOfficeId(officeId);
-        List<String> officeIdList=CollectionUtil.extractToList(officeList,"id");
+    public List<AccountDto> findByOfficeIdList(List<String> officeIdList){
         List<Account> accountList=accountRepository.findByOfficeIdIn(officeIdList);
-        accountDtoList=BeanUtil.map(accountList,AccountDto.class);
+        List<AccountDto> accountDtoList=BeanUtil.map(accountList,AccountDto.class);
         return accountDtoList;
     }
 
