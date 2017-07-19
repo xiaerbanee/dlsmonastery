@@ -11,6 +11,7 @@ import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.text.StringUtils;
+import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.HtmlUtils;
+import sun.misc.Request;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
@@ -80,6 +82,10 @@ public class AuditFileController {
     @RequestMapping(value = "audit")
     public RestResponse audit(String id, boolean pass, String comment) {
         RestResponse restResponse = new RestResponse("文件审核成功",null);
+        AuditFile auditFile=auditFileService.findOne(id);
+        if(!RequestUtils.getPositionId().equals(auditFile.getPositionId())){
+            return new RestResponse("文件审核失败,当前审批岗位与你的岗位不符",null);
+        }
         auditFileService.audit(id, pass, comment);
         return restResponse;
     }
