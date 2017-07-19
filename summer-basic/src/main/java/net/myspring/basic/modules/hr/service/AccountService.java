@@ -65,11 +65,6 @@ public class AccountService {
     @Autowired
     private AccountPermissionRepository accountPermissionRepository;
 
-    public Account findOne(String id) {
-        Account account = accountRepository.findOne(id);
-        return account;
-    }
-
     public List<AccountDto> findByOfficeId(String officeId){
         List<AccountDto> accountDtoList=Lists.newArrayList();
         List<Office> officeList=officeRepository.findSameAreaByOfficeId(officeId);
@@ -86,8 +81,7 @@ public class AccountService {
 
     public AccountDto findOne(AccountDto accountDto) {
         if(!accountDto.isCreate()){
-            Account account = accountRepository.findOne(accountDto.getId());
-            accountDto = BeanUtil.map(account, AccountDto.class);
+            accountDto = accountRepository.findDto(accountDto.getId());
             cacheUtils.initCacheInput(accountDto);
         }
         return accountDto;
@@ -172,7 +166,7 @@ public class AccountService {
     }
 
     public AccountDto getAccountDto(String accountId){
-        AccountDto accountDto=BeanUtil.map(accountRepository.findOne(accountId),AccountDto.class);
+        AccountDto accountDto=accountRepository.findDto(accountId);
         cacheUtils.initCacheInput(accountDto);
         return accountDto;
     }
@@ -221,9 +215,9 @@ public class AccountService {
     }
 
     public List<AccountDto> findByIds(List<String> ids){
-        List<Account> districts = accountRepository.findAll(ids);
-        List<AccountDto> districtDtos= BeanUtil.map(districts,AccountDto.class);
-        return districtDtos;
+        List<AccountDto> accountDtoList= accountRepository.findDtoByIdList(ids);
+        cacheUtils.initCacheInput(accountDtoList);
+        return accountDtoList;
     }
 
 
