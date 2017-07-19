@@ -73,6 +73,7 @@ public class DutyWorktimeService {
     private FolderFileClient folderFileClient;
 
     public Page<DutyWorktimeDto> findPage(Pageable pageable, DutyWorktimeQuery dutyWorktimeQuery) {
+        dutyWorktimeQuery.setAccountId(RequestUtils.getAccountId());
         Page<DutyWorktimeDto> page = dutyWorktimeRepository.findPage(pageable, dutyWorktimeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
