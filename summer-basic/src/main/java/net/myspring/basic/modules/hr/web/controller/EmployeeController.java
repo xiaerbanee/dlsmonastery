@@ -98,12 +98,6 @@ public class EmployeeController {
         return employeeList;
     }
 
-    @RequestMapping(value = "findById")
-    public EmployeeDto findOne(String id) {
-        return employeeService.findOne(id);
-    }
-
-
     @RequestMapping(value = "getQuery")
     public EmployeeQuery getQuery(EmployeeQuery employeeQuery) {
         employeeQuery.getExtra().put("positionList", positionService.findAll());

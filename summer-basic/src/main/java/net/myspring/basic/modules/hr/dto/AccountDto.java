@@ -23,22 +23,13 @@ public class AccountDto extends DataDto<Account> {
     private String employeeId;
     private String outId;
     private String companyName;
-
-    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
-    @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "name")
     private String positionName;
-    @CacheInput(inputKey = "accounts",inputInstance = "leaderId",outputInstance = "loginName")
     private String leaderName;
-    @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "entryDate")
     private LocalDate entryDate;
-    @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "leaveDate")
     private LocalDate leaveDate;
-    @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "regularDate")
     private LocalDate regularDate;
-    @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "name")
     private String employeeName;
-    @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "status")
     private String employeeStatus;
 
     private boolean admin=RequestUtils.getAdmin();

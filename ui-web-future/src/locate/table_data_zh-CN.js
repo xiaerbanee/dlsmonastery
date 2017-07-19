@@ -57,6 +57,8 @@ export default {
     menu:{
       goodsOrderMallForm:"商城订单",
       roleList:"角色管理",
+      roleAuthorityForm:"角色权限",
+      unitsOfficeForm:"单元编辑",
       storeInventoryReport:"仓库报表",
       depotShopList:"门店管理",
       depotStoreList:"仓库管理",
@@ -182,6 +184,7 @@ export default {
       employeeEditForm: "信息修改",
       employeeForm: "员工管理编辑",
       employeeList: "员工管理",
+      accountWeixinList:"微信解绑",
       employeePhoneDepositForm: "押金收款编辑",
       employeePhoneDepositList: "押金收款",
       employeePhoneForm: "导购用机编辑",

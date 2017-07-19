@@ -39,13 +39,9 @@ public class EmployeeDto extends DataDto<Employee> {
     private String accountId;
     private String areaName;
 
-    @CacheInput(inputKey = "accounts",inputInstance = "accountId",outputInstance = "loginName")
     private String accountName;
-    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
-    @CacheInput(inputKey = "accounts",inputInstance = "leaderId",outputInstance = "loginName")
     private String leaderName;
-    @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "name")
     private String positionName;
 
     public String getAreaName() {
