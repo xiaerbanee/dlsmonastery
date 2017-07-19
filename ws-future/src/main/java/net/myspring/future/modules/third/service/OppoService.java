@@ -44,14 +44,6 @@ public class OppoService {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
 
-    @Scheduled(cron = "0 0 0/1 * * ?")
-    public void syn(){
-        logger.info("开始同步串码："+LocalDateTime.now());
-        String date=LocalDateUtils.format(LocalDate.now());
-        synOppo(date);
-        logger.info("串码同步结束："+LocalDateTime.now());
-    }
-
     public String synOppo(String date) {
         if (StringUtils.isBlank(date)) {
             date = LocalDateUtils.formatLocalDate(LocalDate.now(), "yyyy-MM-dd");
