@@ -45,7 +45,6 @@
           <template scope="scope">
             <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'hr:account:edit'">{{$t('accountList.edit')}}</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:account:delete'">{{$t('accountList.delete')}}</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:account:delete'">微信解绑</el-button>
           </template>
         </el-table-column>
       </el-table>
