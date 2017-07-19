@@ -7,6 +7,7 @@ import net.myspring.tool.GlobalToolApplication;
 import net.myspring.tool.common.dataSource.DynamicDataSource;
 import net.myspring.tool.common.enums.DataSourceTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -26,6 +27,8 @@ import org.springframework.util.ClassUtils;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -33,24 +36,25 @@ import java.util.Properties;
 public class JdbcConfig {
     @Autowired
     private Environment environment;
+    @Value("${companyNames}")
+    private String[] companyNames;
 
     @Bean
     public DynamicDataSource dynamicDataSource() {
         Map<Object, Object> targetDataSources = Maps.newHashMap();
-        targetDataSources.put("FACTORY_JXOPPO",getDataSouce("spring.datasource.factory.JXOPPO"));
-        targetDataSources.put("FACTORY_JXVIVO",getDataSouce("spring.datasource.factory.JXVIVO"));
-        targetDataSources.put("FUTURE_JXOPPO",getDataSouce("spring.datasource.ws-future.JXOPPO"));
-        targetDataSources.put("FUTURE_JXVIVO",getDataSouce("spring.datasource.ws-future.JXVIVO"));
-        targetDataSources.put("FACTORY_IDVIVO",getDataSouce("spring.datasource.factory.IDVIVO"));
-        targetDataSources.put("FUTURE_IDVIVO",getDataSouce("spring.datasource.ws-future.IDVIVO"));
-        targetDataSources.put(DataSourceTypeEnum.LOCAL.name(),getDataSouce("spring.datasource.global-tool"));
+        List<String> companyNameList = Arrays.asList(companyNames);
+        for(String companyName:companyNameList) {
+            targetDataSources.put("FACTORY_" + companyName,getDataSource("spring.datasource.factory." + companyName));
+            targetDataSources.put("FUTURE_" + companyName,getDataSource("spring.datasource.ws-future." + companyName));
+        }
+        targetDataSources.put(DataSourceTypeEnum.LOCAL.name(),getDataSource("spring.datasource.global-tool"));
         DynamicDataSource dataSource = new DynamicDataSource();
         dataSource.setTargetDataSources(targetDataSources);
         return dataSource;
     }
 
 
-    private DataSource getDataSouce(String prefix) {
+    private DataSource getDataSource(String prefix) {
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setDriverClassName(environment.getProperty(prefix + ".driver-class-name"));
         dataSource.setUrl(environment.getProperty(prefix + ".url"));

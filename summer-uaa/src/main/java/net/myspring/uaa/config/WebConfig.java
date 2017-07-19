@@ -1,4 +1,4 @@
-package net.myspring.future.common.config;
+package net.myspring.uaa.config;
 
 import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.context.annotation.Configuration;

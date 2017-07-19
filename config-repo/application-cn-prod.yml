@@ -1,10 +1,5 @@
 spring:
   datasource:
-    summer-uaa:
-      url: jdbc:mysql://168.192.1.17:3316/summer_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
-      username: root
-      password: bbk@123456
-      driver-class-name: com.mysql.jdbc.Driver
     global-cloud:
       url: jdbc:mysql://168.192.1.17:3316/summer_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
       username: root
@@ -21,20 +16,34 @@ spring:
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
+      JXVIVO:
+        url: jdbc:mysql://168.192.1.17:3316/summer_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
     summer-basic:
       JXOPPO:
         url: jdbc:mysql://168.192.1.17:3316/summer_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
-    summer-general:
-      JXOPPO:
+      JXVIVO:
         url: jdbc:mysql://168.192.1.17:3316/summer_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
+    summer-general:
+      url: jdbc:mysql://168.192.1.17:3316/summer_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+      username: root
+      password: bbk@123456
+      driver-class-name: com.mysql.jdbc.Driver
     kingdee:
       JXOPPO:
+        url: jdbc:sqlserver://168.192.1.13:1433;DatabaseName=AIS2017040100OPPO
+        username: sa
+        password: bbk@123456
+        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      JXVIVO:
         url: jdbc:sqlserver://168.192.1.13:1433;DatabaseName=AIS2017040100OPPO
         username: sa
         password: bbk@123456
@@ -57,4 +66,4 @@ spring:
     database: 0
     max-idle: 100
     max-total: 200
-companyNames: JXOPPO,JXVIVO,JXDJ,WZOPPO
+companyNames: JXOPPO,JXVIVO

@@ -60,7 +60,9 @@
           })
         },initPage(){
           axios.get('/api/global/cloud/sys/accountKingdeeBook/form',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.inputForm = response.data;
+            if (response.data.username){
+              this.inputForm = response.data;
+            }
           });
         }
       },created(){
