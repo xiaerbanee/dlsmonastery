@@ -130,7 +130,7 @@ public class EmployeeService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"major","专业"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"bankName","开户行"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"bankNumber","银行卡号"));
-
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"remarks","备注"));
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("导出数据",employeeDtoList,simpleExcelColumnList);
         ExcelUtils.doWrite(workbook,simpleExcelSheet);
         return new SimpleExcelBook(workbook,"员工详情"+ LocalDate.now()+".xlsx",simpleExcelSheet);
