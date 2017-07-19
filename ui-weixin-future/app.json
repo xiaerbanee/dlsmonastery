@@ -51,8 +51,9 @@
     "page/crm/depotInventoryDetail/depotInventoryDetail",
     "page/crm/officeDataReport/officeDataReport",
     "page/crm/productDataReport/productDataReport",
-    "page/crm/productSearch/productSearch"
-    ],
+    "page/crm/productSearch/productSearch",
+    "page/crm/productImeSaleReport/productImeSaleReport"
+  ],
   "window": {
     "navigationBarTextStyle": "#fff",
     "navigationBarTitleText": "OA",
