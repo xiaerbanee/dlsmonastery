@@ -36,7 +36,7 @@ import java.util.Properties;
 public class JdbcConfig {
     @Autowired
     private Environment environment;
-    @Value("companyNames")
+    @Value("${companyNames}")
     private String[] companyNames;
 
     @Bean

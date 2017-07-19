@@ -16,7 +16,7 @@ import java.util.List;
  * Created by liuj on 2016-08-20.
  */
 public class MyHandlerInterceptor implements HandlerInterceptor {
-    @Value("companyNames")
+    @Value("${companyNames}")
     private String[] companyNames;
 
     @Override
