@@ -54,7 +54,9 @@
           })
         },initPage(){
           axios.get('/api/global/cloud/sys/accountKingdeeBook/getCurrentOne').then((response)=>{
-            this.inputForm = response.data;
+            if (response.data.username){
+              this.inputForm = response.data;
+            }
           });
         }
       },created(){
