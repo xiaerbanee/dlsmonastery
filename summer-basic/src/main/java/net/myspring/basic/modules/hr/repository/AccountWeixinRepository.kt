@@ -58,6 +58,11 @@ class AccountWeixinRepositoryImpl @Autowired constructor(val namedParameterJdbcT
                 and t3.login_name LIKE CONCAT ('%',:accountName,'%')
             """)
         }
+        if (CollectionUtil.isNotEmpty(accountWeixinQuery.officeIdList)) {
+            sb.append("""
+                and office.id in (:officeIdList)
+            """)
+        }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
         var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(accountWeixinQuery), BeanPropertyRowMapper(AccountWeixinDto::class.java));

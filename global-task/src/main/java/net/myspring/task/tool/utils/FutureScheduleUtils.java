@@ -20,10 +20,17 @@ public class FutureScheduleUtils {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Scheduled(cron = "0 0 0/1 * * ?")
-    public void synIme(){
+    public void synOppoIme(){
         logger.info("同步串码数据开始");
         String date=LocalDateUtils.format(LocalDate.now());
-        futureClient.synIme(date);
+        futureClient.synOppoIme(date);
+        logger.info("同步串码数据结束");
+    }
+
+    public void synVivoIme(){
+        logger.info("同步串码数据开始");
+        String date=LocalDateUtils.format(LocalDate.now());
+        futureClient.synVivoIme(date);
         logger.info("同步串码数据结束");
     }
 }
