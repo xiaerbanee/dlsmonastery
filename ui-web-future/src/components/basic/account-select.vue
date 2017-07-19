@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-select v-model="innerId"  filterable remote  :multiple="multiple" :disabled="disabled" :placeholder="$t('accountChangeForm.inputWord')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
-      <el-option v-for="item in itemList"  :key="item.id" :label="item.loginName" :value="item.id"></el-option>
+      <el-option v-for="item in itemList"  :key="item.id" :label="item.positionName+'_'+item.loginName+'_'+item.employeeStatus" :value="item.id"></el-option>
     </el-select>
   </div>
 </template>
@@ -43,6 +43,7 @@
             }
           }
           this.itemList = newList;
+          console.log(this.itemList)
           this.remoteLoading = false;
         })
       }, handleChange(newVal) {

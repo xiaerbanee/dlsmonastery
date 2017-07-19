@@ -231,7 +231,7 @@ public class ReportScoreService {
             reportScoreOffice.setMonthRank(rank);
             rank = rank + 1;
         }
-        ReportScore score=reportScoreRepository.findByScoreDate(date);
+        ReportScore score=reportScoreRepository.findByEnabledIsTrueAndScoreDate(date);
         if(score!=null){
             delete(BeanUtil.map(score,ReportScoreForm.class));
         }
@@ -250,15 +250,15 @@ public class ReportScoreService {
 
     @Transactional
     public void delete(ReportScoreForm reportScoreForm) {
-        reportScoreRepository.logicDelete(reportScoreForm.getId());
         List<ReportScoreArea> reportScoreAreaList=reportScoreAreaRepository.findByReportScoreId(reportScoreForm.getId());
         if(CollectionUtil.isNotEmpty(reportScoreAreaList)){
-            reportScoreAreaRepository.loginDeleteByIdList(CollectionUtil.extractToList(reportScoreAreaList,"id"));
             List<ReportScoreOffice> reportScoreOfficeList=reportScoreOfficeRepository.findByReportScoreAreaIdIn(CollectionUtil.extractToList(reportScoreAreaList,"id"));
             if(CollectionUtil.isNotEmpty(reportScoreOfficeList)){
-                reportScoreOfficeRepository.loginDeleteByIdList(CollectionUtil.extractToList(reportScoreOfficeList,"id"));
+                reportScoreOfficeRepository.delete(reportScoreOfficeList);
             }
+            reportScoreAreaRepository.delete(reportScoreAreaList);
         }
+        reportScoreRepository.logicDelete(reportScoreForm.getId());
     }
 
     private String getOfficeId(Map<String, List<String>> map, String unitId) {

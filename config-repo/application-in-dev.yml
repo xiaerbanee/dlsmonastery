@@ -1,0 +1,55 @@
+spring:
+  datasource:
+    summer-uaa:
+      url: jdbc:mysql://168.192.1.243:3306/db_id_vivo170718?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+      username: root
+      password: bbk@123456
+      driver-class-name: com.mysql.jdbc.Driver
+    global-cloud:
+      url: jdbc:mysql://168.192.1.243:3306/db_id_vivo170718?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+      username: root
+      password: bbk@123456
+      driver-class-name: com.mysql.jdbc.Driver
+    global-tool:
+      url: jdbc:mysql://168.192.1.243:3306/db_id_vivo170718_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+      username: root
+      password: bbk@123456
+      driver-class-name: com.mysql.jdbc.Driver
+    ws-future:
+      IDVIVO:
+        url: jdbc:mysql://168.192.1.243:3306/db_id_vivo170718_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
+    summer-basic:
+      IDVIVO:
+        url: jdbc:mysql://168.192.1.243:3306/db_id_vivo170718?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
+    summer-general:
+      IDVIVO:
+        url: jdbc:mysql://168.192.1.243:3306/db_id_vivo170718?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
+    kingdee:
+      IDVIVO:
+        url: jdbc:sqlserver://168.192.1.13:1433;DatabaseName=TESTIDVIVO
+        username: sa
+        password: bbk@123456
+        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    factory:
+      IDVIVO:
+        url: jdbc:jtds:sqlserver://168.192.1.13/VIVOTEST
+        username: sa
+        password: bbk@123456
+        driver-class-name: net.sourceforge.jtds.jdbc.Driver
+  redis:
+    host: localhost
+    password:
+    port: 6379
+    database: 0
+    max-idle: 100
+    max-total: 200
+companyNames: IDVIVO,AUOPPO,NZOPPO
