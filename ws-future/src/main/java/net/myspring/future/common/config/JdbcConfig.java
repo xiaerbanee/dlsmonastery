@@ -46,7 +46,7 @@ public class JdbcConfig {
         }
         DynamicDataSource dataSource = new DynamicDataSource();
         dataSource.setTargetDataSources(targetDataSources);
-        dataSource.setDefaultTargetDataSource(Lists.newArrayList(targetDataSources).get(0));
+        dataSource.setDefaultTargetDataSource(Lists.newArrayList(targetDataSources.values()).get(0));
         return dataSource;
     }
 
