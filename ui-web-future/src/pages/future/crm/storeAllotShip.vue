@@ -19,12 +19,22 @@
               {{storeAllot.toStoreName}}
             </el-form-item>
             <el-form-item :label="$t('storeAllotShip.boxImeStr')" prop="boxImeStr">
-              <textarea v-model="inputForm.boxImeStr" :rows="5" class="el-textarea__inner" @input="checkAndSummary()"></textarea>
+              <textarea v-model="inputForm.boxImeStr" :rows="5" class="el-textarea__inner"
+                        @keyup.enter="checkAndSummary()"
+                        @keyup.delete="checkAndSummary()"
+                        @keyup.ctrl.86="checkAndSummary()"
+                        @keyup.ctrl.88="checkAndSummary()"
+              ></textarea>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('storeAllotShip.imeStr')" prop="imeStr">
-              <textarea ref="imeStrTextArea" v-model="inputForm.imeStr" :rows="5" class="el-textarea__inner" @input="checkAndSummary()"></textarea>
+              <textarea ref="imeStrTextArea" v-model="inputForm.imeStr" :rows="5" class="el-textarea__inner"
+                        @keyup.enter="checkAndSummary()"
+                        @keyup.delete="checkAndSummary()"
+                        @keyup.ctrl.86="checkAndSummary()"
+                        @keyup.ctrl.88="checkAndSummary()"
+              ></textarea>
             </el-form-item>
             <el-form-item :label="$t('storeAllotShip.expressCodes')" prop="expressOrderExpressCodes">
               <el-input type="textarea" :autosize="autosize" v-model="inputForm.expressOrderExpressCodes" ></el-input>
@@ -84,34 +94,31 @@
       }
     }, methods:{
       formSubmit(){
-
-        if(util.isBlank(this.inputForm.imeStr) && util.isBlank(this.inputForm.boxImeStr)) {
-          this.$alert("请填入发货串码或箱号");
-          return;
-        }
         this.submitDisabled = true;
         let checkAndSummaryPromise = this.checkAndSummary();
         checkAndSummaryPromise.then((checkResult)=>{
           if(checkResult === "error" ){
             this.$alert("请先处理错误信息");
             this.submitDisabled = false;
-            return;
+          }else if(checkResult === "warning"){
+            this.$confirm("还有货品未发送完，确认保存？").then(()=>{
+              this.doSubmit();
+            }).catch(()=>{
+              this.submitDisabled = false;
+            });
+          }else{
+            this.doSubmit();
           }
-
-          if(checkResult === "warning" && !confirm("还有货品未发送完，确认保存？")){
-            this.submitDisabled = false;
-            return;
-          }
-
-          axios.post('/api/ws/future/crm/storeAllot/ship', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
-            this.$message(response.data.message);
-            this.$router.push({name:'storeAllotList',query:util.getQuery("storeAllotList"), params:{_closeFrom:true}});
-          }).catch(()=> {
-            this.submitDisabled = false;
-          });
         });
-
-      },checkAndSummary(){
+      },doSubmit(){
+        axios.post('/api/ws/future/crm/storeAllot/ship', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
+          this.$message(response.data.message);
+          this.$router.push({name:'storeAllotList',query:util.getQuery("storeAllotList"), params:{_closeFrom:true}});
+        }).catch(()=> {
+          this.submitDisabled = false;
+        });
+      },
+      checkAndSummary(){
       return axios.get('/api/ws/future/crm/storeAllot/shipCheck',{params:{id:this.inputForm.id,boxImeStr:this.inputForm.boxImeStr,imeStr:this.inputForm.imeStr}}).then((response) => {
         this.shipResult = response.data;
         this.refreshDetailShipInfo(this.shipResult.shipQtyMap);

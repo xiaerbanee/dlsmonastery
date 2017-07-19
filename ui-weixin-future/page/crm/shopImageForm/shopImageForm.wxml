@@ -23,7 +23,7 @@
           <view class="weui-label">终端形象方案</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <picker name="imageType" range="{{formProperty.imageTypeList}}" value="{{formData.imageType}}" bindchange="bindImageType" >
+          <picker name="imageType" range="{{formProperty.imageTypeList}}" value="{{formData.imageType?formData.imageType:''}}" bindchange="bindImageType" >
             <view class="weui-input">{{formData.imageType}}</view>
           </picker>
         </view>

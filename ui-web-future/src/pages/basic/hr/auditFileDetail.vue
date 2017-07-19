@@ -85,7 +85,7 @@
           if (valid) {
             axios.post('/api/basic/hr/auditFile/audit',qs.stringify(this.submitData)).then((response)=> {
                this.$message(response.data.message);
-               this.$router.push({name:'auditFileList',query:util.getQuery("auditFileList")})
+               this.$router.push({name:'auditFileList',query:util.getQuery("auditFileList"),params:{_closeFrom:true}})
             }).catch(function () {
               this.submitDisabled = false;
             });

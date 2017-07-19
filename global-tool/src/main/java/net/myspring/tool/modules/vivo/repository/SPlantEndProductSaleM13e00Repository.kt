@@ -21,10 +21,31 @@ class SPlantEndProductSaleM13e00Repository @Autowired constructor(val namedParam
         return namedParameterJdbcTemplate.update(sb.toString(),map)
     }
 
+    fun deleteIDvivoByBillDate(dateStart:String,dateEnd:String,agentCode:String):Int{
+        val map = Maps.newHashMap<String,String>()
+        map.put("dateStart",dateStart)
+        map.put("dateEnd",dateEnd)
+        val sb = StringBuilder()
+        sb.append("""
+            delete from S_PlantEndProductSale_:agentCode where BillDate > :dateStart
+                and BillDate < :dateEnd
+        """)
+        return namedParameterJdbcTemplate.update(sb.toString(),map)
+    }
+
     fun batchSave(sPlantEndProduuctSaleImeiList: MutableList<SPlantEndProductSaleM13e00>):IntArray{
         val sb = StringBuilder()
         sb.append("""
             INSERT INTO S_PLANTENDPRODUCTSALE_M13E00(CompanyID,EndBillID,ProductID,SaleCount,Imei,BillDate,DealerID,SalePrice,CreatedTime)
+            VALUES (:companyID,:endBillID,:productID,:saleCount,:imei,:billDate,:dealerID,:salePrice,:createdTime)
+        """)
+        return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sPlantEndProduuctSaleImeiList.toTypedArray()))
+    }
+
+    fun batchIDvivoSave(sPlantEndProduuctSaleImeiList: MutableList<SPlantEndProductSaleM13e00>):IntArray{
+        val sb = StringBuilder()
+        sb.append("""
+            INSERT S_PlantEndProductSale_:agentCode  (CompanyID,EndBillID,ProductID,SaleCount,Imei,BillDate,DealerID,SalePrice,CreatedTime)
             VALUES (:companyID,:endBillID,:productID,:saleCount,:imei,:billDate,:dealerID,:salePrice,:createdTime)
         """)
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sPlantEndProduuctSaleImeiList.toTypedArray()))

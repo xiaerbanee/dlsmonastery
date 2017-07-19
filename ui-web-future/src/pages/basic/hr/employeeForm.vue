@@ -17,33 +17,33 @@
               <el-input v-model="employeeForm.code"></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.salary')" prop="salary">
-              <el-input v-model="employeeForm.salary"></el-input>
+              <el-input v-model="employeeForm.salary"  :disabled="!isCreate&&!hasPermit"></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.bankNumber')" prop="bankNumber">
-              <el-input v-model="employeeForm.bankNumber"></el-input>
+              <el-input v-model="employeeForm.bankNumber"  :disabled="!isCreate&&!hasPermit"></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.bankName')" prop="bankName">
               <el-input v-model="employeeForm.bankName"></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.entryDate')" prop="entryDate">
-              <date-picker v-model="employeeForm.entryDate"></date-picker>
+              <date-picker v-model="employeeForm.entryDate"  :disabled="!isCreate&&!hasPermit"></date-picker>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.regularDate')" prop="regularDate">
-              <date-picker v-model="employeeForm.regularDate"></date-picker>
+              <date-picker v-model="employeeForm.regularDate"  :disabled="!isCreate&&!hasPermit"></date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('employeeForm.leaveDate')" prop="leaveDate">
-              <date-picker v-model="employeeForm.leaveDate"></date-picker>
+              <date-picker v-model="employeeForm.leaveDate"  :disabled="!isCreate&&!hasPermit"></date-picker>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.school')" prop="school">
               <el-input v-model="employeeForm.school"></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.idCard')" prop="idcard">
-              <el-input v-model="employeeForm.idcard"></el-input>
+              <el-input v-model="employeeForm.idcard"  :disabled="!isCreate&&!hasPermit"></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.mobilePhone')" prop="mobilePhone">
-              <el-input v-model="employeeForm.mobilePhone"></el-input>
+              <el-input v-model="employeeForm.mobilePhone"  :disabled="!isCreate&&!hasPermit"></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.birthday')" prop="birthday">
               <date-picker v-model="employeeForm.birthday"></date-picker>
@@ -73,15 +73,15 @@
               <el-input v-model="accountForm.loginName" :readonly="!isCreate"></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.office')" prop="officeId">
-              <office-select v-model="accountForm.officeId"></office-select>
+              <office-select v-model="accountForm.officeId"  :disabled="!isCreate&&!hasPermit"></office-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('employeeForm.leader')" prop="leaderId">
-              <account-select v-model="accountForm.leaderId"></account-select>
+              <account-select v-model="accountForm.leaderId" :disabled="!isCreate&&!hasPermit"></account-select>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.position')" prop="positionId">
-              <el-select v-model="accountForm.positionId"  filterable :placeholder="$t('employeeForm.selectGroup')" :clearable=true>
+              <el-select v-model="accountForm.positionId"  filterable :placeholder="$t('employeeForm.selectGroup')" :clearable=true  :disabled="!isCreate&&!hasPermit">
                 <el-option v-for="position in accountForm.extra.positionDtoList" :key="position.id" :label="position.name" :value="position.id"></el-option>
               </el-select>
             </el-form-item>
@@ -127,6 +127,7 @@
         return {
           isCreate: this.$route.query.id == null,
           submitDisabled: false,
+          hasPermit:util.isPermit('hr:employee:enableUpdate'),
           employeeForm: {
             extra: {}
           },

@@ -58,4 +58,14 @@ public class AccountKingdeeBookController {
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }
+
+    @RequestMapping(value = "validateByAccountId")
+    public Boolean validateByAccountId(String accountId) {
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(accountId);
+        if (accountKingdeeBook != null && accountKingdeeBook.getPassword() != null){
+            return true;
+        }else {
+            return false;
+        }
+    }
 }

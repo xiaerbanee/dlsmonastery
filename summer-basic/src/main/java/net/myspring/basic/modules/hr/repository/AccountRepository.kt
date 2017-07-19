@@ -73,7 +73,7 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
 }
 
 interface AccountRepositoryCustom{
-    fun findByLoginNameLikeAndType(type: String, loginName: String): MutableList<Account>
+    fun findByLoginNameLikeAndType(type: String, loginName: String): MutableList<AccountDto>
 
     fun findPage(pageable: Pageable, accountQuery: AccountQuery): Page<AccountDto>
 
@@ -217,14 +217,16 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
 
     }
 
-    override fun findByLoginNameLikeAndType(type: String, loginName: String): MutableList<Account> {
+    override fun findByLoginNameLikeAndType(type: String, loginName: String): MutableList<AccountDto> {
         var sb = StringBuilder()
         sb.append("""
             SELECT
-            t1.*
+            t1.*,t2.status as employeeStatus,position.name as positionName
             FROM
-            hr_account t1
+            hr_account t1,hr_employee t2,hr_position position
             where t1.enabled=1
+            and t1.employee_id=t2.id
+            and t1.position_id=position.id
             and t1.login_name LIKE CONCAT('%',:name,'%')
         """)
         if (StringUtils.isNotBlank(type)) {
@@ -234,7 +236,7 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         var paramMap = HashMap<String, Any>()
         paramMap.put("type", type)
         paramMap.put("name", loginName)
-        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(Account::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(AccountDto::class.java))
     }
 
 }

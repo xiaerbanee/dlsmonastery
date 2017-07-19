@@ -11,6 +11,7 @@ import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.time.LocalDateTimeUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -82,7 +83,7 @@ public class DutyOvertimeService {
         if (currentDate == null) {
             return overtimeHour;
         }
-        LocalDate dateStart = currentDate.minusMonths(3);
+        LocalDate dateStart = LocalDateUtils.getFirstDayOfThisMonth(currentDate.minusMonths(3));
         LocalDate dateEnd = currentDate;
         List<DutyOvertime> overtimeList = dutyOvertimeRepository.findByIdAndDate(employeeId, dateStart, dateEnd, AuditTypeEnum.PASS.getValue());
         if (CollectionUtil.isNotEmpty(overtimeList)) {

@@ -148,8 +148,7 @@ public class AccountService {
     }
 
     public List<AccountDto> findByLoginNameLikeAndType(String type,String key) {
-        List<Account> accountList = accountRepository.findByLoginNameLikeAndType(type,key);
-        List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
+        List<AccountDto> accountDtoList = accountRepository.findByLoginNameLikeAndType(type,key);
         return accountDtoList;
     }
 
