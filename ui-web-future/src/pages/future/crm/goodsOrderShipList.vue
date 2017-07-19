@@ -17,7 +17,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShipList.businessId')"  >
-                <el-input v-model.number="formData.businessId" auto-complete="off" :placeholder="$t('goodsOrderShipList.likeSearch')"></el-input>
+                <el-input v-model.number="formData.businessId" :placeholder="$t('goodsOrderShipList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShipList.billDate')" >
                 <date-range-picker  v-model="formData.billDateRange" ></date-range-picker>
@@ -28,7 +28,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShipList.office')" >
-                <office-select v-model="formData.areaId" @afterInit="setSearchText"></office-select>
+                <office-select v-model="formData.areaId" officeRuleName="办事处" @afterInit="setSearchText"></office-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -36,7 +36,7 @@
                 <date-range-picker  v-model="formData.shipDateRange" ></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShipList.shop')" >
-                <el-input v-model="formData.shopName" auto-complete="off"  :placeholder="$t('goodsOrderShipList.likeSearch')"></el-input>
+                <el-input v-model="formData.shopName" :placeholder="$t('goodsOrderShipList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShipList.store')" >
                 <depot-select v-model="formData.storeIdList" multiple category="store" @afterInit="setSearchText"></depot-select>
@@ -45,7 +45,7 @@
                 <account-select v-model="formData.createdBy" @afterInit="setSearchText" ></account-select>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShipList.outCode')" >
-                <el-input v-model="formData.outCode" auto-complete="off" :placeholder="$t('goodsOrderShipList.likeSearch')" ></el-input>
+                <el-input v-model="formData.outCode" :placeholder="$t('goodsOrderShipList.likeSearch')" ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -53,10 +53,10 @@
                 <date-range-picker v-model="formData.createdDateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShipList.expressCodes')" >
-                <el-input type="textarea" v-model="formData.expressCodes" auto-complete="off"  :placeholder="$t('goodsOrderShipList.multiEnterOrComma')"></el-input>
+                <el-input type="textarea" v-model="formData.expressCodes" :placeholder="$t('goodsOrderShipList.multiEnterOrComma')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShipList.businessId')" >
-                <el-input type="textarea" v-model="formData.businessIds" auto-complete="off"  :placeholder="$t('goodsOrderShipList.multiEnterOrComma')"></el-input>
+                <el-input type="textarea" v-model="formData.businessIds" :placeholder="$t('goodsOrderShipList.multiEnterOrComma')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShipList.status')" >
                 <el-select v-model="formData.status" clearable filterable :placeholder="$t('goodsOrderShipList.selectStatus')">
@@ -64,10 +64,10 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShipList.remarks')" >
-                <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('goodsOrderShipList.likeSearch')" ></el-input>
+                <el-input v-model="formData.remarks" :placeholder="$t('goodsOrderShipList.likeSearch')" ></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShipList.expressCode')" >
-                <el-input v-model="formData.expressCode" auto-complete="off" :placeholder="$t('goodsOrderShipList.likeSearch')" ></el-input>
+                <el-input v-model="formData.expressCode" :placeholder="$t('goodsOrderShipList.likeSearch')" ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -78,7 +78,7 @@
       </search-dialog>
 
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('goodsOrderShipList.loading')" @sort-change="sortChange" stripe border >
-        <el-table-column column-key="id" prop="formatId" :label="$t('goodsOrderShipList.businessId')" sortable></el-table-column>
+        <el-table-column column-key="id" prop="businessId" :label="$t('goodsOrderShipList.businessId')" sortable></el-table-column>
         <el-table-column prop="createdDate" sortable :label="$t('goodsOrderShipList.createdDate')"></el-table-column>
         <el-table-column prop="status" :label="$t('goodsOrderShipList.status')"></el-table-column>
         <el-table-column prop="shopName" :label="$t('goodsOrderShipList.shop')" width="160"></el-table-column>

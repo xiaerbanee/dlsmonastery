@@ -1,13 +1,13 @@
 <template>
   <div>
-    <el-select v-model="innerId"  filterable remote :multiple="multiple" :disabled="disabled"  placeholder="输入关键字" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
+    <el-select v-model="innerId"  filterable :remote="remote" :multiple="multiple" :disabled="disabled"  placeholder="输入关键字" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
       <el-option v-for="item in itemList"  :key="item.id" :label="item.fullName" :value="item.id"></el-option>
     </el-select>
   </div>
 </template>
 <script>
   export default {
-    props: ['value','multiple','disabled'],
+    props: ['value','multiple','disabled','remote','officeRuleName'],
     data() {
       return {
         innerId:null,
@@ -20,31 +20,11 @@
           return;
         }
         this.remoteLoading = true;
-        axios.get('/api/basic/sys/office/search',{params:{name:query}}).then((response)=>{
-          var newList = new Array();
-          var idList = new Array();
-          if(this.multiple && this.innerId) {
-            idList = this.innerId;
-          } else {
-            if(util.isNotBlank(this.innerId)) {
-              idList.push(this.innerId);
-            }
-          }
-          for(var index in this.itemList) {
-            var item = this.itemList[index];
-            if(idList.indexOf(item.id)>=0) {
-              newList.push(item);
-            }
-          }
-          for(var index in response.data) {
-            var item = response.data[index];
-            if(idList.indexOf(item.id)<0) {
-              newList.push(item);
-            }
-          }
-          this.itemList = newList;
+        this.doSearchByKey(query).then(()=>{
           this.remoteLoading = false;
-        })
+        }).catch(()=>{
+          this.remoteLoading = false;
+        });
       }, handleChange(newVal) {
         if(newVal !== this.value) {
           this.$emit('input', newVal);
@@ -53,40 +33,72 @@
         if(this.innerId===val){
           return;
         }
-        if(val){
-          this.innerId=val;
-          let idStr=this.innerId;
-          if(this.multiple && this.innerId){
-            idStr=this.innerId;
-          }
-          if(util.isBlank(idStr)) {
-            return;
-          }
-          this.remoteLoading = true;
-          axios.get('/api/basic/sys/office/findByIds?idStr=' + idStr).then((response)=>{
-            this.itemList=response.data;
-            this.remoteLoading = false;
-            this.$nextTick(()=>{
-              this.$emit('afterInit');
-            });
-          })
+        if(this.multiple){
+          this.innerId = (val ? val : []);
         }else{
-          if(this.multiple){
-            this.innerId = [];
-          }else{
-            this.innerId = val
-          }
-          this.$nextTick(()=>{
-            this.$emit('afterInit');
-          });
+          this.innerId = val;
         }
-
+        this.$nextTick(()=>{
+          this.$emit('afterInit');
+        });
+      },initItemList(val, create){
+          //在setValue之前被调用，确保相应的id有对应的记录，可以正确显示label
+        if(this.remote){
+          return this.doSearchByIds(val);
+        }else if(create){
+          return this.doSearchByKey(null);
+        }else{
+          return Promise.resolve();
+        }
+      },
+      doSearchByKey(query){
+        return axios.get('/api/basic/sys/office/search',{params:{officeRuleName:this.officeRuleName, name:query}}).then((response)=>{
+          let newList = [];
+          for(let item of this.itemList) {
+            if(this.selected(item)) {
+              newList.push(item);
+            }
+          }
+          for(let item of response.data) {
+            if(!this.selected(item)) {
+              newList.push(item);
+            }
+          }
+          this.itemList = newList;
+        });
+      },
+      doSearchByIds(val){
+        if(val){
+          return axios.get('/api/basic/sys/office/findByIds', {params: {ids: val}}).then((response)=>{
+              if(response.data){
+                this.itemList=response.data;
+              }else{
+                this.itemList=[];
+              }
+          });
+        }else {
+          this.itemList=[];
+          return Promise.resolve();
+        }
+      },
+      selected(item){
+        if(!this.innerId){
+          return false;
+        }
+        if(this.multiple) {
+          return this.innerId.indexOf(item.id) >=0;
+        }
+        return this.innerId === item.id;
       }
     },created () {
-      this.setValue(this.value);
+      this.initItemList(this.value, true).then(()=>{
+        this.setValue(this.value);
+      });
     },watch: {
       value :function (newVal) {
-        this.setValue(newVal);
+        this.initItemList(newVal, false).then(()=>{
+          this.setValue(newVal);
+        });
       }
     }
   };

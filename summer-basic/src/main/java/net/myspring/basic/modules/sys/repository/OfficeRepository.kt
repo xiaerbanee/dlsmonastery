@@ -216,7 +216,6 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
         }
         sb.append("""
             order by t1.name
-            limit 0,20
         """)
         return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(officeQuery), BeanPropertyRowMapper(Office::class.java))
     }

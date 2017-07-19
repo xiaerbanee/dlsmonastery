@@ -55,7 +55,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.office')">
-                <office-select v-model="formData.areaId" @afterInit="setSearchText"></office-select>
+                <office-select v-model="formData.areaId" officeRuleName="办事处" @afterInit="setSearchText"></office-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -108,7 +108,7 @@
       </search-dialog>
 
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :row-class-name="tableRowClassName" :element-loading-text="$t('goodsOrderList.loading')" @sort-change="sortChange" stripe border >
-        <el-table-column column-key="id" prop="formatId" :label="$t('goodsOrderList.businessId')" sortable></el-table-column>
+        <el-table-column column-key="id" prop="businessId" :label="$t('goodsOrderList.businessId')" sortable></el-table-column>
         <el-table-column prop="createdDate" sortable :label="$t('goodsOrderList.createdDate')"></el-table-column>
         <el-table-column prop="billDate" :label="$t('goodsOrderList.billDate')"></el-table-column>
         <el-table-column prop="status" :label="$t('goodsOrderList.status')"></el-table-column>
@@ -256,7 +256,7 @@
       }
     }
  },created () {
-       this.pageHeight = 0.75*window.innerHeight;
+      this.pageHeight = 0.75*window.innerHeight;
       this.initPromise=axios.get('/api/ws/future/crm/goodsOrder/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);
