@@ -1,6 +1,7 @@
 package net.myspring.basic.common.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.SummerBasicApplication;
 import net.myspring.basic.common.datasource.DynamicDataSource;
@@ -45,6 +46,7 @@ public class JdbcConfig {
         }
         DynamicDataSource dataSource = new DynamicDataSource();
         dataSource.setTargetDataSources(targetDataSources);
+        dataSource.setDefaultTargetDataSource(Lists.newArrayList(targetDataSources).get(0));
         return dataSource;
     }
 
