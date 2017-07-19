@@ -117,8 +117,10 @@ Page({
         console.log(res.data)
         if (res.data.success) {
           wx.navigateBack();
-        } else {
+        } else if (res.data.hasOwnProperty("extra")) {
           that.setData({ 'response.data': res.data.extra.errors, submitDisabled: false });
+        } else {
+          that.setData({ "response.error": res.data.message, submitDisabled: false })
         }
       }
     })
@@ -131,8 +133,10 @@ Page({
       that.setData({ "response.error": responseData[key].message });
       delete responseData[key];
       that.setData({ "response.data": responseData })
+    } else if (res.data.hasOwnProperty("extra")) {
+      that.setData({ 'response.data': res.data.extra.errors, submitDisabled: false });
     } else {
-      that.setData({ "response.error": '' })
+      that.setData({ "response.error": res.data, submitDisabled: false })
     }
   },
   detail: function () {
