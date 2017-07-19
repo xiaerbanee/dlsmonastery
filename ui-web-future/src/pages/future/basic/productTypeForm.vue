@@ -63,7 +63,6 @@
             rules: {
               name: [{ required: true, message: this.$t('productTypeForm.prerequisiteMessage')}],
               reportName: [{ required: true, message: this.$t('productTypeForm.prerequisiteMessage')}],
-              code: [{ required: true, message: this.$t('productTypeForm.prerequisiteMessage')}],
               scoreType: [{ type:"boolean",required: true, message: this.$t('productTypeForm.prerequisiteMessage')}],
               baokaPrice: [{type: 'number', required: true, message: this.$t('productTypeForm.inputLegalValue')}],
               price1: [{type: 'number', required: true, message: this.$t('productTypeForm.inputLegalValue')}],
