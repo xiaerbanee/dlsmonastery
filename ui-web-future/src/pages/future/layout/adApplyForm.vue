@@ -15,6 +15,9 @@
         <el-form-item :label="$t('adApplyForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks" type="textarea"></el-input>
         </el-form-item>
+        <el-form-item :label="$t('adApplyForm.summery')">
+          <div style="color:red" >{{$t('adApplyForm.totalQty')}}：{{totalApplyQty}},{{$t('adApplyForm.totalAmount')}}：{{totalPrice.toFixed(2)}}</div>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('adApplyForm.save')}}</el-button>
         </el-form-item>
@@ -64,6 +67,7 @@
           },
           remoteLoading:false,
           totalApplyQty:0,
+          totalPrice:0,
         }
       },
       formSubmit(){
@@ -111,12 +115,15 @@
         return null;
       },getTotalApplyQty(){
         let tempTotalApplyQty = 0;
+        let tempTotalApplyPrice = 0;
         for(let index of this.filterProduct){
           if(util.isNotBlank(index.applyQty)&&Number.isInteger(index.applyQty)){
             tempTotalApplyQty += index.applyQty;
+            tempTotalApplyPrice += index.applyQty*index.price2;
           }
         }
         this.totalApplyQty = tempTotalApplyQty;
+        this.totalPrice = tempTotalApplyPrice;
       },
        searchDetail(){
          let val=this.productName;
