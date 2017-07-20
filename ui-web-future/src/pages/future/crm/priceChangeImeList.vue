@@ -10,10 +10,10 @@
         <el-button type="primary" @click="exportData" icon="upload" v-permit="'crm:priceChangeIme:view'">{{$t('priceChangeImeList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('priceChangeImeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('priceChangeImeList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
-            <el-col :span="24">
+            <el-col :span="12">
               <el-form-item :label="$t('priceChangeImeList.status')" >
                 <el-select v-model="formData.status" filterable clearable :placeholder="$t('priceChangeImeList.inputKey')">
                   <el-option v-for="item in formData.extra.statusList" :key="item":label="item" :value="item"></el-option>
@@ -25,14 +25,16 @@
               <el-form-item :label="$t('priceChangeImeList.type')" >
                 <product-select v-model="formData.productId" @afterInit="setSearchText"></product-select>
               </el-form-item>
-              <el-form-item :label="$t('priceChangeImeList.shopName')" >
-                <depot-select v-model="formData.shopId" category="shop" @afterInit="setSearchText"></depot-select>
-              </el-form-item>
               <el-form-item :label="$t('priceChangeImeList.isCheck')" >
                 <bool-select v-model="formData.isCheck"></bool-select>
               </el-form-item>
               <el-form-item :label="$t('priceChangeImeList.image')" >
                 <bool-select v-model="formData.hasImage"></bool-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item :label="$t('priceChangeImeList.shopName')" >
+                <depot-select v-model="formData.shopId" category="shop" @afterInit="setSearchText"></depot-select>
               </el-form-item>
               <el-form-item :label="$t('priceChangeImeList.ime')" >
                 <el-input v-model="formData.ime" auto-complete="off" :placeholder="$t('priceChangeImeList.likeSearch')"></el-input>
