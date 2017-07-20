@@ -107,7 +107,8 @@
         searchText:"",
         nextIsShop:false,
         formData:{
-          extra:{productTypeIdList:[]},
+          extra:{},
+          productTypeIdList:[]
         },
         sum:"",
         initPromise:{},
@@ -155,7 +156,7 @@
         this.pageRequest();
       },nextLevel(	productTypeId, officeId, depotId){
         if(productTypeId){
-          this.formData.productTypeIdList=productTypeId;
+          this.formData.productTypeIdList.push(productTypeId);
           this.formData.sumType="区域";
           this.pageRequest();
         }else{
