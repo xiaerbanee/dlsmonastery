@@ -8,6 +8,7 @@ import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.general.modules.sys.dto.ActivitiDetailDto;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.StringUtils;
 
 import javax.persistence.Transient;
 import java.util.List;
@@ -167,7 +168,7 @@ public class AuditFileDto extends DataDto<AuditFile> {
     }
 
     public Boolean getEditable() {
-        if ((!getLocked() && !getFinished()) && RequestUtils.getAccountId()!= null && (RequestUtils.getAccountId().equals(getCreatedBy()) || RequestUtils.getAdmin())) {
+        if ((!getLocked() && !getFinished()) && StringUtils.isNotBlank(RequestUtils.getAccountId())&& (RequestUtils.getAccountId().equals(getCreatedBy()) || RequestUtils.getAdmin())) {
             return true;
         } else {
             return false;

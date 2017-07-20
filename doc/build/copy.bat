@@ -1,5 +1,5 @@
-set from=D:\Users\liuj\IdeaProjects\summer
-set to=C:\Users\liuj\Desktop\server
+set from=D:\IdeaProjects\summer
+set to=C:\Users\lihx\Desktop\server
  copy /y %from%\global-cloud\build\libs\global-cloud-1.0.0-RELEASE.jar %to%
  copy /y %from%\global-tool\build\libs\global-tool-0.0.1-SNAPSHOT.jar %to%
  copy /y %from%\summer-config\build\libs\summer-config-1.0.0-RELEASE.jar %to%

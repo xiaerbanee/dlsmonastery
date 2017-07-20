@@ -7,7 +7,24 @@
 </template>
 <script>
   export default {
-    props: ['value','multiple','disabled','remote','officeRuleName'],
+    props: {
+      value: {
+        required: true
+      },
+      multiple: {
+        default: false
+      },
+      disabled: {
+        default: false
+      },
+      remote: {
+        default: true
+      },
+      officeRuleName: {
+        required: false
+      },
+    },
+
     data() {
       return {
         innerId:null,
@@ -42,7 +59,7 @@
           this.$emit('afterInit');
         });
       },initItemList(val, create){
-          //在setValue之前被调用，确保相应的id有对应的记录，可以正确显示label
+        //在setValue之前被调用，确保相应的id有对应的记录，可以正确显示label
         if(this.remote){
           return this.doSearchByIds(val);
         }else if(create){
@@ -70,11 +87,11 @@
       doSearchByIds(val){
         if(val){
           return axios.get('/api/basic/sys/office/findByIds', {params: {ids: val}}).then((response)=>{
-              if(response.data){
-                this.itemList=response.data;
-              }else{
-                this.itemList=[];
-              }
+            if(response.data){
+              this.itemList=response.data;
+            }else{
+              this.itemList=[];
+            }
           });
         }else {
           this.itemList=[];

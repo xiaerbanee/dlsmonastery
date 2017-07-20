@@ -20,12 +20,6 @@
             <el-form-item :label="$t('employeeEditForm.bankItem')" prop="bankItem">
               <el-input v-model="employeeForm.bankItem"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('employeeEditForm.outId')" prop="outId">
-              <el-input v-model="accountForm.outId"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('employeeEditForm.outPassword')" prop="outPassword">
-              <el-input  v-model="accountForm.outPassword" type="password"></el-input>
-            </el-form-item>
             <el-form-item :label="$t('employeeEditForm.remarks')" prop="remarks">
               <el-input  v-model="employeeForm.remarks"></el-input>
             </el-form-item>
@@ -34,8 +28,8 @@
             <el-form-item :label="$t('employeeEditForm.name')" prop="name">
               <el-input  v-model="employeeForm.name" ></el-input>
             </el-form-item>
-            <el-form-item :label="$t('employeeEditForm.sexLabel')" prop="sexLabel">
-              <el-radio-group v-model="employeeForm.sexLabel">
+            <el-form-item :label="$t('employeeEditForm.sexLabel')" prop="sex">
+              <el-radio-group v-model="employeeForm.sex">
                 <el-radio :label="1">{{$t('employeeEditForm.man')}}</el-radio>
                 <el-radio :label="0">{{$t('employeeEditForm.women')}}</el-radio>
               </el-radio-group>
@@ -51,13 +45,12 @@
             </el-form-item>
             <el-form-item :label="$t('employeeEditForm.education')" prop="education">
               <el-select v-model="employeeForm.education"  clearable >
-                <el-option v-for="item in formData.extra.educationList" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in employeeForm.extra.educationList" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('employeeEditForm.image')" prop="image">
-              <el-upload action="/api/basic/sys/folderFile/upload?uploadPath=/员工管理" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" >
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/员工管理" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" >
                 <el-button size="small" type="primary">{{$t('employeeEditForm.clickUpload')}}</el-button>
-                <div slot="tip" class="el-upload__tip">{{$t('employeeEditForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
             </el-form-item>
             <el-form-item>
@@ -91,27 +84,11 @@
           isInit:false,
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
-          formData:{extra:{}},
           employeeForm:{
-            id:"",
-            bankName:'',
-            bankItem:'',
-            remarks:'',
-            name:'',
-            sex:'',
-            sexLabel:'',
-            birthday:'',
-            school:'',
-            major:'',
-            education:'',
-            image:''
+              extra:[],
           },
           accountForm:{
-            id:"",
-            loginName:'',
-            password:'',
-            outId:'',
-            outPassword:'',
+            extra:[],
           },
           rules: {
             confirmPassword: [{ validator: validateConfigPass, trigger: 'blur' }],
@@ -127,14 +104,12 @@
         form.validate((valid) => {
           if (valid) {
             this.employeeForm.image = util.getFolderFileIdStr(this.fileList);
-            this.employeeForm.sex=this.employeeForm.sexLabel==1?"男":"女";
-              axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeForm)).then((response)=> {
-                  this.$message("员工"+response.data.message);
-                  axios.post('/api/basic/hr/account/save', qs.stringify(this.accountForm)).then((response)=> {
-                  this.$message("账户"+response.data.message);
-                  });
-                Object.assign(this.$data, this.getData());
-               this.$router.push({name:'employeeList',query:util.getQuery("employeeList")})
+            this.employeeForm.sex=this.employeeForm.sex==1?"男":"女"
+            this.employeeForm.accountForm=util.deleteExtra(this.accountForm)
+            axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeForm, {allowDots: true})).then((response)=> {
+              this.$message("员工"+response.data.message);
+                 Object.assign(this.$data, this.getData());
+                  this.$router.push({name:'home', params:{_closeFrom:true}})
               }).catch(function () {
                 that.submitDisabled = false;
             });
@@ -142,10 +117,6 @@
             this.submitDisabled = false;
           }
         })
-      },getForm(){
-          axios.get('/api/basic/hr/employee/getForm').then((response)=>{
-              this.formData=response.data
-          })
       },handlePreview(file) {
         window.open(file.url);
       },handleChange(file, fileList) {
@@ -153,23 +124,25 @@
       },handleRemove(file, fileList) {
         this.fileList = fileList;
       }
-    },activated () {
-      if(!this.$route.query.headClick || this.isInit) {
-        this.getForm();
-        if(!this.isCreate){
+    },created () {
+      axios.get('/api/basic/hr/employee/getForm').then((response)=>{
+        this.employeeForm = response.data;
+        axios.get('/api/basic/hr/account/getForm').then((response)=>{
+          this.accountForm = response.data;
           axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.employeeForm);
-            util.copyValue(response.data.account,this.accountForm);
-            this.employeeForm.sexLabel=response.data.sex=="男"?1:0;
+            util.copyValue(response.data, this.employeeForm);
+            this.employeeForm.sex = response.data.sex == "男" ? 1 : 0;
+            axios.get('/api/basic/hr/account/findOne',{params: {id:this.employeeForm.accountId}}).then((response)=>{
+              util.copyValue(response.data, this.accountForm);
+            })
             if(this.employeeForm.image !=null) {
               axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.employeeForm.image}}).then((response)=>{
                 this.fileList= response.data;
               });
             }
           })
-        }
-      }
-      this.isInit = true;
+        })
+      });
     }
   }
 </script>

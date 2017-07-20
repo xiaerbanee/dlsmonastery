@@ -17,6 +17,7 @@ import java.util.List;
 public class EmployeeForm extends BaseForm<Employee> {
     private String mobilePhone;
     private LocalDate entryDate;
+    private String image;
     private LocalDate regularDate;
     private LocalDate leaveDate;
     private String name;
@@ -28,6 +29,7 @@ public class EmployeeForm extends BaseForm<Employee> {
     private String school;
     private String bankName;
     private String bankNumber;
+    private String bankItem;
     private String sex;
     private String originId;
     private String dutyCode;
@@ -35,6 +37,22 @@ public class EmployeeForm extends BaseForm<Employee> {
     private String accountId;
     private String code;
     private AccountForm accountForm;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getBankItem() {
+        return bankItem;
+    }
+
+    public void setBankItem(String bankItem) {
+        this.bankItem = bankItem;
+    }
 
     public AccountForm getAccountForm() {
         return accountForm;

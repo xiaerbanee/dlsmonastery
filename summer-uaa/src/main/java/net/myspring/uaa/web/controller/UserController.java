@@ -1,11 +1,13 @@
 package net.myspring.uaa.web.controller;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.response.RestResponse;
 import net.myspring.uaa.dto.AccountWeixinDto;
 import net.myspring.uaa.service.AccountWeixinService;
 import net.myspring.uaa.service.UserService;
 import net.myspring.uaa.web.form.AccountWeixinForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.session.ExpiringSession;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,8 @@ import java.util.Map;
 @Controller
 public class UserController {
 
+    @Value("${companyNames}")
+    private String[] companyNames;
     @Autowired
     FindByIndexNameSessionRepository<? extends ExpiringSession> sessions;
 
@@ -77,5 +81,11 @@ public class UserController {
     @ResponseBody
     public List<AccountWeixinDto> getWeixinAccounts(String weixinCode) {
         return userService.getWeixinAccountList(weixinCode);
+    }
+
+    @RequestMapping(value = "/user/getCompanyNames")
+    @ResponseBody
+    public List<String> getCompanyNames() {
+        return Lists.newArrayList(companyNames);
     }
 }

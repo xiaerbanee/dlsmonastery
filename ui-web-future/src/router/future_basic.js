@@ -6,8 +6,6 @@ const chainList  = r => require.ensure([], () => r(require('pages/future/basic/c
 const chainForm  = r => require.ensure([], () => r(require('pages/future/basic/chainForm.vue')));
 const clientList = r  => require.ensure([], () => r(require('pages/future/basic/clientList.vue')));
 const clientForm= r  => require.ensure([], () => r(require('pages/future/basic/clientForm.vue')));
-const depotList = r  => require.ensure([], () => r(require('pages/future/basic/depotList.vue')));
-const depotForm= r  => require.ensure([], () => r(require('pages/future/basic/depotForm.vue')));
 const expressCompanyList= r  => require.ensure([], () => r(require('pages/future/basic/expressCompanyList.vue')));
 const expressCompanyForm  = r => require.ensure([], () => r(require('pages/future/basic/expressCompanyForm.vue')));
 const pricesystemList  = r => require.ensure([], () => r(require('pages/future/basic/pricesystemList.vue')));
@@ -50,8 +48,6 @@ let routes = [
   {path:'/future/basic/chainForm',component:chainForm,name:'chainForm',meta: {menu:"chainList",keepAlive:true}},
   {path:'/future/basic/clientList',component:clientList,name:'clientList'},
   {path:'/future/basic/clientForm',component:clientForm,name:'clientForm',meta: {menu:"clientList",keepAlive:true}},
-  {path:'/future/basic/depotList',component:depotList,name:'depotList'},
-  {path:'/future/basic/depotForm',component:depotForm,name:'depotForm',meta: {menu:"depotList",keepAlive:true}},
   {path:'/future/basic/expressCompanyList',component:expressCompanyList,name:'expressCompanyList'},
   {path:'/future/basic/expressCompanyForm',component:expressCompanyForm,name:'expressCompanyForm',meta: {menu:"expressCompanyList",keepAlive:true}},
   {path:'/future/basic/pricesystemList',component:pricesystemList,name:'pricesystemList'},

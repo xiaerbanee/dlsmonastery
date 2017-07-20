@@ -49,17 +49,18 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
-        that.setData({ formData: res.data, 'formData.dateEnd': $util.formatLocalDate(new Date()),formProperty: res.data.extra });
+        console.log(res.data)
+        that.setData({ formData: res.data, 'formData.dateEnd': $util.formatLocalDate(new Date()), formProperty: res.data.extra });
         that.pageRequest();
       }
     })
   },
-  pageRequest: function () {  
+  pageRequest: function () {
     var that = this;
-    that.setData({ 'formData.dateRange': that.data.formData.dateStart + " - " + that.data.formData.dateEnd})
-    that.setData({ 'formData.type': that.data.types, 'formData.isDetail': false});
+    that.setData({ 'formData.dateRange': that.data.formData.dateStart + " - " + that.data.formData.dateEnd })
+    that.setData({ 'formData.type': that.data.types, 'formData.isDetail': false });
     if (!that.data.nextIsShop) {
-      that.setData({'formData.depotId':''});
+      that.setData({ 'formData.depotId': '' });
       wx.request({
         url: $util.getUrl('ws/future/crm/productIme/productImeReport'),
         header: {
@@ -67,7 +68,7 @@ Page({
         },
         data: $util.deleteExtra(that.data.formData),
         success: function (res) {
-          that.setData({ page: res.data.list, sum: res.data.sum});
+          that.setData({ page: res.data.list, sum: res.data.sum });
           wx.hideToast();
         }
       })
@@ -89,52 +90,46 @@ Page({
   nextLevel: function (e) {
     let that = this;
     let officeId = e.currentTarget.dataset.officeId
-    let productTypeId = e.currentTarget.dataset.productTypeId;
     let depotId = e.currentTarget.dataset.depotId;
-    if (productTypeId) {
-      that.setData({ "formData.productTypeIdList": productTypeId,'formData.sumType':'区域'})
-      that.pageRequest();
-    } else {
-      if (!that.data.nextIsShop) {
-        wx.request({
-          url: $util.getUrl('basic/sys/office/checkLastLevel'),
-          header: {
-            Cookie: "JSESSIONID=" + app.globalData.sessionId
-          },
-          data: { officeId },
-          success: function (res) {
-            that.data.officeIds.push(officeId);
-            that.setData({ officeId: officeId, 'formData.officeId': that.data.officeIds[that.data.officeIds.length - 1],nextIsShop:res.data})
-            wx.showToast({
-              title: '加载中',
-              icon: 'loading',
-              duration: 10000,
-              success: function (res) {
-                that.pageRequest();
-              }
-            })
-          }
-        })
-      } else {
-        that.setData({ 'formData.isDetail': true, 'formData.depotId': depotId })
-        wx.request({
-          url: $util.getUrl('ws/future/basic/depotShop/depotReportDetail'),
-          header: {
-            Cookie: "JSESSIONID=" + app.globalData.sessionId
-          },
-          data: $util.deleteExtra(that.data.formData),
-          success: function (res) {
-            let productQtyMap = res.data.productQtyMap;
-            let productTypeDetail = [];
-            if (productQtyMap) {
-              for (let key in productQtyMap) {
-                productTypeDetail.push({ productName: key, qty: productQtyMap[key] })
-              }
-              that.setData({ productTypeDetail: productTypeDetail });
+    if (!that.data.nextIsShop) {
+      wx.request({
+        url: $util.getUrl('basic/sys/office/checkLastLevel'),
+        header: {
+          Cookie: "JSESSIONID=" + app.globalData.sessionId
+        },
+        data: { officeId },
+        success: function (res) {
+          that.data.officeIds.push(officeId);
+          that.setData({ officeId: officeId, 'formData.officeId': that.data.officeIds[that.data.officeIds.length - 1], nextIsShop: res.data })
+          wx.showToast({
+            title: '加载中',
+            icon: 'loading',
+            duration: 10000,
+            success: function (res) {
+              that.pageRequest();
             }
+          })
+        }
+      })
+    } else {
+      that.setData({ 'formData.isDetail': true, 'formData.depotId': depotId })
+      wx.request({
+        url: $util.getUrl('ws/future/basic/depotShop/depotReportDetail'),
+        header: {
+          Cookie: "JSESSIONID=" + app.globalData.sessionId
+        },
+        data: $util.deleteExtra(that.data.formData),
+        success: function (res) {
+          let productQtyMap = res.data.productQtyMap;
+          let productTypeDetail = [];
+          if (productQtyMap) {
+            for (let key in productQtyMap) {
+              productTypeDetail.push({ productName: key, qty: productQtyMap[key] })
+            }
+            that.setData({ productTypeDetail: productTypeDetail });
           }
-        })
-      }
+        }
+      })
     }
   },
   preLevel() {
@@ -175,6 +170,10 @@ Page({
   bindOutType: function (e) {
     var that = this;
     that.setData({ 'formData.outType': that.data.formProperty.outTypeList[e.detail.value] })
+  },
+  switchChange: function (e) {
+    console.log("eeee", e.detail.value)
+    this.setData({ 'formData.scoreType': e.detail.value })
   },
   search: function () {
     var that = this;

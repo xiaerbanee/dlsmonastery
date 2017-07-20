@@ -63,8 +63,26 @@ public class DepotForm extends BaseForm<Depot> {
     private Boolean popShop = false;
     //公司分组（imoo，电玩，oppo不写）
     private String companyGroup;
+    private String cmccCarrierShopId;
+    private String ctccCarrierShopId;
 
     private String parentId;
+
+    public String getCmccCarrierShopId() {
+        return cmccCarrierShopId;
+    }
+
+    public void setCmccCarrierShopId(String cmccCarrierShopId) {
+        this.cmccCarrierShopId = cmccCarrierShopId;
+    }
+
+    public String getCtccCarrierShopId() {
+        return ctccCarrierShopId;
+    }
+
+    public void setCtccCarrierShopId(String ctccCarrierShopId) {
+        this.ctccCarrierShopId = ctccCarrierShopId;
+    }
 
     public String getAreaId() {
         return areaId;

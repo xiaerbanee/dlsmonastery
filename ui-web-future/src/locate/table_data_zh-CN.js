@@ -245,8 +245,6 @@ export default {
       depotChangeForm: "仓库调整编辑",
       depotChangeList: "仓库调整",
       depotDetailList: "货品库存",
-      depotForm: "仓库管理编辑",
-      depotList: "仓库管理",
       expressCompanyForm: "快递公司编辑",
       expressCompanyList: "快递公司",
       expressForm: "快递管理编辑",
