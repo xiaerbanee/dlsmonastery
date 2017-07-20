@@ -83,7 +83,7 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         """);
         var paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("idList",idList)
-        return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(paramMap),BeanPropertyRowMapper(EmployeeDto::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(),paramMap,BeanPropertyRowMapper(EmployeeDto::class.java))
     }
 
     override fun findByNameLike(name: String):MutableList<EmployeeDto>{

@@ -29,9 +29,6 @@
           this.$emit('input', newVal);
         }
       },setValue(val) {
-        if(this.innerId===val){
-          return;
-        }
         if(val) {
           this.innerId=val;
           let idStr=this.innerId;

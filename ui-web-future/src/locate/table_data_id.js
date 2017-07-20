@@ -229,8 +229,6 @@ export default {
       depotChangeForm: "formulir gudang",
       depotChangeList: "仓库调整",
       depotDetailList: "persediaan barang",
-      depotForm: "manajemen gudang",
-      depotList: "manajemen gudangn",
       expressCompanyForm: "Ekspres Mengedit",
       expressCompanyList: "perusahan=an jasa pengiriman",
       expressForm: "Ekspres managing editor",

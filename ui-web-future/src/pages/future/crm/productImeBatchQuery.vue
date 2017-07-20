@@ -31,7 +31,11 @@
             <template>
               <el-table :data="productImeList" style="width: 100%" border>
                 <el-table-column prop="companyName" :label="$t('productImeBatchQuery.companyName')"></el-table-column>
-                <el-table-column prop="ime" :label="$t('productImeBatchQuery.ime')"></el-table-column>
+                <el-table-column prop="ime" :label="$t('productImeBatchQuery.ime')">
+                  <template scope="scope">
+                    <a href="javascript:void(0);" style="color:blue;text-decoration:underline;" @click="showDetail(scope.row.id)">{{ scope.row.ime}}</a>
+                  </template>
+                </el-table-column>
                 <el-table-column prop="ime2" :label="$t('productImeBatchQuery.ime2')"></el-table-column>
                 <el-table-column prop="boxIme" :label="$t('productImeBatchQuery.boxIme')"></el-table-column>
                 <el-table-column prop="meid" :label="$t('productImeBatchQuery.meid')"></el-table-column>
@@ -79,11 +83,12 @@
           errMsg:'',
           productImeList:[],
           productQtyList:[],
-
           rules: {
             allImeStr: [{ required: true, message: this.$t('productImeBatchQuery.prerequisiteMessage')}],
           },
         }
+      }, showDetail(id){
+        this.$router.push({ name: 'productImeDetail', query: { id: id }});
       }, onAllImeStrChange(){
         this.searched = true;
         axios.post('/api/ws/future/crm/productIme/batchQuery',qs.stringify({allImeStr: this.allImeStr})).then((response)=>{

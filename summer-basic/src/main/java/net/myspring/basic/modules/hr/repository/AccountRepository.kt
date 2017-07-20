@@ -115,13 +115,12 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             t1.*,t2.name as employeeName,t3.name as positionName,office.name as officeName,leader.login_name as leaderName,
             t2.entry_date,t2.leave_date,t2.regular_date,t2.status as employeeStatus
             FROM
-            hr_account t1,hr_employee t2,hr_position t3,sys_office office,hr_account leader
+             hr_account t1 left join hr_employee t2 on t1.employee_id=t2.id
+            left join hr_position t3 on t1.position_id=t3.id
+            left join sys_office office on t1.office_id=office.id
+            left join hr_account leader on t1.leader_id=leader.id
             WHERE
             t1.enabled=1
-            and t1.office_id=office.id
-            and t1.employee_id=t2.id
-            AND t1.position_id=t3.id
-            and t1.leader_id=leader.id
             and t1.id=:id
         """)
         var paramMap = HashMap<String, Any>()
@@ -208,13 +207,12 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             t1.*,t2.name as employeeName,t3.name as positionName,office.name as officeName,leader.login_name as leaderName,
             t2.entry_date,t2.leave_date,t2.regular_date,t2.status as employeeStatus
             FROM
-            hr_account t1,hr_employee t2,hr_position t3,sys_office office,hr_account leader
+            hr_account t1 left join hr_employee t2 on t1.employee_id=t2.id
+            left join hr_position t3 on t1.position_id=t3.id
+            left join sys_office office on t1.office_id=office.id
+            left join hr_account leader on t1.leader_id=leader.id
             WHERE
             t1.enabled=1
-            and t1.office_id=office.id
-            and t1.employee_id=t2.id
-            AND t1.position_id=t3.id
-            and t1.leader_id=leader.id
         """)
         if (accountQuery.loginName != null) {
             sb.append(" AND t1.login_name LIKE CONCAT('%',:loginName,'%') ")
