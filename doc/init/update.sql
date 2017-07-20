@@ -379,11 +379,6 @@ CREATE TABLE `sys_process_task` (
 );
 
 
-
-ALTER TABLE `sys_process_type`
-ADD COLUMN `view_position_ids`  varchar(64) NULL AFTER `audit_file_type`,
-ADD COLUMN `created_position_ids`  varchar(64) NULL AFTER `view_position_ids`;
-
 DROP TABLE IF EXISTS `sys_product`;
 CREATE TABLE `sys_product` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -1214,3 +1209,34 @@ SET FOREIGN_KEY_CHECKS=1;
 
 ALTER TABLE `sys_account_kingdee_book`
 ADD COLUMN `company_name`  varchar(64) NULL AFTER `kingdee_book_id`;
+
+DROP TABLE IF EXISTS `api_oppo_plant_agent_product_sel`;
+CREATE TABLE `api_oppo_plant_agent_product_sel` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `brand_id` varchar(64) DEFAULT NULL,
+  `brand_name` varchar(64) DEFAULT NULL,
+  `type_id` varchar(64) DEFAULT NULL,
+  `type_name` varchar(64) DEFAULT NULL,
+  `color_id` varchar(64) DEFAULT NULL,
+  `color_name` varchar(64) DEFAULT NULL,
+  `code_record_type` varchar(64) DEFAULT NULL,
+  `brand_type` varchar(64) DEFAULT NULL,
+  `item_desc` varchar(64) DEFAULT NULL,
+  `item_number` varchar(64) DEFAULT NULL,
+  `product_id` bigint(20) DEFAULT NULL,
+  `lx_product_id` bigint(20) DEFAULT NULL,
+  `created_by` bigint(20) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `last_modified_by` bigint(20) NOT NULL,
+  `last_modified_date` datetime NOT NULL,
+  `remarks` varchar(255) DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '0',
+  `locked` tinyint(1) NOT NULL,
+  `enabled` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `item_number` (`item_number`) USING BTREE
+);
+
+ALTER TABLE `sys_product`
+ADD COLUMN `company_name`  varchar(64) NULL AFTER `kingdee_book_id`;
+

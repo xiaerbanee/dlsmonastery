@@ -2,7 +2,7 @@ spring:
   application:
     name: global-cloud
   profiles:
-    active: cn-dev
+    active: in-dev
   cloud:
     config:
       uri: http://localhost:9900
