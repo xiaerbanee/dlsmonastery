@@ -1,16 +1,15 @@
 <template>
   <div>
     <head-tab active="imeAllotBatchForm"></head-tab>
-    <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('imeAllotBatchForm.filter')" v-model="searchFormVisible" size="small" class="search-form" z-index="1500">
-      <el-form >
+    <search-dialog :show="searchFormVisible" @hide="searchFormVisible=false" :title="$t('imeAllotBatchForm.filter')" v-model="searchFormVisible" size="tiny" class="search-form" z-index="1500">
+      <el-form>
         <el-row :gutter="4">
-          <el-col :span="12">
-            <el-form-item :label="$t('imeAllotBatchForm.ime')">
+          <el-col :span="24">
+            <el-form-item :label="$t('imeAllotBatchForm.imeStr')">
               <el-input type="textarea" :rows="6" v-model="imeStr"  ></el-input>
             </el-form-item>
           </el-col>
         </el-row>
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="search" icon="search">{{$t('imeAllotBatchForm.sure')}}</el-button>
@@ -98,6 +97,7 @@
         };
       },
       search() {
+        this.searchFormVisible = false;
         axios.post('/api/ws/future/crm/productIme/findDtoListByImes', qs.stringify({imeStr: this.imeStr})).then((response) => {
           table.loadData(response.data);
         });
