@@ -21,6 +21,9 @@ export default {
     filter: "过滤",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
+    summery:"汇总信息",
+    totalQty:"总开单数",
+    totalAmount:"总价格",
   },
   adApplyList: {
     adApplyList: "POP征订",

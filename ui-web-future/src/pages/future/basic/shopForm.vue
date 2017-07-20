@@ -51,6 +51,12 @@
             <el-option v-for="item in inputForm.extra.adPricesystemList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="移动商城名称" prop="cmccCarrierShopId">
+          <carrier-shop-select v-model="inputForm.cmccCarrierShopId" type="移动"></carrier-shop-select>
+        </el-form-item>
+        <el-form-item label="联信商城名称" prop="ctccCarrierShopId">
+          <carrier-shop-select v-model="inputForm.ctccCarrierShopId" type="联信"></carrier-shop-select>
+        </el-form-item>
         <el-form-item label="快递公司" prop="expressCompanyId">
           <express-company-select v-model="inputForm.expressCompanyId"></express-company-select>
         </el-form-item>
@@ -90,8 +96,9 @@
   import boolRadioGroup from 'components/common/bool-radio-group'
   import expressCompanySelect from 'components/future/express-company-select'
   import depotSelect from 'components/future/depot-select'
+  import carrierShopSelect from 'components/future/carrier-shop-select'
   export default {
-    components:{depotSelect,officeSelect,districtSelect,boolRadioGroup,expressCompanySelect},
+    components:{depotSelect,officeSelect,districtSelect,boolRadioGroup,expressCompanySelect,carrierShopSelect},
     data(){
       return this.getData()
     },

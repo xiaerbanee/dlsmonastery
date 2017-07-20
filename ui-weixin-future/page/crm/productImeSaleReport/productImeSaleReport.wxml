@@ -1,0 +1,107 @@
+<import src="/page/template/pageable/pageable" />
+<scroll-view class="page" name="pageHeader" scroll-top="{{scrollTop}}" scroll-y="true" style="height:{{height}}px">
+  <form wx:if="{{!searchHidden}}" bindsubmit="formSubmit">
+    <view class="weui-cells weui-cells_after-title form_bd">
+      <input type="hidden" name="page" value="{{formData.page}}" class="hidden" />
+      <input type="hidden" name="size" value="{{formData.size}}" class="hidden" />
+      <input type="hidden" name="sort" value="{{formData.sort}}" class="hidden" />
+      <input name="depotId" value="{{formData.depotId}}" class="hidden" />
+      <input name="officeId" value="{{formData.officeId}}" class="hidden" />
+      <input name="isDetail" value="{{formData.isDetail}}" class="hidden" />
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">开始日期</view>
+        </view>
+        <view class="weui-cell__bd ">
+          <picker mode="date" name="dateStart" value="{{formData.dateStart}}" data-name="dateStart" bindchange="bindDateChange">
+            <view class="weui-input">{{formData.dateStart?formData.dateStart:""}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">结束日期</view>
+        </view>
+        <view class="weui-cell__bd ">
+          <picker mode="date" name="dateEnd" value="{{formData.dateEnd}}" data-name="dateEnd" bindchange="bindDateChange">
+            <view class="weui-input">{{formData.dateEnd?formData.dateEnd:""}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">汇总</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker name="sumType" range="{{formProperty.sumTypeList}}" value="{{formData.sumType?formData.sumType:''}}" disabled bindchange="bindSumType">
+            <view class="weui-input">{{formData.sumType}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">查看</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker name="outType" range="{{formProperty.outTypeList}}" value="{{formData.outType?formData.outType:''}}" bindchange="bindOutType">
+            <view class="weui-input">{{formData.outType}}</view>
+          </picker>
+        </view>
+
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">打分型号</view>
+        </view>
+        <view class="weui-cell__bd ">
+          <switch name="scoreType" checked="{{formData.scoreType}}" bindchange="switchChange"/>
+        </view>
+      </view>
+    </view>
+    <view class="weui-btn-area">
+      <button formType="submit" class="weui-btn" type="primary">确定</button>
+    </view>
+  </form>
+  <view class="page__bd">
+    <view class="weui-panel">
+      <template is="searchHeader" />
+      <view class="weui-tab">
+        <view>
+          <button bindtap="preLevel" class="page__bd_return" type="primary">返回</button>
+        </view>
+        <view class="weui-tab__panel" wx:if="{{!formData.isDetail}}">
+          <view class="table">
+            <view class="tr">
+              <view class="th" wx:if="{{formData.sumType=='区域'}}">{{isDepot?'门店':'区域'}}</view>
+              <view class="th" wx:if="{{formData.sumType=='型号'}}">型号</view>
+              <view class="th">数量({{sum}})</view>
+              <view class="th">占比(%)</view>
+            </view>
+            <view wx:for="{{page}}" wx:key="index" data-office-id="{{item.officeId}}" data-depot-id="{{item.depotId}}" data-product-type-id="{{item.productTypeId}}" class="rowspan" bindtap="nextLevel">
+              <view class="tr">
+                <view class="td" wx:if="{{formData.sumType=='区域'}}">{{isDepot?item.depotName:item.officeName}}</view>
+                <view class="td" wx:if="{{formData.sumType=='型号'}}">{{item.productTypeName}}</view>
+                <view class="td">{{item.qty}}</view>
+                <view class="td">{{item.percent}}</view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="weui-tab__panel" wx:if="{{formData.isDetail}}">
+          <view class="table">
+            <view class="tr">
+              <view class="th">货品</view>
+              <view class="th">数量</view>
+            </view>
+            <view wx:for="{{productTypeDetail}}" wx:for-item="product" wx:key="index" class="rowspan">
+              <view class="tr">
+                <view class="td">{{product.productName}}</view>
+                <view class="td">{{product.qty}}</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</scroll-view>

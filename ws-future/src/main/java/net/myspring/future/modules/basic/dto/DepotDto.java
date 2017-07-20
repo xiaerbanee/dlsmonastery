@@ -48,6 +48,24 @@ public class DepotDto extends DataDto<Depot> {
     private String areaType;
     private Boolean rebate;
     private String parentId;
+    private String cmccCarrierShopId;
+    private String ctccCarrierShopId;
+
+    public String getCmccCarrierShopId() {
+        return cmccCarrierShopId;
+    }
+
+    public void setCmccCarrierShopId(String cmccCarrierShopId) {
+        this.cmccCarrierShopId = cmccCarrierShopId;
+    }
+
+    public String getCtccCarrierShopId() {
+        return ctccCarrierShopId;
+    }
+
+    public void setCtccCarrierShopId(String ctccCarrierShopId) {
+        this.ctccCarrierShopId = ctccCarrierShopId;
+    }
 
     public String getParentId() {
         return parentId;

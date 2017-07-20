@@ -47,10 +47,11 @@
         return{
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
-          formProperty:{},
           fileList:[],
           processTypeList:[],
-          inputForm:{},
+          inputForm:{
+            content:""
+          },
           rules: {
             processTypeName: [{ required: true, message: this.$t('auditFileForm.prerequisiteMessage')}],
             title: [{ required: true, message: this.$t('auditFileForm.prerequisiteMessage')}],
@@ -92,7 +93,7 @@
         axios.get('/api/basic/hr/auditFile/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         })
-        axios.get('/api/general/sys/processType/findByCreatePositionId',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/general/sys/processType/findByCreatePositionId').then((response)=>{
           this.processTypeList = response.data;
         })
       }
