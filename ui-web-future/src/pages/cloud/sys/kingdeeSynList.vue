@@ -27,10 +27,10 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="是否同步成功" :label-width="formLabelWidth">
-                <bool-select v-model="formData.success" clearable="false"></bool-select>
+                <bool-select v-model="formData.success"></bool-select>
               </el-form-item>
               <el-form-item label="是否锁定" :label-width="formLabelWidth">
-                <bool-select v-model="formData.locked" clearable="false"></bool-select>
+                <bool-select v-model="formData.locked"></bool-select>
               </el-form-item>
             </el-col>
           </el-row>
