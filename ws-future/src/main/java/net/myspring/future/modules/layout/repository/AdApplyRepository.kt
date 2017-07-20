@@ -106,11 +106,11 @@ class AdApplyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         if (adApplyQuery.isBilled != null) {
             if(adApplyQuery.isBilled){
                 sb.append("""
-                    and t1.billed_qty > 0
+                    and t1.left_qty <= 0
                 """)
             }else{
                 sb.append("""
-                    and t1.billed_qty = 0
+                    and t1.left_qty > 0
                 """)
             }
         }
@@ -156,11 +156,11 @@ class AdApplyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         if (adApplyQuery.isBilled != null) {
             if(adApplyQuery.isBilled){
                 sb.append("""
-                    and t1.billed_qty > 0
+                    and t1.left_qty <= 0
                 """)
             }else{
                 sb.append("""
-                    and t1.billed_qty = 0
+                    and t1.left_qty > 0
                 """)
             }
         }

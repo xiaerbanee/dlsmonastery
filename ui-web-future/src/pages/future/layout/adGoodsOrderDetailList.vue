@@ -72,9 +72,9 @@
         <el-table-column prop="productCode" :label="$t('adGoodsOrderDetailList.productCode')"  ></el-table-column>
         <el-table-column prop="productName" :label="$t('adGoodsOrderDetailList.productName')" ></el-table-column>
         <el-table-column prop="productPrice2" :label="$t('adGoodsOrderDetailList.productPrice2')"></el-table-column>
-        <el-table-column prop="qty" :label="$t('adGoodsOrderDetailList.qty')"></el-table-column>
-        <el-table-column prop="confirmQty" :label="$t('adGoodsOrderDetailList.confirmQty')"></el-table-column>
-        <el-table-column prop="billQty" :label="$t('adGoodsOrderDetailList.billQty')"></el-table-column>
+        <el-table-column prop="qty" :label="$t('adGoodsOrderDetailList.qty')+'('+totalQty+')'"></el-table-column>
+        <el-table-column prop="confirmQty" :label="$t('adGoodsOrderDetailList.confirmQty')+'('+totalConfirmQty+')'"></el-table-column>
+        <el-table-column prop="billQty" :label="$t('adGoodsOrderDetailList.billQty')+'('+totalBillQty+')'"></el-table-column>
         <el-table-column prop="productPrice2" :label="$t('adGoodsOrderDetailList.price')"></el-table-column>
         <el-table-column prop="adGoodsOrderRemarks" :label="$t('adGoodsOrderDetailList.adGoodsOrderRemarks')" ></el-table-column>
       </el-table>
@@ -106,6 +106,9 @@
         initPromise:{},
         formVisible: false,
         pageHeight:600,
+        totalQty:0,
+        totalConfirmQty:0,
+        totalBillQty:0,
       };
     },
     methods: {
@@ -120,6 +123,7 @@
         let submitData = util.deleteExtra(this.formData);
         util.setQuery("adGoodsOrderDetailList",submitData);
         axios.get('/api/ws/future/layout/adGoodsOrderDetail', {params:submitData}).then((response) => {
+          this.getTotalQty(response.data.content);
           this.page = response.data;
           this.pageLoading = false;
         });
@@ -142,6 +146,27 @@
         if (action === "detail") {
           this.$router.push({name: 'adGoodsOrderDetail', query: {id: id, action: "detail"}})
         }
+      },getTotalQty(content){
+        if(content == null){
+          return;
+        }
+        let tempQty = 0;
+        let tempConfirmQty = 0;
+        let tempBillQty = 0;
+        for(let index of content){
+          if(util.isNotBlank(index.qty)){
+            tempQty += index.qty;
+          }
+          if(util.isNotBlank(index.confirmQty)){
+            tempConfirmQty += index.confirmQty;
+          }
+          if(util.isNotBlank(index.billQty)){
+            tempBillQty += index.billQty;
+          }
+        }
+        this.totalQty = tempQty;
+        this.totalConfirmQty = tempConfirmQty;
+        this.totalBillQty = tempBillQty;
       }
     },created () {
        this.pageHeight = 0.75*window.innerHeight;
