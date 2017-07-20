@@ -1,5 +1,5 @@
 d:
-cd D:\Users\liuj\IdeaProjects\summer\global-cloud
+cd D:\IdeaProjects\summer\global-cloud
 call gradle clean build -x test
 
 cd..
