@@ -34,17 +34,21 @@
   var headers = [];
   var debit = 0;
   var credit = 0;
-  var setDebit = function (value) {
-    if (value) {
-      debit = debit + value;
-      document.getElementById("debit").innerHTML = debit
+  var setCreditAndDebit = function (datas) {
+    let debitColumn =headers.length - 2;
+    let creditColumn = headers.length - 1;
+    let debit=0;
+    let credit=0;
+    for(let i=0;i<datas.length; i++) {
+      if(datas[i][debitColumn]) {
+        debit = debit + datas[i][debitColumn]*1;
+      }
+      if(datas[i][creditColumn]) {
+        credit = credit + datas[i][creditColumn]*1;
+      }
     }
-  };
-  var setCredit = function (value) {
-    if (value) {
-      credit = credit + value;
-      document.getElementById("credit").innerHTML = credit
-    }
+    document.getElementById("debit").innerHTML = debit;
+    document.getElementById("credit").innerHTML = credit;
   };
   export default {
     data() {
@@ -67,12 +71,12 @@
                 if (column === headers.length - 1) {//贷方金额
                   if (changes[i][3] !== '') {
                     table.setDataAtCell(row, headers.length - 2, '');
-                    setCredit(changes[i][3]);
+                    setCreditAndDebit(table.getData());
                   }
                 }else if (column === headers.length - 2) {//借方金额
                   if (changes[i][3] !== '') {
                     table.setDataAtCell(row, headers.length - 1, '');
-                    setDebit(changes[i][3]);
+                    setCreditAndDebit(table.getData());
                   }
                 }
 
@@ -94,6 +98,8 @@
                   }
                 }
               }
+            }else if (source === 'loadData'){
+
             }
           }
         },
@@ -146,6 +152,7 @@
         this.settings.columns.push({type: 'numeric', format:"0,0.00", allowEmpty: true, width:80, strict: true});
         this.settings.data = extra.data;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
+        setCreditAndDebit(table.getData());
       });
     },
     methods: {
@@ -168,7 +175,7 @@
                 this.$message(response.data.message);
                 this.$router.push({name:'voucherList',query:util.getQuery("voucherList"), params:{_closeFrom:true}})
               }else {
-                this.$message.error(response.data.message);
+                this.$alert(response.data.message);
                 this.submitDisabled = false;
                 this.submitAuditDisabled = false;
               }

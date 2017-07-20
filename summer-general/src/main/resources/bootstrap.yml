@@ -2,7 +2,7 @@ spring:
   application:
     name: summer-general
   profiles:
-    active: cn-dev
+    active: in-dev
   cloud:
     config:
       uri: http://localhost:9900

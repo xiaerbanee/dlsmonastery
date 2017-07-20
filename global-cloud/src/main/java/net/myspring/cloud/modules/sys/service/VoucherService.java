@@ -18,6 +18,7 @@ import net.myspring.cloud.modules.sys.repository.*;
 import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.*;
@@ -269,14 +270,16 @@ public class VoucherService {
     }
 
     @Transactional
-    public Voucher audit(VoucherForm voucherForm,List<BdFlexItemGroup> bdFlexItemGroupList,List<BdFlexItemProperty> bdFlexItemPropertyList){
+    public Voucher audit(VoucherForm voucherForm,List<BdFlexItemGroup> bdFlexItemGroupList,List<BdFlexItemProperty> bdFlexItemPropertyList,AccountKingdeeBook accountKingdeeBook){
         if (StringUtils.isNotBlank(voucherForm.getId())){
             Voucher voucher = voucherRepository.findOne(voucherForm.getId());
             voucher.setFDate(voucherForm.getFdate());
             if (VoucherStatusEnum.地区财务审核.name().equals(voucher.getStatus())) {
                 voucher.setStatus(VoucherStatusEnum.省公司财务审核.name());
-            } else {
+            } else if (accountKingdeeBook != null){
                 voucher.setStatus(VoucherStatusEnum.已完成.name());
+            }else {
+                throw new ServiceException("你的岗位没有权限审核");
             }
             return voucherRepository.save(voucher);
         }else {

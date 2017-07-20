@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-select v-model="innerId" clearable @change="handleChange" :disabled="disabled" >
-      <el-option v-for="item in itemList"  :key="item" :label="item | bool2str" :value="item "></el-option>
+      <el-option v-for="item in itemList"  :key="item?1:0" :label="item | bool2str" :value="item "></el-option>
     </el-select>
   </div>
 </template>
@@ -11,7 +11,7 @@
     data() {
       return {
         innerId: this.value,
-        itemList:[1, 0],
+        itemList:[true, false],
       };
     },methods:{
       handleChange(newVal) {
