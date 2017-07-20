@@ -50,20 +50,19 @@ public class ShopAdController {
     @RequestMapping(value = "save")
     @PreAuthorize("hasPermission(null,'crm:shopAd:edit')")
     public RestResponse save(ShopAdForm shopAdForm, BindingResult bindingResult) {
-        RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
         shopAdValidator.validate(shopAdForm,bindingResult);
         if(bindingResult.hasErrors()){
             return  new RestResponse(bindingResult,"保存失败", null);
         }
         shopAdService.save(shopAdForm);
-        return restResponse;
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "delete")
     @PreAuthorize("hasPermission(null,'crm:shopAd:delete')")
     public RestResponse delete(String id) {
         shopAdService.logicDelete(id);
-        return new RestResponse("删除成功", ResponseCodeEnum.saved.name());
+        return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "getForm")

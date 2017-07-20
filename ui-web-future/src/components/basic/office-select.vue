@@ -7,7 +7,24 @@
 </template>
 <script>
   export default {
-    props: ['value','multiple','disabled','remote','officeRuleName'],
+    props: {
+      value: {
+        required: true
+      },
+      multiple: {
+        default: false
+      },
+      disabled: {
+        default: false
+      },
+      remote: {
+        default: true
+      },
+      officeRuleName: {
+        required: false
+      },
+    },
+
     data() {
       return {
         innerId:null,

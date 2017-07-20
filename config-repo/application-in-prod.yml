@@ -6,13 +6,13 @@ spring:
       password: bbk@123456
       driver-class-name: com.mysql.jdbc.Driver
     global-tool:
-      url: jdbc:mysql://168.192.1.243:3306/db_id_vivo170718_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
-      username: root
-      password: bbk@123456
-      driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://168.192.1.243:3306/db_id_vivo170718?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
     ws-future:
       IDVIVO:
-        url: jdbc:mysql://168.192.1.243:3306/db_id_vivo170718_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        url: jdbc:mysql://168.192.1.243:3306/db_id_vivo170718?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
@@ -23,10 +23,10 @@ spring:
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
     summer-general:
-      url: jdbc:mysql://168.192.1.243:3306/db_id_vivo170718?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
-      username: root
-      password: bbk@123456
-      driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://168.192.1.243:3306/db_id_vivo170718?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
     kingdee:
       IDVIVO:
         url: jdbc:sqlserver://168.192.1.13:1433;DatabaseName=TESTIDVIVO

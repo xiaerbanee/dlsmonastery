@@ -28,7 +28,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShipList.office')" >
-                <office-select v-model="formData.areaId" officeRuleName="办事处" @afterInit="setSearchText"></office-select>
+                <office-select v-model="formData.areaId" :remote="false" officeRuleName="办事处" @afterInit="setSearchText"></office-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
