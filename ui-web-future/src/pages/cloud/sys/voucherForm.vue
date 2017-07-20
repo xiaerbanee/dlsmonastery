@@ -34,17 +34,21 @@
   var headers = [];
   var debit = 0;
   var credit = 0;
-  var setDebit = function (value) {
-    if (value) {
-      debit = debit + value;
-      document.getElementById("debit").innerHTML = debit
+  var setCreditAndDebit = function (datas) {
+    var debitColumn =headers.length - 2;
+    var creditColumn = headers.length - 1;
+    var debit=0;
+    var credit=0;
+    for(var i=0;i<datas.length; i++) {
+      if(datas[i][debitColumn]) {
+        debit = debit + datas[i][debitColumn]*1;
+      }
+      if(datas[i][creditColumn]) {
+        credit = credit + datas[i][creditColumn]*1;
+      }
     }
-  };
-  var setCredit = function (value) {
-    if (value) {
-      credit = credit + value;
-      document.getElementById("credit").innerHTML = credit
-    }
+    document.getElementById("debit").innerHTML = debit;
+    document.getElementById("credit").innerHTML = credit;
   };
   export default {
     data() {
@@ -67,12 +71,12 @@
                 if (column === headers.length - 1) {//贷方金额
                   if (changes[i][3] !== '') {
                     table.setDataAtCell(row, headers.length - 2, '');
-                    setCredit(changes[i][3]);
+                    setCreditAndDebit(table.getData());
                   }
                 }else if (column === headers.length - 2) {//借方金额
                   if (changes[i][3] !== '') {
                     table.setDataAtCell(row, headers.length - 1, '');
-                    setDebit(changes[i][3]);
+                    setCreditAndDebit(table.getData());
                   }
                 }
 
@@ -94,6 +98,8 @@
                   }
                 }
               }
+            }else if (source === 'loadData'){
+
             }
           }
         },
