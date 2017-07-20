@@ -74,7 +74,6 @@
         initPromise:{},
         formVisible: false,
         pageLoading: false,
-        accountTaxPermitted:false,
         formLabelWidth:'28%'
       };
     },
@@ -88,8 +87,6 @@
         this.pageLoading = true;
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
-        //判断是否有tax权限
-        submitData.accountTaxPermitted = util.isPermit("crm:depot:depotAccountTax");
         util.setQuery("depotAccountList", submitData);
         axios.get('/api/ws/future/basic/depot/findDepotAccountList?' + qs.stringify(submitData)).then((response) => {
           this.page = response.data;
@@ -112,22 +109,22 @@
           this.$router.push({name: 'depotAccountDetail', query: {clientOutId: clientOutId, dateRange:  this.formData.dutyDateRange }});
       }, exportAllDepots() {
       util.confirmBeforeExportData(this).then(() => {
-        window.location.href='/api/ws/future/basic/depot/depotAccountExportAllDepots?'+qs.stringify({dutyDateRange:this.formData.dutyDateRange, accountTaxPermitted:this.accountTaxPermitted});
+        window.location.href='/api/ws/future/basic/depot/depotAccountExportAllDepots?'+qs.stringify(util.deleteExtra(this.formData));
       }).catch(()=>{});
     }, exportConfirmation(){
       util.confirmBeforeExportData(this).then(() => {
-        window.location.href='/api/ws/future/basic/depot/depotAccountExportConfirmation?'+qs.stringify({dutyDateRange:this.formData.dutyDateRange,specialityStore: this.formData.specialityStore, accountTaxPermitted:this.accountTaxPermitted});
+        window.location.href='/api/ws/future/basic/depot/depotAccountExportConfirmation?'+qs.stringify(util.deleteExtra(this.formData));
       }).catch(()=>{});
     }, exportDetail(){
       util.confirmBeforeExportData(this).then(() => {
-        window.location.href='/api/ws/future/basic/depot/depotAccountExportDetail?'+qs.stringify({dutyDateRange:this.formData.dutyDateRange,specialityStore: this.formData.specialityStore, accountTaxPermitted:this.accountTaxPermitted});
+        window.location.href='/api/ws/future/basic/depot/depotAccountExportDetail?'+qs.stringify(util.deleteExtra(this.formData));
       }).catch(()=>{});
     }
   }, created (){
-      this.accountTaxPermitted = util.isPermit("crm:depot:depotAccountTax");
-       this.pageHeight = 0.75*window.innerHeight;
+      this.pageHeight = 0.75*window.innerHeight;
       this.initPromise=axios.get('/api/ws/future/basic/depot/getDepotAccountQuery').then((response) =>{
         this.formData=response.data;
+        this.formData.accountTaxPermitted = util.isPermit("crm:depot:depotAccountTax");
         util.copyValue(this.$route.query,this.formData);
       });
     },activated(){

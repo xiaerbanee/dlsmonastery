@@ -82,7 +82,7 @@ public class OppoPushSerivce {
         List<OppoCustomer> oppoCustomers = Lists.newArrayList();
         initAreaDepotMap();
         Map<String, OppoCustomer> oppoCustomersMap = Maps.newHashMap();
-        List<CustomerDto> customerDtosList=customerClient.findCustomerDtoList();
+        List<CustomerDto> customerDtoList=customerClient.findCustomerDtoList();
         List<DistrictEntity>  districtList=districtClient.findDistrictList();
         Map<String,DistrictEntity>  districtMap=Maps.newHashMap();
         for(DistrictEntity districtEntity:districtList){
@@ -93,7 +93,7 @@ public class OppoPushSerivce {
         for(OfficeEntity officeEntity:offices){
             officeMap.put(officeEntity.getId(),officeEntity);
         }
-        for(CustomerDto customerDto:customerDtosList){
+        for(CustomerDto customerDto:customerDtoList){
             String depotId=getDepotId(customerDto);
             //一代库不上抛
             if(StringUtils.isBlank(depotId)){

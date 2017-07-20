@@ -1,0 +1,7 @@
+@import "/page/template/pageable/pageable.wxss";
+.page__bd_return{
+    position:absolute;
+    width:200rpx;
+    text-align: center;
+    font-weight: bold;
+}
