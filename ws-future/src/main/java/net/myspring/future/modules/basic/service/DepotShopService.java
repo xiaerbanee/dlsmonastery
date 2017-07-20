@@ -179,7 +179,7 @@ public class DepotShopService {
         List<DepotShopDto> depotShopDtoList = depotShopRepository.findFilter(depotShopQuery);
         cacheUtils.initCacheInput(depotShopDtoList);
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"name","门店名称"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"depotName","门店名称"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"clientName","金蝶名称"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"areaName","办事处"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"officeName","机构"));

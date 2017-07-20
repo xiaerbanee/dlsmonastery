@@ -189,7 +189,7 @@
       },exportData(){
         this.formVisible = false;
         util.confirmBeforeExportData(this).then(() => {
-          window.location.href='/api/ws/future/basic/depot/export?'+qs.stringify(util.deleteExtra(this.formData));
+          window.location.href='/api/ws/future/basic/depotShop/export?'+qs.stringify(util.deleteExtra(this.formData));
           this.pageRequest();
         }).catch(()=>{});
       },synArea(){

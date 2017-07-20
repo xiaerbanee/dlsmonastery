@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-radio-group v-model="innerBool" @change="onChange" :disabled="disabled">
-      <el-radio :label=true>{{$t('depotForm.true')}}</el-radio>
-      <el-radio :label=false>{{$t('depotForm.false')}}</el-radio>
+      <el-radio :label=true>是</el-radio>
+      <el-radio :label=false>否</el-radio>
     </el-radio-group>
   </div>
 </template>

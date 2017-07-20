@@ -23,6 +23,9 @@ export default {
     search: "搜索",
     inputTowKey: "至少二位关键字",
     inputKey: "silahkan masukkan kata kunci",
+    summery:"汇总信息",
+    totalQty:"总开单数",
+    totalAmount:"总价格",
   },
   adApplyForm: {
     adApplyForm: "formulir bahan",
