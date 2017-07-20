@@ -65,7 +65,7 @@ class SPlantCustomerStockRepository @Autowired constructor(val namedParameterJdb
         map.put("dateEnd",dateEnd)
         val sb = StringBuilder()
         sb.append("""
-            select de.province_id as CustomerId,t.product_id as productId,count(*) as useAbleStock ,1 as customerLevel
+            select de.province_id as CustomerId,t.product_id as productId,count(*) as useAbleStock ,1 as customerLevel,de.province_id as provinceId
             from crm_product_ime t ,crm_depot de,crm_depot_store de1
             where t.depot_id=de.id
                 and t.created_date >= :dateStart
@@ -79,7 +79,7 @@ class SPlantCustomerStockRepository @Autowired constructor(val namedParameterJdb
 
             union all
 
-            select de.province_id as CustomerId,im.product_id as productId,count(*) as useAbleStock ,2 as customerLevel
+            select de.province_id as CustomerId,im.product_id as productId,count(*) as useAbleStock ,2 as customerLevel,de.province_id as provinceId
             from crm_product_ime im ,crm_depot de,crm_depot_store de1
             where im.depot_id=de.id
                 and im.created_date >= :dateStart
@@ -93,7 +93,7 @@ class SPlantCustomerStockRepository @Autowired constructor(val namedParameterJdb
 
             union all
 
-            select de.id as CustomerId,im.product_id as productId,count(*) as useAbleStock ,3 as customerLevel
+            select de.id as CustomerId,im.product_id as productId,count(*) as useAbleStock ,3 as customerLevel,de.province_id as provinceId
             from crm_product_ime im ,crm_depot de,crm_depot_shop shop
             where im.depot_id=de.id
                 and im.created_date >= :dateStart
