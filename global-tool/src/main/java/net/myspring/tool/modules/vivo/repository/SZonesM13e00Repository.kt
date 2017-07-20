@@ -22,10 +22,12 @@ class SZonesM13e00Repository @Autowired constructor(val namedParameterJdbcTempla
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sZonesM13e00List.toTypedArray()))
     }
 
-    fun batchSaveIDvivo(sZonesM13e00List: MutableList<SZonesM13e00>): IntArray {
+    fun batchSaveIDvivo(agentCode: String,sZonesM13e00List: MutableList<SZonesM13e00>): IntArray {
         val sb = StringBuilder()
-        sb.append("insert into :tableName (zoneID,zoneName,shortCut,zoneDepth,zonePath,fatherID,subCount,zoneTypes)")
-        sb.append("values (:zoneId,:zoneName,:shortcut,:zoneDepth,:zonePath,:fatherId,:subCount,:zoneTypes)")
+        sb.append(" insert into ")
+        sb.append(" S_zones_"+agentCode)
+        sb.append(" (zoneID,zoneName,shortCut,zoneDepth,zonePath,fatherID,subCount,zoneTypes) ")
+        sb.append(" values (:zoneId,:zoneName,:shortcut,:zoneDepth,:zonePath,:fatherId,:subCount,:zoneTypes) ")
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sZonesM13e00List.toTypedArray()))
     }
 

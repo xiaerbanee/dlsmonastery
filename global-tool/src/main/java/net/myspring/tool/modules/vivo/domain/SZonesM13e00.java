@@ -10,7 +10,6 @@ public class SZonesM13e00 {
     private String fatherId;
     private Integer subCount;
     private String zoneTypes;
-    private String tableName;
 
     public String getZoneId() {
         return zoneId;
@@ -76,11 +75,4 @@ public class SZonesM13e00 {
         this.zoneTypes = zoneTypes;
     }
 
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
 }

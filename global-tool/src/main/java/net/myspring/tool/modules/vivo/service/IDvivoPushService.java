@@ -95,7 +95,6 @@ public class IDvivoPushService {
             sZonesM13e00.setFatherId(getZoneId(officeEntity.getAgentCode(),officeEntity.getParentId()));
             sZonesM13e00.setSubCount(officeEntity.getChildCount());
             sZonesM13e00.setZoneTypes(CharConstant.EMPTY);
-            sZonesM13e00.setTableName("S_zones_"+ officeEntity.getAgentCode());
             if(!zonesMap.containsKey(officeEntity.getAgentCode())){
                 List<SZonesM13e00> list=Lists.newArrayList();
                 zonesMap.put(officeEntity.getAgentCode(),list);
@@ -105,14 +104,14 @@ public class IDvivoPushService {
         logger.info("开始上抛机构数据"+ LocalDateTime.now());
         sZonesM13e00Repository.deleteIDvivoZones();
         for(String agentCode:zonesMap.keySet()){
-            sZonesM13e00Repository.batchSaveIDvivo(zonesMap.get(agentCode));
+            sZonesM13e00Repository.batchSaveIDvivo(agentCode,zonesMap.get(agentCode));
         }
         logger.info("上抛机构数据完成"+LocalDateTime.now());
     }
 
     @FutureDataSource
     public List<SCustomerDto> getVivoCustomersData(String date){
-        List<SCustomerDto> sCustomerDtoList = sCustomersM13e00Repository.findVivoCustomers(LocalDateUtils.parse(date));
+        List<SCustomerDto> sCustomerDtoList = sCustomersM13e00Repository.findIDvivoCustomers(LocalDateUtils.parse(date));
         cacheUtils.initCacheInput(sCustomerDtoList);
         return sCustomerDtoList;
     }
@@ -121,18 +120,18 @@ public class IDvivoPushService {
     @Transactional
     public void pushIDVivoSCustomersData(List<SCustomerDto> sCustomerDtos){
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
-        Map<String,List<SCustomersM13e00>>  customerMap = Maps.newHashMap();
-        for(SCustomerDto futureCustomerDto :sCustomerDtos){
+        Map<String,List<SCustomersM13e00>> customerMap = Maps.newHashMap();
+         for(SCustomerDto futureCustomerDto :sCustomerDtos){
             SCustomersM13e00 sCustomersM13e00 = new SCustomersM13e00();
             String customerId = futureCustomerDto.getCustomerId();
             String agentCode=futureCustomerDto.getAgentCode();
             sCustomersM13e00.setCustomerLevel(futureCustomerDto.getCustomerLevel());
             if(futureCustomerDto.getCustomerLevel() == 1){
                 sCustomersM13e00.setCustomerId(StringUtils.getFormatId(customerId,mainCode+"D","00000"));
-                sCustomersM13e00.setCustomerId(futureCustomerDto.getAreaName());
+                sCustomersM13e00.setCustomerName(futureCustomerDto.getAreaName());
             }else {
                 sCustomersM13e00.setCustomerId(StringUtils.getFormatId(customerId,mainCode+"C","00000"));
-                sCustomersM13e00.setCustomerId(futureCustomerDto.getCustomerName());
+                sCustomersM13e00.setCustomerName(futureCustomerDto.getCustomerName());
                 sCustomersM13e00.setCustomerStr4(StringUtils.getFormatId(futureCustomerDto.getCustomerStr4(),mainCode+"D","00000"));
             }
             if("R250082".equals(agentCode)){
@@ -149,20 +148,11 @@ public class IDvivoPushService {
             }
             customerMap.get(agentCode).add(sCustomersM13e00);
         }
-        List<String> customerIDs=sCustomersM13e00Repository.findIDvivoCustomerIDs();
         logger.info("开始上抛客户数据"+LocalDateTime.now());
-        for(String agentCode:customerMap.keySet()){
-            List<SCustomersM13e00> sCustomersM13e00s=customerMap.get(agentCode);
-            for(int i=sCustomersM13e00s.size()-1;i>=0;i--){
-                SCustomersM13e00 sCustomersM13e00=sCustomersM13e00s.get(i);
-                if(CollectionUtil.isNotEmpty(customerIDs)&&customerIDs.contains(sCustomersM13e00.getCustomerId())){
-                    sCustomersM13e00s.remove(i);
-                }
-            }
-        }
+        sCustomersM13e00Repository.deleteIDvivoCustomers();
         for(String agentCode:customerMap.keySet()){
             List<SCustomersM13e00> sCustomersM13e00List=customerMap.get(agentCode);
-            sCustomersM13e00Repository.batchSave(sCustomersM13e00List);
+            sCustomersM13e00Repository.batchIDvivoSave(sCustomersM13e00List,agentCode);
         }
         logger.info("上抛客户数据完成"+LocalDateTime.now());
     }
@@ -171,7 +161,7 @@ public class IDvivoPushService {
     public List<SPlantCustomerStockDto> getCustomerStockData(String date){
         LocalDate dateStart = LocalDateUtils.parse(date).minusYears(1);
         LocalDate dateEnd = LocalDateUtils.parse(date).plusDays(1);
-        List<SPlantCustomerStockDto> sPlantCustomerStockDtoList = sPlantCustomerStockRepository.findCustomerStockData(dateStart,dateEnd);
+        List<SPlantCustomerStockDto> sPlantCustomerStockDtoList = sPlantCustomerStockRepository.findIDvivoCustomerStockData(dateStart,dateEnd);
         cacheUtils.initCacheInput(sPlantCustomerStockDtoList);
         return sPlantCustomerStockDtoList;
     }
@@ -458,4 +448,5 @@ public class IDvivoPushService {
     private String getZoneId(String mainCode,String id){
         return StringUtils.getFormatId(id,mainCode,"0000");
     }
+
 }

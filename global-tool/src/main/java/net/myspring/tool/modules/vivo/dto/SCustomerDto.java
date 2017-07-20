@@ -2,14 +2,12 @@ package net.myspring.tool.modules.vivo.dto;
 
 import net.myspring.util.cahe.annotation.CacheInput;
 
-import java.time.LocalDate;
-
 public class SCustomerDto {
     private String customerId;
     private String customerName;
-    @CacheInput(inputKey = "offices",inputInstance = "customerId" ,outputInstance = "name")
+    @CacheInput(inputKey = "offices",inputInstance = "zoneId" ,outputInstance = "name")
     private String areaName;
-    @CacheInput(inputKey = "offices",inputInstance = "customerId" ,outputInstance = "agentCode")
+    @CacheInput(inputKey = "offices",inputInstance = "zoneId" ,outputInstance = "agentCode")
     private String agentCode;
     private String zoneId;
     private String recordDate;
