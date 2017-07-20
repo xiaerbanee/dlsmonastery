@@ -58,8 +58,8 @@ public class ProcessTypeController {
 
     @RequestMapping(value = "save")
     public RestResponse save(ProcessTypeForm processTypeForm) {
-        processTypeForm.setCreatePositionIds(StringUtils.join(processTypeForm.getCreatePositionIdList(), CharConstant.COMMA));
-        processTypeForm.setViewPositionIds(StringUtils.join(processTypeForm.getViewPositionIdList(), CharConstant.COMMA));
+        processTypeForm.setCreatePositionIds(CharConstant.COMMA+StringUtils.join(processTypeForm.getCreatePositionIdList(), CharConstant.COMMA)+CharConstant.COMMA);
+        processTypeForm.setViewPositionIds(StringUtils.join(CharConstant.COMMA+processTypeForm.getViewPositionIdList(), CharConstant.COMMA)+CharConstant.COMMA);
         processTypeService.save(processTypeForm);
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
