@@ -65,10 +65,10 @@ class SCustomersM13e00Repository @Autowired constructor(val namedParameterJdbcTe
             UNION
                 SELECT
                     de.id AS customerId,
-                    de.NAME AS CustomerName,
+                    de.NAME AS customerName,
                     de.area_id AS zoneId,
                     :date AS recordDate,
-                    2 AS CustomerLevel,
+                    2 AS customerLevel,
                     de.area_type AS customerStr1,
                     de.area_id AS customerStr4
                 FROM
@@ -80,7 +80,8 @@ class SCustomersM13e00Repository @Autowired constructor(val namedParameterJdbcTe
                         FROM
                             crm_depot_shop
                         WHERE
-                            depot_id NOT IN (
+                            depot_id NOT IN
+                            (
                                 SELECT
                                     depot_id
                                 FROM

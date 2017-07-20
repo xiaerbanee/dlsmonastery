@@ -62,7 +62,7 @@ public class LocalDateUtils {
             return dateList;
         }
         Long step = dateEnd.toEpochDay() - dateStart.toEpochDay();
-        if (step >= 1) {
+        if (step >= 0) {
             for (int i = 0; i <= step; i++) {
                 dateList.add(dateStart.plusDays(i));
             }

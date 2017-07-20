@@ -5,12 +5,12 @@ import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.*;
-import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FutureDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.domain.DistrictEntity;
 import net.myspring.tool.common.domain.EmployeeEntity;
 import net.myspring.tool.common.domain.OfficeEntity;
+import net.myspring.tool.common.utils.CacheUtils;
 import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.common.dto.CustomerDto;
 import net.myspring.tool.modules.oppo.repository.*;
@@ -65,6 +65,8 @@ public class OppoPushSerivce {
     private OppoCustomerAfterSaleImeiRepository oppoCustomerAfterSaleImeiRepository;
     @Autowired
     private OppoCustomerDemoPhoneRepository oppoCustomerDemoPhoneRepository;
+    @Autowired
+    private CacheUtils cacheUtils;
 
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
@@ -80,7 +82,7 @@ public class OppoPushSerivce {
         List<OppoCustomer> oppoCustomers = Lists.newArrayList();
         initAreaDepotMap();
         Map<String, OppoCustomer> oppoCustomersMap = Maps.newHashMap();
-        List<CustomerDto> customerDtosList=customerClient.findCustomerDtoList();
+        List<CustomerDto> customerDtoList=customerClient.findCustomerDtoList();
         List<DistrictEntity>  districtList=districtClient.findDistrictList();
         Map<String,DistrictEntity>  districtMap=Maps.newHashMap();
         for(DistrictEntity districtEntity:districtList){
@@ -91,7 +93,7 @@ public class OppoPushSerivce {
         for(OfficeEntity officeEntity:offices){
             officeMap.put(officeEntity.getId(),officeEntity);
         }
-        for(CustomerDto customerDto:customerDtosList){
+        for(CustomerDto customerDto:customerDtoList){
             String depotId=getDepotId(customerDto);
             //一代库不上抛
             if(StringUtils.isBlank(depotId)){
@@ -166,6 +168,7 @@ public class OppoPushSerivce {
         List<OppoCustomerOperatortype> oppoCustomerOperatortypeList = Lists.newArrayList();
         initAreaDepotMap();
         List<CustomerDto> customerDtosList=customerClient.findCustomerDtoList();
+        cacheUtils.initCacheInput(customerDtosList);
         for(CustomerDto customerDto:customerDtosList){
             if(isShop(customerDto)){
                 if("运营商营业厅".equals(customerDto.getSalePointType())){
@@ -528,8 +531,6 @@ public class OppoPushSerivce {
     @FutureDataSource
     @Transactional(readOnly = true)
     public List<OppoCustomerAllot> getFutureOppoCustomerAllot(String date){
-        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
-        DbContextHolder.get().setCompanyName(companyName);
         if(StringUtils.isEmpty(date)){
             date=LocalDateUtils.format(LocalDate.now());
         }
@@ -542,8 +543,6 @@ public class OppoPushSerivce {
     @FutureDataSource
     @Transactional(readOnly = true)
     public List<OppoCustomerStock> getFutureOppoCustomerStock(String date){
-        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
-        DbContextHolder.get().setCompanyName(companyName);
         if(StringUtils.isEmpty(date)){
             date=LocalDateUtils.format(LocalDate.now());
         }
@@ -568,8 +567,6 @@ public class OppoPushSerivce {
     @FutureDataSource
     @Transactional(readOnly = true)
     public List<OppoCustomerSale> getFutureOppoCustomerSale(String date){
-        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
-        DbContextHolder.get().setCompanyName(companyName);
         if(StringUtils.isEmpty(date)){
             date=LocalDateUtils.format(LocalDate.now());
         }
@@ -594,8 +591,6 @@ public class OppoPushSerivce {
     @FutureDataSource
     @Transactional(readOnly = true)
     public List<OppoCustomerSaleCount> getFutureOppoCustomerSaleCounts(String date){
-        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
-        DbContextHolder.get().setCompanyName(companyName);
         if(StringUtils.isEmpty(date)){
             date=LocalDateUtils.format(LocalDate.now());
         }
@@ -608,8 +603,6 @@ public class OppoPushSerivce {
     @FutureDataSource
     @Transactional(readOnly = true)
     public List<OppoCustomerAfterSaleImei> getFutureOppoCustomerAfterSaleImeis(String date){
-        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
-        DbContextHolder.get().setCompanyName(companyName);
         if(StringUtils.isEmpty(date)){
             date=LocalDateUtils.format(LocalDate.now());
         }
@@ -622,8 +615,6 @@ public class OppoPushSerivce {
     @FutureDataSource
     @Transactional(readOnly = true)
     public  List<OppoCustomerDemoPhone> getFutureOppoCustomerDemoPhone(String date){
-        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
-        DbContextHolder.get().setCompanyName(companyName);
         if(StringUtils.isEmpty(date)){
             date=LocalDateUtils.format(LocalDate.now());
         }
