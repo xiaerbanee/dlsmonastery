@@ -43,6 +43,24 @@ public class EmployeeDto extends DataDto<Employee> {
     private String officeName;
     private String leaderName;
     private String positionName;
+    private String bankItem;
+    private String image;
+
+    public String getBankItem() {
+        return bankItem;
+    }
+
+    public void setBankItem(String bankItem) {
+        this.bankItem = bankItem;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public String getAreaName() {
         return areaName;

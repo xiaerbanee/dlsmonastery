@@ -8,6 +8,7 @@ public class OfficeQuery extends BaseQuery {
     private String id;
     private String name;
     private String officeRuleName;
+    private String sort = "id,asc";
 
     public String getOfficeRuleName() {
         return officeRuleName;
