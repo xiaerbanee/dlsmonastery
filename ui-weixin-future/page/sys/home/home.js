@@ -23,6 +23,9 @@ Page({
         if (app.globalData.weixinAccounts.length > 1 && app.globalData.weixinAccount == null) {
             that.setData({ weixinAccountsHidden: false, weixinAccounts: app.globalData.weixinAccounts })
         } else {
+          console.log(">>>>>",app.globalData.weixinAccount)
+          that.setData({ tip: "当前登录帐号为：" + app.globalData.weixinAccount.loginName })
+
             that.setData({ weixinAccountsHidden: true })
             that.setData({ menuList: app.globalData.menuList })
         }
@@ -37,6 +40,7 @@ Page({
         if (app.globalData.weixinAccount.accountName==='xcxtest'){
           that.setData({tip: "当前登录的为测试帐号xcxtest，请绑定并登陆自己的真实帐号"})
         }else{
+          console.log("++++", app.globalData.weixinAccount)
           that.setData({ tip: "当前登录帐号为：" + app.globalData.weixinAccount.accountName})
         }
     },
