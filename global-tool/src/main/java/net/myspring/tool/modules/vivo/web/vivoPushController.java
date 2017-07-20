@@ -57,7 +57,7 @@ public class vivoPushController {
     public void pushIDvivoData(String date){
         //同步机构数据
         DbContextHolder.get().setCompanyName("IDVIVO");
-//        idvivoPushService.pushIDvivoZonesData();
+        idvivoPushService.pushIDvivoZonesData();
         //同步客户数据
         List<SCustomerDto> sCustomerDtos=idvivoPushService.getVivoCustomersData(date);
         idvivoPushService.pushIDVivoSCustomersData(sCustomerDtos);
@@ -72,8 +72,8 @@ public class vivoPushController {
         List<SStoresM13e00> sStoresM13e00List=idvivoPushService.getCustomerStoreData();
         idvivoPushService.pushCustomerStoresData(sStoresM13e00List);
         //同步核销数据
-        List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList = vivoPushService.getProductImeSaleData(date);
-        vivoPushService.pushProductImeSaleData(vivoCustomerSaleImeiDtoList,productColorMap,date);
+        List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList = idvivoPushService.getProductImeSaleData(date);
+        idvivoPushService.pushProductImeSaleData(vivoCustomerSaleImeiDtoList,productColorMap,date);
     }
 
 }

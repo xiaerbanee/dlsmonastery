@@ -383,7 +383,7 @@ public class IDvivoPushService {
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<VivoCustomerSaleImeiDto>  vivoCustomerSaleImeiDtos= vivoCustomerSaleImeiRepository.findProductSaleImei(dateStart,dateEnd);
         cacheUtils.initCacheInput(vivoCustomerSaleImeiDtos);
-        return vivoCustomerSaleImeiRepository.findProductSaleImei(dateStart,dateEnd);
+        return vivoCustomerSaleImeiDtos;
     }
 
     @FactoryDataSource
@@ -419,7 +419,7 @@ public class IDvivoPushService {
         for(String agentCode:saleMap.keySet()){
             List<SPlantEndProductSaleM13e00> sPlantEndProduuctSaleImeiList=saleMap.get(agentCode);
             sPlantEndProductSaleM13e00Repository.deleteIDvivoByBillDate(dateStart,dateEnd,agentCode);
-            sPlantEndProductSaleM13e00Repository.batchIDvivoSave(sPlantEndProduuctSaleImeiList);
+            sPlantEndProductSaleM13e00Repository.batchIDvivoSave(sPlantEndProduuctSaleImeiList,agentCode);
         }
         logger.info("IDVIVO:上抛核销记录结束" + LocalDateTime.now());
     }
@@ -427,7 +427,6 @@ public class IDvivoPushService {
 
     @LocalDataSource
     public Map<String,String> getProductColorMap(){
-        System.err.println("CompanyName:"+DbContextHolder.get().getCompanyName()+"DataSourceType:"+DbContextHolder.get().getDataSourceType());
         List<VivoPlantProducts> vivoPlantProductList= vivoPlantProductsRepository.findAllByProductId();
         Map<String, String> productColorMap = Maps.newHashMap();
 
