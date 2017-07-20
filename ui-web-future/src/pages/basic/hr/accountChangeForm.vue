@@ -6,7 +6,9 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('accountChangeForm.account')" prop="accountId">
-              <account-select v-model="inputForm.accountId" :disabled="isDetail=='detail'||isAudit=='audit'"></account-select>
+              <el-select  v-model="inputForm.accountId" filterable remote clearable :placeholder="$t('accountChangeForm.inputWord')"  :remote-method="remoteAccount" :loading="remoteLoading" @change="getAccount(inputForm.accountId)"  :disabled="isDetail=='detail'||isAudit=='audit'">
+                <el-option v-for="item in accounts" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
+              </el-select>
             </el-form-item>
             <div v-show="inputForm.id!=null||inputForm.accountId!=null">
               <el-form-item :label="$t('accountChangeForm.type')"  prop="type">
@@ -106,6 +108,16 @@
             this.submitDisabled = false;
       }
       })
+      },remoteAccount(query) {
+        if (query !== '') {
+          this.remoteLoading = true;
+          axios.get('/api/basic/hr/account/searchFilter',{params:{loginName:query}}).then((response)=>{
+            this.accounts=response.data;
+            this.remoteLoading = false;
+          })
+        } else {
+          this.accounts = [];
+        }
       },formAudit(){
           axios.get('api/basic/hr/accountChange/audit',{params:{id:this.$route.query.id,pass:this.pass}}).then((response)=>{
             console.log(response.data)
@@ -116,6 +128,8 @@
         var type=this.inputForm.type;
         axios.get('/api/basic/hr/accountChange/findData',{params: {type:type,accountId:accountId,id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
+          console.log("response.data")
+          console.log(response.data)
           if(response.data.accountId!=null){
             this.accounts=new Array({id:response.data.accountId,loginName:response.data.accountName})
           }

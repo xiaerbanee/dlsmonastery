@@ -99,8 +99,7 @@ public class EmployeeService {
         if(CollectionUtil.isEmpty(ids)) {
             return Lists.newArrayList();
         }
-        List<Employee> employees = employeeRepository.findAll(ids);
-        List<EmployeeDto> employeeDto= BeanUtil.map(employees,EmployeeDto.class);
+        List<EmployeeDto> employeeDto=employeeRepository.findDtoByIdList(ids);
         return employeeDto;
     }
 

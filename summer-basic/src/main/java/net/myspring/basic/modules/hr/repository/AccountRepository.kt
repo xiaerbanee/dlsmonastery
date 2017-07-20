@@ -80,9 +80,55 @@ interface AccountRepositoryCustom{
     fun findByFilter(accountQuery: AccountQuery): MutableList<Account>
 
     fun findByAccessLoginNameList(loginNameList:MutableList<String>,date:LocalDate): MutableList<Account>
+
+    fun findDto(id:String):AccountDto
+
+    fun findDtoByIdList(idList:MutableList<String>):MutableList<AccountDto>
 }
 
 class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): AccountRepositoryCustom{
+    override fun findDtoByIdList(idList: MutableList<String>): MutableList<AccountDto> {
+        var sb = StringBuilder()
+        sb.append("""
+            SELECT
+            t1.*,t2.name as employeeName,t3.name as positionName,office.name as officeName,leader.login_name as leaderName,
+            t2.entry_date,t2.leave_date,t2.regular_date,t2.status as employeeStatus
+            FROM
+            hr_account t1,hr_employee t2,hr_position t3,sys_office office,hr_account leader
+            WHERE
+            t1.enabled=1
+            and t1.office_id=office.id
+            and t1.employee_id=t2.id
+            AND t1.position_id=t3.id
+            and t1.leader_id=leader.id
+            and t1.id in (:idList)
+        """)
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("idList", idList)
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(AccountDto::class.java))
+    }
+
+    override fun findDto(id: String): AccountDto {
+        var sb = StringBuilder()
+        sb.append("""
+            SELECT
+            t1.*,t2.name as employeeName,t3.name as positionName,office.name as officeName,leader.login_name as leaderName,
+            t2.entry_date,t2.leave_date,t2.regular_date,t2.status as employeeStatus
+            FROM
+            hr_account t1,hr_employee t2,hr_position t3,sys_office office,hr_account leader
+            WHERE
+            t1.enabled=1
+            and t1.office_id=office.id
+            and t1.employee_id=t2.id
+            AND t1.position_id=t3.id
+            and t1.leader_id=leader.id
+            and t1.id=:id
+        """)
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("id", id)
+        return namedParameterJdbcTemplate.queryForObject(sb.toString(), paramMap, BeanPropertyRowMapper(AccountDto::class.java))
+    }
+
     override fun findByAccessLoginNameList(loginNameList: MutableList<String>, date: LocalDate): MutableList<Account> {
         var sb = StringBuilder()
         sb.append("""
@@ -159,12 +205,16 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         var sb = StringBuilder()
         sb.append("""
             SELECT
-            t1.*
+            t1.*,t2.name as employeeName,t3.name as positionName,office.name as officeName,leader.login_name as leaderName,
+            t2.entry_date,t2.leave_date,t2.regular_date,t2.status as employeeStatus
             FROM
-            hr_account t1,sys_office office
+            hr_account t1,hr_employee t2,hr_position t3,sys_office office,hr_account leader
             WHERE
             t1.enabled=1
             and t1.office_id=office.id
+            and t1.employee_id=t2.id
+            AND t1.position_id=t3.id
+            and t1.leader_id=leader.id
         """)
         if (accountQuery.loginName != null) {
             sb.append(" AND t1.login_name LIKE CONCAT('%',:loginName,'%') ")
@@ -175,15 +225,6 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         if (CollectionUtil.isNotEmpty(accountQuery.officeIdList)) {
             sb.append(" AND t1.office_id in ( :officeIdList) ")
         }
-        if (accountQuery.officeName != null) {
-            sb.append("""
-                and t1.office_id in(
-                select t2.id
-                from sys_office t2
-                where t2.name = :officeName
-            )
-            """)
-        }
         if (accountQuery.positionId != null) {
             sb.append("""
                 and t1.position_id =:positionId
@@ -191,21 +232,13 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         }
         if (accountQuery.employeeName != null) {
             sb.append("""
-                and t1.employee_id in(
-                select t4.id
-                from hr_employee t4
-                where t4.name LIKE CONCAT('%',:employeeName,'%')
-                )
+                and t2.name LIKE CONCAT('%',:employeeName,'%')
             """)
         }
 
         if (accountQuery.leaderName != null) {
             sb.append("""
-                AND t1.leader_id in (
-                select t1.id
-                from hr_account t1
-                where t1.login_name LIKE CONCAT('%',:leaderName,'%')
-                )
+                AND leader.login_name LIKE CONCAT('%',:leaderName,'%')
             """)
         }
 

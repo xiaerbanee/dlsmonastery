@@ -32,14 +32,14 @@
                   placeholder="选择月" />
               </el-form-item>
               <el-form-item label="办事处">
-                <el-select v-model="formData.areaId">
+                <el-select v-model="formData.areaId"clearable>
                   <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item :label="$t('employeeList.status')">
-                <el-select v-model="formData.status" clearable filterable :placeholder="$t('employeeList.selectGroup')">
+                <el-select v-model="formData.status"   :placeholder="$t('employeeList.selectGroup')" clearable>
                   <el-option v-for="item in formData.extra.statusList"  :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
