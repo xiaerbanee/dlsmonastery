@@ -68,8 +68,8 @@ public class CarrierShopController {
     }
 
     @RequestMapping(value="search")
-    public List<CarrierShopDto> getQuery(String name){
-        List<CarrierShopDto> carrierShopDtoList=carrierShopService.findByNameLike(name);
+    public List<CarrierShopDto> getQuery(String name,String type){
+        List<CarrierShopDto> carrierShopDtoList=carrierShopService.findByNameLikeAndType(name,type);
         return carrierShopDtoList;
     }
 

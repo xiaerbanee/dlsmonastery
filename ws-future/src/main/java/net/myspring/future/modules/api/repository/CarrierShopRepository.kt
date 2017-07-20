@@ -1,5 +1,6 @@
 package net.myspring.future.modules.api.repository
 
+import com.google.common.collect.Maps
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.api.domain.CarrierShop
 import net.myspring.future.modules.api.dto.CarrierOrderDto
@@ -29,11 +30,11 @@ interface CarrierShopRepository : BaseRepository<CarrierShop, String>, CarrierSh
 interface CarrierShopRepositoryCustom {
     fun findPage(pageable: Pageable, carrierShopQuery: CarrierShopQuery):Page<CarrierShopDto>
 
-    fun  findByNameLikeAndEnabledIsTrue(name:String):MutableList<CarrierShop>
+    fun  findByNameLikeAndTypeAndEnabledIsTrue(name:String,type:String):MutableList<CarrierShop>
 }
 
 class CarrierShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : CarrierShopRepositoryCustom {
-    override fun findByNameLikeAndEnabledIsTrue(name: String): MutableList<CarrierShop> {
+    override fun findByNameLikeAndTypeAndEnabledIsTrue(name: String,type:String): MutableList<CarrierShop> {
         val sb = StringBuffer()
         sb.append("""
          SELECT
@@ -46,8 +47,14 @@ class CarrierShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
         if (StringUtils.isNotBlank(name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%')   """)
         }
+        if (StringUtils.isNotBlank(type)) {
+            sb.append("""  and t1.type =:type  """)
+        }
         sb.append("""  limit 50  """)
-        return namedParameterJdbcTemplate.query(sb.toString(), Collections.singletonMap("name", name), BeanPropertyRowMapper(CarrierShop::class.java))
+        var paramMap= Maps.newHashMap<String,Any>()
+        paramMap.put("name",name);
+        paramMap.put("type",type);
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(CarrierShop::class.java))
     }
 
     override fun findPage(pageable: Pageable, carrierShopQuery: CarrierShopQuery):Page<CarrierShopDto> {
