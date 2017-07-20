@@ -10,7 +10,7 @@
           <el-input v-model.number="inputForm.sort"></el-input>
         </el-form-item>
         <el-form-item :label="$t('pricesystemForm.remarks')" prop="remarks">
-          <el-input v-model="inputForm.remarks"></el-input>
+          <el-input v-model="inputForm.remarks" type="textarea"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('pricesystemForm.save')}}</el-button>
@@ -39,7 +39,6 @@
     methods:{
       getData() {
       return{
-        isInit:false,
         isCreate:this.$route.query.id == null,
         submitDisabled:false,
         productName:'',
@@ -56,16 +55,14 @@
       }
     },
       formSubmit(){
-        var that = this;
         this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            var tempList=new Array();
-            for(var index in this.filterPricesystemDetailList){
-                var detail = this.filterPricesystemDetailList[index];
-                if(util.isNotBlank(detail.price)){
-                    tempList.push(detail);
+            let tempList=new Array();
+            for(let index of this.pricesystemDetailList){
+                if(util.isNotBlank(index.price)){
+                    tempList.push(index);
                 }
             }
             this.inputForm.pricesystemDetailList=tempList;
@@ -78,26 +75,28 @@
               }else {
                 this.$router.push({name:'pricesystemList',query:util.getQuery("pricesystemList"),params:{_closeFrom:true}})
               }
-            }).catch(function () {
-              that.submitDisabled = false;
+            }).catch( ()=> {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
           }
         })
       },searchDetail(){
-        var val=this.productName;
-        var tempList=new Array();
-        for(var index in this.filterPricesystemDetailList){
-          var detail=this.filterPricesystemDetailList[index];
-          if(util.isNotBlank(detail.qty)){
-            tempList.push(detail)
+        let val=this.productName;
+        if(!val){
+            this.filterPricesystemDetailList = this.pricesystemDetailList;
+            return;
+        }
+        let tempList=new Array();
+        for(let index of this.pricesystemDetailList){
+          if(util.isNotBlank(index.price)){
+            tempList.push(index)
           }
         }
-        for(var index in this.pricesystemDetailList){
-          var detail=this.pricesystemDetailList[index];
-          if(util.contains(detail.productName,val)){
-            tempList.push(detail)
+        for(let index of this.pricesystemDetailList){
+          if(util.contains(index.productName,val)&&util.isBlank(index.price)){
+            tempList.push(index)
           }
         }
         this.filterPricesystemDetailList = tempList;
@@ -105,7 +104,7 @@
         axios.get('/api/ws/future/basic/pricesystem/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
           this.pricesystemDetailList = response.data.pricesystemDetailList;
-          this.filterPricesystemDetailList = this.pricesystemDetailList;
+          this.searchDetail();
           if(!this.isCreate) {
             axios.get('/api/ws/future/basic/pricesystem/findOne', {params: {id: this.$route.query.id}}).then((response) => {
               util.copyValue(response.data, this.inputForm);

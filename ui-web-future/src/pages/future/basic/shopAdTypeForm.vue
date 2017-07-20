@@ -47,9 +47,8 @@
           }
       },
         formSubmit(){
-          var that = this;
           this.submitDisabled = true;
-          var form = this.$refs["formData"];
+          let form = this.$refs["formData"];
           form.validate((valid) => {
             if (valid) {
               axios.post('/api/ws/future/basic/shopAdType/save', qs.stringify(util.deleteExtra(this.formData))).then((response)=> {
@@ -61,8 +60,8 @@
                 else{
                   this.$router.push({name:'shopAdTypeList',query:util.getQuery("shopAdTypeList"),params:{_closeFrom:true}})
                 }
-              }).catch(function () {
-                that.submitDisabled = false;
+              }).catch(()=> {
+                  this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;
