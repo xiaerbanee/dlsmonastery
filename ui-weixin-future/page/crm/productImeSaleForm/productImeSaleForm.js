@@ -8,6 +8,8 @@ Page({
     formProperty: {},
     response: {},
     shops: [],
+    shopId:null,
+    shopName:null,
     submitDisabled: false,
     saleShopId: null,
   },
@@ -77,9 +79,11 @@ Page({
   },
   bindSaleShop: function (e) {
     var that = this;
+    console.log(">>>>",that.data.shops);
+    console.log(e)
     that.setData({
-      'formData.id': that.data.shops[e.detail.value].id,
-      'formData.name': that.data.shops[e.detail.value].name,
+      shopId: that.data.shops[e.detail.value].id,
+      shopName: that.data.shops[e.detail.value].name,
       saleShopId: that.data.shops[e.detail.value].id
     })
   },
