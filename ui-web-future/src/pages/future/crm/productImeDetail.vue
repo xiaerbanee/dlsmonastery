@@ -5,18 +5,29 @@
       <el-form :model="productIme" ref="productIme"  label-width="120px" class="form input-form">
         <el-row :gutter="4">
           <el-col :span="12">
+            <el-form-item :label="$t('productImeDetail.ime')"  >
+              {{productIme.ime}}
+            </el-form-item>
+            <el-form-item :label="$t('productImeDetail.ime2')"  >
+              {{productIme.ime2}}
+            </el-form-item>
+            <el-form-item :label="$t('productImeDetail.meid')"  >
+              {{productIme.meid}}
+            </el-form-item>
+            <el-form-item :label="$t('productImeDetail.boxIme')"  >
+              {{productIme.boxIme}}
+            </el-form-item>
             <el-form-item :label="$t('productImeDetail.depotName')">
               {{productIme.depotName}}
             </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item :label="$t('productImeDetail.inputType')">
               {{productIme.inputType}}
             </el-form-item>
             <el-form-item :label="$t('productImeDetail.createdDate')"  >
               {{productIme.createdDate}}
             </el-form-item>
-
-          </el-col>
-          <el-col :span="12">
             <el-form-item :label="$t('productImeDetail.productName')"  >
               {{productIme.productName}}
             </el-form-item>
@@ -41,16 +52,13 @@
   </div>
 </template>
 <script>
-
   export default{
-
     data(){
       return {
         productImeHistoryList:[],
         productIme:{},
       }
     },created(){
-
       axios.get('/api/ws/future/crm/productIme/getProductImeDetail', {params: {id: this.$route.query.id}}).then((response) => {
         this.productIme = response.data;
       });
