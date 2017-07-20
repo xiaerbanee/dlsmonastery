@@ -72,15 +72,21 @@ public class AdGoodsOrderDetailExportDto extends IdDto<AdGoodsOrderDetail> {
     private Integer confirmQty;
     private Integer billQty;
     private Integer shippedQty;
-    private String expressCompanyOPPO = CompanyNameEnum.JXOPPO.name();
 
     public String getExpressCompanyOPPO() {
-        return expressCompanyOPPO;
+        if(CompanyNameEnum.JXOPPO.name().equalsIgnoreCase(RequestUtils.getCompanyName())){
+            return CompanyNameEnum.JXOPPO.name();
+        }else if(CompanyNameEnum.JXvivo.name().equalsIgnoreCase(RequestUtils.getCompanyName())){
+            return CompanyNameEnum.JXvivo.name();
+        }else if(CompanyNameEnum.IDvivo.name().equalsIgnoreCase(RequestUtils.getCompanyName())){
+            return CompanyNameEnum.IDvivo.name();
+        }else if(CompanyNameEnum.JXDJ.name().equalsIgnoreCase(RequestUtils.getCompanyName())){
+            return CompanyNameEnum.JXDJ.name();
+        }else{
+            return CompanyNameEnum.JXIMOO.name();
+        }
     }
 
-    public void setExpressCompanyOPPO(String expressCompanyOPPO) {
-        this.expressCompanyOPPO = expressCompanyOPPO;
-    }
 
     public String getAdGoodsOrderFormatId(){
         if(StringUtils.isBlank(adGoodsOrderParentId) || adGoodsOrderParentId.equals(adGoodsOrderId)){
