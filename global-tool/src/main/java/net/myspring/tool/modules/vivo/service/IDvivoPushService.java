@@ -367,7 +367,7 @@ public class IDvivoPushService {
             for(String agentCode:storeMap.keySet()){
                 sStoresM13e00Repository.deleteIDvivoStores(agentCode);
                 List<SStoresM13e00> sStoresM13e00List=storeMap.get(agentCode);
-                sStoresM13e00Repository.batchSave(sStoresM13e00List);
+                sStoresM13e00Repository.batchIDvivoSave(sStoresM13e00List,agentCode);
             }
             logger.info("IDVIVO:仓库数据上抛结束" + LocalDateTime.now());
         }

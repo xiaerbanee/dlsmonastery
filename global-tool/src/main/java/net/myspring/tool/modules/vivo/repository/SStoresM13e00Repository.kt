@@ -27,8 +27,10 @@ class SStoresM13e00Repository @Autowired constructor(val namedParameterJdbcTempl
 
     fun deleteIDvivoStores(agentCode:String):Int{
         val map = Maps.newHashMap<String,Any>()
-        map.put("agentCode",agentCode);
-        return namedParameterJdbcTemplate.update("delete from S_Stores_:agentCode",map)
+        map.put("agentCode",agentCode)
+        val sb = StringBuilder()
+        sb.append("delete from S_Stores_"+agentCode)
+        return namedParameterJdbcTemplate.update(sb.toString(),map)
     }
 
 
@@ -49,12 +51,11 @@ class SStoresM13e00Repository @Autowired constructor(val namedParameterJdbcTempl
         return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertyRowMapper(SStoresM13e00::class.java))
     }
 
-    fun batchIDvivoSave(sStoresM13e00List: MutableList<SStoresM13e00>):IntArray{
+    fun batchIDvivoSave(sStoresM13e00List: MutableList<SStoresM13e00>,agentCode: String):IntArray{
         val sb = StringBuilder()
-        sb.append("""
-            INSERT INTO S_Stores_:agentCode  (StoreID,StoreName,Remark,ShortCut)
-                VALUES (:storeID,:storeName,:remark,:shortCut)
-        """)
+        sb.append("INSERT INTO S_Stores_"+agentCode)
+        sb.append(" (StoreID,StoreName,Remark,ShortCut) ")
+        sb.append(" VALUES (:storeID,:storeName,:remark,:shortCut) ")
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sStoresM13e00List.toTypedArray()))
     }
 
