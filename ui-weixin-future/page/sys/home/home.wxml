@@ -18,7 +18,7 @@
     </view> 
   </view>
   <view class="{{weixinAccountsHidden?'':'hidden'}}">
-    <view bindtap="switchAccount">
+    <view bindtap="switchAccount" class="{{companyHidden?'':'hidden'}}">
       <view class="tip">{{tip}}</view>
       <view class="page_switch">切换
         <image class="page_switch_icon" src="/image/icons/right.png" />
