@@ -117,9 +117,26 @@ interface OfficeRepositoryCustom {
     fun findPage(pageable: Pageable, officeQuery: OfficeQuery): Page<OfficeDto>?
 
     fun findAllChildCount(): MutableList<OfficeChildDto>
+
+    fun findDtoByParentIdsLike(parentId: String): MutableList<OfficeDto>
 }
 
 class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): OfficeRepositoryCustom {
+    override fun findDtoByParentIdsLike(parentId: String): MutableList<OfficeDto> {
+        var sb = StringBuilder();
+        sb.append("""
+            SELECT t1.*,parent.name as 'parentName',t2.name as officeRuleName
+            FROM sys_office t1,sys_office_rule t2,sys_office parent
+            where  t1.enabled =1
+            and t1.office_rule_id=t2.id
+            and t1.parent_id=parent.id
+            and t1.parent_ids like concat('%,',:parentId,',%')
+        """)
+        var paramMap = Maps.newHashMap<String,String>();
+        paramMap.put("parentId",parentId);
+        return namedParameterJdbcTemplate.query(sb.toString(),paramMap, BeanPropertyRowMapper(OfficeDto::class.java))
+    }
+
     override fun findByParentIdsListLikeAndOfficeRuleId(parentIdList: MutableList<String>, officeRuleId: String): MutableList<Office> {
         var sb = StringBuilder();
         sb.append("""

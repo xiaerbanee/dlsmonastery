@@ -45,6 +45,7 @@ Page({
   },
   bindAdType: function (e) {
     var that = this;
+    console.log("eeeee", e);
     that.setData({
       'formData.shopAdTypeId': that.data.formProperty.shopAdTypeList[e.detail.value].id,
       'formData.shopAdTypeName': that.data.formProperty.shopAdTypeList[e.detail.value].name

@@ -27,6 +27,7 @@ App({
         weixinCode: null,
         weixinAccount: null,
         weixinAccounts: [],
+        companyNames: [],
         menuList: [],
     },
     //检查用户是否登陆，如果未登陆，自动登陆
@@ -46,7 +47,7 @@ App({
         if (weixinAccount == null || !$util.isNotBlank(weixinAccount.id)) {
             wx.request({
                 url: $util.getUaaUrl('user/getWeixinAccounts?weixinCode=' + that.globalData.weixinCode),
-                data: {},
+                data: { companyName: that.globalData.companyName},
                 method: 'POST',
                 success: function (res) {
                     var weixinAccounts = res.data;
@@ -71,7 +72,7 @@ App({
         var that = this;
         wx.request({
             url: $util.getUaaUrl('user/login'),
-            data: { weixinCode: that.globalData.weixinCode, accountId: that.globalData.weixinAccount.accountId },
+            data: { weixinCode: that.globalData.weixinCode, accountId: that.globalData.weixinAccount.accountId, companyName: that.globalData.companyName},
             method: 'GET',
             success: function (res) {
                 that.globalData.sessionId = res.data.JSESSIONID

@@ -35,11 +35,11 @@
   var debit = 0;
   var credit = 0;
   var setCreditAndDebit = function (datas) {
-    var debitColumn =headers.length - 2;
-    var creditColumn = headers.length - 1;
-    var debit=0;
-    var credit=0;
-    for(var i=0;i<datas.length; i++) {
+    let debitColumn =headers.length - 2;
+    let creditColumn = headers.length - 1;
+    let debit=0;
+    let credit=0;
+    for(let i=0;i<datas.length; i++) {
       if(datas[i][debitColumn]) {
         debit = debit + datas[i][debitColumn]*1;
       }
@@ -152,6 +152,7 @@
         this.settings.columns.push({type: 'numeric', format:"0,0.00", allowEmpty: true, width:80, strict: true});
         this.settings.data = extra.data;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
+        setCreditAndDebit(table.getData());
       });
     },
     methods: {
@@ -174,7 +175,7 @@
                 this.$message(response.data.message);
                 this.$router.push({name:'voucherList',query:util.getQuery("voucherList"), params:{_closeFrom:true}})
               }else {
-                this.$message.error(response.data.message);
+                this.$alert(response.data.message);
                 this.submitDisabled = false;
                 this.submitAuditDisabled = false;
               }
