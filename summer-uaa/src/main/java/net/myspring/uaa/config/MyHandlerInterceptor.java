@@ -20,6 +20,9 @@ public class MyHandlerInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String companyName = request.getParameter("companyName");
+        if(StringUtils.isBlank(companyName)) {
+            companyName = CompanyNameEnum.JXOPPO.name();
+        }
         DbContextHolder.get().setCompanyName(companyName);
         return true;
     }
