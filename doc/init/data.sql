@@ -1,0 +1,1 @@
+insert into sys_company_config values (1023,'公司名称','COMPANY_NAME','IDVIVO','1','2017-06-26 17:19:10','1','2017-06-26 17:19:13','1','0','0','1','1');
