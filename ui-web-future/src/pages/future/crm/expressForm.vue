@@ -4,7 +4,7 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('expressForm.expressOrderToDepotId')" prop="expressOrderToDepotId">
-          <depot-select :disabled="!isCreate" v-model="inputForm.expressOrderToDepotId" category="shop" ></depot-select>
+          <depot-select :disabled="!isCreate" v-model="inputForm.expressOrderToDepotId" category="depot" ></depot-select>
         </el-form-item>
         <el-form-item :label="$t('expressForm.code')" prop="code">
           <el-input v-model="inputForm.code"></el-input>
