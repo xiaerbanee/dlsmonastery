@@ -15,7 +15,7 @@ interface OppoCustomerSaleCountRepository : BaseRepository<OppoCustomerSaleCount
 interface OppoCustomerSaleCountRepositoryCustom{
     fun findAll(dateStart: String,dateEnd: String): MutableList<OppoCustomerSaleCount>
     fun findByDate(dateStart:String,dateEnd:String):MutableList<OppoCustomerSaleCount>
-
+    fun deleteByDate(dateStart: String,dateEnd: String):Int
 }
 class OppoCustomerSaleCountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : OppoCustomerSaleCountRepositoryCustom{
     override fun findAll(dateStart: String, dateEnd: String): MutableList<OppoCustomerSaleCount>{
@@ -49,5 +49,12 @@ class OppoCustomerSaleCountRepositoryImpl @Autowired constructor(val namedParame
         return namedParameterJdbcTemplate.query("""
             select *  from oppo_push_customer_sale_count where sale_time >=:dateStart and sale_time <:dateEnd
          """,paramMap,BeanPropertyRowMapper(OppoCustomerSaleCount::class.java));
+    }
+
+    override fun deleteByDate(dateStart: String, dateEnd: String): Int {
+        val map = Maps.newHashMap<String,String>()
+        map.put("dateStart",dateStart)
+        map.put("dateEnd",dateEnd)
+        return namedParameterJdbcTemplate.update("delete from oppo_push_customer_sale_count where sale_time >=:dateStart and sale_time <:dateEnd",map)
     }
 }

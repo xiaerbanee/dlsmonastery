@@ -73,7 +73,7 @@ public class VivoService {
         String defaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).replace("\"", "");
         String goodStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.GOOD_STORE_ID.name()).replace("\"", "");
         String lxDefaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).replace("\"", "");
-        List<VivoPlantSendimei> vivoPlantSendimeis = vivoClient.findSynImeList(date, agentCode);
+        List<VivoPlantSendimei> vivoPlantSendimeis = vivoClient.getSendImeList(date, agentCode);
         List<ProductIme> productImes=Lists.newArrayList();
         List<ProductIme> productImeList=Lists.newArrayList();
         //判断绑定货品是否为空
@@ -149,7 +149,7 @@ public class VivoService {
         }
         //同步电子保卡
         List<ProductIme> localProductImeList=Lists.newArrayList();
-        List<VivoPlantElectronicsn>  vivoPlantElectronicsns=vivoClient.synProductItemelectronSel(date,agentCode);
+        List<VivoPlantElectronicsn>  vivoPlantElectronicsns=vivoClient.getItemelectronSelList(date,agentCode);
         if(CollectionUtil.isNotEmpty(vivoPlantElectronicsns)){
             Map<String,VivoPlantElectronicsn> vivoPlantElectronicsnsMap=Maps.newHashMap();
             for(VivoPlantElectronicsn vivoPlantElectronicsn:vivoPlantElectronicsns){

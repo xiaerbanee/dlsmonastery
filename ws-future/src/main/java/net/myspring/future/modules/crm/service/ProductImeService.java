@@ -179,7 +179,7 @@ public class ProductImeService {
     }
 
     private boolean hasProvince(){
-        return CompanyNameEnum.IDvivo.name().equals(RequestUtils.getCompanyName());
+        return CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName());
     }
 
     public SimpleExcelBook export(ProductImeQuery productImeQuery) {

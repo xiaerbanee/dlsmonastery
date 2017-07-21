@@ -1,13 +1,16 @@
 package net.myspring.future.modules.basic.manager;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.BillTypeEnum;
+import net.myspring.future.common.enums.CompanyNameEnum;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Client;
@@ -31,6 +34,7 @@ import net.myspring.future.modules.layout.repository.ShopAllotDetailRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -57,6 +61,8 @@ public class SalOutStockManager {
     private DepotRepository depotRepository;
     @Autowired
     private ShopAllotDetailRepository shopAllotDetailRepository;
+    @Autowired
+    private RedisTemplate redisTemplate;
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
@@ -122,7 +128,7 @@ public class SalOutStockManager {
             salOutStockDto.setExtendId(adGoodsOrder.getId());
             salOutStockDto.setExtendType(ExtendTypeEnum.柜台订货.name());
             salOutStockDto.setDate(adGoodsOrder.getBillDate());
-            if(client == null || StringUtils.isBlank(client.getOutId())){
+            if(client == null || StringUtils.isBlank(client.getOutCode())){
                 throw new ServiceException(client.getName() + " 没有关联财务客户，不能申请");
             }else{
                 salOutStockDto.setCustomerNumber(client.getOutCode());
@@ -172,7 +178,7 @@ public class SalOutStockManager {
         salOutStockDto.setExtendId(adGoodsOrder.getId());
         salOutStockDto.setExtendType(ExtendTypeEnum.柜台订货.name());
         salOutStockDto.setDate(adGoodsOrder.getBillDate());
-        if(client == null || StringUtils.isBlank(client.getOutId())){
+        if(client == null || StringUtils.isBlank(client.getOutCode())){
             throw new ServiceException(client.getName() + " 没有关联财务客户，不能申请");
         }else{
             salOutStockDto.setCustomerNumber(client.getOutCode());
@@ -180,6 +186,7 @@ public class SalOutStockManager {
         salOutStockDto.setNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+shop.getName()+CharConstant.COMMA+shop.getContator()+CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+adGoodsOrder.getBillAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
         List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
         List<AdGoodsOrderDetail> detailList = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
+        String storeId  = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.AD_CHARGE_DEPOTS.name()).getCode();
         for(AdGoodsOrderDetail adGoodsOrderDetail:detailList){
             SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
             if(depotStore != null || depotStore.getOutCode() != null){
@@ -194,8 +201,8 @@ public class SalOutStockManager {
                 throw new ServiceException(product.getName()+" 该货品没有编码，不能开单");
             }
             entityDto.setQty(adGoodsOrderDetail.getBillQty());
-            // 是否赠品 赠品，电教，imoo 广告办事处的以原价出库
-            if(BillTypeEnum.配件赠品.name().equals(adGoodsOrder.getBillType())){//或者是电教公司,而且的depot必须是金蝶里有的
+            // 是否赠品-- 赠品(电教，imoo 的广告办事处的以原价出库)
+            if(BillTypeEnum.配件赠品.name().equals(adGoodsOrder.getBillType()) || CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())&&depotStore.getOutId().equals(storeId)){
                 entityDto.setPrice(productMap.get(adGoodsOrderDetail.getProductId()).getPrice2());
             }else{
                 entityDto.setPrice(BigDecimal.ZERO);
