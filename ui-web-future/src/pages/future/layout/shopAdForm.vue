@@ -101,7 +101,7 @@
         });
       },
       handlePreview(file) {
-        window.open(file.url);
+        window.open(file.viewUrl);
       },handleChange(file, fileList) {
         this.fileList = fileList;
       },handleRemove(file, fileList) {
