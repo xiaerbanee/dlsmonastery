@@ -1,17 +1,6 @@
 package net.myspring.tool.modules.oppo.dto;
 
-import net.myspring.common.dto.DataDto;
-import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
-import net.myspring.util.cahe.annotation.CacheInput;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.List;
-
-
 public class OppoPlantAgentProductSelDto {
-    @Id
     private String id;
     private String brandId;
     private String brandName;
