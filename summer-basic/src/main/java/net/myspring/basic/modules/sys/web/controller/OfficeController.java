@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.JointTypeEnum;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
 import net.myspring.basic.common.utils.RequestUtils;
+import net.myspring.basic.modules.hr.dto.OfficeChangeDto;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.OfficeBusiness;
 import net.myspring.basic.modules.sys.dto.OfficeChildDto;
