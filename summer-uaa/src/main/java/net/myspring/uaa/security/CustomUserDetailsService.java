@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.uaa.datasource.DbContextHolder;
 import net.myspring.uaa.dto.AccountDto;
 import net.myspring.uaa.dto.AccountWeixinDto;
 import net.myspring.uaa.dto.OfficeDto;
@@ -62,6 +63,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         AccountDto accountDto = null;
         HttpServletRequest request  = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
         String weixinCode = request.getParameter("weixinCode");
+        String companyName=request.getParameter("companyName");
+        DbContextHolder.get().setCompanyName(companyName);
         if(StringUtils.isNotBlank(weixinCode)) {
             String accountId = ObjectUtils.toString(request.getParameter("accountId"));
             WeixinSessionDto weixinSessionDto = weixinManager.findWeixinSessionDto(weixinCode);
@@ -89,7 +92,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             }
         }
         if(accountDto != null) {
-            accountDto.setCompanyName(companyConfigRepository.findByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()));
+            accountDto.setCompanyName(companyName);
             LocalDate leaveDate = accountDto.getLeaveDate();
             boolean accountNoExpired = leaveDate == null || leaveDate.isAfter(LocalDate.now());
             Set<SimpleGrantedAuthority> authList = Sets.newHashSet();

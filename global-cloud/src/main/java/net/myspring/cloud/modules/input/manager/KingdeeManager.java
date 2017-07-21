@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.enums.KingdeeActionEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
+import net.myspring.cloud.common.utils.Base64Utils;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
@@ -44,7 +45,7 @@ public class KingdeeManager {
         List<Object> list = Lists.newArrayList();
         list.add(dbid);
         list.add(username);
-        list.add(password);
+        list.add(Base64Utils.decode(password));
         list.add("2052");
         OkHttpClient okHttpClient = getClient(RequestUtils.getAccountId());
         Request request = new Request.Builder()

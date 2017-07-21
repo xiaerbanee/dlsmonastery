@@ -2,6 +2,7 @@ package net.myspring.cloud.modules.sys.service;
 
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
+import net.myspring.cloud.common.utils.Base64Utils;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
@@ -71,7 +72,6 @@ public class AccountKingdeeBookService {
         return null;
     }
 
-
     @Transactional
     public AccountKingdeeBook save(AccountKingdeeBookForm accountKingdeeBookForm){
         AccountKingdeeBook accountKingdeeBook;
@@ -79,10 +79,12 @@ public class AccountKingdeeBookService {
             accountKingdeeBook = BeanUtil.map(accountKingdeeBookForm,AccountKingdeeBook.class);
             KingdeeBook kingdeeBook = kingdeeBookRepository.findByCompanyName(RequestUtils.getCompanyName());
             accountKingdeeBook.setKingdeeBookId(kingdeeBook.getId());
+            accountKingdeeBook.setPassword(Base64Utils.encode(accountKingdeeBook.getPassword().getBytes()));
             accountKingdeeBookRepository.save(accountKingdeeBook);
         }else{
             accountKingdeeBook = accountKingdeeBookRepository.findOne(accountKingdeeBookForm.getId());
             ReflectionUtil.copyProperties(accountKingdeeBookForm,accountKingdeeBook);
+            accountKingdeeBook.setPassword(Base64Utils.encode(accountKingdeeBook.getPassword().getBytes()));
             accountKingdeeBookRepository.save(accountKingdeeBook);
         }
         return accountKingdeeBook;
