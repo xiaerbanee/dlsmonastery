@@ -4,14 +4,13 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
-import net.myspring.tool.modules.oppo.domain.OppoPlantProductItemelectronSel;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
 import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
 import net.myspring.tool.modules.vivo.domain.VivoProducts;
 import net.myspring.tool.modules.vivo.dto.FactoryOrderDto;
 import net.myspring.tool.modules.vivo.dto.VivoPlantSendimeiDto;
-import net.myspring.tool.modules.vivo.service.VivoService;
+import net.myspring.tool.modules.vivo.service.VivoPullService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "factory/vivo")
-public class VivoController {
+public class VivoPullController {
     @Autowired
-    private VivoService vivoService;
+    private VivoPullService vivoService;
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
