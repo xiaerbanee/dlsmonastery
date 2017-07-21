@@ -65,15 +65,16 @@ public class ShopDepositService {
             throw new ServiceException("该门店没有绑定财务，不能同步金蝶");
         }
 
+        if(shopDepositForm.isDemoPhoneAmountValid()){
+            saveShopDeposit(shopDepositForm, ShopDepositTypeEnum.演示机押金, shopDepositForm.getDemoPhoneAmount());
+        }
         if(shopDepositForm.isImageAmountValid()){
             saveShopDeposit(shopDepositForm, ShopDepositTypeEnum.形象保证金, shopDepositForm.getImageAmount());
         }
         if(shopDepositForm.isMarketAmountValid()){
             saveShopDeposit(shopDepositForm, ShopDepositTypeEnum.市场保证金, shopDepositForm.getMarketAmount());
         }
-        if(shopDepositForm.isDemoPhoneAmountValid()){
-            saveShopDeposit(shopDepositForm, ShopDepositTypeEnum.演示机押金, shopDepositForm.getDemoPhoneAmount());
-        }
+
     }
 
     @Transactional
