@@ -2,13 +2,20 @@ package net.myspring.basic.modules.hr.service;
 
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.domain.OfficeChange;
+import net.myspring.basic.modules.hr.dto.OfficeChangeDto;
+import net.myspring.basic.modules.hr.dto.OfficeChangeFormDto;
 import net.myspring.basic.modules.hr.repository.OfficeChangeRepository;
+import net.myspring.basic.modules.sys.domain.Office;
+import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.basic.modules.sys.repository.OfficeRepository;
 import net.myspring.basic.modules.hr.web.form.OfficeChangeForm;
 import net.myspring.util.mapper.BeanUtil;
+import org.apache.commons.beanutils.BeanMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -34,5 +41,12 @@ public class OfficeChangeService {
             cacheUtils.initCacheInput(officeChangeForm);
         }
         return officeChangeForm;
+    }
+
+    public List<OfficeChangeFormDto> getChangeByOfficeId(String officeId){
+        List<OfficeDto> officeList=officeRepository.findDtoByParentIdsLike("%,"+officeId+",%");
+        List<OfficeChangeFormDto> officeChangeFormDtos= BeanUtil.map(officeList,OfficeChangeFormDto.class);
+        cacheUtils.initCacheInput(officeChangeFormDtos);
+        return officeChangeFormDtos;
     }
 }

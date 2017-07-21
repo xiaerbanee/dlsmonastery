@@ -28,6 +28,9 @@
         <el-form-item :label="$t('shopDepositForm.imageAmount')" prop="imageAmount" >
           <el-input v-model.number="inputForm.imageAmount"></el-input>
         </el-form-item>
+        <el-form-item :label="$t('shopDepositForm.demoPhoneAmount')" prop="demoPhoneAmount" >
+          <el-input v-model.number="inputForm.demoPhoneAmount"></el-input>
+        </el-form-item>
         <el-form-item :label="$t('shopDepositForm.remarks')" prop="remarks" >
           <el-input v-model="inputForm.remarks" type="textarea"></el-input>
         </el-form-item>
@@ -57,7 +60,6 @@
             inputForm:{
               extra:{}
             },
-
             rules: {
               shopId: [{ required: true, message: this.$t('shopDepositForm.prerequisiteMessage')}],
               departMent: [{ required: true, message: this.$t('shopDepositForm.prerequisiteMessage')}],
@@ -66,6 +68,7 @@
               billDate: [{ required: true, message: this.$t('shopDepositForm.prerequisiteMessage')}],
               marketAmount: [{ required: true, type: 'number', message: this.$t('shopDepositForm.prerequisiteAndNumberMessage')}],
               imageAmount: [{ required: true, type: 'number', message: this.$t('shopDepositForm.prerequisiteAndNumberMessage')}],
+              demoPhoneAmount: [{ required: true,  type: 'number', message: this.$t('shopDepositForm.prerequisiteAndNumberMessage')}],
             }
           }
         },

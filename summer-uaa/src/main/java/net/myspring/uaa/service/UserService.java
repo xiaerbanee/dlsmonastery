@@ -3,6 +3,7 @@ package net.myspring.uaa.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.uaa.datasource.DbContextHolder;
 import net.myspring.uaa.dto.AccountDto;
 import net.myspring.uaa.dto.AccountWeixinDto;
 import net.myspring.uaa.dto.PermissionDto;
@@ -37,7 +38,7 @@ public class UserService {
     @Autowired
     private AccountWeixinDtoRepository accountWeixinDtoRepository;
 
-    public Map<String, Object> login(String username, String password, String weixinCode, String accountId) {
+    public Map<String, Object> login(String username, String password, String weixinCode, String accountId,String companyName) {
         String url = "http://localhost:1200/login";
         Map<String, Object> map = Maps.newHashMap();
         Boolean success = true;
@@ -66,7 +67,6 @@ public class UserService {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
-
         Response response = null;
         try {
             response = client.newCall(request).execute();
@@ -96,6 +96,9 @@ public class UserService {
         }
         if (StringUtils.isNotBlank(accountId)) {
             builder.add("accountId", accountId);
+        }
+        if (StringUtils.isNotBlank(companyName)) {
+            builder.add("companyName", companyName);
         }
         RequestBody body = builder.build();
 
@@ -144,5 +147,6 @@ public class UserService {
         }
         return accountWeixinList;
     }
+
 }
 

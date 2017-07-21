@@ -10,11 +10,20 @@ public class ShopDepositForm extends BaseForm<ShopDeposit> {
 
     private BigDecimal imageAmount;
     private BigDecimal marketAmount;
+    private BigDecimal demoPhoneAmount ;
     private LocalDate billDate;
     private String bankId;
     private String departMent;
     private String outBillType;
     private String shopId;
+
+    public BigDecimal getDemoPhoneAmount() {
+        return demoPhoneAmount;
+    }
+
+    public void setDemoPhoneAmount(BigDecimal demoPhoneAmount) {
+        this.demoPhoneAmount = demoPhoneAmount;
+    }
 
     public LocalDate getBillDate() {
         return billDate;
@@ -82,6 +91,14 @@ public class ShopDepositForm extends BaseForm<ShopDeposit> {
 
     public boolean isMarketAmountValid() {
         if (marketAmount != null && ! marketAmount.equals(BigDecimal.ZERO)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isDemoPhoneAmountValid() {
+        if (demoPhoneAmount != null && ! demoPhoneAmount.equals(BigDecimal.ZERO)) {
             return true;
         } else {
             return false;

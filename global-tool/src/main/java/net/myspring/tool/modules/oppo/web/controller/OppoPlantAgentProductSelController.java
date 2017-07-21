@@ -4,7 +4,7 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.tool.modules.oppo.dto.OppoPlantAgentProductSelDto;
 import net.myspring.tool.modules.oppo.service.OppoPlantAgentProductSelService;
-import net.myspring.tool.modules.oppo.web.form.OppoPlantAgentProductSqlForm;
+import net.myspring.tool.modules.oppo.web.form.OppoPlantAgentProductSelForm;
 import net.myspring.tool.modules.oppo.web.query.OppoPlantAgentProductSelQuery;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,8 @@ public class OppoPlantAgentProductSelController {
     }
 
     @RequestMapping(value = "form")
-    public OppoPlantAgentProductSqlForm form(OppoPlantAgentProductSqlForm oppoPlantAgentProductSqlForm){
-        return oppoPlantAgentProductSelService.form(oppoPlantAgentProductSqlForm);
+    public OppoPlantAgentProductSelForm form(OppoPlantAgentProductSelForm oppoPlantAgentProductSelForm){
+        return oppoPlantAgentProductSelService.form(oppoPlantAgentProductSelForm);
     }
 
     @RequestMapping(value = "save")

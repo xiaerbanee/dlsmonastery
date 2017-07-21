@@ -6,6 +6,8 @@ import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.modules.oppo.domain.*;
+import net.myspring.tool.modules.oppo.dto.OppoPlantSendImeiPpselDto;
+import net.myspring.tool.modules.oppo.dto.OppoResponseMessage;
 import net.myspring.tool.modules.oppo.service.OppoPushSerivce;
 import net.myspring.tool.modules.oppo.service.OppoService;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -71,7 +73,7 @@ public class OppoController {
         oppoPushSerivce.getOppoCustomers(date);
         //上抛运营商属性
         oppoPushSerivce.getOppoCustomerOperatortype(date);
-        //发货退货调拨数据上抛
+//发货退货调拨数据上抛
         List<OppoCustomerAllot> oppoCustomerAllots=oppoPushSerivce.getFutureOppoCustomerAllot(date);
         oppoPushSerivce.getOppoCustomerAllot(oppoCustomerAllots,date);
         //上抛一代二代库存数据,不包括门店数据
@@ -99,7 +101,7 @@ public class OppoController {
     }
 
     @RequestMapping(value = "synIme")
-    public List<OppoPlantSendImeiPpselDto> synIme(String date,String agentCode) {
+    public List<OppoPlantSendImeiPpselDto> synIme(String date, String agentCode) {
         List<OppoPlantSendImeiPpselDto> oppoPlantSendImeiPpselDtos = oppoService.synIme(date,agentCode);
         return oppoPlantSendImeiPpselDtos;
     }

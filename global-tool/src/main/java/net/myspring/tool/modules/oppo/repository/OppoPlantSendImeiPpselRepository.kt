@@ -3,16 +3,14 @@ package net.myspring.tool.modules.oppo.repository;
 import com.google.common.collect.Maps
 import net.myspring.tool.common.repository.BaseRepository
 import net.myspring.tool.modules.oppo.domain.OppoPlantSendImeiPpsel;
-import net.myspring.tool.modules.oppo.domain.OppoPlantSendImeiPpselDto
+import net.myspring.tool.modules.oppo.dto.OppoPlantSendImeiPpselDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils
 import org.springframework.jdbc.core.simple.SimpleJdbcCall
 import org.springframework.stereotype.Component
-import java.lang.StringBuilder
 
 import java.time.LocalDate;
 

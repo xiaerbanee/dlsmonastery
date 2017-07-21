@@ -69,7 +69,8 @@
           <template scope="scope">
             <div class="action"> <el-button size="small" @click.native="itemAction(scope.row.id,'verify')"  class="action" v-if="scope.row.auditable">审核</el-button></div>
             <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')"  class="action"  v-permit="'hr:auditFile:view'">详细</el-button></div>
-              <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')"  class="action" v-permit="'hr:auditFile:delete'" v-if="scope.row.editable">删除</el-button></div>
+            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'print')"  class="action"  v-permit="'hr:auditFile:print'">打印</el-button></div>
+            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')"  class="action" v-permit="'hr:auditFile:delete'" v-if="scope.row.editable">删除</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -142,6 +143,8 @@
             this.pageRequest();
           });
         }).catch(()=>{});
+        }else if(action=="print"){
+          window.open('/#/future/crm/goodsOrderPrint?id=' + id);
         }
       }
     },created () {
