@@ -32,7 +32,7 @@ import java.util.Map;
  */
 @Service
 @LocalDataSource
-@Transactional(readOnly = false)
+@Transactional(readOnly = true)
 public class VivoPullService {
     @Autowired
     private VivoPlantProductsRepository vivoPlantProductsRepository;
@@ -67,7 +67,7 @@ public class VivoPullService {
 
     //获取物料编码
     @LocalDataSource
-    @Transactional(readOnly = false)
+    @Transactional
     public void pullPlantProducts( List<VivoPlantProducts> vivoPlantProducts){
         if(CollectionUtil.isNotEmpty(vivoPlantProducts)) {
             for(VivoPlantProducts plantProduct:vivoPlantProducts){
@@ -90,7 +90,7 @@ public class VivoPullService {
 
     //查询发货串码
     @LocalDataSource
-    @Transactional(readOnly = false)
+    @Transactional
     public void pullPlantSendimeis(List<VivoPlantSendimei> vivoPlantSendimeis){
         if(CollectionUtil.isNotEmpty(vivoPlantSendimeis)){
             List<String> imeiList = Lists.newArrayList();
@@ -131,6 +131,7 @@ public class VivoPullService {
 
     //查询电子保卡
     @LocalDataSource
+    @Transactional
     public void pullPlantElectronicsns(List<VivoPlantElectronicsn> vivoPlantElectronicsns) {
         if(CollectionUtil.isNotEmpty(vivoPlantElectronicsns)) {
             List<String> snImeis = CollectionUtil.extractToList(vivoPlantElectronicsns, "snImei");
