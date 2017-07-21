@@ -1,14 +1,14 @@
 package net.myspring.tool.modules.vivo.repository
 
 import com.google.common.collect.Maps
-import net.myspring.tool.modules.vivo.domain.SProductItem000M13e00
+import net.myspring.tool.modules.vivo.domain.SProductItem000
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils
 import org.springframework.stereotype.Component
 
 @Component
-class SProductItem000M13e00Repository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
+class SProductItem000Repository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
     fun deleteByUpdateTime(dateStart:String,dateEnd:String):Int{
         val map = Maps.newHashMap<String,String>()
         map.put("dateStart",dateStart)
@@ -33,7 +33,7 @@ class SProductItem000M13e00Repository @Autowired constructor(val namedParameterJ
         return namedParameterJdbcTemplate.update(sb.toString(),map)
     }
 
-    fun batchSave(sProductItem000M13e00List:MutableList<SProductItem000M13e00>):IntArray{
+    fun batchSave(sProductItem000M13e00List:MutableList<SProductItem000>):IntArray{
         val sb = StringBuilder()
         sb.append("""
             INSERT INTO S_ProductItem000_M13E00(CompanyID,ProductID,ProductNo,StoreID,CustomerID,SubCustomerID,Status,StatusInfo,IsReturnProfit,IsLock,Remark,UpdateTime)
@@ -42,7 +42,7 @@ class SProductItem000M13e00Repository @Autowired constructor(val namedParameterJ
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sProductItem000M13e00List.toTypedArray()))
     }
 
-    fun batchIDvivoSave(sProductItem000M13e00List:MutableList<SProductItem000M13e00>,agentCode: String):IntArray{
+    fun batchIDvivoSave(sProductItem000M13e00List:MutableList<SProductItem000>, agentCode: String):IntArray{
         val sb = StringBuilder()
         sb.append("INSERT INTO S_ProductItem000_")
         sb.append(agentCode+" ")

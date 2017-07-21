@@ -1,7 +1,7 @@
 package net.myspring.tool.modules.vivo.repository
 
 import com.google.common.collect.Maps
-import net.myspring.tool.modules.vivo.domain.SProductItemLendM13e00
+import net.myspring.tool.modules.vivo.domain.SProductItemLend
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -9,8 +9,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils
 import org.springframework.stereotype.Component
 
 @Component
-class SProductItemLendM13e00Repository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
-    fun findDemoPhones(dateStart:String,dateEnd:String):MutableList<SProductItemLendM13e00>{
+class SProductItemLendRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
+    fun findDemoPhones(dateStart:String,dateEnd:String):MutableList<SProductItemLend>{
         val map = Maps.newHashMap<String,String>()
         map.put("dateStart",dateStart)
         map.put("dateEnd",dateEnd)
@@ -30,7 +30,7 @@ class SProductItemLendM13e00Repository @Autowired constructor(val namedParameter
                 and demo.created_date <:dateEnd
                 and demo.enabled = 1
         """)
-        return namedParameterJdbcTemplate.query(sb.toString(),map, BeanPropertyRowMapper(SProductItemLendM13e00::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(),map, BeanPropertyRowMapper(SProductItemLend::class.java))
     }
 
     fun deleteByUpdateTime(dateStart:String,dateEnd:String):Int{
@@ -44,7 +44,7 @@ class SProductItemLendM13e00Repository @Autowired constructor(val namedParameter
         return namedParameterJdbcTemplate.update(sb.toString(),map)
     }
 
-    fun batchSave(sProductItemLendM13e00List: MutableList<SProductItemLendM13e00>):IntArray{
+    fun batchSave(sProductItemLendM13e00List: MutableList<SProductItemLend>):IntArray{
         val sb = StringBuilder()
         sb.append("""
             INSERT INTO S_ProductItemLend_M13E00 (CompanyID,ProductID,ProductNo,StoreID,Status,StatusInfo,UpdateTime)

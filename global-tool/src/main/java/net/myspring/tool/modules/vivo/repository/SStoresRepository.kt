@@ -1,8 +1,7 @@
 package net.myspring.tool.modules.vivo.repository
 
 import com.google.common.collect.Maps
-import net.myspring.tool.modules.vivo.domain.SStoresM13e00
-import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDetailDto
+import net.myspring.tool.modules.vivo.domain.SStores
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -10,13 +9,13 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils
 import org.springframework.stereotype.Component
 
 @Component
-class SStoresM13e00Repository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
+class SStoresRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
     fun deleteAll():Int{
         val map = Maps.newHashMap<String,Any>()
         return namedParameterJdbcTemplate.update("DELETE FROM S_Stores_M13E00",map)
     }
 
-    fun batchSave(sStoresM13e00List: MutableList<SStoresM13e00>):IntArray{
+    fun batchSave(sStoresM13e00List: MutableList<SStores>):IntArray{
         val sb = StringBuilder()
         sb.append("""
             INSERT INTO S_Stores_M13E00(StoreID,StoreName,Remark,ShortCut)
@@ -34,7 +33,7 @@ class SStoresM13e00Repository @Autowired constructor(val namedParameterJdbcTempl
     }
 
 
-    fun findIDvivoStore():MutableList<SStoresM13e00>{
+    fun findIDvivoStore():MutableList<SStores>{
         val sb = StringBuilder()
         sb.append("""
           select
@@ -48,10 +47,10 @@ class SStoresM13e00Repository @Autowired constructor(val namedParameterJdbcTempl
             group by de.province_id
             order by store.joint_level asc
         """)
-        return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertyRowMapper(SStoresM13e00::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertyRowMapper(SStores::class.java))
     }
 
-    fun batchIDvivoSave(sStoresM13e00List: MutableList<SStoresM13e00>,agentCode: String):IntArray{
+    fun batchIDvivoSave(sStoresM13e00List: MutableList<SStores>, agentCode: String):IntArray{
         val sb = StringBuilder()
         sb.append("INSERT INTO S_Stores_"+agentCode)
         sb.append(" (StoreID,StoreName,Remark,ShortCut) ")

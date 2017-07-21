@@ -1,19 +1,16 @@
 package net.myspring.tool.modules.vivo.domain;
 
-
-
-//代理商库存表
-public class SPlantStockSupplyM13e00 {
+//经销商库存表
+public class SPlantStockDealer {
 
     private String companyId;
-    private String supplyId;
+    private String dealerId;
     private String productId;
     private String createdTime;
     private Integer sumStock;
     private Integer useAbleStock;
     private Integer bad;
     private String accountDate;
-    private String agentCode;
 
     public String getCompanyId() {
         return companyId;
@@ -23,12 +20,12 @@ public class SPlantStockSupplyM13e00 {
         this.companyId = companyId;
     }
 
-    public String getSupplyId() {
-        return supplyId;
+    public String getDealerId() {
+        return dealerId;
     }
 
-    public void setSupplyId(String supplyId) {
-        this.supplyId = supplyId;
+    public void setDealerId(String dealerId) {
+        this.dealerId = dealerId;
     }
 
     public String getProductId() {
@@ -77,13 +74,5 @@ public class SPlantStockSupplyM13e00 {
 
     public void setAccountDate(String accountDate) {
         this.accountDate = accountDate;
-    }
-
-    public String getAgentCode() {
-        return agentCode;
-    }
-
-    public void setAgentCode(String agentCode) {
-        this.agentCode = agentCode;
     }
 }
