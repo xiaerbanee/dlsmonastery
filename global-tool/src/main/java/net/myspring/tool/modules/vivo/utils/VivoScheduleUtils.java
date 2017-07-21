@@ -22,8 +22,6 @@ public class VivoScheduleUtils {
 	@Autowired
 	private ToolClient toolClient;
 	@Autowired
-	private VivoRepository vivoRepository;
-	@Autowired
 	private VivoProductsRepository vivoProductsRepository;
 	@Autowired
 	private VivoPlantProductsRepository vivoPlantProductsRepository;

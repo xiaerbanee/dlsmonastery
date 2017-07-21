@@ -34,8 +34,6 @@ import java.util.*;
 @Transactional(readOnly = false)
 public class VivoService {
     @Autowired
-    private VivoRepository vivoRepository;
-    @Autowired
     private VivoProductsRepository vivoProductsRepository;
     @Autowired
     private VivoPlantProductsRepository vivoPlantProductsRepository;
