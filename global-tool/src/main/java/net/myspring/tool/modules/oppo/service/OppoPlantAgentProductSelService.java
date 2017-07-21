@@ -41,20 +41,17 @@ public class OppoPlantAgentProductSelService {
         return oppoPlantAgentProductSelDtoList;
     }
 
-    public OppoPlantAgentProductSelForm form(OppoPlantAgentProductSelForm oppoPlantAgentProductSelForm){
-        String isLx = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
-        if(StringUtils.isNotBlank(isLx)){
-            oppoPlantAgentProductSelForm.setLx(true);
-        }else{
-            oppoPlantAgentProductSelForm.setLx(false);
-        }
+    public OppoPlantAgentProductSelForm getForm(OppoPlantAgentProductSelForm oppoPlantAgentProductSelForm){
+        String lxAgentCodes = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
+        oppoPlantAgentProductSelForm.setLx(StringUtils.isNotBlank(lxAgentCodes));
         oppoPlantAgentProductSelForm.getExtra().put("productNames",CollectionUtil.extractToList(productClient.findHasImeProduct(),"name"));
         return oppoPlantAgentProductSelForm;
     }
 
     @Transactional
     public void save(String data){
-        String lxAgentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
+        String lxAgentCodes = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
+        Boolean isLx = StringUtils.isNotBlank(lxAgentCodes);
         List<Map<String,String>> list = ObjectMapperUtils.readValue(data, ArrayList.class);
         List<ProductEntity> productEntityList=productClient.findHasImeProduct();
         Map<String,ProductEntity> productMap=Maps.newHashMap();
@@ -75,7 +72,7 @@ public class OppoPlantAgentProductSelService {
             }else{
                 agentProductSel.setProductId(defaultProduct.getId());
             }
-            if(StringUtils.isNotBlank(lxAgentCode)){
+            if(isLx){
                 if(lxProduct==null){
                     agentProductSel.setLxProductId(null);
                 }else{
