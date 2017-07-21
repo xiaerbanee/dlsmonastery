@@ -71,7 +71,7 @@ public class OppoController {
         oppoPushSerivce.getOppoCustomers(date);
         //上抛运营商属性
         oppoPushSerivce.getOppoCustomerOperatortype(date);
-        //发货退货调拨数据上抛
+//发货退货调拨数据上抛
         List<OppoCustomerAllot> oppoCustomerAllots=oppoPushSerivce.getFutureOppoCustomerAllot(date);
         oppoPushSerivce.getOppoCustomerAllot(oppoCustomerAllots,date);
         //上抛一代二代库存数据,不包括门店数据
