@@ -22,8 +22,8 @@ public class vivoPushController {
     private VivoPushService vivoPushService;
 
     @RequestMapping(value = "pushVivoData")
-    public void pushVivoData(String date){
-        DbContextHolder.get().setCompanyName("JXVIVO");
+    public void pushVivoData(String date,String companyName){
+        DbContextHolder.get().setCompanyName(companyName);
         //机构数据
         vivoPushService.pushVivoZonesData();
         //客户数据
