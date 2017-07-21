@@ -1,11 +1,13 @@
 package net.myspring.uaa.web.controller;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.uaa.dto.AccountWeixinDto;
 import net.myspring.uaa.service.AccountWeixinService;
 import net.myspring.uaa.service.UserService;
 import net.myspring.uaa.web.form.AccountWeixinForm;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.session.ExpiringSession;
@@ -13,6 +15,7 @@ import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,8 +69,11 @@ public class UserController {
     //模拟UAA登陆，不需要跳转页面
     @RequestMapping(value = "/user/login")
     @ResponseBody
-    public Map<String, Object> login(String username, String password, String weixinCode,String accountId) {
-        Map<String, Object> map = userService.login(username, password, weixinCode,accountId);
+    public Map<String, Object> login(String username, String password, String weixinCode,String accountId,String companyName) {
+        if(StringUtils.isBlank(companyName)){
+            companyName= CompanyNameEnum.JXOPPO.name();
+        }
+        Map<String, Object> map = userService.login(username, password, weixinCode,accountId,companyName);
         return map;
     }
 
