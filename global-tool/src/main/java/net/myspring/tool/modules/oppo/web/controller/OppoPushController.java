@@ -44,8 +44,6 @@ public class OppoPushController {
         String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
         DbContextHolder.get().setCompanyName("JXOPPO");
         //上抛oppo门店数据,只上抛二代和渠道门店
-        logger.info("CompanyName===="+DbContextHolder.get().getCompanyName());
-        logger.info("DateSourceType===="+DbContextHolder.get().getDataSourceType());
         oppoPushSerivce.getOppoCustomers(date);
         //上抛运营商属性
         oppoPushSerivce.getOppoCustomerOperatortype(date);
