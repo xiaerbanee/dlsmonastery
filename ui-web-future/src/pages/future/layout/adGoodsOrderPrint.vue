@@ -83,7 +83,13 @@
 
       axios.all([this.findDetailList(), this.print()])
         .then(axios.spread( (findDetailListRes, printRes) => {
-          this.adGoodsOrderDetailList = findDetailListRes.data;
+          let tempList = new Array();
+          for(let index of findDetailListRes.data){
+            if(index.billQty >0){
+              tempList.push(index);
+            }
+          }
+          this.adGoodsOrderDetailList = tempList;
           this.adGoodsOrder = printRes.data;
 
           let resultQty = 0;
