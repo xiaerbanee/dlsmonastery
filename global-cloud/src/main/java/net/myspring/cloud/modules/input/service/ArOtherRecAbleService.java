@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
-import net.myspring.cloud.common.utils.HandsontableUtils;
+import net.myspring.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.ArOtherRecAbleDto;
 import net.myspring.cloud.modules.input.dto.ArOtherRecAbleFEntityDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;

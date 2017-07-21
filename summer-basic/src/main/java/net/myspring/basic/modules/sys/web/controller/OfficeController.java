@@ -210,4 +210,13 @@ public class OfficeController {
         return officeService.findByNameLike(name);
     }
 
+    @RequestMapping(value = "saveChange",method = RequestMethod.POST)
+    public RestResponse saveChange(String id,String json){
+        if (StringUtils.isNotBlank(json)) {
+             officeService.saveChange(id,json);
+             return new RestResponse("保存成功",null,true);
+        }
+        return new RestResponse("数据不能为空",null,false);
+    }
+
 }
