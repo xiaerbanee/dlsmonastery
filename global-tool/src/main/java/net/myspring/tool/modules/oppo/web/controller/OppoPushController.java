@@ -38,8 +38,9 @@ public class OppoPushController {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
 
-    @RequestMapping(value = "pushFactoryData")
-    public String pushFactoryData(String date) {
+    //将需要上抛的数据先同步到本地数据库
+    @RequestMapping(value = "synToLocal")
+    public String synToLocal(String date) {
         String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
         DbContextHolder.get().setCompanyName(companyName);
         //上抛oppo门店数据,只上抛二代和渠道门店
