@@ -919,7 +919,7 @@ INSERT INTO crm_client (
   FROM
     crm_depot
   WHERE
-    out_type='门店'
+    out_type='门店' and out_id is not null;
 );
 update crm_depot t1,crm_client t2 set t1.client_id=t2.id where t1.out_id=t2.out_id and t1.out_type='门店';
 

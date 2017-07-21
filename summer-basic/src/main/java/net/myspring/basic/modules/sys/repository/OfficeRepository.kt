@@ -65,7 +65,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
     @Query("""
         SELECT t
         FROM  #{#entityName} t
-        where t.parentIds like ?1
+        where t.parentIds like concat('%',?1,'%')
         and t.enabled =1
      """)
     fun findByParentIdsLike(parentId: String): MutableList<Office>
@@ -78,7 +78,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
         where t1.enabled=1
         and t2.enabled=1
         and t1.officeRuleId=t2.id
-        and (t1.parentIds like ?1 or t1.id=?1)
+        and (t1.parentIds like concat('%',?1,'%') or t1.id=?1)
         and t1.officeRuleId=?2
      """)
     fun findByOfficeIdAndRuleId( officeId: String, officeRuleId: String): MutableList<Office>
@@ -128,7 +128,6 @@ interface OfficeRepositoryCustom {
 
     fun findDtoByParentIdsLike(parentId: String): MutableList<OfficeDto>
 
-//    fun findByNameLike(name: String): MutableList<Office>
 }
 
 class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): OfficeRepositoryCustom {
@@ -158,7 +157,7 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
             and (
         """)
         for((index) in parentIdList.withIndex()) {
-            sb.append(" t1.parent_ids like :parentId").append(index);
+            sb.append(" t1.parent_ids like concat('%',:parentId,'%')").append(index);
             if(index < parentIdList.size-1) {
                 sb.append(" or ");
             }
@@ -207,7 +206,7 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
             and (
         """)
         for((index) in parentIdList.withIndex()) {
-            sb.append(" t1.parent_ids like :parentId").append(index);
+            sb.append(" t1.parent_ids like  concat('%',:parentId,'%')").append(index);
             if(index < parentIdList.size-1) {
                 sb.append(" or ");
             }
@@ -298,16 +297,5 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
             order by of.id asc
         """,BeanPropertyRowMapper(OfficeChildDto::class.java));
     }
-
-//    override fun findByNameLike(name: String):MutableList<Office> {
-//        return namedParameterJdbcTemplate.query("""
-//            select
-//                office.*
-//            from
-//                sys_office office
-//            where
-//                office.enabled = 1 and office.name like concat('%,', name, ',%')
-//        """,Collections.singletonMap("name",name),BeanPropertyRowMapper(Office::class.java));
-//    }
 
 }
