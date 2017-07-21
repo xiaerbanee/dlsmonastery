@@ -155,8 +155,7 @@ public class OppoPushSerivce {
         }
         logger.info("同步经销商数据开始");
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomer> oppoCustomerList=oppoCustomerRepository.findByDate(date,dateEnd);
-        oppoCustomerRepository.delete(oppoCustomerList);
+        oppoCustomerRepository.deleteBydate(date,dateEnd);
         oppoCustomerRepository.save(oppoCustomers);
         logger.info("同步经销商数据结束");
         return oppoCustomers;
@@ -201,8 +200,7 @@ public class OppoPushSerivce {
         logger.info("同步运营商数据开始");
         if(CollectionUtil.isNotEmpty(oppoCustomerOperatortypeList)){
             String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-            List<OppoCustomerOperatortype> customerOperatortypes=oppoCustomerOperatortypeRepository.findByDate(date,dateEnd);
-            oppoCustomerOperatortypeRepository.delete(customerOperatortypes);
+            oppoCustomerOperatortypeRepository.deleteByDate(date,dateEnd);
             oppoCustomerOperatortypeRepository.save(oppoCustomerOperatortypeList);
         }
         logger.info("同步运营商数据结束");
@@ -240,8 +238,7 @@ public class OppoPushSerivce {
         List<OppoCustomerAllot>  oppoCustomerAllotList=new ArrayList<OppoCustomerAllot>(oppoCustomerAllotMap.values());
         logger.info("同步发货退货数据开始");
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerAllot> customerAllots=oppoCustomerAllotRepository.findByDate(date,dateEnd);
-        oppoCustomerAllotRepository.delete(customerAllots);
+        oppoCustomerAllotRepository.deleteByDate(date,dateEnd);
         oppoCustomerAllotRepository.save(oppoCustomerAllotList);
         logger.info("同步发货退货数据结束");
         return  oppoCustomerAllotList;
@@ -275,8 +272,7 @@ public class OppoPushSerivce {
         List<OppoCustomerStock>  oppoCustomerStockList=new ArrayList<OppoCustomerStock>(oppoCustomerStockHashMap.values());
         logger.info("同步库存数据开始");
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerStock> customerStocks=oppoCustomerStockRepository.findByDate(date,dateEnd);
-        oppoCustomerStockRepository.delete(customerStocks);
+        oppoCustomerStockRepository.deleteByDate(date,dateEnd);
         oppoCustomerStockRepository.save(oppoCustomerStockList);
         logger.info("同步库存数据结束");
         return oppoCustomerStockList;
@@ -298,8 +294,7 @@ public class OppoPushSerivce {
         }
         logger.info("同步渠道串码收货数据开始");
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerImeiStock> oppoCustomerImeiStocks=oppoCustomerImeiStockRepository.findByDate(date,dateEnd);
-        oppoCustomerImeiStockRepository.delete(oppoCustomerImeiStocks);
+        oppoCustomerImeiStockRepository.deleteByDate(date,dateEnd);
         oppoCustomerImeiStockRepository.save(oppoCustomerImeiStockList);
         logger.info("同步渠道串码收货数据结束");
         return oppoCustomerImeiStockList;
@@ -315,8 +310,7 @@ public class OppoPushSerivce {
         }
         logger.info("同步店核销总数据开始");
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerSale> customerSales=oppoCustomerSaleRepository.findByDate(date,dateEnd);
-        oppoCustomerSaleRepository.delete(customerSales);
+        oppoCustomerSaleRepository.deleteByDate(date,dateEnd);
         oppoCustomerSaleRepository.save(oppoCustomerSales);
         logger.info("同步店核销总数据结束");
         return oppoCustomerSales;
@@ -367,8 +361,7 @@ public class OppoPushSerivce {
         }
         logger.info("同步销售明细数据开始");
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerSaleImei> oppoCustomerSaleImeis=oppoCustomerSaleImeiRepository.findByDate(date,dateEnd);
-        oppoCustomerSaleImeiRepository.delete(oppoCustomerSaleImeis);
+        oppoCustomerSaleImeiRepository.deleteByDate(date,dateEnd);
         oppoCustomerSaleImeiRepository.save(oppoCustomerSaleImes);
         logger.info("同步销售明细数据结束");
         return oppoCustomerSaleImes;
@@ -390,8 +383,7 @@ public class OppoPushSerivce {
         }
         logger.info("同步销售数据汇总开始");
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerSaleCount> customerSaleCounts=oppoCustomerSaleCountRepository.findByDate(date,dateEnd);
-        oppoCustomerSaleCountRepository.delete(customerSaleCounts);
+        oppoCustomerSaleCountRepository.deleteByDate(date,dateEnd);
         oppoCustomerSaleCountRepository.save(oppoCustomerSaleCounts);
         logger.info("同步销售数据汇总结束");
         return oppoCustomerSaleCounts;
@@ -411,8 +403,7 @@ public class OppoPushSerivce {
         }
         logger.info("同步门店售后退货汇总开始");
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerAfterSaleImei> customerAfterSaleImeis=oppoCustomerAfterSaleImeiRepository.findByDate(date,dateEnd);
-        oppoCustomerAfterSaleImeiRepository.delete(customerAfterSaleImeis);
+        oppoCustomerAfterSaleImeiRepository.deleteByDate(date,dateEnd);
         oppoCustomerAfterSaleImeiRepository.save(oppoCustomerAfterSaleImeis);
         logger.info("同步门店售后退货汇总结束");
         return oppoCustomerAfterSaleImeis;
@@ -433,8 +424,7 @@ public class OppoPushSerivce {
         }
         logger.info("同步门店演示机汇总数据开始");
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerDemoPhone> customerDemoPhones=oppoCustomerDemoPhoneRepository.findByDate(date,dateEnd);
-        oppoCustomerDemoPhoneRepository.delete(customerDemoPhones);
+        oppoCustomerDemoPhoneRepository.deleteByDate(date,dateEnd);
         oppoCustomerDemoPhoneRepository.save(oppoCustomerDemoPhones);
         logger.info("同步门店演示机汇总数据结束");
         return oppoCustomerDemoPhones;
