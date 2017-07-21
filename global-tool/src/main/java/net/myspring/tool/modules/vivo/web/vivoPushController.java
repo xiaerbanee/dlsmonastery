@@ -1,20 +1,18 @@
 package net.myspring.tool.modules.vivo.web;
 
 import net.myspring.tool.common.dataSource.DbContextHolder;
-import net.myspring.tool.modules.vivo.domain.SProductItemLendM13e00;
-import net.myspring.tool.modules.vivo.domain.SStoresM13e00;
+import net.myspring.tool.modules.vivo.domain.SProductItemLend;
+import net.myspring.tool.modules.vivo.domain.SStores;
 import net.myspring.tool.modules.vivo.dto.SCustomerDto;
 import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDetailDto;
 import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDto;
 import net.myspring.tool.modules.vivo.dto.VivoCustomerSaleImeiDto;
 import net.myspring.tool.modules.vivo.service.IDvivoPushService;
 import net.myspring.tool.modules.vivo.service.VivoPushService;
-import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -43,8 +41,8 @@ public class vivoPushController {
         List<SPlantCustomerStockDetailDto> sPlantCustomerStockDetailDtoList = vivoPushService.getCustomerStockDetailData(date);
         vivoPushService.pushCustomerStockDetailData(sPlantCustomerStockDetailDtoList,productColorMap,date);
         //演示机数据
-        List<SProductItemLendM13e00> sProductItemLendM13e00List = vivoPushService.getDemoPhonesData(date);
-        vivoPushService.pushDemoPhonesData(sProductItemLendM13e00List,productColorMap,date);
+        List<SProductItemLend> sProductItemLendList = vivoPushService.getDemoPhonesData(date);
+        vivoPushService.pushDemoPhonesData(sProductItemLendList,productColorMap,date);
         //核销记录数据
         List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList = vivoPushService.getProductImeSaleData(date);
         vivoPushService.pushProductImeSaleData(vivoCustomerSaleImeiDtoList,productColorMap,date);
@@ -69,8 +67,8 @@ public class vivoPushController {
         List<SPlantCustomerStockDetailDto>  sPlantCustomerStockDetailDtoList=idvivoPushService.getCustomerStockDetailData(date);
         idvivoPushService.pushCustomerStockDetailData(sPlantCustomerStockDetailDtoList,productColorMap,date);
         //同步仓库数据
-        List<SStoresM13e00> sStoresM13e00List=idvivoPushService.getCustomerStoreData();
-        idvivoPushService.pushCustomerStoresData(sStoresM13e00List);
+        List<SStores> sStoresList=idvivoPushService.getCustomerStoreData();
+        idvivoPushService.pushCustomerStoresData(sStoresList);
         //同步核销数据
         List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList = idvivoPushService.getProductImeSaleData(date);
         idvivoPushService.pushProductImeSaleData(vivoCustomerSaleImeiDtoList,productColorMap,date);
