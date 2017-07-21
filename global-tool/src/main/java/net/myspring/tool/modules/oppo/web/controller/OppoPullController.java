@@ -61,15 +61,15 @@ public class OppoPullController {
     }
 
 
-    @RequestMapping(value = "synIme")
-    public List<OppoPlantSendImeiPpselDto> synIme(String date, String agentCode) {
-        List<OppoPlantSendImeiPpselDto> oppoPlantSendImeiPpselDtos = oppoPullService.synIme(date,agentCode);
+    @RequestMapping(value = "getSendImeList")
+    public List<OppoPlantSendImeiPpselDto> getSendImeList(String date, String agentCode) {
+        List<OppoPlantSendImeiPpselDto> oppoPlantSendImeiPpselDtos = oppoPullService.getSendImeList(date,agentCode);
         return oppoPlantSendImeiPpselDtos;
     }
 
-    @RequestMapping(value = "synProductItemelectronSel")
-    public List<OppoPlantProductItemelectronSel> synProductItemelectronSel(String date,String agentCode) {
-        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoPullService.synProductItemelectronSel(date,agentCode);
+    @RequestMapping(value = "getItemelectronSelList")
+    public List<OppoPlantProductItemelectronSel> getItemelectronSelList(String date,String agentCode) {
+        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoPullService.getItemelectronSelList(date,agentCode);
         return oppoPlantProductItemelectronSels;
     }
 

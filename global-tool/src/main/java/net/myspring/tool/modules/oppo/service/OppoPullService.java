@@ -215,7 +215,7 @@ public class OppoPullService {
     }
 
     @LocalDataSource
-    public  List<OppoPlantSendImeiPpselDto>  synIme(String date, String agentCode) {
+    public  List<OppoPlantSendImeiPpselDto>  getSendImeList(String date, String agentCode) {
         String dateStart =date;
         String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);
@@ -224,7 +224,7 @@ public class OppoPullService {
     }
 
     @LocalDataSource
-    public  List<OppoPlantProductItemelectronSel>  synProductItemelectronSel(String date,String agentCode) {
+    public  List<OppoPlantProductItemelectronSel>  getItemelectronSelList(String date,String agentCode) {
         String dateStart =date;
         String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);
