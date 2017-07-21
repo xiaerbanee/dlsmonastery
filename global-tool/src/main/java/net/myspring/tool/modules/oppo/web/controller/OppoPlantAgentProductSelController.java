@@ -19,8 +19,8 @@ public class OppoPlantAgentProductSelController {
     @Autowired
     private OppoPlantAgentProductSelService oppoPlantAgentProductSelService;
 
-    @RequestMapping(value = "filter")
-    public List<OppoPlantAgentProductSelDto> filter(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
+    @RequestMapping(value = "findAll")
+    public List<OppoPlantAgentProductSelDto> findAll(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
         List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelService.findAll(oppoPlantAgentProductSelQuery);
         return oppoPlantAgentProductSelDtoList;
     }
