@@ -97,7 +97,7 @@ public class BankInService {
         }
     }
 
-private void synToCloud(BankIn bankIn, BankInAuditForm bankInAuditForm) {
+    private void synToCloud(BankIn bankIn, BankInAuditForm bankInAuditForm) {
 
         KingdeeSynReturnDto kingdeeSynReturnDto = arReceiveBillManager.synForBankIn(bankIn,bankInAuditForm);
 
