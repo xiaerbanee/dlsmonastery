@@ -115,6 +115,14 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
         and t.enabled =1
      """)
     fun findByNameIn(nameList: List<String>): MutableList<Office>
+
+    @Query("""
+        SELECT t
+        FROM  #{#entityName} t
+        where t.id in (?1)
+        and t.enabled =1
+     """)
+    fun findByIdIn(idList: List<String>): MutableList<Office>
 }
 
 interface OfficeRepositoryCustom {

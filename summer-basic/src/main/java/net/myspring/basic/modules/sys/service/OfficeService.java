@@ -22,6 +22,7 @@ import net.myspring.basic.modules.sys.web.form.OfficeForm;
 import net.myspring.basic.modules.sys.web.query.OfficeQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.constant.TreeConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
@@ -38,6 +39,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.rmi.ServerException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -367,38 +369,52 @@ public class OfficeService {
         return null;
     }
 
-    public void saveChange(String json){
+    @Transactional
+    public void saveChange(String id,String json){
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
         List<String> parentNameList = Lists.newArrayList();
+        List<String> newIdList = Lists.newArrayList();
+        BigDecimal newTaskPoint = BigDecimal.ZERO;
         for(List<Object> row: data){
-            String parentName= HandsontableUtils.getValue(row,5);
-            parentNameList.add(parentName);
+            newIdList.add(HandsontableUtils.getValue(row,0));
+            parentNameList.add(HandsontableUtils.getValue(row,5));
+            newTaskPoint = newTaskPoint.add(new BigDecimal(HandsontableUtils.getValue(row,7)));
         }
-        Map<String,Office> officeNameMap = officeRepository.findByNameIn(parentNameList).stream().collect(Collectors.toMap(Office::getName,Office->Office));
-        for(List<Object> row: data){
-            String id = HandsontableUtils.getValue(row,0);
-            String parentName= HandsontableUtils.getValue(row,5);
-            String name = HandsontableUtils.getValue(row,6);
-            String taskPointStr = HandsontableUtils.getValue(row,7);
-            BigDecimal taskPoint = new BigDecimal(taskPointStr);
+        List<OfficeDto> officeDtoList = change(id);
+        BigDecimal oldTaskPoint = BigDecimal.ZERO;
+        for (OfficeDto oldOffice : officeDtoList){
+            oldTaskPoint = oldTaskPoint.add(oldOffice.getTaskPoint());
+        }
+        if (newTaskPoint.equals(oldTaskPoint)) {
+            Map<String, Office> officeNameMap = officeRepository.findByNameIn(parentNameList).stream().collect(Collectors.toMap(Office::getName, Office -> Office));
+            Map<String, Office> officeIdMap = officeRepository.findByIdIn(newIdList).stream().collect(Collectors.toMap(Office::getId, Office -> Office));
+            for (List<Object> row : data) {
+                String newId = HandsontableUtils.getValue(row, 0);
+                String parentName = HandsontableUtils.getValue(row, 5);
+                String name = HandsontableUtils.getValue(row, 6);
+                String taskPointStr = HandsontableUtils.getValue(row, 7);
+                BigDecimal taskPoint = new BigDecimal(taskPointStr);
 
-            Office office = officeRepository.findOne(id);
-            Office parent = officeNameMap.get(parentName);
-            String newParentIds =parent.getParentIds()+parent.getId()+ CharConstant.COMMA;
-            String oldParentIds = office.getParentIds();
-            office.setName(name);
-            office.setTaskPoint(taskPoint);
-            office.setParentId(parent.getId());
-            office.setParentIds(newParentIds);
-            officeRepository.saveAndFlush(office);
+                Office office = officeIdMap.get(newId);
+                Office parent = officeNameMap.get(parentName);
+                String newParentIds = parent.getParentIds() + parent.getId() + CharConstant.COMMA;
+                String oldParentIds = office.getParentIds();
+                office.setName(name);
+                office.setTaskPoint(taskPoint);
+                office.setParentId(parent.getId());
+                office.setParentIds(newParentIds);
+                officeRepository.saveAndFlush(office);
 
-            List<Office> list = officeRepository.findByParentIdsLike("%," + office.getId() + ",%");
-            if(CollectionUtil.isNotEmpty(list)){
-                for (Office e : list) {
-                    e.setParentIds(e.getParentIds().replace(oldParentIds, office.getParentIds()));
+                List<Office> list = officeRepository.findByParentIdsLike("%," + office.getId() + ",%");
+                if (CollectionUtil.isNotEmpty(list)) {
+                    for (Office e : list) {
+                        e.setParentIds(e.getParentIds().replace(oldParentIds, office.getParentIds()));
+                    }
                 }
+                officeRepository.save(list);
             }
-            officeRepository.save(list);
+        }else {
+            throw new ServiceException("任务点位总和与修改之前总和不一样");
         }
     }
 }

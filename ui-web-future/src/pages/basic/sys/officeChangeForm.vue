@@ -2,7 +2,7 @@
   <div>
     <head-tab active="officeChangeForm"></head-tab>
     <div>
-      <el-form :model="formData" method="get" ref="inputForm">
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules">
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item label="机构名称"   prop="stockNumber">
@@ -60,22 +60,22 @@
   export default {
     data() {
       return {
-        officeList:{},
+        officeList: {},
         settings: {
-          rowHeaders:true,
-          autoColumnSize:true,
+          rowHeaders: true,
+          autoColumnSize: true,
           stretchH: 'all',
           height: 650,
-          colHeaders: ['机构ID','上级名称','名称','类型',"任务点位",'修改后上级',"修改后名称","修改后任务点位"],
+          colHeaders: ['机构ID', '上级名称', '名称', '类型', "任务点位", '修改后上级', "修改后名称", "修改后任务点位"],
           columns: [
-            {type:"text", data:"id", allowEmpty: false, readOnly: true, strict: true},
-            {type: "text", data:"parentName", allowEmpty: false, readOnly: true,strict: true},
-            {type: "text", data:"name", allowEmpty: true,readOnly: true, strict: true},
-            {type: 'text', data:"type",allowEmpty: false,readOnly: true,},
-            {type: "numeric", data:"taskPoint", allowEmpty: false,readOnly: true,},
-            {type: "autocomplete", data:"parentName", allowEmpty: false, strict: true, officeName:[],source:this.officeName},
-            {type: "text", data:"name", allowEmpty: true, strict: true},
-            {type: "numeric", data:"taskPoint", allowEmpty: false}
+            {type: "text", data: "id", allowEmpty: false, readOnly: true, strict: true},
+            {type: "text", data: "parentName", allowEmpty: false, readOnly: true, strict: true},
+            {type: "text", data: "name", allowEmpty: true, readOnly: true, strict: true},
+            {type: 'text', data: "type", allowEmpty: false, readOnly: true,},
+            {type: "numeric", data: "taskPoint", allowEmpty: false, readOnly: true,},
+            {type: "autocomplete", data: "parentName", allowEmpty: false, strict: true, officeName: [], source: this.officeName},
+            {type: "text", data: "name", allowEmpty: true, strict: true},
+            {type: "numeric", data: "taskPoint", allowEmpty: false}
           ],
           contextMenu: ['row_above', 'row_below', 'remove_row'],
           afterChange: function (changes, source) {
@@ -92,13 +92,16 @@
             }
           }
         },
-        formData:{
-          id:'',
-          json:[],
+        formData: {
+          id: '',
+          json: [],
         },
-        submitDisabled:false,
-        remoteLoading:false
-      };
+        submitDisabled: false,
+        remoteLoading: false,
+        rules: {
+          id: [{required: true, message: '必填项'}],
+        },
+      }
     },
     mounted() {
       axios.get('/api/basic/sys/office/getForm').then((response)=>{
