@@ -68,6 +68,20 @@ public class OppoPushSerivce {
     @Autowired
     private OppoCustomerDemoPhoneRepository oppoCustomerDemoPhoneRepository;
     @Autowired
+    private FutureAfterSaleRepository futureAfterSaleRepository;
+    @Autowired
+    private FutureStoreAllotRepository futureStoreAllotRepository;
+    @Autowired
+    private FutureDemoPhoneRepository futureDemoPhoneRepository;
+    @Autowired
+    private FutureImeAllotRepository futureImeAllotRepository;
+    @Autowired
+    private FutureProductImeSaleRepository futureProductImeSaleRepository;
+    @Autowired
+    private FutureProductImeRepository futureProductImeRepository;
+    @Autowired
+    private FutureCustomerRepository futureCustomerRepository;
+    @Autowired
     private CacheUtils cacheUtils;
 
 
@@ -81,36 +95,41 @@ public class OppoPushSerivce {
     @Transactional
     public void pushToLocal(OppoPushDto oppoPushDto) {
         //上抛oppo门店数据,只上抛二代和渠道门店
-        getOppoCustomers(oppoPushDto.getDate());
+        pushOppoCustomers(oppoPushDto.getCustomerDtos(),oppoPushDto.getDate());
         //上抛运营商属性
-        getOppoCustomerOperatortype(oppoPushDto.getDate());
+        pushOppoCustomerOperatortype(oppoPushDto.getCustomerDtos(),oppoPushDto.getDate());
         //发货退货调拨数据上抛
-        getOppoCustomerAllot(oppoPushDto.getOppoCustomerAllots(),oppoPushDto.getDate());
+        pushOppoCustomerAllot(oppoPushDto.getOppoCustomerAllots(),oppoPushDto.getDate());
         //上抛一代二代库存数据,不包括门店数据
-        getOppoCustomerStock(oppoPushDto.getOppoCustomerStocks(),oppoPushDto.getDate());
+        pushOppoCustomerStock(oppoPushDto.getOppoCustomerStocks(),oppoPushDto.getDate());
         //获取渠道串码收货数据
-        getOppoCustomerImeiStock(oppoPushDto.getOppoCustomerImeiStocks(),oppoPushDto.getDate());
+        pushOppoCustomerImeiStock(oppoPushDto.getOppoCustomerImeiStocks(),oppoPushDto.getDate());
         //获取店核销总数据
-        getOppoCustomerSales(oppoPushDto.getOppoCustomerSales(),oppoPushDto.getDate());
+        pushOppoCustomerSales(oppoPushDto.getOppoCustomerSales(),oppoPushDto.getDate());
         //门店销售明细数据
-        getOppoCustomerSaleImes(oppoPushDto.getOppoCustomerSaleImeis(),oppoPushDto.getDate());
+        pushOppoCustomerSaleImes(oppoPushDto.getOppoCustomerSaleImeis(),oppoPushDto.getDate());
         //门店销售数据汇总
-        getOppoCustomerSaleCounts(oppoPushDto.getOppoCustomerSaleCounts(),oppoPushDto.getDate());
+        pushOppoCustomerSaleCounts(oppoPushDto.getOppoCustomerSaleCounts(),oppoPushDto.getDate());
         //门店售后退货汇总
-        getOppoCustomerAfterSaleImeis(oppoPushDto.getOppoCustomerAfterSaleImeis(),oppoPushDto.getDate());
+        pushOppoCustomerAfterSaleImeis(oppoPushDto.getOppoCustomerAfterSaleImeis(),oppoPushDto.getDate());
         //门店演示机汇总数据
-        getOppoCustomerDemoPhone(oppoPushDto.getOppoCustomerDemoPhones(),oppoPushDto.getDate());
+        pushOppoCustomerDemoPhone(oppoPushDto.getOppoCustomerDemoPhones(),oppoPushDto.getDate());
+    }
+
+    @FutureDataSource
+    public List<CustomerDto> getOppoCustomers(){
+        List<CustomerDto> customerDtoList = futureCustomerRepository.findOppoCustomers();
+        return customerDtoList;
     }
 
     //上抛oppo门店数据,只上抛二代和渠道门店
     @LocalDataSource
     @Transactional
-    public List<OppoCustomer> getOppoCustomers(String date) {
+    public List<OppoCustomer> pushOppoCustomers(List<CustomerDto> customerDtoList,String date) {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","").split(CharConstant.COMMA)[0];
         List<OppoCustomer> oppoCustomers = Lists.newArrayList();
         initAreaDepotMap();
         Map<String, OppoCustomer> oppoCustomersMap = Maps.newHashMap();
-        List<CustomerDto> customerDtoList=customerClient.findCustomerDtoList();
         List<DistrictEntity>  districtList=districtClient.findDistrictList();
         Map<String,DistrictEntity>  districtMap=Maps.newHashMap();
         for(DistrictEntity districtEntity:districtList){
@@ -191,10 +210,9 @@ public class OppoPushSerivce {
     //上抛运营商属性
     @LocalDataSource
     @Transactional
-    public List<OppoCustomerOperatortype> getOppoCustomerOperatortype(String date) {
+    public List<OppoCustomerOperatortype> pushOppoCustomerOperatortype(List<CustomerDto> customerDtosList,String date) {
         List<OppoCustomerOperatortype> oppoCustomerOperatortypeList = Lists.newArrayList();
         initAreaDepotMap();
-        List<CustomerDto> customerDtosList=customerClient.findCustomerDtoList();
         cacheUtils.initCacheInput(customerDtosList);
         for(CustomerDto customerDto:customerDtosList){
             if(isShop(customerDto)){
@@ -237,7 +255,7 @@ public class OppoPushSerivce {
     //发货退货调拨数据上抛
     @LocalDataSource
     @Transactional
-    public List<OppoCustomerAllot>  getOppoCustomerAllot(List<OppoCustomerAllot> oppoCustomerAllots,String date){
+    public List<OppoCustomerAllot>  pushOppoCustomerAllot(List<OppoCustomerAllot> oppoCustomerAllots,String date){
         initAreaDepotMap();
         Map<String, String> productColorMap = getProductColorMap();
         Map<String, OppoCustomerAllot> oppoCustomerAllotMap = Maps.newHashMap();
@@ -274,7 +292,7 @@ public class OppoPushSerivce {
     //上抛一代二代库存数据,不包括门店数据
     @LocalDataSource
     @Transactional
-    public List<OppoCustomerStock> getOppoCustomerStock(List<OppoCustomerStock> oppoCustomerStocks,String date) {
+    public List<OppoCustomerStock> pushOppoCustomerStock(List<OppoCustomerStock> oppoCustomerStocks,String date) {
         initAreaDepotMap();
         Map<String, OppoCustomerStock> oppoCustomerStockHashMap = Maps.newHashMap();
         Map<String, String> productColorMap = getProductColorMap();
@@ -308,7 +326,7 @@ public class OppoPushSerivce {
     //获取渠道串码收货数据
     @LocalDataSource
     @Transactional
-    public List<OppoCustomerImeiStock> getOppoCustomerImeiStock(List<OppoCustomerImeiStock> oppoCustomerImeiStockList,String date) {
+    public List<OppoCustomerImeiStock> pushOppoCustomerImeiStock(List<OppoCustomerImeiStock> oppoCustomerImeiStockList,String date) {
         initAreaDepotMap();
         Map<String, String> productColorMap = getProductColorMap();
         for(OppoCustomerImeiStock oppoCustomerImeiStock:oppoCustomerImeiStockList){
@@ -330,7 +348,7 @@ public class OppoPushSerivce {
     //获取店核销总数据
     @LocalDataSource
     @Transactional
-    public List<OppoCustomerSale> getOppoCustomerSales(List<OppoCustomerSale> oppoCustomerSales,String date) {
+    public List<OppoCustomerSale> pushOppoCustomerSales(List<OppoCustomerSale> oppoCustomerSales,String date) {
         initAreaDepotMap();
         for(OppoCustomerSale oppoCustomerSale:oppoCustomerSales){
             oppoCustomerSale.setCreatedDate(LocalDate.now());
@@ -346,7 +364,7 @@ public class OppoPushSerivce {
     //	门店销售明细数据
     @LocalDataSource
     @Transactional
-    public List<OppoCustomerSaleImei> getOppoCustomerSaleImes(List<OppoCustomerSaleImei> oppoCustomerSaleImes,String date) {
+    public List<OppoCustomerSaleImei> pushOppoCustomerSaleImes(List<OppoCustomerSaleImei> oppoCustomerSaleImes,String date) {
         initAreaDepotMap();
         List<DistrictEntity>  districtList=districtClient.findDistrictList();
         Map<String,DistrictEntity>  districtMap=Maps.newHashMap();
@@ -397,7 +415,7 @@ public class OppoPushSerivce {
     //门店销售数据汇总
     @LocalDataSource
     @Transactional
-    public List<OppoCustomerSaleCount> getOppoCustomerSaleCounts(List<OppoCustomerSaleCount> oppoCustomerSaleCounts,String date) {
+    public List<OppoCustomerSaleCount> pushOppoCustomerSaleCounts(List<OppoCustomerSaleCount> oppoCustomerSaleCounts,String date) {
         initAreaDepotMap();
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","").split(CharConstant.COMMA)[0];
         Map<String, String> productColorMap = getProductColorMap();
@@ -420,7 +438,7 @@ public class OppoPushSerivce {
     //门店售后退货汇总
     @LocalDataSource
     @Transactional
-    public List<OppoCustomerAfterSaleImei> getOppoCustomerAfterSaleImeis(List<OppoCustomerAfterSaleImei>  oppoCustomerAfterSaleImeis,String date) {
+    public List<OppoCustomerAfterSaleImei> pushOppoCustomerAfterSaleImeis(List<OppoCustomerAfterSaleImei>  oppoCustomerAfterSaleImeis,String date) {
         initAreaDepotMap();
         Map<String, String> productColorMap = getProductColorMap();
         for(OppoCustomerAfterSaleImei oppoCustomerAfterSaleImei:oppoCustomerAfterSaleImeis){
@@ -439,7 +457,7 @@ public class OppoPushSerivce {
     //门店演示机汇总数据
     @LocalDataSource
     @Transactional
-    public List<OppoCustomerDemoPhone> getOppoCustomerDemoPhone(List<OppoCustomerDemoPhone> oppoCustomerDemoPhones,String date) {
+    public List<OppoCustomerDemoPhone> pushOppoCustomerDemoPhone(List<OppoCustomerDemoPhone> oppoCustomerDemoPhones,String date) {
         initAreaDepotMap();
         Map<String, String> productColorMap = getProductColorMap();
         for(OppoCustomerDemoPhone oppoCustomerDemoPhone:oppoCustomerDemoPhones){
@@ -553,7 +571,7 @@ public class OppoPushSerivce {
         }
         String dateStart= date;
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerAllot> oppoCustomerAllots=oppoCustomerAllotRepository.findAll(dateStart,dateEnd);
+        List<OppoCustomerAllot> oppoCustomerAllots=futureStoreAllotRepository.findAll(dateStart,dateEnd);
         return oppoCustomerAllots;
     }
 
@@ -564,7 +582,7 @@ public class OppoPushSerivce {
         }
         String dateStart= LocalDateUtils.format(LocalDateUtils.parse(date).plusMonths(-12));
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerStock> oppoCustomerStocks=oppoCustomerStockRepository.findAll(dateStart,dateEnd,date);
+        List<OppoCustomerStock> oppoCustomerStocks=futureProductImeRepository.findAll(dateStart,dateEnd,date);
         return oppoCustomerStocks;
     }
 
@@ -575,7 +593,7 @@ public class OppoPushSerivce {
         }
         String dateStart= date;
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerImeiStock>  oppoCustomerImeiStocks=oppoCustomerImeiStockRepository.findAll(dateStart,dateEnd);
+        List<OppoCustomerImeiStock>  oppoCustomerImeiStocks=futureImeAllotRepository.findAll(dateStart,dateEnd);
         return oppoCustomerImeiStocks;
     }
 
@@ -586,7 +604,7 @@ public class OppoPushSerivce {
         }
         String dateStart= date;
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerSale>  oppoCustomerSales=oppoCustomerSaleRepository.findAll(dateStart,dateEnd);
+        List<OppoCustomerSale>  oppoCustomerSales=futureProductImeSaleRepository.findCustomerSales(dateStart,dateEnd);
         return oppoCustomerSales;
     }
 
@@ -597,7 +615,7 @@ public class OppoPushSerivce {
         }
         String dateStart= date;
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerSaleImei> oppoCustomerSaleImeis=oppoCustomerSaleImeiRepository.findAll(dateStart,dateEnd);
+        List<OppoCustomerSaleImei> oppoCustomerSaleImeis=futureProductImeSaleRepository.findCustomerSaleImeis(dateStart,dateEnd);
         return oppoCustomerSaleImeis;
     }
 
@@ -608,7 +626,7 @@ public class OppoPushSerivce {
         }
         String dateStart= date;
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoCustomerSaleCountRepository.findAll(dateStart,dateEnd);
+        List<OppoCustomerSaleCount> oppoCustomerSaleCounts=futureProductImeSaleRepository.findCustomerSaleCounts(dateStart,dateEnd);
         return oppoCustomerSaleCounts;
     }
 
@@ -619,7 +637,7 @@ public class OppoPushSerivce {
         }
         String dateStart= date;
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=oppoCustomerAfterSaleImeiRepository.findAll(dateStart,dateEnd);
+        List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=futureAfterSaleRepository.findAll(dateStart,dateEnd);
         return oppoCustomerAfterSaleImeis;
     }
 
@@ -630,7 +648,7 @@ public class OppoPushSerivce {
         }
         String dateStart= date;
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoCustomerDemoPhoneRepository.findAll(dateStart,dateEnd);
+        List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=futureDemoPhoneRepository.findAll(dateStart,dateEnd);
         return oppoCustomerDemoPhones;
     }
 
