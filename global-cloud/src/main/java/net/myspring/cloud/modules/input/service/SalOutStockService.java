@@ -74,7 +74,6 @@ public class SalOutStockService {
     @Transactional
     public List<KingdeeSynExtendDto> save (List<SalOutStockDto> salOutStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
-        //财务出库开单
         if (CollectionUtil.isNotEmpty(salOutStockDtoList)) {
             Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
             if(isLogin) {

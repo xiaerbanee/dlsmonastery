@@ -99,6 +99,14 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
     fun findSameAreaByOfficeId(officeId: String): MutableList<Office>
 
     fun findByEnabledIsTrueAndType(type:String):MutableList<Office>
+
+    @Query("""
+        SELECT t
+        FROM  #{#entityName} t
+        where t.name like  concat('%',?1,'%')
+        and t.enabled =1
+     """)
+    fun findByNameLike(name: String): MutableList<Office>
 }
 
 interface OfficeRepositoryCustom {
@@ -119,6 +127,8 @@ interface OfficeRepositoryCustom {
     fun findAllChildCount(): MutableList<OfficeChildDto>
 
     fun findDtoByParentIdsLike(parentId: String): MutableList<OfficeDto>
+
+//    fun findByNameLike(name: String): MutableList<Office>
 }
 
 class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): OfficeRepositoryCustom {
@@ -172,6 +182,7 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
           ORDER BY t1.task_point DESC
         """,Collections.singletonMap("officeRuleName",officeRuleName),BeanPropertyRowMapper(Office::class.java))
     }
+
     override fun findPage(pageable: Pageable, officeQuery: OfficeQuery): Page<OfficeDto>? {
         var sb = StringBuilder("select * from sys_office where enabled=1 ");
         if(StringUtils.isNotBlank(officeQuery.name)) {
@@ -287,5 +298,16 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
             order by of.id asc
         """,BeanPropertyRowMapper(OfficeChildDto::class.java));
     }
+
+//    override fun findByNameLike(name: String):MutableList<Office> {
+//        return namedParameterJdbcTemplate.query("""
+//            select
+//                office.*
+//            from
+//                sys_office office
+//            where
+//                office.enabled = 1 and office.name like concat('%,', name, ',%')
+//        """,Collections.singletonMap("name",name),BeanPropertyRowMapper(Office::class.java));
+//    }
 
 }

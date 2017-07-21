@@ -78,8 +78,8 @@ public class AdGoodsOrderDetailExportDto extends IdDto<AdGoodsOrderDetail> {
             return CompanyNameEnum.JXOPPO.name();
         }else if(CompanyNameEnum.JXvivo.name().equalsIgnoreCase(RequestUtils.getCompanyName())){
             return CompanyNameEnum.JXvivo.name();
-        }else if(CompanyNameEnum.IDvivo.name().equalsIgnoreCase(RequestUtils.getCompanyName())){
-            return CompanyNameEnum.IDvivo.name();
+        }else if(CompanyNameEnum.IDVIVO.name().equalsIgnoreCase(RequestUtils.getCompanyName())){
+            return CompanyNameEnum.IDVIVO.name();
         }else if(CompanyNameEnum.JXDJ.name().equalsIgnoreCase(RequestUtils.getCompanyName())){
             return CompanyNameEnum.JXDJ.name();
         }else{

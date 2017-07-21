@@ -24,6 +24,7 @@ import net.myspring.common.constant.TreeConstant;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -35,7 +36,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.sql.Struct;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -346,5 +349,21 @@ public class OfficeService {
         }else {
             return false;
         }
+    }
+
+    public List<OfficeDto> change(String id){
+        Office office = officeRepository.findOne(id);
+        String parentIds = office.getParentIds()+office.getId()+",";
+        List<Office> officeList = officeRepository.findByParentIdsLike(parentIds);
+        List<OfficeDto> officeDtoList = BeanUtil.map(officeList,OfficeDto.class);
+        return officeDtoList;
+    }
+
+    public List<Office> findByNameLike(String name){
+        if (StringUtils.isNotBlank(name)){
+            List<Office> officeList =  officeRepository.findByNameLike(name);
+            return officeList;
+        }
+        return null;
     }
 }

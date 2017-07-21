@@ -12,6 +12,7 @@ interface OppoCustomerOperatortypeRepository : BaseRepository<OppoCustomerOperat
 }
 interface OppoCustomerOperatortypeRepositoryCustom{
     fun findByDate(dateStart:String,dateEnd:String):MutableList<OppoCustomerOperatortype>
+    fun deleteByDate(dateStart: String,dateEnd: String):Int
 }
 class OppoCustomerOperatortypeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : OppoCustomerOperatortypeRepositoryCustom{
 
@@ -22,5 +23,12 @@ class OppoCustomerOperatortypeRepositoryImpl @Autowired constructor(val namedPar
         return namedParameterJdbcTemplate.query("""
             select *  from oppo_push_customer_operator_type where created_date >=:dateStart and created_date<:dateEnd
          """,paramMap, BeanPropertyRowMapper(OppoCustomerOperatortype::class.java));
+    }
+
+    override fun deleteByDate(dateStart: String, dateEnd: String): Int {
+        val map = Maps.newHashMap<String,String>()
+        map.put("dateStart",dateStart)
+        map.put("dateEnd",dateEnd)
+        return namedParameterJdbcTemplate.update("delete from oppo_push_customer_operator_type where created_date >=:dateStart and created_date<:dateEnd",map)
     }
 }
