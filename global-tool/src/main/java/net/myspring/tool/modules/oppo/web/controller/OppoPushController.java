@@ -143,7 +143,7 @@ public class OppoPushController {
             responseMessage.setResult("false");
         }else{
             logger.info("库存上抛开始："+new Date());
-            String dateStart= LocalDateUtils.format(LocalDateUtils.parse(createdDate).plusMonths(-12));
+            String dateStart= LocalDateUtils.format(LocalDateUtils.parse(createdDate));
             String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(createdDate).plusDays(1));
             List<OppoCustomerStock> oppoCustomerStocks=oppoPushSerivce.getOppoCustomerStocksByDate(dateStart,dateEnd);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerStocks));
