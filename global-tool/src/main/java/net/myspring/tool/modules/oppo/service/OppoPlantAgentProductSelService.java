@@ -35,9 +35,9 @@ public class OppoPlantAgentProductSelService {
     @Autowired
     private OppoPlantAgentProductSelRepository oppoPlantAgentProductSelRepository;
 
-    public List<OppoPlantAgentProductSelDto> findFilter(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
+    public List<OppoPlantAgentProductSelDto> findAll(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
         oppoPlantAgentProductSelQuery.setItemNumberList(StringUtils.getSplitList(oppoPlantAgentProductSelQuery.getItemNumberStr(), CharConstant.ENTER));
-        List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelRepository.findFilter(oppoPlantAgentProductSelQuery);
+        List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelRepository.findAll(oppoPlantAgentProductSelQuery);
         return oppoPlantAgentProductSelDtoList;
     }
 

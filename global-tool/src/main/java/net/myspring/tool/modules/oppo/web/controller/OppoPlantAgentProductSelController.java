@@ -21,7 +21,7 @@ public class OppoPlantAgentProductSelController {
 
     @RequestMapping(value = "filter")
     public List<OppoPlantAgentProductSelDto> filter(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
-        List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelService.findFilter(oppoPlantAgentProductSelQuery);
+        List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelService.findAll(oppoPlantAgentProductSelQuery);
         return oppoPlantAgentProductSelDtoList;
     }
 
