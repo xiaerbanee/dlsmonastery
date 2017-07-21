@@ -102,7 +102,7 @@ public class ProductImeSaleService {
             if(StringUtils.isNotBlank(saleShop.getDepotStoreId())) {
                 throw new ServiceException("串码：" + ime + "的所属地点为："+saleShop.getName()+"，不是门店，无法核销；");
             }
-            if(!depotManager.isAccess(saleShop.getId(), true, RequestUtils.getAccountId(), RequestUtils.getOfficeId())) {
+            if(!depotManager.isAccess(saleShop.getId(), true, RequestUtils.getAccountId())) {
                 throw new ServiceException("您没有串码：" + ime + "所在门店："+saleShop.getName()+"的核销权限，请先将串码调拨至您管辖的门店；");
             }
             if(productIme.getProductImeUploadId() != null) {
@@ -162,7 +162,7 @@ public class ProductImeSaleService {
 
                 if(productIme.getProductImeSaleId() ==null) {
                     sb.append("串码：").append(ime).append("还未被核销，不能退回；");
-                } else if(!depotManager.isAccess(depot.getId(),true,RequestUtils.getAccountId(),RequestUtils.getOfficeId())) {
+                } else if(!depotManager.isAccess(depot.getId(),true,RequestUtils.getAccountId())) {
                     sb.append("您没有串码：").append(ime).append("所在门店：").append(depot.getName()).append("的核销权限，请先将串码调拨至您管辖的门店；");
                 }
                 if(productIme.getProductImeUploadId() != null) {
@@ -248,15 +248,15 @@ public class ProductImeSaleService {
                 productImeForSaleDto.setEditable(false);
                 productImeForSaleDto.setFromChain(false);
                     //如果用户对此串码是可以编辑的，那么直接出库的门店为所在门店，否则说明是该串码在连锁门店，需要用户选择对应核销门店。
-                    if(productImeForSaleDto.getProductImeSaleId()==null && depotManager.isAccess(productImeForSaleDto.getDepotId(),true, RequestUtils.getAccountId(),RequestUtils.getOfficeId()) && StringUtils.isBlank(productImeForSaleDto.getDepotDepotStoreId())) {
+                    if(productImeForSaleDto.getProductImeSaleId()==null && depotManager.isAccess(productImeForSaleDto.getDepotId(),true, RequestUtils.getAccountId()) && StringUtils.isBlank(productImeForSaleDto.getDepotDepotStoreId())) {
                         productImeForSaleDto.setEditable(true);
                         //如果是关联连锁体系的，核销为自己管辖的连锁体系
-                        if(!depotManager.isAccess(productImeForSaleDto.getDepotId(),false, RequestUtils.getAccountId(),RequestUtils.getOfficeId())) {
+                        if(!depotManager.isAccess(productImeForSaleDto.getDepotId(),false, RequestUtils.getAccountId())) {
                             productImeForSaleDto.setFromChain(true);
                             productImeForSaleDto.setAccessChainDepotList(new ArrayList<>());
                             List<Depot> chainDepotList = depotRepository.findByChainId(productImeForSaleDto.getDepotChainId());
                             for(Depot depot : chainDepotList) {
-                                if(depotManager.isAccess(depot.getId(), false, RequestUtils.getAccountId(),RequestUtils.getOfficeId())) {
+                                if(depotManager.isAccess(depot.getId(), false, RequestUtils.getAccountId())) {
                                     DepotDto depotDto = new DepotDto();
                                     depotDto.setId(depot.getId());
                                     depotDto.setName(depot.getName());

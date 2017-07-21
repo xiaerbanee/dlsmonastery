@@ -32,7 +32,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -111,7 +110,7 @@ public class ImeAllotService {
                     sb.append("串码：").append(ime).append("已上报；");
                 }else{
                     if(checkAccess) {
-                        if(!depotManager.isAccess(depot.getId(), true,RequestUtils.getAccountId(),RequestUtils.getOfficeId())) {
+                        if(!depotManager.isAccess(depot.getId(), true,RequestUtils.getAccountId())) {
                             sb.append("您没有串码：").append(ime).append("所在门店：").append(depot.getName()).append("的调拨权限，将自动生成调拨申请单；");
                         }
                     }
@@ -135,7 +134,7 @@ public class ImeAllotService {
             if(productIme.getProductImeSaleId()==null && productIme.getDepotId()!=null&&!productIme.getDepotId().equals(imeAllotForm.getToDepotId())) {
                 Depot fromDepot = depotRepository.findOne(productIme.getDepotId());
 
-                if(depotManager.isAccess(fromDepot.getId(), true,RequestUtils.getAccountId(),RequestUtils.getOfficeId())) {
+                if(depotManager.isAccess(fromDepot.getId(), true,RequestUtils.getAccountId())) {
                     ImeAllot imeAllot = new ImeAllot();
                     imeAllot.setProductImeId(productIme.getId());
                     imeAllot.setFromDepotId(fromDepot.getId());
