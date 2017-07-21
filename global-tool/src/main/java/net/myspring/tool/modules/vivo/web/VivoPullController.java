@@ -25,9 +25,7 @@ import java.util.List;
 @RequestMapping(value = "factory/vivo")
 public class VivoPullController {
     @Autowired
-    private VivoPullService vivoService;
-    @Autowired
-    private RedisTemplate redisTemplate;
+    private VivoPullService vivoPullService;
     @Autowired
     private CompanyConfigClient companyConfigClient;
 
@@ -41,37 +39,37 @@ public class VivoPullController {
         DbContextHolder.get().setCompanyName("JXVIVO");
         //同步颜色编码
         if(!"IDVIVO".equals(companyName)){
-            List<VivoProducts> vivoProducts=vivoService.getProducts();
-            vivoService.pullVivoProducts(vivoProducts);
+            List<VivoProducts> vivoProducts=vivoPullService.getProducts();
+            vivoPullService.pullVivoProducts(vivoProducts);
         }
         //同步物料编码
-         List<VivoPlantProducts> vivoPlantProducts=vivoService.getPlantProducts();
+         List<VivoPlantProducts> vivoPlantProducts=vivoPullService.getPlantProducts();
         logger.info("vivoPlantProducts=="+vivoPlantProducts.toString());
-        vivoService.pullPlantProducts(vivoPlantProducts);
+        vivoPullService.pullPlantProducts(vivoPlantProducts);
         //同步发货串码
-        List<VivoPlantSendimei> vivoPlantSendimeis=vivoService.getPlantSendimei(date,agentCodes);
-        vivoService.pullPlantSendimeis(vivoPlantSendimeis);
+        List<VivoPlantSendimei> vivoPlantSendimeis=vivoPullService.getPlantSendimei(date,agentCodes);
+        vivoPullService.pullPlantSendimeis(vivoPlantSendimeis);
         //同步电子保卡
-        List<VivoPlantElectronicsn> vivoPlantElectronicsns = vivoService.getPlantElectronicsn(date);
-        vivoService.pullPlantElectronicsns(vivoPlantElectronicsns);
+        List<VivoPlantElectronicsn> vivoPlantElectronicsns = vivoPullService.getPlantElectronicsn(date);
+        vivoPullService.pullPlantElectronicsns(vivoPlantElectronicsns);
         return "vivo同步成功";
     }
 
-    @RequestMapping(value="synIme")
-    public List<VivoPlantSendimeiDto> synIme (String date, String agentCode){
-        List<VivoPlantSendimeiDto> vivoPlantSendimeiList=vivoService.synIme(date,agentCode);
+    @RequestMapping(value="getSendImeList")
+    public List<VivoPlantSendimeiDto> getSendImeList (String date, String agentCode){
+        List<VivoPlantSendimeiDto> vivoPlantSendimeiList=vivoPullService.getSendImeList(date,agentCode);
         return vivoPlantSendimeiList;
     }
 
-    @RequestMapping(value = "synPlantElectronicsn")
-    public List<VivoPlantElectronicsn> synPlantElectronicsn(String date, String agentCode) {
-        List<VivoPlantElectronicsn> vivoPlantElectronicsnList = vivoService.synVivoPlantElectronicsnl(date,agentCode);
+    @RequestMapping(value = "getItemelectronSelList")
+    public List<VivoPlantElectronicsn> getItemelectronSelList(String date, String agentCode) {
+        List<VivoPlantElectronicsn> vivoPlantElectronicsnList = vivoPullService.getItemelectronSelList(date,agentCode);
         return vivoPlantElectronicsnList;
     }
 
     @RequestMapping(value="factoryOrder")
     public FactoryOrderDto factoryOrder(FactoryOrderDto factoryOrderDto){
-        return vivoService.factoryOrder(factoryOrderDto);
+        return vivoPullService.factoryOrder(factoryOrderDto);
     }
 
 }

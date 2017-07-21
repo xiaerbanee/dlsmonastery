@@ -90,11 +90,15 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         return namedParameterJdbcTemplate.query("""
                 SELECT
                     account.position_id positionId,
+                    pos.name positionName,
                     account.office_id officeId,
+                    office.name officeName,
                     t1.*
                 FROM
                     hr_employee t1
                 LEFT JOIN hr_account account ON account.id = t1.account_id
+                LEFT JOIN sys_office office ON account.office_id=office.id
+                LEFT JOIN hr_position pos ON  account.position_id=pos.id
                 WHERE
                     t1.enabled = 1
                 AND t1.name LIKE CONCAT('%' ,:name, '%')
