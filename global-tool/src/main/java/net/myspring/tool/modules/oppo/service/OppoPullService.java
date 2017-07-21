@@ -1,15 +1,12 @@
 package net.myspring.tool.modules.oppo.service;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.CompanyConfigClient;
-import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
-import net.myspring.tool.common.enums.DataSourceTypeEnum;
 import net.myspring.tool.modules.oppo.domain.*;
+import net.myspring.tool.modules.oppo.dto.OppoPlantSendImeiPpselDto;
 import net.myspring.tool.modules.oppo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -28,10 +25,8 @@ import java.util.Map;
  */
 @Service
 @LocalDataSource
-@Transactional(readOnly = false)
-public class OppoService {
-    @Autowired
-    private CompanyConfigClient companyConfigClient;
+@Transactional(readOnly = true)
+public class OppoPullService {
     @Autowired
     private OppoPlantProductSelRepository oppoPlantProductSelRepository;
     @Autowired
@@ -64,8 +59,29 @@ public class OppoService {
     }
 
 
+    @FactoryDataSource
+    public List<OppoPlantProductSel>  plantProductSel(String companyId, String password, String branchId) {
+        return oppoPlantProductSelRepository.plantProductSel(companyId, password, branchId);
+    }
+
+    @FactoryDataSource
+    public List<OppoPlantAgentProductSel> plantAgentProductSel(String companyId, String password, String branchId) {
+        return oppoPlantAgentProductSelRepository.plantAgentProductSel(companyId, password, branchId);
+    }
+
+    @FactoryDataSource
+    public List<OppoPlantSendImeiPpsel> plantSendImeiPPSel(String companyId, String password, String dateTime) {
+        return oppoPlantSendImeiPpselRepository.plantSendImeiPPSel(companyId, password, dateTime);
+    }
+
+    @FactoryDataSource
+    public List<OppoPlantProductItemelectronSel> plantProductItemelectronSel(String companyId, String password, String date) {
+        return  oppoPlantProductItemelectronSelRepository.plantProductItemelectronSel(companyId, password, date);
+    }
+
+
     @LocalDataSource
-    @Transactional(readOnly = false)
+    @Transactional
     public void pullPlantProductSels(List<OppoPlantProductSel> oppoPlantProductSels) {
         logger.info("开始同步颜色编码");
         for(OppoPlantProductSel oppoPlantProductSel:oppoPlantProductSels){
@@ -99,7 +115,7 @@ public class OppoService {
 
     //获取物料编码
     @LocalDataSource
-    @Transactional(readOnly = false)
+    @Transactional
     public void pullPlantAgentProductSels(List<OppoPlantAgentProductSel> oppoPlantAgentProductSels) {
         logger.info("开始物料编码");
         List<OppoPlantAgentProductSel> list = Lists.newArrayList();
@@ -127,7 +143,7 @@ public class OppoService {
 
     //获取发货串码信息
     @LocalDataSource
-    @Transactional(readOnly = false)
+    @Transactional
     public void pullPlantSendImeiPpsels(Map<String,List<OppoPlantSendImeiPpsel>> oppoPlantSendImeiPpselMap) {
         logger.info("发货串码开始同步");
         List<String> imeiList=Lists.newArrayList();
@@ -169,7 +185,7 @@ public class OppoService {
 
     // 获取电子保卡信息
     @LocalDataSource
-    @Transactional(readOnly = false)
+    @Transactional
     public void pullPlantProductItemelectronSels(List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels) {
         logger.info("开始同步电子保卡");
         List<OppoPlantProductItemelectronSel> list = Lists.newArrayList();
@@ -198,28 +214,8 @@ public class OppoService {
         }
     }
 
-    @FactoryDataSource
-    public List<OppoPlantProductSel>  plantProductSel(String companyId, String password, String branchId) {
-        return oppoPlantProductSelRepository.plantProductSel(companyId, password, branchId);
-    }
-
-    @FactoryDataSource
-    public List<OppoPlantAgentProductSel> plantAgentProductSel(String companyId, String password, String branchId) {
-        return oppoPlantAgentProductSelRepository.plantAgentProductSel(companyId, password, branchId);
-    }
-
-    @FactoryDataSource
-    public List<OppoPlantSendImeiPpsel> plantSendImeiPPSel(String companyId, String password, String dateTime) {
-        return oppoPlantSendImeiPpselRepository.plantSendImeiPPSel(companyId, password, dateTime);
-    }
-
-    @FactoryDataSource
-    public List<OppoPlantProductItemelectronSel> plantProductItemelectronSel(String companyId, String password, String date) {
-        return  oppoPlantProductItemelectronSelRepository.plantProductItemelectronSel(companyId, password, date);
-    }
-
     @LocalDataSource
-    public  List<OppoPlantSendImeiPpselDto>  synIme(String date,String agentCode) {
+    public  List<OppoPlantSendImeiPpselDto>  getSendImeList(String date, String agentCode) {
         String dateStart =date;
         String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);
@@ -228,7 +224,7 @@ public class OppoService {
     }
 
     @LocalDataSource
-    public  List<OppoPlantProductItemelectronSel>  synProductItemelectronSel(String date,String agentCode) {
+    public  List<OppoPlantProductItemelectronSel>  getItemelectronSelList(String date,String agentCode) {
         String dateStart =date;
         String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);

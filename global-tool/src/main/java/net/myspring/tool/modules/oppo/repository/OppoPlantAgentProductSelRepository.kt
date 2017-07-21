@@ -29,7 +29,7 @@ interface OppoPlantAgentProductSelRepository : BaseRepository<OppoPlantAgentProd
 }
 interface OppoPlantAgentProductSelRepositoryCustom{
     fun plantAgentProductSel(companyId: String, password: String, branchId: String): MutableList<OppoPlantAgentProductSel>
-    fun findFilter(oppoPlantAgentProductSelQuery : OppoPlantAgentProductSelQuery):MutableList<OppoPlantAgentProductSelDto>
+    fun findAll(oppoPlantAgentProductSelQuery : OppoPlantAgentProductSelQuery):MutableList<OppoPlantAgentProductSelDto>
 }
 class OppoPlantAgentProductSelRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate,val jdbcTemplate: JdbcTemplate) : OppoPlantAgentProductSelRepositoryCustom{
 
@@ -42,7 +42,7 @@ class OppoPlantAgentProductSelRepositoryImpl @Autowired constructor(val namedPar
         return simpleJdbcCall.withProcedureName("plantAgentProductSel").returningResultSet("returnValue", BeanPropertyRowMapper(OppoPlantAgentProductSel::class.java)).execute(paramMap).get("returnValue") as MutableList<OppoPlantAgentProductSel>;
     }
 
-    override fun findFilter(oppoPlantAgentProductSelQuery: OppoPlantAgentProductSelQuery): MutableList<OppoPlantAgentProductSelDto> {
+    override fun findAll(oppoPlantAgentProductSelQuery: OppoPlantAgentProductSelQuery): MutableList<OppoPlantAgentProductSelDto> {
         var sb = StringBuilder("""
             SELECT t1.*,t2.name AS "productName",t3.name AS "lxProductName"
             FROM oppo_plant_agent_product_sel t1

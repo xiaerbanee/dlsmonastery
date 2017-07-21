@@ -6,8 +6,10 @@ import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.modules.oppo.domain.*;
+import net.myspring.tool.modules.oppo.dto.OppoPlantSendImeiPpselDto;
+import net.myspring.tool.modules.oppo.dto.OppoResponseMessage;
 import net.myspring.tool.modules.oppo.service.OppoPushSerivce;
-import net.myspring.tool.modules.oppo.service.OppoService;
+import net.myspring.tool.modules.oppo.service.OppoPullService;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.MD5Utils;
 import net.myspring.util.time.LocalDateUtils;
@@ -26,9 +28,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "factory/oppo")
-public class OppoController {
-    @Autowired
-    private OppoService oppoService;
+public class OppoPushController {
     @Autowired
     private OppoPushSerivce oppoPushSerivce;
     @Autowired
@@ -37,34 +37,10 @@ public class OppoController {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "pullFactoryData")
-    public String pullFactoryData(String date) {
-        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
-        String[] agentCodes=agentCode.split(CharConstant.COMMA);
-        String passWord=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_PASSWORDS.name()).replace("\"","");
-        String[] passWords=passWord.split(CharConstant.COMMA);
-        //同步颜色编码
-        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
-        DbContextHolder.get().setCompanyName(companyName);
-        List<OppoPlantProductSel> oppoPlantProductSels=oppoService.getOppoPlantProductSels(agentCodes[0],passWords[0]);
-        oppoService.pullPlantProductSels(oppoPlantProductSels);
-        //同步物料编码
-        List<OppoPlantAgentProductSel> oppoPlantAgentProductSels=oppoService.getOppoPlantAgentProductSels(agentCodes[0],passWords[0]);
-        oppoService.pullPlantAgentProductSels(oppoPlantAgentProductSels);
-        //同步发货串码
-        Map<String,List<OppoPlantSendImeiPpsel>> oppoPlantSendImeiPpselMap= Maps.newHashMap();
-        for (int i = 0; i < agentCodes.length; i++) {
-            oppoPlantSendImeiPpselMap.put(agentCodes[i],oppoService.getOppoPlantSendImeiPpsels(agentCodes[i],passWords[i],date)) ;
-        }
-        oppoService.pullPlantSendImeiPpsels(oppoPlantSendImeiPpselMap);
-        //同步电子保卡
-        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels=oppoService.getOppoPlantProductItemelectronSels(agentCodes[0],passWords[0],date);
-        oppoService.pullPlantProductItemelectronSels(oppoPlantProductItemelectronSels);
-        return "OPPO同步成功";
-    }
 
-    @RequestMapping(value = "pushFactoryData")
-    public String pushFactoryData(String date) {
+    //将需要上抛的数据先同步到本地数据库
+    @RequestMapping(value = "synToLocal")
+    public String synToLocal(String date) {
         String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
         DbContextHolder.get().setCompanyName(companyName);
         //上抛oppo门店数据,只上抛二代和渠道门店
@@ -96,18 +72,6 @@ public class OppoController {
         List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoPushSerivce.getFutureOppoCustomerDemoPhone(date);
         oppoPushSerivce.getOppoCustomerDemoPhone(oppoCustomerDemoPhones,date);
         return "OPPO同步成功";
-    }
-
-    @RequestMapping(value = "synIme")
-    public List<OppoPlantSendImeiPpselDto> synIme(String date,String agentCode) {
-        List<OppoPlantSendImeiPpselDto> oppoPlantSendImeiPpselDtos = oppoService.synIme(date,agentCode);
-        return oppoPlantSendImeiPpselDtos;
-    }
-
-    @RequestMapping(value = "synProductItemelectronSel")
-    public List<OppoPlantProductItemelectronSel> synProductItemelectronSel(String date,String agentCode) {
-        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoService.synProductItemelectronSel(date,agentCode);
-        return oppoPlantProductItemelectronSels;
     }
 
     //代理商经销商基础数据上抛

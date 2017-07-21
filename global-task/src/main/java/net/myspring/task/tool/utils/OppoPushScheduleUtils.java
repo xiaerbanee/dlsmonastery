@@ -19,10 +19,10 @@ public class OppoPushScheduleUtils {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Scheduled(cron = "0 0 21,22,23 * * ?")
-    public void pullOppoData(){
+    public void synToLocal(){
         logger.info("工厂上抛数据开始");
         String date= LocalDateUtils.format(LocalDate.now());
-        factoryClient.pushOppoFactoryData(date);
+        factoryClient.synToLocal(date);
         logger.info("工厂上抛数据结束");
     }
 }

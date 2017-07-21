@@ -46,8 +46,7 @@ App({
         //如果没有登陆
         if (weixinAccount == null || !$util.isNotBlank(weixinAccount.id)) {
             wx.request({
-                url: $util.getUaaUrl('user/getWeixinAccounts?weixinCode=' + that.globalData.weixinCode),
-                data: { companyName: that.globalData.companyName},
+                url: $util.getUaaUrl('user/getWeixinAccounts?weixinCode=' + that.globalData.weixinCode+"&companyName="+that.globalData.companyName),
                 method: 'POST',
                 success: function (res) {
                     var weixinAccounts = res.data;

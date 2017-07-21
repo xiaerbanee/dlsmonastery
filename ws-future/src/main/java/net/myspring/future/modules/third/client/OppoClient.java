@@ -12,9 +12,9 @@ import java.util.List;
 @FeignClient("global-tool")
 public interface OppoClient {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/factory/oppo/synIme")
-    List<OppoPlantSendImeiPpsel> findSynImeList(@RequestParam(value = "date")String date, @RequestParam(value="agentCode")String agentCode);
+    @RequestMapping(method = RequestMethod.GET, value = "/factory/oppo/getSendImeList")
+    List<OppoPlantSendImeiPpsel> getSendImeList(@RequestParam(value = "date")String date, @RequestParam(value="agentCode")String agentCode);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/factory/oppo/synProductItemelectronSel")
-    List<OppoPlantProductItemelectronSel>  synProductItemelectronSel(@RequestParam(value = "date")String date, @RequestParam(value="agentCode")String agentCode);
+    @RequestMapping(method = RequestMethod.GET, value = "/factory/oppo/getItemelectronSelList")
+    List<OppoPlantProductItemelectronSel>  getItemelectronSelList(@RequestParam(value = "date")String date, @RequestParam(value="agentCode")String agentCode);
 }
