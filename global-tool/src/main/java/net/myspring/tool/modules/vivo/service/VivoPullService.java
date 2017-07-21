@@ -146,7 +146,7 @@ public class VivoPullService {
             }
             List<VivoPlantElectronicsn> list = Lists.newArrayList();
             for(VivoPlantElectronicsn item : vivoPlantElectronicsns){
-                if( ! localImeiList.contains(item.getSnImei())){
+                if(!localImeiList.contains(item.getSnImei())){
                     list.add(item);
                 }
             }
