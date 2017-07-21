@@ -6,7 +6,7 @@ import net.myspring.tool.modules.oppo.dto.OppoPlantAgentProductSelDto;
 
 import java.util.List;
 
-public class OppoPlantAgentProductSqlForm extends BaseForm<OppoPlantAgentProductSel>{
+public class OppoPlantAgentProductSelForm extends BaseForm<OppoPlantAgentProductSel>{
     private Boolean lx;
 
     public Boolean getLx() {

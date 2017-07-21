@@ -165,19 +165,19 @@
         });
       },
       handlePreview1(file) {
-        window.open(file.url);
+        window.open(file.viewUrl);
       },handleChange1(file, fileList) {
         this.fileList1 = fileList;
       },handleRemove1(file, fileList) {
         this.fileList1 = fileList;
       },handlePreview2(file) {
-        window.open(file.url);
+        window.open(file.viewUrl);
       },handleChange2(file, fileList) {
         this.fileList2 = fileList;
       },handleRemove2(file, fileList) {
         this.fileList2= fileList;
       },handlePreview3(file) {
-        window.open(file.url);
+        window.open(file.viewUrl);
       },handleChange3(file, fileList) {
         this.fileList3 = fileList;
       },handleRemove3(file, fileList) {
