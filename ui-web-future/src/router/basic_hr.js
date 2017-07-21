@@ -28,6 +28,7 @@ const dutyOvertimeList= r => require.ensure([], () => r(require('pages/basic/hr/
 const auditFileList= r => require.ensure([], () => r(require('pages/basic/hr/auditFileList.vue')));
 const auditFileForm= r => require.ensure([], () => r(require('pages/basic/hr/auditFileForm.vue')));
 const auditFileDetail= r => require.ensure([], () => r(require('pages/basic/hr/auditFileDetail.vue')));
+const auditFilePrint= r => require.ensure([], () => r(require('pages/basic/hr/auditFilePrint.vue')));
 const accountTaskList= r => require.ensure([], () => r(require('pages/basic/hr/accountTaskList.vue')));
 const accountAuthorityForm= r => require.ensure([], () => r(require('pages/basic/hr/accountAuthorityForm.vue')));
 
@@ -64,6 +65,8 @@ let routes = [
   {path:'/basic/hr/auditFileList',component:auditFileList,name:'auditFileList'},
   {path:'/basic/hr/auditFileForm',component:auditFileForm,name:'auditFileForm',meta: {menu:"auditFileList",keepAlive:true}},
   {path:'/basic/hr/auditFileDetail',component:auditFileDetail,name:'auditFileDetail',meta: {menu:"auditFileList"}},
+  {path:'/basic/hr/auditFilePrint',component:auditFilePrint,name:'auditFilePrint',meta:{hidden:true}},
+
 
   {path:'/basic/hr/accountTaskList',component:accountTaskList,name:'accountTaskList'},
   {path:'/basic/hr/recruitList',component:recruitList,name:'recruitList'},
