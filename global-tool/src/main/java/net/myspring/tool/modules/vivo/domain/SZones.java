@@ -1,21 +1,22 @@
-package net.myspring.tool.modules.vivo.model;
+package net.myspring.tool.modules.vivo.domain;
 
-public class SZonesM13e00 {
-    private String zoneID;
+public class SZones {
+
+    private String zoneId;
     private String zoneName;
-    private String shortCut;
+    private String shortcut;
     private Integer zoneDepth;
     private String zonePath;
-    private String fatherID;
+    private String fatherId;
     private Integer subCount;
     private String zoneTypes;
 
-    public String getZoneID() {
-        return zoneID;
+    public String getZoneId() {
+        return zoneId;
     }
 
-    public void setZoneID(String zoneID) {
-        this.zoneID = zoneID;
+    public void setZoneId(String zoneId) {
+        this.zoneId = zoneId;
     }
 
     public String getZoneName() {
@@ -26,12 +27,12 @@ public class SZonesM13e00 {
         this.zoneName = zoneName;
     }
 
-    public String getShortCut() {
-        return shortCut;
+    public String getShortcut() {
+        return shortcut;
     }
 
-    public void setShortCut(String shortCut) {
-        this.shortCut = shortCut;
+    public void setShortcut(String shortcut) {
+        this.shortcut = shortcut;
     }
 
     public Integer getZoneDepth() {
@@ -50,12 +51,12 @@ public class SZonesM13e00 {
         this.zonePath = zonePath;
     }
 
-    public String getFatherID() {
-        return fatherID;
+    public String getFatherId() {
+        return fatherId;
     }
 
-    public void setFatherID(String fatherID) {
-        this.fatherID = fatherID;
+    public void setFatherId(String fatherId) {
+        this.fatherId = fatherId;
     }
 
     public Integer getSubCount() {
@@ -73,4 +74,5 @@ public class SZonesM13e00 {
     public void setZoneTypes(String zoneTypes) {
         this.zoneTypes = zoneTypes;
     }
+
 }

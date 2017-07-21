@@ -35,26 +35,21 @@ public class OppoPlantAgentProductSelService {
     @Autowired
     private OppoPlantAgentProductSelRepository oppoPlantAgentProductSelRepository;
 
-    public List<OppoPlantAgentProductSelDto> findFilter(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
+    public List<OppoPlantAgentProductSelDto> findAll(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
         oppoPlantAgentProductSelQuery.setItemNumberList(StringUtils.getSplitList(oppoPlantAgentProductSelQuery.getItemNumberStr(), CharConstant.ENTER));
-        List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelRepository.findFilter(oppoPlantAgentProductSelQuery);
+        List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelRepository.findAll(oppoPlantAgentProductSelQuery);
         return oppoPlantAgentProductSelDtoList;
     }
 
-    public OppoPlantAgentProductSelForm form(OppoPlantAgentProductSelForm oppoPlantAgentProductSelForm){
-        String isLx = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
-        if(StringUtils.isNotBlank(isLx)){
-            oppoPlantAgentProductSelForm.setLx(true);
-        }else{
-            oppoPlantAgentProductSelForm.setLx(false);
-        }
+    public OppoPlantAgentProductSelForm getForm(OppoPlantAgentProductSelForm oppoPlantAgentProductSelForm){
+        String lxAgentCodes = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
+        oppoPlantAgentProductSelForm.setLx(StringUtils.isNotBlank(lxAgentCodes));
         oppoPlantAgentProductSelForm.getExtra().put("productNames",CollectionUtil.extractToList(productClient.findHasImeProduct(),"name"));
         return oppoPlantAgentProductSelForm;
     }
 
     @Transactional
     public void save(String data){
-        String lxAgentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
         List<Map<String,String>> list = ObjectMapperUtils.readValue(data, ArrayList.class);
         List<ProductEntity> productEntityList=productClient.findHasImeProduct();
         Map<String,ProductEntity> productMap=Maps.newHashMap();
@@ -70,18 +65,8 @@ public class OppoPlantAgentProductSelService {
             OppoPlantAgentProductSel agentProductSel=oppoPlantAgentProductSelMap.get(map.get("id"));
             ProductEntity defaultProduct=productMap.get(map.get("productName"));
             ProductEntity lxProduct=productMap.get(map.get("lxProductName"));
-            if(defaultProduct==null){
-                agentProductSel.setProductId(null);
-            }else{
-                agentProductSel.setProductId(defaultProduct.getId());
-            }
-            if(StringUtils.isNotBlank(lxAgentCode)){
-                if(lxProduct==null){
-                    agentProductSel.setLxProductId(null);
-                }else{
-                    agentProductSel.setLxProductId(lxProduct.getId());
-                }
-            }
+            agentProductSel.setProductId(defaultProduct==null?null:defaultProduct.getId());
+            agentProductSel.setLxProductId(lxProduct==null?null:lxProduct.getId());
             oppoPlantAgentProductSelRepository.save(agentProductSel);
         }
     }

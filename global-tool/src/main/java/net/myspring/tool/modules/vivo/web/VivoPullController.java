@@ -4,14 +4,13 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
-import net.myspring.tool.modules.oppo.domain.OppoPlantProductItemelectronSel;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
 import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
 import net.myspring.tool.modules.vivo.domain.VivoProducts;
 import net.myspring.tool.modules.vivo.dto.FactoryOrderDto;
 import net.myspring.tool.modules.vivo.dto.VivoPlantSendimeiDto;
-import net.myspring.tool.modules.vivo.service.VivoService;
+import net.myspring.tool.modules.vivo.service.VivoPullService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +23,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "factory/vivo")
-public class VivoController {
+public class VivoPullController {
     @Autowired
-    private VivoService vivoService;
-    @Autowired
-    private RedisTemplate redisTemplate;
+    private VivoPullService vivoPullService;
     @Autowired
     private CompanyConfigClient companyConfigClient;
 
@@ -42,37 +39,37 @@ public class VivoController {
         DbContextHolder.get().setCompanyName("JXVIVO");
         //同步颜色编码
         if(!"IDVIVO".equals(companyName)){
-            List<VivoProducts> vivoProducts=vivoService.getProducts();
-            vivoService.pullVivoProducts(vivoProducts);
+            List<VivoProducts> vivoProducts=vivoPullService.getProducts();
+            vivoPullService.pullVivoProducts(vivoProducts);
         }
         //同步物料编码
-         List<VivoPlantProducts> vivoPlantProducts=vivoService.getPlantProducts();
+         List<VivoPlantProducts> vivoPlantProducts=vivoPullService.getPlantProducts();
         logger.info("vivoPlantProducts=="+vivoPlantProducts.toString());
-        vivoService.pullPlantProducts(vivoPlantProducts);
+        vivoPullService.pullPlantProducts(vivoPlantProducts);
         //同步发货串码
-        List<VivoPlantSendimei> vivoPlantSendimeis=vivoService.getPlantSendimei(date,agentCodes);
-        vivoService.pullPlantSendimeis(vivoPlantSendimeis);
+        List<VivoPlantSendimei> vivoPlantSendimeis=vivoPullService.getPlantSendimei(date,agentCodes);
+        vivoPullService.pullPlantSendimeis(vivoPlantSendimeis);
         //同步电子保卡
-        List<VivoPlantElectronicsn> vivoPlantElectronicsns = vivoService.getPlantElectronicsn(date);
-        vivoService.pullPlantElectronicsns(vivoPlantElectronicsns);
+        List<VivoPlantElectronicsn> vivoPlantElectronicsns = vivoPullService.getPlantElectronicsn(date);
+        vivoPullService.pullPlantElectronicsns(vivoPlantElectronicsns);
         return "vivo同步成功";
     }
 
-    @RequestMapping(value="synIme")
-    public List<VivoPlantSendimeiDto> synIme (String date, String agentCode){
-        List<VivoPlantSendimeiDto> vivoPlantSendimeiList=vivoService.synIme(date,agentCode);
+    @RequestMapping(value="getSendImeList")
+    public List<VivoPlantSendimeiDto> getSendImeList (String date, String agentCode){
+        List<VivoPlantSendimeiDto> vivoPlantSendimeiList=vivoPullService.getSendImeList(date,agentCode);
         return vivoPlantSendimeiList;
     }
 
-    @RequestMapping(value = "synPlantElectronicsn")
-    public List<VivoPlantElectronicsn> synPlantElectronicsn(String date, String agentCode) {
-        List<VivoPlantElectronicsn> vivoPlantElectronicsnList = vivoService.synVivoPlantElectronicsnl(date,agentCode);
+    @RequestMapping(value = "getItemelectronSelList")
+    public List<VivoPlantElectronicsn> getItemelectronSelList(String date, String agentCode) {
+        List<VivoPlantElectronicsn> vivoPlantElectronicsnList = vivoPullService.getItemelectronSelList(date,agentCode);
         return vivoPlantElectronicsnList;
     }
 
     @RequestMapping(value="factoryOrder")
     public FactoryOrderDto factoryOrder(FactoryOrderDto factoryOrderDto){
-        return vivoService.factoryOrder(factoryOrderDto);
+        return vivoPullService.factoryOrder(factoryOrderDto);
     }
 
 }

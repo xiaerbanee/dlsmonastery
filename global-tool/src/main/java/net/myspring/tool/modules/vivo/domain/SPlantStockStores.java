@@ -1,7 +1,7 @@
 package net.myspring.tool.modules.vivo.domain;
 
 
-public class SPlantStockStoresM13e00 {
+public class SPlantStockStores {
 
     private String companyId;
     private String storeId;

@@ -45,6 +45,9 @@
             <el-form-item v-if="isAudit">
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" >{{$t('auditFileDetail.save')}}</el-button>
             </el-form-item>
+            <el-form-item style="margin-top:20px">
+              <el-button type="primary" @click="print()" >打印</el-button>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -83,18 +86,27 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/basic/hr/auditFile/audit',qs.stringify(this.submitData)).then((response)=> {
-               this.$message(response.data.message);
-               this.$router.push({name:'auditFileList',query:util.getQuery("auditFileList"),params:{_closeFrom:true}})
+            axios.post('/api/basic/hr/auditFile/audit', qs.stringify(this.submitData)).then((response) => {
+              this.$message(response.data.message);
+              this.$router.push({
+                name: 'auditFileList',
+                query: util.getQuery("auditFileList"),
+                params: {_closeFrom: true}
+              })
             }).catch(function () {
               this.submitDisabled = false;
             });
-          }else{
+          } else {
             this.submitDisabled = false;
           }
         })
-      }
-    },created(){
+      },
+      print(){
+        window.open('/#/basic/hr/auditFilePrint?id=' + this.$route.query.id);
+      },
+    },
+
+    created(){
         axios.get('/api/basic/hr/auditFile/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
           if(this.inputForm.attachment != null) {

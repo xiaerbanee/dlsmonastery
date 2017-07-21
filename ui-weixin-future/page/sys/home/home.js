@@ -76,7 +76,7 @@ Page({
                         app.globalData.weixinAccount = null
                         that.setData({ weixinAccountsHidden: false })
                         wx.request({
-                            url: $util.getUaaUrl('user/getWeixinAccounts?weixinCode=' + app.globalData.weixinCode+"&companyName="+that.globalData.companyName),
+                            url: $util.getUaaUrl('user/getWeixinAccounts?weixinCode=' + app.globalData.weixinCode+"&companyName="+app.globalData.companyName),
                             method: 'POST',
                             success: function (res) {
                                 app.globalData.weixinAccounts = res.data;

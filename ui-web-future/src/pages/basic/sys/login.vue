@@ -4,15 +4,23 @@
       <div class="input-group">
         <div class="title">OA SYSTEM</div>
       </div>
-      <div class="input-group">
-        <el-input :autofocus="true" :placeholder="$t('login.inputUserName')" v-model="username"></el-input>
-      </div>
-      <div class="input-group">
-        <el-input :placeholder="$t('login.inputPassword')" type="password" v-model="password"></el-input>
-      </div>
-      <div class="input-group">
-        <el-button @click.native="login" type="primary" :loading="isBtnLoading">{{btnText}}</el-button>
-      </div>
+      <el-form>
+         <el-form-item>
+           <el-select v-model="companyName" clearable	>
+               <el-option v-for="item in companyNames" :key="item" :label="item" :value="item"></el-option>
+           </el-select>
+         </el-form-item>
+         <el-form-item>
+              <el-input :autofocus="true" :placeholder="$t('login.inputUserName')" v-model="username"></el-input>
+         </el-form-item>
+         <el-form-item>
+              <el-input :placeholder="$t('login.inputPassword')" type="password" v-model="password"></el-input>
+         </el-form-item>
+         <el-form-item>
+              <el-button @click.native="login" type="primary" :loading="isBtnLoading">{{btnText}}</el-button>
+         </el-form-item>
+     </el-form>
+
     </div>
   </div>
 </template>
@@ -20,9 +28,11 @@
   export default {
     data() {
       return {
+        companyName:'',
         username: '',
         password: '',
-        isBtnLoading: false
+        isBtnLoading: false,
+        companyNames:[]
       };
     },
     computed: {
@@ -36,6 +46,10 @@
     methods: {
       login() {
         var that = this;
+        if(!that.companyName){
+          that.$message.error("请选择公司");
+          return;
+        }
         if (!that.username) {
           that.$message.error(this.$t('login.inputUserName'));
           return;
@@ -47,8 +61,9 @@
         that.isBtnLoading = true;
         let data = {
           grant_type:'password',
+          companyName:that.companyName,
           username:that.username,
-          password:that.password
+          password:that.password,
         };
         axios.post('/user/login',qs.stringify(data)).then((response)=>{
           if(response.data.success){
@@ -80,9 +95,14 @@
         })
       }
     },created () {
+        var that=this;
       if(checkLogin()) {
-        this.initLogin();
-      }
+        that.initLogin();
+      };
+      axios.get('/user/getCompanyNames').then((response)=>{
+          console.log(response.data);
+        that.companyNames=response.data;
+      })
     }
   };
 </script>
@@ -115,6 +135,10 @@
   }
 
   .input-group {
+    margin-top: 25px;
+    width: 80%;
+  }
+  .select-group {
     margin-top: 25px;
     width: 80%;
   }

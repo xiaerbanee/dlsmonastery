@@ -2,7 +2,7 @@ package net.myspring.tool.modules.vivo.domain;
 
 import java.time.LocalDate;
 
-public class SProductItem000M13e00 {
+public class SProductItem000 {
     private String companyId;
     private String productId;
     private String productNo;

@@ -96,7 +96,7 @@
         })
       },
       handlePreview(file) {
-        window.open(file.url);
+        window.open(file.viewUrl);
       },initPage(){
         axios.get('/api/ws/future/layout/shopAd/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;

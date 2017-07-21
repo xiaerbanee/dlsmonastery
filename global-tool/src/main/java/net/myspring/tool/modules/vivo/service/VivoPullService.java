@@ -32,9 +32,7 @@ import java.util.*;
 @Service
 @LocalDataSource
 @Transactional(readOnly = false)
-public class VivoService {
-    @Autowired
-    private VivoRepository vivoRepository;
+public class VivoPullService {
     @Autowired
     private VivoProductsRepository vivoProductsRepository;
     @Autowired
@@ -184,7 +182,7 @@ public class VivoService {
     }
 
     @LocalDataSource
-    public  List<VivoPlantSendimeiDto>  synIme(String date,String agentCode) {
+    public  List<VivoPlantSendimeiDto>  getSendImeList(String date,String agentCode) {
         String dateStart =date;
         String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);
@@ -194,7 +192,7 @@ public class VivoService {
 
 
     @LocalDataSource
-    public  List<VivoPlantElectronicsn>  synVivoPlantElectronicsnl(String date, String agentCode) {
+    public  List<VivoPlantElectronicsn>  getItemelectronSelList(String date, String agentCode) {
         String dateStart =date;
         String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);
