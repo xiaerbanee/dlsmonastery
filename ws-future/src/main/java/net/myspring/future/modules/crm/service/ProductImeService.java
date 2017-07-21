@@ -2,8 +2,10 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.enums.CompanyNameEnum;
 import net.myspring.future.common.enums.InputTypeEnum;
 import net.myspring.future.common.enums.OutTypeEnum;
 import net.myspring.future.common.enums.SumTypeEnum;
@@ -87,20 +89,6 @@ public class ProductImeService {
         return productImeDtoList;
     }
 
-    public Map<String, Integer> findQtyMap(List<String> imeList) {
-        Map<String, Integer> map = Maps.newHashMap();
-        List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
-        if (CollectionUtil.isNotEmpty(productImeList)) {
-            List<Product> productList = productRepository.findAll(CollectionUtil.extractToList(productImeList, "productId"));
-            Map<String, Product> productMap = CollectionUtil.extractToMap(productList, "id");
-            Map<String, List<ProductIme>> productImeMap = CollectionUtil.extractToMapList(productImeList, "productId");
-            for (Map.Entry<String, List<ProductIme>> entry : productImeMap.entrySet()) {
-                map.put(productMap.get(entry.getKey()).getName(), entry.getValue().size());
-            }
-        }
-        return map;
-    }
-
     public ProductImeSearchResultDto findProductImeSearchResult(List<String> imeList) {
         List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
         ProductImeSearchResultDto productImeSearchResult = new ProductImeSearchResultDto();
@@ -168,6 +156,10 @@ public class ProductImeService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "billId", "工厂订单编号"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdTime", "工厂发货时间"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "创建时间"));
+        if(hasProvince()){
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotRegionName", "大区"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotProvinceName", "省份"));
+        }
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotAreaName", "办事处"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotOfficeName", "考核区域"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotAreaType", "区域属性"));
@@ -186,25 +178,40 @@ public class ProductImeService {
         return new SimpleExcelBook(workbook, "串码列表" + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
     }
 
+    private boolean hasProvince(){
+        return CompanyNameEnum.IDvivo.name().equals(RequestUtils.getCompanyName());
+    }
+
     public SimpleExcelBook export(ProductImeQuery productImeQuery) {
         List<ProductImeDto> productImeDtoList = productImeRepository.findPage(new PageRequest(0, 10000), productImeQuery).getContent();
         cacheUtils.initCacheInput(productImeDtoList);
+        if(hasProvince()){
+            fulfillProvinceInfo(productImeDtoList);
+        }
+
         return export(productImeDtoList);
     }
 
+    private void fulfillProvinceInfo(List<ProductImeDto> productImeDtoList) {
+        List<OfficeDto> officeDtoList = officeClient.findAll();
+        Map<String, OfficeDto> officeDtoMap = CollectionUtil.extractToMap(officeDtoList, "id");
+        for(ProductImeDto productImeDto : productImeDtoList){
+
+            OfficeDto province = officeDtoMap.get(productImeDto.getDepotProvinceId());
+            if(province!=null){
+                productImeDto.setDepotProvinceName(province.getName());
+            }
+            if(province!=null && officeDtoMap.get(province.getParentId())!=null){
+                productImeDto.setDepotRegionName(officeDtoMap.get(province.getParentId()).getName());
+            }
+        }
+    }
 
     public List<ProductImeDto> findByImeLike(String imeReverse) {
         List<ProductIme> productImeList = productImeRepository.findTop20ByImeReverseStartingWithAndEnabledIsTrue(imeReverse);
         List<ProductImeDto> productImeDtos = BeanUtil.map(productImeList,ProductImeDto.class);
         cacheUtils.initCacheInput(productImeDtos);
         return productImeDtos;
-    }
-
-    public  List<ProductImeDto> getProductImeReportDetail(ReportQuery reportQuery){
-        List<ProductImeReportDto> productImeSaleReportList = getProductImeReportList(reportQuery);
-        List<String> imeList=CollectionUtil.extractToList(productImeSaleReportList,"ime");
-        List<ProductImeDto> productImeDtoList=productImeRepository.findDtoListByImeList(imeList);
-        return productImeDtoList;
     }
 
     public Map<String,Object> productImeReport(ReportQuery reportQuery) {
@@ -216,7 +223,7 @@ public class ProductImeService {
             lastRuleMap = officeClient.getLastRuleMapByOfficeId(reportQuery.getOfficeId());
         }
         List<ProductImeReportDto> productImeSaleReportList = getProductImeReportList(reportQuery);
-        Integer sum=0;
+        Integer sum;
         if (StringUtils.isNotBlank(reportQuery.getOfficeId()) && SumTypeEnum.区域.name().equals(reportQuery.getSumType())) {
             Map<String, ProductImeReportDto> ProductImeReportMap = Maps.newHashMap();
             for (ProductImeReportDto productImeSaleReportDto : productImeSaleReportList) {
@@ -348,8 +355,7 @@ public class ProductImeService {
         cacheUtils.initCacheInput(depotReportList);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("销售报表" + reportQuery.getExportType(), depotReportList, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook,simpleExcelSheet);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "销售报表" + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
-        return simpleExcelBook;
+        return new SimpleExcelBook(workbook, "销售报表" + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
     }
 
     @Transactional
@@ -391,7 +397,7 @@ public class ProductImeService {
         productImeRepository.save(toBeSaved);
     }
 
-private String toUpperCase(String str) {
+    private String toUpperCase(String str) {
         if (str == null) {
             return null;
         }
@@ -421,12 +427,16 @@ private String toUpperCase(String str) {
     public List<ProductImeDto> batchQuery(List<String> allImeList) {
         List<ProductImeDto> result = productImeRepository.batchQuery(allImeList);
         cacheUtils.initCacheInput(result);
+        if(hasProvince()){
+            fulfillProvinceInfo(result);
+        }
         return result;
     }
 
     public List<ProductIme> findByIds(List<String> ids){
-        List<ProductIme> productImeList=productImeRepository.findAll(ids);
-        return productImeList;
+        return productImeRepository.findAll(ids);
     }
+
+
 
 }
