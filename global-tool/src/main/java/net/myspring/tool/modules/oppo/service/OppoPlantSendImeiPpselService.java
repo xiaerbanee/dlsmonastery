@@ -3,7 +3,7 @@ package net.myspring.tool.modules.oppo.service;
 import com.google.common.collect.Lists;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.utils.CacheUtils;
-import net.myspring.tool.modules.oppo.domain.OppoPlantSendImeiPpselDto;
+import net.myspring.tool.modules.oppo.dto.OppoPlantSendImeiPpselDto;
 import net.myspring.tool.modules.oppo.repository.OppoPlantSendImeiPpselRepository;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;

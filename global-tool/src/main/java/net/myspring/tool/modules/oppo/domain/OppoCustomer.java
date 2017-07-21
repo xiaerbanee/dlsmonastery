@@ -14,11 +14,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name="oppo_push_customer")
-public class OppoCustomer  {
-    @JsonIgnore
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected String id;
+public class OppoCustomer  extends  IdEntity<OppoCustomer>{
     private String customerid;
     private String customername;
     private String agentid;
@@ -47,12 +43,9 @@ public class OppoCustomer  {
     @JsonIgnore
     private LocalDate createdDate;
 
+    @JsonIgnore
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getAgentid() {

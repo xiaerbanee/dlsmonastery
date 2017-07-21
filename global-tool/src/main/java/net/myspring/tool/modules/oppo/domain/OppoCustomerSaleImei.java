@@ -1,6 +1,7 @@
 package net.myspring.tool.modules.oppo.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.myspring.tool.common.domain.IdEntity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -8,11 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name="oppo_push_customer_sale_imei")
-public class OppoCustomerSaleImei {
-    @JsonIgnore
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+public class OppoCustomerSaleImei extends IdEntity<OppoCustomerSaleImei>{
     private String imei;
     private LocalDateTime saletime;
     private String custname;
@@ -28,12 +25,9 @@ public class OppoCustomerSaleImei {
     @JsonIgnore
     private LocalDate createdDate;
 
+    @JsonIgnore
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getAgentcode() {

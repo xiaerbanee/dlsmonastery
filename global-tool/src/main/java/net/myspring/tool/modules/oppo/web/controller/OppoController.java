@@ -6,6 +6,8 @@ import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.modules.oppo.domain.*;
+import net.myspring.tool.modules.oppo.dto.OppoPlantSendImeiPpselDto;
+import net.myspring.tool.modules.oppo.dto.OppoResponseMessage;
 import net.myspring.tool.modules.oppo.service.OppoPushSerivce;
 import net.myspring.tool.modules.oppo.service.OppoService;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -99,7 +101,7 @@ public class OppoController {
     }
 
     @RequestMapping(value = "synIme")
-    public List<OppoPlantSendImeiPpselDto> synIme(String date,String agentCode) {
+    public List<OppoPlantSendImeiPpselDto> synIme(String date, String agentCode) {
         List<OppoPlantSendImeiPpselDto> oppoPlantSendImeiPpselDtos = oppoService.synIme(date,agentCode);
         return oppoPlantSendImeiPpselDtos;
     }
