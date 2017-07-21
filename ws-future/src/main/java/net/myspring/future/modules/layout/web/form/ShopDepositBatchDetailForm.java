@@ -10,11 +10,20 @@ public class ShopDepositBatchDetailForm extends BaseForm<ShopDeposit> {
 
     private BigDecimal imageAmount;
     private BigDecimal marketAmount;
+    private BigDecimal demoPhoneAmount ;
     private LocalDate billDate;
     private String bankName;
     private String departMentName;
     private String outBillType;
     private String shopName;
+
+    public BigDecimal getDemoPhoneAmount() {
+        return demoPhoneAmount;
+    }
+
+    public void setDemoPhoneAmount(BigDecimal demoPhoneAmount) {
+        this.demoPhoneAmount = demoPhoneAmount;
+    }
 
     public BigDecimal getImageAmount() {
         return imageAmount;
