@@ -114,21 +114,23 @@ public class ClientService {
     public void syn(){
         LocalDateTime outDate=clientRepository.findMaxOutDate();
         List<BdCustomer> bdCustomers=cloudClient.findCustomerByMaxModifyDate(outDate.toString());
-        List<Client> clientList=clientRepository.findByOutIdIn(CollectionUtil.extractToList(bdCustomers,"FCustId"));
-        Map<String,Client> outIdClientMap=CollectionUtil.extractToMap(clientList,"outId");
-        for(BdCustomer bdCustomer:bdCustomers){
-            Client outClient=outIdClientMap.get(bdCustomer.getFCustId());
-            if(outClient==null){
-                outClient=new Client();
+        if(CollectionUtil.isNotEmpty(bdCustomers)){
+            List<Client> clientList=clientRepository.findByOutIdIn(CollectionUtil.extractToList(bdCustomers,"FCustId"));
+            Map<String,Client> outIdClientMap=CollectionUtil.extractToMap(clientList,"outId");
+            for(BdCustomer bdCustomer:bdCustomers){
+                Client outClient=outIdClientMap.get(bdCustomer.getFCustId());
+                if(outClient==null){
+                    outClient=new Client();
+                }
+                outClient.setName(bdCustomer.getFName().trim());
+                outClient.setOutId(bdCustomer.getFCustId());
+                outClient.setOutGroupId(bdCustomer.getFPrimaryGroup());
+                outClient.setOutGroupName(bdCustomer.getFPrimaryGroupName());
+                outClient.setOutCode(bdCustomer.getFNumber());
+                outClient.setOutDate(bdCustomer.getFModifyDate());
+                outClient.setEnabled(true);
+                clientRepository.save(outClient);
             }
-            outClient.setName(bdCustomer.getFName().trim());
-            outClient.setOutId(bdCustomer.getFCustId());
-            outClient.setOutGroupId(bdCustomer.getFPrimaryGroup());
-            outClient.setOutGroupName(bdCustomer.getFPrimaryGroupName());
-            outClient.setOutCode(bdCustomer.getFNumber());
-            outClient.setOutDate(bdCustomer.getFModifyDate());
-            outClient.setEnabled(true);
-            clientRepository.save(outClient);
         }
     }
 }
