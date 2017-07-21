@@ -41,12 +41,13 @@ public class VivoPullService {
     @Autowired
     private VivoPlantElectronicsnRepository vivoPlantElectronicsnRepository;
 
-
+    //货品
     @FactoryDataSource
     public List<VivoPlantProducts> getPlantProducts() {
         return vivoPlantProductsRepository.findPlantProducts();
     }
 
+    //获取串码
     @FactoryDataSource
     public List<VivoPlantSendimei> getPlantSendimei(String date, List<String> agentCodes) {
         if(StringUtils.isBlank(date)){
@@ -56,6 +57,7 @@ public class VivoPullService {
         return vivoPlantSendimeiRepository.findPlantSendimei(date, dateEnd, agentCodes);
     }
 
+    //获取电子保卡
     @FactoryDataSource
     public List<VivoPlantElectronicsn> getPlantElectronicsn(String date) {
         if(StringUtils.isBlank(date)){
