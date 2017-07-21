@@ -176,7 +176,6 @@ public class VivoPullService {
     }
 
 
-    @Transactional(readOnly = true)
     public FactoryOrderDto factoryOrder(FactoryOrderDto factoryOrderDto){
         List<String> factoryCodeList = Lists.newArrayList(CharConstant.JX_VIVO_FACTORY_AGENT_CODES.split(CharConstant.COMMA));
         List<String> factoryNameList = Lists.newArrayList(CharConstant.JX_VIVO_FACTORY_AGENT_NAMES.split(CharConstant.COMMA));
@@ -198,7 +197,6 @@ public class VivoPullService {
         Runtime runtime = Runtime.getRuntime();
         Process process;
         String command= "c:\\vivoDes.exe "+ code;
-        System.out.println(command);
         try {
             process = runtime.exec(command);
             BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -209,7 +207,6 @@ public class VivoPullService {
             }
             br.close();
             process.destroy();
-            System.out.println(sb.toString());
             return sb.toString().trim();
         } catch (IOException e) {
             return "";
