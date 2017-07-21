@@ -116,6 +116,12 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (CollectionUtil.isNotEmpty(afterSaleQuery.depotIdList)) {
             sb.append("""  and ( t4.id in (:depotIdList) or t7.id in (:depotIdList) ) """)
         }
+        if (StringUtils.isNotBlank(afterSaleQuery.badProductName)) {
+            sb.append("""  and t3.name like concat('%',:badProductName,'%') """)
+        }
+        if (afterSaleQuery.fromCompany) {
+            sb.append("""  and t1.from_company_date is null  """)
+        }
         print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(afterSaleQuery), BeanPropertyRowMapper(AfterSaleDto::class.java));
     }
