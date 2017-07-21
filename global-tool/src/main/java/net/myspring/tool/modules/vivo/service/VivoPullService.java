@@ -94,16 +94,7 @@ public class VivoPullService {
     @Transactional
     public void pullPlantSendimeis(List<VivoPlantSendimei> vivoPlantSendimeis){
         if(CollectionUtil.isNotEmpty(vivoPlantSendimeis)){
-            List<String> imeiList = Lists.newArrayList();
-            Map<String,List<VivoPlantSendimei>> vivoPlantSendimeiMap= Maps.newHashMap();
-            for(VivoPlantSendimei vivoPlantSendimei:vivoPlantSendimeis){
-                if(!vivoPlantSendimeiMap.containsKey(vivoPlantSendimei.getCompanyId())){
-                    List<VivoPlantSendimei> plantSendimeis=Lists.newArrayList();
-                    vivoPlantSendimeiMap.put(vivoPlantSendimei.getCompanyId(),plantSendimeis);
-                }
-                imeiList.add(vivoPlantSendimei.getImei());
-                vivoPlantSendimeiMap.get(vivoPlantSendimei.getCompanyId()).add(vivoPlantSendimei);
-            }
+            List<String> imeiList = CollectionUtil.extractToList(vivoPlantSendimeis,"imei");
             List<String> localImeiList=Lists.newArrayList();
             if(CollectionUtil.isNotEmpty(imeiList)){
                 for(List<String>imes:CollectionUtil.splitList(imeiList,1000)){
@@ -114,13 +105,9 @@ public class VivoPullService {
                 }
             }
             List<VivoPlantSendimei> pullPlantSendimeis=Lists.newArrayList();
-            for(String agentCode:vivoPlantSendimeiMap.keySet()){
-                List<VivoPlantSendimei>  plantSendimeis=vivoPlantSendimeiMap.get(agentCode);
-                for(VivoPlantSendimei plantSendimei:plantSendimeis){
-                    plantSendimei.setCompanyId(agentCode);
-                    if(!localImeiList.contains(plantSendimei.getImei())){
-                        pullPlantSendimeis.add(plantSendimei);
-                    }
+            for(VivoPlantSendimei plantSendimei:vivoPlantSendimeis){
+                if(!localImeiList.contains(plantSendimei.getImei())){
+                    pullPlantSendimeis.add(plantSendimei);
                 }
             }
             if(CollectionUtil.isNotEmpty(pullPlantSendimeis)){
