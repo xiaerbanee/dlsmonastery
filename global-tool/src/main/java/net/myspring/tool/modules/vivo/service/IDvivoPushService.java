@@ -239,19 +239,19 @@ public class IDvivoPushService {
         for(String agentCode:storesMap.keySet()){
             List<SPlantStockStoresM13e00> sPlantStockStoresM13e00List =storesMap.get(agentCode);
             sPlantStockStoresM13e00Repository.deleteIDvivoByAccountDate(dateStart,dateEnd,agentCode);
-            sPlantStockStoresM13e00Repository.batchIDvivoSave(sPlantStockStoresM13e00List);
+            sPlantStockStoresM13e00Repository.batchIDvivoSave(sPlantStockStoresM13e00List,agentCode);
         }
         logger.info("IDVIVO:代理商库存数据上抛开始" + LocalDateTime.now());
         for(String agentCode:supplyMap.keySet()){
             List<SPlantStockSupplyM13e00> sPlantStockSupplyM13e00List =supplyMap.get(agentCode);
             sPlantStockSupplyM13e00Repository.deleteIDvivoByAccountDate(dateStart,dateEnd,agentCode);
-            sPlantStockSupplyM13e00Repository.batchIDvivoSave(sPlantStockSupplyM13e00List);
+            sPlantStockSupplyM13e00Repository.batchIDvivoSave(sPlantStockSupplyM13e00List,agentCode);
         }
         logger.info("IDVIVO:经销商库存数据上抛开始" + LocalDateTime.now());
         for(String agentCode:dealerMap.keySet()){
             List<SPlantStockDealerM13e00> sPlantStockDealerM13e00List =dealerMap.get(agentCode);
             sPlantStockDealerM13e00Repository.deleteIDvivoByAccountDate(dateStart,dateEnd,agentCode);
-            sPlantStockDealerM13e00Repository.batchIDvivoSave(sPlantStockDealerM13e00List);
+            sPlantStockDealerM13e00Repository.batchIDvivoSave(sPlantStockDealerM13e00List,agentCode);
         }
     }
 
@@ -259,7 +259,7 @@ public class IDvivoPushService {
     public List<SPlantCustomerStockDetailDto> getCustomerStockDetailData(String date){
         LocalDate dateStart = LocalDateUtils.parse(date).minusYears(1);
         LocalDate dateEnd = LocalDateUtils.parse(date).plusDays(1);
-        List<SPlantCustomerStockDetailDto> sPlantCustomerStockDetailDtoList = sPlantCustomerStockDetailRepository.findCustomerStockDetailData(dateStart,dateEnd);
+        List<SPlantCustomerStockDetailDto> sPlantCustomerStockDetailDtoList = sPlantCustomerStockDetailRepository.findIDVivoCustomerStockDetailData(dateStart,dateEnd);
         cacheUtils.initCacheInput(sPlantCustomerStockDetailDtoList);
         return sPlantCustomerStockDetailDtoList;
     }
@@ -328,15 +328,15 @@ public class IDvivoPushService {
         logger.info("IDVIVO:库存串码明细数据上抛开始" + LocalDateTime.now());
         for(String agentCode:stockMap.keySet()){
             List<SProductItemStocksM13e00> sProductItemStocksM13e00List =stockMap.get(agentCode);
-            sProductItemStocksM13e00Repository.deleteIDvivoByUpdateTime(date,LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1)),agentCode);
-            sProductItemStocksM13e00Repository.batchIDvivoSave(sProductItemStocksM13e00List);
+//            sProductItemStocksM13e00Repository.deleteIDvivoByUpdateTime(date,LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1)),agentCode);
+            sProductItemStocksM13e00Repository.batchIDvivoSave(sProductItemStocksM13e00List,agentCode);
         }
         logger.info("IDVIVO:库存串码明细数据上抛结束" + LocalDateTime.now());
         logger.info("IDVIVO:渠道串码明细数据上抛开始" + LocalDateTime.now());
         for(String agentCode:itemMap.keySet()){
             List<SProductItem000M13e00> sProductItem000M13e00List =itemMap.get(agentCode);
-            sProductItem000M13e00Repository.deleteIDvivoByUpdateTime(date,LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1)),agentCode);
-            sProductItem000M13e00Repository.batchIDvivoSave(sProductItem000M13e00List);
+//            sProductItem000M13e00Repository.deleteIDvivoByUpdateTime(date,LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1)),agentCode);
+            sProductItem000M13e00Repository.batchIDvivoSave(sProductItem000M13e00List,agentCode);
         }
         logger.info("IDVIVO:渠道串码明细数据上抛结束" + LocalDateTime.now());
     }
@@ -367,7 +367,7 @@ public class IDvivoPushService {
             for(String agentCode:storeMap.keySet()){
                 sStoresM13e00Repository.deleteIDvivoStores(agentCode);
                 List<SStoresM13e00> sStoresM13e00List=storeMap.get(agentCode);
-                sStoresM13e00Repository.batchSave(sStoresM13e00List);
+                sStoresM13e00Repository.batchIDvivoSave(sStoresM13e00List,agentCode);
             }
             logger.info("IDVIVO:仓库数据上抛结束" + LocalDateTime.now());
         }
@@ -383,7 +383,7 @@ public class IDvivoPushService {
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<VivoCustomerSaleImeiDto>  vivoCustomerSaleImeiDtos= vivoCustomerSaleImeiRepository.findProductSaleImei(dateStart,dateEnd);
         cacheUtils.initCacheInput(vivoCustomerSaleImeiDtos);
-        return vivoCustomerSaleImeiRepository.findProductSaleImei(dateStart,dateEnd);
+        return vivoCustomerSaleImeiDtos;
     }
 
     @FactoryDataSource
@@ -419,7 +419,7 @@ public class IDvivoPushService {
         for(String agentCode:saleMap.keySet()){
             List<SPlantEndProductSaleM13e00> sPlantEndProduuctSaleImeiList=saleMap.get(agentCode);
             sPlantEndProductSaleM13e00Repository.deleteIDvivoByBillDate(dateStart,dateEnd,agentCode);
-            sPlantEndProductSaleM13e00Repository.batchIDvivoSave(sPlantEndProduuctSaleImeiList);
+            sPlantEndProductSaleM13e00Repository.batchIDvivoSave(sPlantEndProduuctSaleImeiList,agentCode);
         }
         logger.info("IDVIVO:上抛核销记录结束" + LocalDateTime.now());
     }
@@ -427,7 +427,6 @@ public class IDvivoPushService {
 
     @LocalDataSource
     public Map<String,String> getProductColorMap(){
-        System.err.println("CompanyName:"+DbContextHolder.get().getCompanyName()+"DataSourceType:"+DbContextHolder.get().getDataSourceType());
         List<VivoPlantProducts> vivoPlantProductList= vivoPlantProductsRepository.findAllByProductId();
         Map<String, String> productColorMap = Maps.newHashMap();
 

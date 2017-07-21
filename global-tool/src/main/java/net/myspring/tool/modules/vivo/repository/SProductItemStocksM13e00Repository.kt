@@ -27,10 +27,9 @@ class SProductItemStocksM13e00Repository @Autowired constructor(val namedParamet
         map.put("dateEnd",dateEnd)
         map.put("agentCode",agentCode)
         val sb = StringBuilder()
-        sb.append("""
-            DELETE FROM S_ProductItemStocks_:agentCode
-            WHERE UpdateTime >=  :dateStart and UpdateTime < :dateEnd
-        """)
+        sb.append(" DELETE FROM S_ProductItemStocks_")
+        sb.append(agentCode+" ")
+        sb.append(" WHERE UpdateTime >=  :dateStart and UpdateTime < :dateEnd ")
         return namedParameterJdbcTemplate.update(sb.toString(),map)
     }
 
@@ -43,12 +42,12 @@ class SProductItemStocksM13e00Repository @Autowired constructor(val namedParamet
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sProductItemStocksM13e00List.toTypedArray()))
     }
 
-    fun batchIDvivoSave(sProductItemStocksM13e00List:MutableList<SProductItemStocksM13e00>):IntArray{
+    fun batchIDvivoSave(sProductItemStocksM13e00List:MutableList<SProductItemStocksM13e00>,agentCode: String):IntArray{
         val sb = StringBuilder()
-        sb.append("""
-            INSERT INTO S_ProductItemStocks_:agentCode (CompanyID,ProductID,ProductNo,StoreID,CustomerID,SubCustomerID,Status,StatusInfo,IsReturnProfit,IsLock,Remark,UpdateTime)
-            VALUES (:companyId,:productId,:productNo,:storeId,:customerId,:subCustomerId,:status,:statusInfo,:isReturnProfit,:isLock,:remark,:updateTime)
-        """)
+        sb.append(" INSERT INTO S_ProductItemStocks_")
+        sb.append(agentCode+" ")
+        sb.append(" (CompanyID,ProductID,ProductNo,StoreID,CustomerID,SubCustomerID,Status,StatusInfo,IsReturnProfit,IsLock,Remark) ")
+        sb.append(" VALUES (:companyId,:productId,:productNo,:storeId,:customerId,:subCustomerId,:status,:statusInfo,:isReturnProfit,:isLock,:remark) ")
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sProductItemStocksM13e00List.toTypedArray()))
     }
 }
