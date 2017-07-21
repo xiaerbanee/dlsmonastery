@@ -13,6 +13,7 @@ import net.myspring.tool.common.domain.OfficeEntity;
 import net.myspring.tool.common.utils.CacheUtils;
 import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.common.dto.CustomerDto;
+import net.myspring.tool.modules.oppo.dto.OppoPushDto;
 import net.myspring.tool.modules.oppo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -74,6 +75,16 @@ public class OppoPushSerivce {
 
     private static Map<String,String> areaDepotMap=Maps.newHashMap();
     private static Map<String,CustomerDto> customerDtoMap=Maps.newHashMap();
+
+
+    @LocalDataSource
+    @Transactional
+    public void pushToLocal(OppoPushDto oppoPushDto) {
+        getOppoCustomers(oppoPushDto.getDate());
+        getOppoCustomerOperatortype(oppoPushDto.getDate());
+        getOppoCustomerAllot(oppoPushDto.getOppoCustomerAllots(),oppoPushDto.getDate());
+
+    }
 
     //上抛oppo门店数据,只上抛二代和渠道门店
     @LocalDataSource
