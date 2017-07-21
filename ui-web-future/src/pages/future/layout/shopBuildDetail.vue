@@ -147,11 +147,11 @@
           }
         });
       }, handlePreview1(file) {
-        window.open(file.url);
+        window.open(file.viewUrl);
       },handlePreview2(file) {
-        window.open(file.url);
+        window.open(file.viewUrl);
       },handlePreview3(file) {
-        window.open(file.url);
+        window.open(file.viewUrl);
       },initPage(){
         axios.get('/api/ws/future/layout/shopBuild/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
