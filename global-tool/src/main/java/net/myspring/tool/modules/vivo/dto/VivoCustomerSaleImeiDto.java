@@ -1,5 +1,7 @@
 package net.myspring.tool.modules.vivo.dto;
 
+import net.myspring.util.cahe.annotation.CacheInput;
+
 public class VivoCustomerSaleImeiDto {
     private String provinceId;
     private String imei;
@@ -12,6 +14,7 @@ public class VivoCustomerSaleImeiDto {
     private String salePromoter;
     private String shopCode;
     private String shopName;
+    @CacheInput(inputKey = "offices",inputInstance = "provinceId" ,outputInstance = "agentCode")
     private String agentCode;
 
     public String getProvinceId() {

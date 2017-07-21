@@ -26,12 +26,11 @@ class SPlantStockStoresM13e00Repository @Autowired constructor(val namedParamete
         val map = Maps.newHashMap<String,Any>()
         map.put("dateStart",dateStart)
         map.put("dateEnd",dateEnd)
-        map.put("agentCode",agentCode);
-        val sb = StringBuilder("""
-            delete from s_PlantStockStores_:agentCode
-            where AccountDate >= :dateStart
-                and AccountDate < :dateEnd
-        """)
+        map.put("agentCode",agentCode)
+        val sb = StringBuilder()
+        sb.append(" delete from s_PlantStockStores_")
+        sb.append(agentCode+" ")
+        sb.append(" where AccountDate >= :dateStart and AccountDate < :dateEnd ")
         return namedParameterJdbcTemplate.update(sb.toString(),map)
     }
 
@@ -44,12 +43,12 @@ class SPlantStockStoresM13e00Repository @Autowired constructor(val namedParamete
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sPlantStockStoreM13e00List.toTypedArray()))
     }
 
-    fun batchIDvivoSave(sPlantStockStoreM13e00List: MutableList<SPlantStockStoresM13e00>):IntArray?{
+    fun batchIDvivoSave(sPlantStockStoreM13e00List: MutableList<SPlantStockStoresM13e00>,agentCode:String):IntArray?{
         val sb = StringBuilder()
-        sb.append("""
-            insert into s_PlantStockStores_:agentCode (CompanyID,StoreID,ProductID,CreatedTime,sumstock,useablestock,bad,AccountDate)
-            values(:companyId,:storeId,:productId,:createdTime,:sumStock,:useAbleStock,:bad,:accountDate)
-        """)
+        sb.append(" insert into s_PlantStockStores_")
+        sb.append(agentCode+" ")
+        sb.append(" (CompanyID,StoreID,ProductID,CreatedTime,sumstock,useablestock,bad,AccountDate) ")
+        sb.append("values(:companyId,:storeId,:productId,:createdTime,:sumStock,:useAbleStock,:bad,:accountDate)")
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sPlantStockStoreM13e00List.toTypedArray()))
     }
 }

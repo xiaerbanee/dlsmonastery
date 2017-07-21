@@ -6,9 +6,10 @@ public class SPlantCustomerStockDto {
     private String customerId;
     private String productId;
     private Integer useAbleStock;
-    @CacheInput(inputKey = "offices",inputInstance = "customerId" ,outputInstance = "agentCode")
+    @CacheInput(inputKey = "offices",inputInstance = "provinceId" ,outputInstance = "agentCode")
     private String agentCode;
     private Integer customerLevel;
+    private String provinceId;
 
     public String getCustomerId() {
         return customerId;
@@ -48,5 +49,13 @@ public class SPlantCustomerStockDto {
 
     public void setCustomerLevel(Integer customerLevel) {
         this.customerLevel = customerLevel;
+    }
+
+    public String getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
     }
 }

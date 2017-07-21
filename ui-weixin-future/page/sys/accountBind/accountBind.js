@@ -37,7 +37,8 @@ Page({
       data: {
         loginName: e.detail.value.loginName,
         password: e.detail.value.password,
-        code: that.data.code
+        code: that.data.code,
+        companyName:app.globalData.companyName
       },
       header: {
         Cookie: "JSESSIONID=" + app.globalData.sessionId

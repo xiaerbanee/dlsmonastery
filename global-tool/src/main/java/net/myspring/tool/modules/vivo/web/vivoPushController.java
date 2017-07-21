@@ -65,15 +65,15 @@ public class vivoPushController {
         Map<String,String> productColorMap = idvivoPushService.getProductColorMap();
         List<SPlantCustomerStockDto> sPlantCustomerStockDtoList = idvivoPushService.getCustomerStockData(date);
         idvivoPushService.pushCustomerStockData(sPlantCustomerStockDtoList,productColorMap,date);
-       //同步库存明细数据
-       List<SPlantCustomerStockDetailDto>  sPlantCustomerStockDetailDtoList=idvivoPushService.getCustomerStockDetailData(date);
-       idvivoPushService.pushCustomerStockDetailData(sPlantCustomerStockDetailDtoList,productColorMap,date);
-       //同步仓库数据
+        //同步库存明细数据
+        List<SPlantCustomerStockDetailDto>  sPlantCustomerStockDetailDtoList=idvivoPushService.getCustomerStockDetailData(date);
+        idvivoPushService.pushCustomerStockDetailData(sPlantCustomerStockDetailDtoList,productColorMap,date);
+        //同步仓库数据
         List<SStoresM13e00> sStoresM13e00List=idvivoPushService.getCustomerStoreData();
         idvivoPushService.pushCustomerStoresData(sStoresM13e00List);
         //同步核销数据
-        List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList = vivoPushService.getProductImeSaleData(date);
-        vivoPushService.pushProductImeSaleData(vivoCustomerSaleImeiDtoList,productColorMap,date);
+        List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList = idvivoPushService.getProductImeSaleData(date);
+        idvivoPushService.pushProductImeSaleData(vivoCustomerSaleImeiDtoList,productColorMap,date);
     }
 
 }

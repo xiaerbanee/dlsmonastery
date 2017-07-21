@@ -9,6 +9,7 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.*;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.api.service.CarrierOrderService;
 import net.myspring.future.modules.api.web.form.CarrierOrderFrom;
 import net.myspring.future.modules.basic.client.OfficeClient;
@@ -89,9 +90,17 @@ public class GoodsOrderController {
     @RequestMapping(value = "getForm")
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:edit')")
     public GoodsOrderForm getForm(GoodsOrderForm goodsOrderForm){
-        goodsOrderForm.getExtra().put("netTypeList", Lists.newArrayList(NetTypeEnum.移动.name(), NetTypeEnum.联信.name()));
+        goodsOrderForm.getExtra().put("netTypeList", getNetTypeList());
         goodsOrderForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
         return goodsOrderForm;
+    }
+
+    private List<String> getNetTypeList() {
+        if(CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyName()) || CompanyNameEnum.JXvivo.name().equals(RequestUtils.getCompanyName()) ){
+            return Lists.newArrayList(NetTypeEnum.移动.name(), NetTypeEnum.联信.name());
+        }else{
+          return Lists.newArrayList(NetTypeEnum.全网通.name());
+        }
     }
 
     @RequestMapping(value = "updatePullStatus")
@@ -232,7 +241,7 @@ public class GoodsOrderController {
     @RequestMapping(value = "getBatchAddForm")
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:batchAdd')")
     public GoodsOrderBatchAddForm getBatchAddForm(GoodsOrderBatchAddForm goodsOrderBatchAddForm){
-        goodsOrderBatchAddForm.getExtra().put("netTypeList", Lists.newArrayList(NetTypeEnum.移动.name(), NetTypeEnum.联信.name()));
+        goodsOrderBatchAddForm.getExtra().put("netTypeList", getNetTypeList());
         goodsOrderBatchAddForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
         return goodsOrderBatchAddForm;
     }

@@ -7,6 +7,7 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.future.common.enums.CompanyNameEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.dto.ProductAdApplyDto;
@@ -238,15 +239,7 @@ public class ProductService {
                         product.setLastModifiedBy(RequestUtils.getAccountId());
                     }
                 }
-                if(bdMaterial.getFMaterialGroupName().equalsIgnoreCase("商品类")){
-                    if(bdMaterial.getFName().trim().contains(NetTypeEnum.移动.name())){
-                        product.setNetType(NetTypeEnum.移动.name());
-                    }else{
-                        product.setNetType(NetTypeEnum.联信.name());
-                    }
-                }else{
-                    product.setNetType(NetTypeEnum.全网通.name());
-                }
+                setProductNetType(product,bdMaterial);
                 product.setOutDate(bdMaterial.getFModifyDate());
                 product.setName(bdMaterial.getFName());
                 product.setOutId(bdMaterial.getFMasterId());
@@ -292,4 +285,19 @@ public class ProductService {
         }
     }
 
+    private void setProductNetType(Product product,BdMaterial bdMaterial) {
+        if (CompanyNameEnum.JXOPPO.name().equalsIgnoreCase(RequestUtils.getCompanyName()) || CompanyNameEnum.JXvivo.name().equalsIgnoreCase(RequestUtils.getCompanyName())) {
+            if (bdMaterial.getFMaterialGroupName().equalsIgnoreCase("商品类")) {
+                if (bdMaterial.getFName().trim().contains(NetTypeEnum.移动.name())) {
+                    product.setNetType(NetTypeEnum.移动.name());
+                } else {
+                    product.setNetType(NetTypeEnum.联信.name());
+                }
+            } else {
+                product.setNetType(NetTypeEnum.全网通.name());
+            }
+        }else{
+            product.setNetType(NetTypeEnum.全网通.name());
+        }
+    }
 }

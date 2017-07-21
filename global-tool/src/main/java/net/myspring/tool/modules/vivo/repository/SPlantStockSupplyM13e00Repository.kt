@@ -28,12 +28,11 @@ class SPlantStockSupplyM13e00Repository @Autowired constructor(val namedParamete
         val map = Maps.newHashMap<String,Any>()
         map.put("dateStart",dateStart)
         map.put("dateEnd",dateEnd)
-        map.put("agentCode",agentCode);
-        val sb = StringBuilder("""
-            delete from s_PlantStockSupply_:agentCode
-            where AccountDate >= :dateStart
-                and AccountDate < :dateEnd
-        """);
+        map.put("agentCode",agentCode)
+        val sb = StringBuilder()
+        sb.append(" delete from s_PlantStockSupply_")
+        sb.append(agentCode+" ")
+            sb.append(" where AccountDate >= :dateStart and AccountDate < :dateEnd ")
         return namedParameterJdbcTemplate.update(sb.toString(),map)
     }
 
@@ -47,12 +46,12 @@ class SPlantStockSupplyM13e00Repository @Autowired constructor(val namedParamete
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(), SqlParameterSourceUtils.createBatch(sPlantStockSupplyM13e00List.toTypedArray()))
     }
 
-    fun batchIDvivoSave(sPlantStockSupplyM13e00List: MutableList<SPlantStockSupplyM13e00>):IntArray?{
+    fun batchIDvivoSave(sPlantStockSupplyM13e00List: MutableList<SPlantStockSupplyM13e00>,agentCode: String):IntArray?{
         val sb = StringBuilder()
-        sb.append("""
-            insert into s_PlantStockSupply_:agentCode  (CompanyID,SupplyID,ProductID,CreatedTime,sumstock,useablestock,bad,AccountDate)
-            values(:companyId,:supplyId,:productId,:createdTime,:sumStock,:useAbleStock,:bad,:accountDate)
-        """)
+        sb.append(" insert into s_PlantStockSupply_")
+        sb.append(agentCode+" ")
+        sb.append(" (CompanyID,SupplyID,ProductID,CreatedTime,sumstock,useablestock,bad,AccountDate) ")
+        sb.append(" values(:companyId,:supplyId,:productId,:createdTime,:sumStock,:useAbleStock,:bad,:accountDate) ")
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(), SqlParameterSourceUtils.createBatch(sPlantStockSupplyM13e00List.toTypedArray()))
     }
 
