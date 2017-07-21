@@ -176,7 +176,7 @@ public class ProductImeUploadService {
                     sb.append("串码：").append(ime).append("未上报，不能退回；");
                 }else if(AuditStatusEnum.已通过.name().equals(productImeDto.getProductImeUploadStatus())) {
                     sb.append("串码：").append(ime).append("的上报记录已经审核通过，不能退回；");
-                } else if (!depotManager.isAccess(productImeDto.getProductImeUploadShopId(), true, RequestUtils.getAccountId(),RequestUtils.getOfficeId())) {
+                } else if (!depotManager.isAccess(productImeDto.getProductImeUploadShopId(), true, RequestUtils.getAccountId())) {
                     sb.append("您没有串码：").append(ime).append("所在门店的上报退回权限；");
                 }
 

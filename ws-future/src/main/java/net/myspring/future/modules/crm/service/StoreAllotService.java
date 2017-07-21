@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
-import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
@@ -18,13 +17,11 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.enums.StoreAllotStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.ExpressUtils;
-import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.manager.StkTransferDirectManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.*;
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto;
@@ -58,7 +55,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -86,17 +82,15 @@ public class StoreAllotService {
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
-    private CloudClient cloudClient;
-    @Autowired
     private ExpressUtils expressUtils;
-    @Autowired
-    private DepotStoreRepository depotStoreRepository;
     @Autowired
     private StkTransferDirectManager stkTransferDirectManager;
     @Autowired
     private ExpressOrderManager expressOrderManager;
     @Autowired
     private RedisIdManager redisIdManager;
+    @Autowired
+    private DepotManager depotManager;
 
     public StoreAllotDto findDto(String id) {
         StoreAllotDto storeAllotDto = storeAllotRepository.findDto(id);
@@ -385,17 +379,14 @@ public class StoreAllotService {
                 each.setBillQty(null);
             }
         });
-
         return result;
     }
 
     private void fulfillCloudQty(String fromStoreId, List<StoreAllotDetailSimpleDto> list) {
-        DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(fromStoreId);
-        List<StkInventory> inventoryList = cloudClient.findInventoriesByDepotStoreOutIds(Collections.singletonList(depotStore.getOutId()));
-        Map<String, StkInventory> inventoryMap = CollectionUtil.extractToMap(inventoryList, "FMaterialId");
+        Map<String, Integer> inventoryMap = depotManager.getCloudQtyMap(fromStoreId);
         for(StoreAllotDetailSimpleDto storeAllotDetailSimpleDto : list){
             if(inventoryMap.containsKey(storeAllotDetailSimpleDto.getProductOutId())){
-                storeAllotDetailSimpleDto.setCloudQty(inventoryMap.get(storeAllotDetailSimpleDto.getProductOutId()).getFBaseQty());
+                storeAllotDetailSimpleDto.setCloudQty(inventoryMap.get(storeAllotDetailSimpleDto.getProductOutId()));
             }
         }
     }
