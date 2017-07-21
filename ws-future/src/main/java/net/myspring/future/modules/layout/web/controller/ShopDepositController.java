@@ -116,6 +116,9 @@ public class ShopDepositController {
             if(shopDepositBatchDetailForm.getMarketAmount() == null){
                 throw new ServiceException("市场保证金不能为空");
             }
+            if(shopDepositBatchDetailForm.getDemoPhoneAmount() == null){
+                throw new ServiceException("演示机押金不能为空");
+            }
             if(shopDepositBatchDetailForm.getBillDate() == null){
                 throw new ServiceException("开单日期不能为空");
             }
@@ -149,6 +152,7 @@ public class ShopDepositController {
                 shopDepositForm.setBillDate(shopDepositBatchDetailForm.getBillDate());
                 shopDepositForm.setImageAmount(shopDepositBatchDetailForm.getImageAmount());
                 shopDepositForm.setMarketAmount(shopDepositBatchDetailForm.getMarketAmount());
+                shopDepositForm.setDemoPhoneAmount(shopDepositBatchDetailForm.getDemoPhoneAmount());
                 shopDepositForm.setRemarks(shopDepositBatchDetailForm.getRemarks());
 
                 save(shopDepositForm);
