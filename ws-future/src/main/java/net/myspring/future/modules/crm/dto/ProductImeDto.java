@@ -23,6 +23,11 @@ public class ProductImeDto extends DataDto<ProductIme> {
     private String depotId;
     @CacheInput(inputKey = "depots",inputInstance = "depotId",outputInstance = "name")
     private String depotName;
+    @CacheInput(inputKey = "depots",inputInstance = "depotId",outputInstance = "provinceId")
+    private String depotProvinceId;
+    private String depotProvinceName;
+    private String depotRegionName;
+
     private String inputType;
     @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
     private String productName;
@@ -70,6 +75,30 @@ public class ProductImeDto extends DataDto<ProductIme> {
     private String productImeUploadEmployeeName;
     private LocalDateTime productImeUploadCreatedDate;
     private String productImeUploadId;
+
+    public String getDepotProvinceName() {
+        return depotProvinceName;
+    }
+
+    public void setDepotProvinceName(String depotProvinceName) {
+        this.depotProvinceName = depotProvinceName;
+    }
+
+    public String getDepotRegionName() {
+        return depotRegionName;
+    }
+
+    public void setDepotRegionName(String depotRegionName) {
+        this.depotRegionName = depotRegionName;
+    }
+
+    public String getDepotProvinceId() {
+        return depotProvinceId;
+    }
+
+    public void setDepotProvinceId(String depotProvinceId) {
+        this.depotProvinceId = depotProvinceId;
+    }
 
     public String getRetailDepotName() {
         return retailDepotName;
