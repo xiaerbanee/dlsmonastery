@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
@@ -96,7 +97,7 @@ public class GoodsOrderController {
     }
 
     private List<String> getNetTypeList() {
-        if(CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyName()) || CompanyNameEnum.JXvivo.name().equals(RequestUtils.getCompanyName()) ){
+        if(CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyName()) || CompanyNameEnum.JXVIVO.name().equals(RequestUtils.getCompanyName()) ){
             return Lists.newArrayList(NetTypeEnum.移动.name(), NetTypeEnum.联信.name());
         }else{
           return Lists.newArrayList(NetTypeEnum.全网通.name());
