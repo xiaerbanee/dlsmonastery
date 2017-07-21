@@ -17,18 +17,19 @@ interface VivoPlantElectronicsnRepository : BaseRepository<VivoPlantElectronicsn
     @Query("select  t from #{#entityName}  t where t.snImei in (?1)")
     fun findSnImeis(snImeis: MutableList<String>): MutableList<VivoPlantElectronicsn>
 }
-interface VivoPlantElectronicsnRepositoryCustom{
-    fun findSynList(dateStart:String,dateEnd:String,agentCodes:MutableList<String>): MutableList<VivoPlantElectronicsn>
+
+interface VivoPlantElectronicsnRepositoryCustom {
+    fun findSynList(dateStart: String, dateEnd: String, agentCodes: MutableList<String>): MutableList<VivoPlantElectronicsn>
     fun findPlantElectronicsn(dateStart: String, dateEnd: String): MutableList<VivoPlantElectronicsn>
-    }
+}
 
-class VivoPlantElectronicsnRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) :VivoPlantElectronicsnRepositoryCustom {
+class VivoPlantElectronicsnRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : VivoPlantElectronicsnRepositoryCustom {
 
-    override fun findSynList(dateStart:String, dateEnd:String, agentCodes:MutableList<String>): MutableList<VivoPlantElectronicsn> {
+    override fun findSynList(dateStart: String, dateEnd: String, agentCodes: MutableList<String>): MutableList<VivoPlantElectronicsn> {
         val paramMap = Maps.newHashMap<String, Any>();
-        paramMap.put("dateStart",dateStart);
-        paramMap.put("dateEnd",dateEnd);
-        paramMap.put("agentCodes",agentCodes);
+        paramMap.put("dateStart", dateStart);
+        paramMap.put("dateEnd", dateEnd);
+        paramMap.put("agentCodes", agentCodes);
 
         return namedParameterJdbcTemplate.query("""
          select
@@ -39,18 +40,18 @@ class VivoPlantElectronicsnRepositoryImpl @Autowired constructor(val namedParame
           t.create_time>=:dateStart
           and t.create_time<:dateEnd
           and t.company_id in (:agentCodes)
-            """,paramMap,BeanPropertyRowMapper(VivoPlantElectronicsn::class.java));
+            """, paramMap, BeanPropertyRowMapper(VivoPlantElectronicsn::class.java));
     }
 
-    override fun findPlantElectronicsn(dateStart: String, dateEnd: String): MutableList<VivoPlantElectronicsn>{
-        var paramMap=Maps.newHashMap<String,Any>();
-        paramMap.put("dateStart",dateStart);
-        paramMap.put("dateEnd",dateEnd);
+    override fun findPlantElectronicsn(dateStart: String, dateEnd: String): MutableList<VivoPlantElectronicsn> {
+        var paramMap = Maps.newHashMap<String, Any>();
+        paramMap.put("dateStart", dateStart);
+        paramMap.put("dateEnd", dateEnd);
         return namedParameterJdbcTemplate.query("""
-      select *
-        from vr_plant_electronicsn_m13e00 t
-        where t.createtime>=:dateStart
-          and t.createtime<:dateEnd
-      """,paramMap,BeanPropertyRowMapper(VivoPlantElectronicsn::class.java));
+          select *
+            from vr_plant_electronicsn_m13e00 t
+            where t.createtime>=:dateStart
+              and t.createtime<:dateEnd
+          """, paramMap, BeanPropertyRowMapper(VivoPlantElectronicsn::class.java));
     }
 }
