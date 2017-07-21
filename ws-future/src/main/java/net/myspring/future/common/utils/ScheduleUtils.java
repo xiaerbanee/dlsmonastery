@@ -69,7 +69,7 @@ public class ScheduleUtils {
         String defaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).replace("\"", "");
         String goodStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.GOOD_STORE_ID.name()).replace("\"", "");
         String lxDefaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).replace("\"", "");
-        List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels = oppoClient.findSynImeList(date, agentCode);
+        List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels = oppoClient.getSendImeList(date, agentCode);
         List<ProductIme> productImes=Lists.newArrayList();
         List<ProductIme> productImeList=Lists.newArrayList();
         //判断绑定货品是否为空
@@ -145,7 +145,7 @@ public class ScheduleUtils {
         }
         //同步电子保卡
         List<ProductIme> localProductImeList=Lists.newArrayList();
-        List<OppoPlantProductItemelectronSel>  oppoPlantProductItemelectronSels=oppoClient.synProductItemelectronSel(date,agentCode);
+        List<OppoPlantProductItemelectronSel>  oppoPlantProductItemelectronSels=oppoClient.getItemelectronSelList(date,agentCode);
         if(CollectionUtil.isNotEmpty(oppoPlantProductItemelectronSels)){
             Map<String,OppoPlantProductItemelectronSel> productItemelectronSelMap=Maps.newHashMap();
             for(OppoPlantProductItemelectronSel oppoPlantProductItemelectronSel:oppoPlantProductItemelectronSels){
