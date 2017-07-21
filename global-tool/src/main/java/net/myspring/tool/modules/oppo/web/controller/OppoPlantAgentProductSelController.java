@@ -2,10 +2,12 @@ package net.myspring.tool.modules.oppo.web.controller;
 
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.tool.common.client.ProductClient;
 import net.myspring.tool.modules.oppo.dto.OppoPlantAgentProductSelDto;
 import net.myspring.tool.modules.oppo.service.OppoPlantAgentProductSelService;
-import net.myspring.tool.modules.oppo.web.form.OppoPlantAgentProductSqlForm;
+import net.myspring.tool.modules.oppo.web.form.OppoPlantAgentProductSelForm;
 import net.myspring.tool.modules.oppo.web.query.OppoPlantAgentProductSelQuery;
+import net.myspring.util.collection.CollectionUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,9 +21,9 @@ public class OppoPlantAgentProductSelController {
     @Autowired
     private OppoPlantAgentProductSelService oppoPlantAgentProductSelService;
 
-    @RequestMapping(value = "filter")
-    public List<OppoPlantAgentProductSelDto> filter(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
-        List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelService.findFilter(oppoPlantAgentProductSelQuery);
+    @RequestMapping(value = "findAll")
+    public List<OppoPlantAgentProductSelDto> findAll(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
+        List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelService.findAll(oppoPlantAgentProductSelQuery);
         return oppoPlantAgentProductSelDtoList;
     }
 
@@ -30,9 +32,9 @@ public class OppoPlantAgentProductSelController {
         return oppoPlantAgentProductSelQuery;
     }
 
-    @RequestMapping(value = "form")
-    public OppoPlantAgentProductSqlForm form(OppoPlantAgentProductSqlForm oppoPlantAgentProductSqlForm){
-        return oppoPlantAgentProductSelService.form(oppoPlantAgentProductSqlForm);
+    @RequestMapping(value = "getForm")
+    public OppoPlantAgentProductSelForm getForm(OppoPlantAgentProductSelForm oppoPlantAgentProductSelForm){
+        return oppoPlantAgentProductSelService.getForm(oppoPlantAgentProductSelForm);
     }
 
     @RequestMapping(value = "save")

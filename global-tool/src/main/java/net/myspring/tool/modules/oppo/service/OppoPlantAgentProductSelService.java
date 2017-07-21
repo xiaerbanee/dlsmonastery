@@ -7,21 +7,18 @@ import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.client.ProductClient;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
-import net.myspring.tool.common.client.CustomerClient;
 import net.myspring.tool.common.domain.ProductEntity;
 import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
 import net.myspring.tool.modules.oppo.dto.OppoPlantAgentProductSelDto;
 import net.myspring.tool.modules.oppo.repository.OppoPlantAgentProductSelRepository;
-import net.myspring.tool.modules.oppo.web.form.OppoPlantAgentProductSqlForm;
+import net.myspring.tool.modules.oppo.web.form.OppoPlantAgentProductSelForm;
 import net.myspring.tool.modules.oppo.web.query.OppoPlantAgentProductSelQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
-import org.apache.commons.math.stat.descriptive.summary.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.util.HtmlUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,26 +35,23 @@ public class OppoPlantAgentProductSelService {
     @Autowired
     private OppoPlantAgentProductSelRepository oppoPlantAgentProductSelRepository;
 
-    public List<OppoPlantAgentProductSelDto> findFilter(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
+    public List<OppoPlantAgentProductSelDto> findAll(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
         oppoPlantAgentProductSelQuery.setItemNumberList(StringUtils.getSplitList(oppoPlantAgentProductSelQuery.getItemNumberStr(), CharConstant.ENTER));
-        List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelRepository.findFilter(oppoPlantAgentProductSelQuery);
+        List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelRepository.findAll(oppoPlantAgentProductSelQuery);
         return oppoPlantAgentProductSelDtoList;
     }
 
-    public OppoPlantAgentProductSqlForm form(OppoPlantAgentProductSqlForm oppoPlantAgentProductSqlForm){
-        String isLx = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
-        if(StringUtils.isNotBlank(isLx)){
-            oppoPlantAgentProductSqlForm.setLx(true);
-        }else{
-            oppoPlantAgentProductSqlForm.setLx(false);
-        }
-        oppoPlantAgentProductSqlForm.getExtra().put("productNames",CollectionUtil.extractToList(productClient.findHasImeProduct(),"name"));
-        return oppoPlantAgentProductSqlForm;
+    public OppoPlantAgentProductSelForm getForm(OppoPlantAgentProductSelForm oppoPlantAgentProductSelForm){
+        String lxAgentCodes = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
+        oppoPlantAgentProductSelForm.setLx(StringUtils.isNotBlank(lxAgentCodes));
+        oppoPlantAgentProductSelForm.getExtra().put("productNames",CollectionUtil.extractToList(productClient.findHasImeProduct(),"name"));
+        return oppoPlantAgentProductSelForm;
     }
 
     @Transactional
     public void save(String data){
-        String lxAgentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
+        String lxAgentCodes = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
+        Boolean isLx = StringUtils.isNotBlank(lxAgentCodes);
         List<Map<String,String>> list = ObjectMapperUtils.readValue(data, ArrayList.class);
         List<ProductEntity> productEntityList=productClient.findHasImeProduct();
         Map<String,ProductEntity> productMap=Maps.newHashMap();
@@ -78,7 +72,7 @@ public class OppoPlantAgentProductSelService {
             }else{
                 agentProductSel.setProductId(defaultProduct.getId());
             }
-            if(StringUtils.isNotBlank(lxAgentCode)){
+            if(isLx){
                 if(lxProduct==null){
                     agentProductSel.setLxProductId(null);
                 }else{
