@@ -31,7 +31,7 @@ import java.util.Set;
  * Created by guolm on 2017/5/23.
  */
 @Service
-@Transactional(readOnly = false)
+@Transactional(readOnly = true)
 public class OppoService {
 
     @Autowired
@@ -43,7 +43,7 @@ public class OppoService {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-
+    @Transactional
     public String synOppo(String date) {
         if (StringUtils.isBlank(date)) {
             date = LocalDateUtils.formatLocalDate(LocalDate.now(), "yyyy-MM-dd");
