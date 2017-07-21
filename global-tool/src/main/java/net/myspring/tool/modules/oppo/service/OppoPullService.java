@@ -59,6 +59,27 @@ public class OppoPullService {
     }
 
 
+    @FactoryDataSource
+    public List<OppoPlantProductSel>  plantProductSel(String companyId, String password, String branchId) {
+        return oppoPlantProductSelRepository.plantProductSel(companyId, password, branchId);
+    }
+
+    @FactoryDataSource
+    public List<OppoPlantAgentProductSel> plantAgentProductSel(String companyId, String password, String branchId) {
+        return oppoPlantAgentProductSelRepository.plantAgentProductSel(companyId, password, branchId);
+    }
+
+    @FactoryDataSource
+    public List<OppoPlantSendImeiPpsel> plantSendImeiPPSel(String companyId, String password, String dateTime) {
+        return oppoPlantSendImeiPpselRepository.plantSendImeiPPSel(companyId, password, dateTime);
+    }
+
+    @FactoryDataSource
+    public List<OppoPlantProductItemelectronSel> plantProductItemelectronSel(String companyId, String password, String date) {
+        return  oppoPlantProductItemelectronSelRepository.plantProductItemelectronSel(companyId, password, date);
+    }
+
+
     @LocalDataSource
     @Transactional
     public void pullPlantProductSels(List<OppoPlantProductSel> oppoPlantProductSels) {
@@ -191,26 +212,6 @@ public class OppoPullService {
             }
             logger.info("电子保卡同步成功");
         }
-    }
-
-    @FactoryDataSource
-    public List<OppoPlantProductSel>  plantProductSel(String companyId, String password, String branchId) {
-        return oppoPlantProductSelRepository.plantProductSel(companyId, password, branchId);
-    }
-
-    @FactoryDataSource
-    public List<OppoPlantAgentProductSel> plantAgentProductSel(String companyId, String password, String branchId) {
-        return oppoPlantAgentProductSelRepository.plantAgentProductSel(companyId, password, branchId);
-    }
-
-    @FactoryDataSource
-    public List<OppoPlantSendImeiPpsel> plantSendImeiPPSel(String companyId, String password, String dateTime) {
-        return oppoPlantSendImeiPpselRepository.plantSendImeiPPSel(companyId, password, dateTime);
-    }
-
-    @FactoryDataSource
-    public List<OppoPlantProductItemelectronSel> plantProductItemelectronSel(String companyId, String password, String date) {
-        return  oppoPlantProductItemelectronSelRepository.plantProductItemelectronSel(companyId, password, date);
     }
 
     @LocalDataSource
