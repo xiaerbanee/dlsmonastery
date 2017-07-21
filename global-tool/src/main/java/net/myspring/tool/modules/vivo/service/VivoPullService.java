@@ -32,7 +32,7 @@ import java.util.*;
 @Service
 @LocalDataSource
 @Transactional(readOnly = false)
-public class VivoService {
+public class VivoPullService {
     @Autowired
     private VivoProductsRepository vivoProductsRepository;
     @Autowired
