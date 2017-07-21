@@ -42,7 +42,7 @@ public class OppoPushController {
     @RequestMapping(value = "synToLocal")
     public String synToLocal(String date) {
         String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
-        DbContextHolder.get().setCompanyName("JXOPPO");
+        DbContextHolder.get().setCompanyName(companyName);
         //上抛oppo门店数据,只上抛二代和渠道门店
         oppoPushSerivce.getOppoCustomers(date);
         //上抛运营商属性
