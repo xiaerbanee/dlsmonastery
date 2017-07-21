@@ -30,7 +30,7 @@ import java.util.Map;
 @RequestMapping(value = "factory/oppo")
 public class OppoPullController {
     @Autowired
-    private OppoPullService oppoService;
+    private OppoPullService oppoPullService;
     @Autowired
     private CompanyConfigClient companyConfigClient;
 
@@ -43,33 +43,33 @@ public class OppoPullController {
         //同步颜色编码
         String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
         DbContextHolder.get().setCompanyName(companyName);
-        List<OppoPlantProductSel> oppoPlantProductSels=oppoService.getOppoPlantProductSels(agentCodes[0],passWords[0]);
-        oppoService.pullPlantProductSels(oppoPlantProductSels);
+        List<OppoPlantProductSel> oppoPlantProductSels=oppoPullService.getOppoPlantProductSels(agentCodes[0],passWords[0]);
+        oppoPullService.pullPlantProductSels(oppoPlantProductSels);
         //同步物料编码
-        List<OppoPlantAgentProductSel> oppoPlantAgentProductSels=oppoService.getOppoPlantAgentProductSels(agentCodes[0],passWords[0]);
-        oppoService.pullPlantAgentProductSels(oppoPlantAgentProductSels);
+        List<OppoPlantAgentProductSel> oppoPlantAgentProductSels=oppoPullService.getOppoPlantAgentProductSels(agentCodes[0],passWords[0]);
+        oppoPullService.pullPlantAgentProductSels(oppoPlantAgentProductSels);
         //同步发货串码
         Map<String,List<OppoPlantSendImeiPpsel>> oppoPlantSendImeiPpselMap= Maps.newHashMap();
         for (int i = 0; i < agentCodes.length; i++) {
-            oppoPlantSendImeiPpselMap.put(agentCodes[i],oppoService.getOppoPlantSendImeiPpsels(agentCodes[i],passWords[i],date)) ;
+            oppoPlantSendImeiPpselMap.put(agentCodes[i],oppoPullService.getOppoPlantSendImeiPpsels(agentCodes[i],passWords[i],date)) ;
         }
-        oppoService.pullPlantSendImeiPpsels(oppoPlantSendImeiPpselMap);
+        oppoPullService.pullPlantSendImeiPpsels(oppoPlantSendImeiPpselMap);
         //同步电子保卡
-        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels=oppoService.getOppoPlantProductItemelectronSels(agentCodes[0],passWords[0],date);
-        oppoService.pullPlantProductItemelectronSels(oppoPlantProductItemelectronSels);
+        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels=oppoPullService.getOppoPlantProductItemelectronSels(agentCodes[0],passWords[0],date);
+        oppoPullService.pullPlantProductItemelectronSels(oppoPlantProductItemelectronSels);
         return "OPPO同步成功";
     }
 
 
     @RequestMapping(value = "synIme")
     public List<OppoPlantSendImeiPpselDto> synIme(String date, String agentCode) {
-        List<OppoPlantSendImeiPpselDto> oppoPlantSendImeiPpselDtos = oppoService.synIme(date,agentCode);
+        List<OppoPlantSendImeiPpselDto> oppoPlantSendImeiPpselDtos = oppoPullService.synIme(date,agentCode);
         return oppoPlantSendImeiPpselDtos;
     }
 
     @RequestMapping(value = "synProductItemelectronSel")
     public List<OppoPlantProductItemelectronSel> synProductItemelectronSel(String date,String agentCode) {
-        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoService.synProductItemelectronSel(date,agentCode);
+        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoPullService.synProductItemelectronSel(date,agentCode);
         return oppoPlantProductItemelectronSels;
     }
 
