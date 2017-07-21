@@ -151,7 +151,7 @@
       },getTableData(){
         let submitData = util.deleteExtra(this.formData);
         util.setQuery("oppoPlantAgentProductSelList",submitData);
-        axios.get('/api/global/tool/factory/oppo/oppoPlantAgentProductSel/filter', {params: submitData}).then((response) => {
+        axios.get('/api/global/tool/factory/oppo/oppoPlantAgentProductSel/findAll', {params: submitData}).then((response) => {
           this.settings.data = response.data;
           console.log(response.data.length);
           table.loadData(this.settings.data);
