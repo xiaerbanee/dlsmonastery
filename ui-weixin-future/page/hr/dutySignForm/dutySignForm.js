@@ -129,7 +129,7 @@ Page({
             that.setData({ "formProperty.images": that.data.formProperty.images });
           }
         }
-      }
+      } 
     });
   },
   formSubmit: function (e) {
@@ -145,9 +145,10 @@ Page({
       success: function (res) {
         if (res.data.success) {
           wx.navigateBack();
-        } else {
-          that.setData({ "response.error": res.data.message })
+        } else if (res.data.hasOwnProperty("extra")){
           that.setData({ "response.data": res.data.extra.errors, submitDisabled: false });
+        }else {
+          that.setData({ "response.error": res.data.message,submitDisabled: false})
         }
       }
     })
