@@ -53,10 +53,10 @@ public class VivoService {
 
     public String synVivo(String date) {
         if (StringUtils.isBlank(date)) {
-            date = LocalDateUtils.formatLocalDate(LocalDate.now(), "yyyy-MM-dd");
+            date = LocalDateUtils.formatLocalDate(LocalDate.now(),LocalDateUtils.FORMATTER);
         }
-        String agentCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"", "");
-        String lxAgentCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name()).replace("\"", "");
+        String agentCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace(CharConstant.DOUBLE_QUOTATION, "");
+        String lxAgentCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name()).replace(CharConstant.DOUBLE_QUOTATION, "");
         List<String> lxAgentCodes = Lists.newArrayList();
         if (StringUtils.isNotBlank(lxAgentCode)) {
             lxAgentCodes = StringUtils.getSplitList(lxAgentCode, CharConstant.COMMA);
