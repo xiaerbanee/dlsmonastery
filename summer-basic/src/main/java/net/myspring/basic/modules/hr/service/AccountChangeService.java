@@ -83,13 +83,8 @@ public class AccountChangeService {
     @Transactional
     public void audit(String id,boolean pass,String comment) {
         AccountChange accountChange = accountChangeRepository.findOne(id);
-        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(accountChange.getProcessInstanceId(), accountChange.getProcessTypeId(), comment, pass));
-        accountChange.setLocked(true);
-        accountChange.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
-        accountChange.setProcessStatus(activitiCompleteDto.getProcessStatus());
-        accountChange.setPositionId(activitiCompleteDto.getPositionId());
-        accountChangeRepository.save(accountChange);
-        if (AuditTypeEnum.PASS.getValue().equals(accountChange.getProcessStatus())) {
+        if (pass) {
+            accountChange.setProcessStatus("已通过");
             Account account = accountRepository.findOne(accountChange.getAccountId());
             Employee employee=employeeRepository.findOne(account.getEmployeeId());
             if (accountChange.getType().equals(AccountChangeTypeEnum.部门.toString())) {
@@ -108,7 +103,11 @@ public class AccountChangeService {
                 employee.setRegularDate(LocalDateUtils.parse(accountChange.getNewValue()));
             } else if (accountChange.getType().equals(AccountChangeTypeEnum.离职.toString())) {
                 employee.setLeaveDate(LocalDateUtils.parse(accountChange.getNewValue()));
-                employee.setStatus(EmployeeStatusEnum.离职.name());
+                if(StringUtils.isNotBlank(accountChange.getNewValue())){
+                    employee.setStatus(EmployeeStatusEnum.离职.name());
+                }else {
+                    employee.setStatus(EmployeeStatusEnum.在职.name());
+                }
             }else if(accountChange.getType().equals(AccountChangeTypeEnum.入职.name())){
                 employee.setEntryDate(LocalDateUtils.parse(accountChange.getNewValue()));
             }else if(accountChange.getType().equals(AccountChangeTypeEnum.底薪.name())){
@@ -116,7 +115,10 @@ public class AccountChangeService {
             }
             accountRepository.save(account);
             employeeRepository.save(employee);
+        }else {
+            accountChange.setProcessStatus("未通过");
         }
+        accountChangeRepository.save(accountChange);
     }
     @Transactional
     public AccountChange save(AccountChangeForm accountChangeForm) {
@@ -174,8 +176,8 @@ public class AccountChangeService {
             if (employee.getLeaveDate() != null) {
                 accountChange.setOldLabel(LocalDateUtils.format(employee.getLeaveDate()));
                 accountChange.setOldValue(LocalDateUtils.format(employee.getLeaveDate()));
-                accountChange.setNewLabel(accountChangeForm.getNewValue());
             }
+            accountChange.setNewLabel(accountChangeForm.getNewValue());
         }else if(accountChange.getType().equals(AccountChangeTypeEnum.入职.name())){
             if (employee.getEntryDate() != null) {
                 accountChange.setOldLabel(LocalDateUtils.format(employee.getEntryDate()));
@@ -183,15 +185,11 @@ public class AccountChangeService {
             }
             accountChange.setNewLabel(accountChangeForm.getNewValue());
         }
+        accountChange.setProcessStatus("省公司人事审核");
         accountChangeRepository.save(accountChange);
-        String businessKey = accountChange.getId();
-        ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("员工调整", businessKey,AccountChange.class.getSimpleName(),account.getLoginName()));
-        accountChange.setProcessStatus(activitiStartDto.getProcessStatus());
-        accountChange.setProcessFlowId(activitiStartDto.getProcessFlowId());
-        accountChange.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
-        accountChange.setPositionId(activitiStartDto.getPositionId());
-        accountChange.setProcessTypeId(activitiStartDto.getProcessTypeId());
-        accountChangeRepository.save(accountChange);
+        if(employee.getLeaveDate()==null){
+            audit(accountChange.getId(),true,null);
+        }
         return accountChange;
     }
 
