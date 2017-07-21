@@ -337,7 +337,7 @@ public class DepotDto extends DataDto<Depot> {
     }
 
     public String getFullName() {
-        if(CompanyNameEnum.IDvivo.name().equals(RequestUtils.getCompanyName())){
+        if(CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName())){
             return name;
         }else{
             return namePinyin + CharConstant.SPACE + name + CharConstant.SPACE + code;

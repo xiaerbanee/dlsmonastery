@@ -1,5 +1,5 @@
 package net.myspring.future.common.enums;
 
 public enum CompanyNameEnum {
-    JXOPPO,JXvivo,JXDJ,JXIMOO,WZOPPO,IDvivo
+    JXOPPO,JXvivo,JXDJ,JXIMOO,WZOPPO,IDVIVO
 }
