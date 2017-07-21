@@ -24,6 +24,7 @@ const officeRuleList  = r => require.ensure([], () => r(require('pages/basic/sys
 const officeRuleForm= r => require.ensure([], () => r(require('pages/basic/sys/officeRuleForm.vue')));
 const officeList = r => require.ensure([],() => r(require('pages/basic/sys/officeList.vue')));
 const officeForm = r => require.ensure([],() => r(require('pages/basic/sys/officeForm.vue')));
+const officeChangeForm = r => require.ensure([],() => r(require('pages/basic/sys/officeChangeForm.vue')));
 const roleList = r => require.ensure([],() => r(require('pages/basic/sys/roleList.vue')));
 const roleForm = r => require.ensure([],() => r(require('pages/basic/sys/roleForm.vue')));
 const roleAuthorityForm = r => require.ensure([],() => r(require('pages/basic/sys/roleAuthorityForm.vue')));
@@ -56,6 +57,7 @@ let routes = [
   {path:'/basic/sys/officeRuleForm',component:officeRuleForm,name:'officeRuleForm',meta: {menu:"officeRuleList",keepAlive:true}},
   {path:'/basic/sys/officeList',component:officeList,name:'officeList'},
   {path:'/basic/sys/officeForm',component:officeForm,name:'officeForm',meta: {menu:"officeList",keepAlive:true}},
+  {path:'/basic/sys/officeChangeForm',component:officeChangeForm,name:'officeChangeForm',meta: {menu:"officeList",keepAlive:true}},
   {path:'/basic/sys/roleList',component:roleList,name:'roleList'},
   {path:'/basic/sys/roleForm',component:roleForm,name:'roleForm',meta: {menu:"roleList",keepAlive:true}},
   {path:'/basic/sys/roleAuthorityForm',component:roleAuthorityForm,name:'roleAuthorityForm',meta: {menu:"roleList",keepAlive:true}},
