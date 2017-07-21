@@ -30,8 +30,6 @@ import java.util.Map;
 @RequestMapping(value = "factory/oppo")
 public class OppoPushController {
     @Autowired
-    private OppoPullService oppoService;
-    @Autowired
     private OppoPushSerivce oppoPushSerivce;
     @Autowired
     private CompanyConfigClient companyConfigClient;
