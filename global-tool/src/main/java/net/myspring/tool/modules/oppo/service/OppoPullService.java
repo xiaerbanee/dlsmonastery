@@ -25,10 +25,8 @@ import java.util.Map;
  */
 @Service
 @LocalDataSource
-@Transactional(readOnly = false)
-public class OppoService {
-    @Autowired
-    private CompanyConfigClient companyConfigClient;
+@Transactional(readOnly = true)
+public class OppoPullService {
     @Autowired
     private OppoPlantProductSelRepository oppoPlantProductSelRepository;
     @Autowired
@@ -62,7 +60,7 @@ public class OppoService {
 
 
     @LocalDataSource
-    @Transactional(readOnly = false)
+    @Transactional
     public void pullPlantProductSels(List<OppoPlantProductSel> oppoPlantProductSels) {
         logger.info("开始同步颜色编码");
         for(OppoPlantProductSel oppoPlantProductSel:oppoPlantProductSels){
@@ -96,7 +94,7 @@ public class OppoService {
 
     //获取物料编码
     @LocalDataSource
-    @Transactional(readOnly = false)
+    @Transactional
     public void pullPlantAgentProductSels(List<OppoPlantAgentProductSel> oppoPlantAgentProductSels) {
         logger.info("开始物料编码");
         List<OppoPlantAgentProductSel> list = Lists.newArrayList();
@@ -124,7 +122,7 @@ public class OppoService {
 
     //获取发货串码信息
     @LocalDataSource
-    @Transactional(readOnly = false)
+    @Transactional
     public void pullPlantSendImeiPpsels(Map<String,List<OppoPlantSendImeiPpsel>> oppoPlantSendImeiPpselMap) {
         logger.info("发货串码开始同步");
         List<String> imeiList=Lists.newArrayList();
@@ -166,7 +164,7 @@ public class OppoService {
 
     // 获取电子保卡信息
     @LocalDataSource
-    @Transactional(readOnly = false)
+    @Transactional
     public void pullPlantProductItemelectronSels(List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels) {
         logger.info("开始同步电子保卡");
         List<OppoPlantProductItemelectronSel> list = Lists.newArrayList();
