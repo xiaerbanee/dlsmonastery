@@ -1,15 +1,12 @@
 package net.myspring.tool.modules.oppo.service;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.CompanyConfigClient;
-import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
-import net.myspring.tool.common.enums.DataSourceTypeEnum;
 import net.myspring.tool.modules.oppo.domain.*;
+import net.myspring.tool.modules.oppo.dto.OppoPlantSendImeiPpselDto;
 import net.myspring.tool.modules.oppo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -219,7 +216,7 @@ public class OppoService {
     }
 
     @LocalDataSource
-    public  List<OppoPlantSendImeiPpselDto>  synIme(String date,String agentCode) {
+    public  List<OppoPlantSendImeiPpselDto>  synIme(String date, String agentCode) {
         String dateStart =date;
         String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);

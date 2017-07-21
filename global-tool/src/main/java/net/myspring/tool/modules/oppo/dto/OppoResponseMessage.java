@@ -1,4 +1,4 @@
-package net.myspring.tool.modules.oppo.domain;
+package net.myspring.tool.modules.oppo.dto;
 
 /**
  * Created by guolm on 2016/8/6.
