@@ -80,10 +80,26 @@ public class OppoPushSerivce {
     @LocalDataSource
     @Transactional
     public void pushToLocal(OppoPushDto oppoPushDto) {
+        //上抛oppo门店数据,只上抛二代和渠道门店
         getOppoCustomers(oppoPushDto.getDate());
+        //上抛运营商属性
         getOppoCustomerOperatortype(oppoPushDto.getDate());
+        //发货退货调拨数据上抛
         getOppoCustomerAllot(oppoPushDto.getOppoCustomerAllots(),oppoPushDto.getDate());
-
+        //上抛一代二代库存数据,不包括门店数据
+        getOppoCustomerStock(oppoPushDto.getOppoCustomerStocks(),oppoPushDto.getDate());
+        //获取渠道串码收货数据
+        getOppoCustomerImeiStock(oppoPushDto.getOppoCustomerImeiStocks(),oppoPushDto.getDate());
+        //获取店核销总数据
+        getOppoCustomerSales(oppoPushDto.getOppoCustomerSales(),oppoPushDto.getDate());
+        //门店销售明细数据
+        getOppoCustomerSaleImes(oppoPushDto.getOppoCustomerSaleImeis(),oppoPushDto.getDate());
+        //门店销售数据汇总
+        getOppoCustomerSaleCounts(oppoPushDto.getOppoCustomerSaleCounts(),oppoPushDto.getDate());
+        //门店售后退货汇总
+        getOppoCustomerAfterSaleImeis(oppoPushDto.getOppoCustomerAfterSaleImeis(),oppoPushDto.getDate());
+        //门店演示机汇总数据
+        getOppoCustomerDemoPhone(oppoPushDto.getOppoCustomerDemoPhones(),oppoPushDto.getDate());
     }
 
     //上抛oppo门店数据,只上抛二代和渠道门店

@@ -47,31 +47,17 @@ public class OppoPushController {
 
         OppoPushDto oppoPushDto = new OppoPushDto();
         oppoPushDto.setDate(date);
-        //发货退货调拨数据上抛
-        List<OppoCustomerAllot> oppoCustomerAllots=oppoPushSerivce.getFutureOppoCustomerAllot(date);
-        oppoPushDto.setOppoCustomerAllots(oppoCustomerAllots);
-        //上抛一代二代库存数据,不包括门店数据
-        List<OppoCustomerStock> oppoCustomerStocks=oppoPushSerivce.getFutureOppoCustomerStock(date);
-        oppoPushDto.setOppoCustomerStocks(oppoCustomerStocks);
-        //获取渠道串码收货数据
-        List<OppoCustomerImeiStock> oppoCustomerImeiStocks=oppoPushSerivce.getFutureOppoCustomerImeiStock(date);
-        oppoPushSerivce.getOppoCustomerImeiStock(oppoCustomerImeiStocks,date);
-        //获取店核销总数据
-        List<OppoCustomerSale> oppoCustomerSales=oppoPushSerivce.getFutureOppoCustomerSale(date);
-        oppoPushSerivce.getOppoCustomerSales(oppoCustomerSales,date);
-        //门店销售明细数据
-        List<OppoCustomerSaleImei> oppoCustomerSaleImeis=oppoPushSerivce.getFutureOppoCustomerSaleImeis(date);
-        oppoPushSerivce.getOppoCustomerSaleImes(oppoCustomerSaleImeis,date);
-        //门店销售数据汇总
-        List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoPushSerivce.getFutureOppoCustomerSaleCounts(date);
-        oppoPushSerivce.getOppoCustomerSaleCounts(oppoCustomerSaleCounts,date);
-        //门店售后退货汇总
-        List<OppoCustomerAfterSaleImei>  oppoCustomerAfterSaleImeis=oppoPushSerivce.getFutureOppoCustomerAfterSaleImeis(date);
-        oppoPushSerivce.getOppoCustomerAfterSaleImeis(oppoCustomerAfterSaleImeis,date);
-        //门店演示机汇总数据
-        List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoPushSerivce.getFutureOppoCustomerDemoPhone(date);
-        oppoPushSerivce.getOppoCustomerDemoPhone(oppoCustomerDemoPhones,date);
+        oppoPushDto.setOppoCustomerAllots(oppoPushSerivce.getFutureOppoCustomerAllot(date));
+        oppoPushDto.setOppoCustomerStocks(oppoPushSerivce.getFutureOppoCustomerStock(date));
+        oppoPushDto.setOppoCustomerImeiStocks(oppoPushSerivce.getFutureOppoCustomerImeiStock(date));
+        oppoPushDto.setOppoCustomerSales(oppoPushSerivce.getFutureOppoCustomerSale(date));
+        oppoPushDto.setOppoCustomerSaleImeis(oppoPushSerivce.getFutureOppoCustomerSaleImeis(date));
+        oppoPushDto.setOppoCustomerSaleCounts(oppoPushSerivce.getFutureOppoCustomerSaleCounts(date));
+        oppoPushDto.setOppoCustomerAfterSaleImeis(oppoPushSerivce.getFutureOppoCustomerAfterSaleImeis(date));
+        oppoPushDto.setOppoCustomerDemoPhones(oppoPushSerivce.getFutureOppoCustomerDemoPhone(date));
+
         oppoPushSerivce.pushToLocal(oppoPushDto);
+
         return "OPPO同步成功";
     }
 
