@@ -182,7 +182,7 @@ public class VivoPullService {
     }
 
     @LocalDataSource
-    public  List<VivoPlantSendimeiDto>  synIme(String date,String agentCode) {
+    public  List<VivoPlantSendimeiDto>  getSendImeList(String date,String agentCode) {
         String dateStart =date;
         String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);
@@ -192,7 +192,7 @@ public class VivoPullService {
 
 
     @LocalDataSource
-    public  List<VivoPlantElectronicsn>  synVivoPlantElectronicsnl(String date, String agentCode) {
+    public  List<VivoPlantElectronicsn>  getPlantElectronicsnList(String date, String agentCode) {
         String dateStart =date;
         String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);
