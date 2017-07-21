@@ -2,11 +2,9 @@ package net.myspring.tool.modules.vivo.repository;
 
 import com.google.common.collect.Maps
 import net.myspring.tool.common.repository.BaseRepository
-import net.myspring.tool.modules.oppo.domain.OppoPlantProductItemelectronSel
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
@@ -14,7 +12,7 @@ import java.time.LocalDate;
 
 
 interface VivoPlantElectronicsnRepository : BaseRepository<VivoPlantElectronicsn, String>, VivoPlantElectronicsnRepositoryCustom {
-    @Query("select  t from #{#entityName}  t where t.snImei in (?1)")
+    @Query("select  t.snImei from #{#entityName}  t where t.snImei in (?1)")
     fun findSnImeis(snImeis: MutableList<String>): MutableList<VivoPlantElectronicsn>
 }
 

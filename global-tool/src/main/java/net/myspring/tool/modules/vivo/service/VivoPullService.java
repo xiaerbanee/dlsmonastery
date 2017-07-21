@@ -79,8 +79,7 @@ public class VivoPullService {
             List<String> localItemNumbers = CollectionUtil.extractToList(vivoPlantProductsRepository.findItemNumbers(itemNumbers),"itemNumber");
             List<VivoPlantProducts> list= Lists.newArrayList();
             for(VivoPlantProducts plantProduct : vivoPlantProducts){
-                if(!localItemNumbers.contains(plantProduct.getItemNumber().trim())){
-                    plantProduct.setItemNumber(plantProduct.getItemNumber().trim());
+                if(!localItemNumbers.contains(plantProduct.getItemNumber())){
                     list.add(plantProduct);
                 }
             }
@@ -90,7 +89,7 @@ public class VivoPullService {
         }
     }
 
-    //查询发货串码
+    //同步发货串码
     @LocalDataSource
     @Transactional
     public void pullPlantSendimeis(List<VivoPlantSendimei> vivoPlantSendimeis){
@@ -131,7 +130,7 @@ public class VivoPullService {
     }
 
 
-    //查询电子保卡
+    //同步电子保卡
     @LocalDataSource
     @Transactional
     public void pullPlantElectronicsns(List<VivoPlantElectronicsn> vivoPlantElectronicsns) {
