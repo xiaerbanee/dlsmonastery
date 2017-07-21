@@ -12,9 +12,9 @@ import java.util.List;
 @FeignClient("global-tool")
 public interface VivoClient {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/factory/vivo/synIme")
-    List<VivoPlantSendimei> findSynImeList(@RequestParam(value = "date") String date, @RequestParam(value = "agentCode") String agentCode);
+    @RequestMapping(method = RequestMethod.GET, value = "/factory/vivo/getSendImeList")
+    List<VivoPlantSendimei> getSendImeList(@RequestParam(value = "date") String date, @RequestParam(value = "agentCode") String agentCode);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/factory/vivo/synPlantElectronicsn")
-    List<VivoPlantElectronicsn>  synProductItemelectronSel(@RequestParam(value = "date") String date, @RequestParam(value = "agentCode") String agentCode);
+    @RequestMapping(method = RequestMethod.GET, value = "/factory/vivo/getItemelectronSelList")
+    List<VivoPlantElectronicsn>  getItemelectronSelList(@RequestParam(value = "date") String date, @RequestParam(value = "agentCode") String agentCode);
 }
