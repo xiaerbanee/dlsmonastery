@@ -3,16 +3,16 @@ package net.myspring.tool.modules.vivo.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
 import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
-import net.myspring.tool.modules.vivo.domain.VivoProducts;
 import net.myspring.tool.modules.vivo.dto.FactoryOrderDto;
 import net.myspring.tool.modules.vivo.dto.VivoPlantSendimeiDto;
-import net.myspring.tool.modules.vivo.repository.*;
+import net.myspring.tool.modules.vivo.repository.VivoPlantElectronicsnRepository;
+import net.myspring.tool.modules.vivo.repository.VivoPlantProductsRepository;
+import net.myspring.tool.modules.vivo.repository.VivoPlantSendimeiRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -24,7 +24,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by guolm on 2017/5/12.
@@ -34,18 +35,12 @@ import java.util.*;
 @Transactional(readOnly = false)
 public class VivoPullService {
     @Autowired
-    private VivoProductsRepository vivoProductsRepository;
-    @Autowired
     private VivoPlantProductsRepository vivoPlantProductsRepository;
     @Autowired
     private VivoPlantSendimeiRepository vivoPlantSendimeiRepository;
     @Autowired
     private VivoPlantElectronicsnRepository vivoPlantElectronicsnRepository;
 
-    @FactoryDataSource
-    public List<VivoProducts> getProducts() {
-        return vivoProductsRepository.findProducts();
-    }
 
     @FactoryDataSource
     public List<VivoPlantProducts> getPlantProducts() {
@@ -70,27 +65,6 @@ public class VivoPullService {
         return vivoPlantElectronicsnRepository.findPlantElectronicsn(date,dateEnd);
     }
 
-    //获取颜色编码
-    @LocalDataSource
-    @Transactional(readOnly = false)
-    public void pullVivoProducts(List<VivoProducts> vivoProducts){
-        if(CollectionUtil.isNotEmpty(vivoProducts)) {
-            for(VivoProducts vivoProduct:vivoProducts){
-                vivoProduct.setColorId(vivoProduct.getColorId().trim());
-            }
-            List<String> colorIds = CollectionUtil.extractToList(vivoProducts, "colorId");
-            List<String> localColorIds = CollectionUtil.extractToList( vivoProductsRepository.findColorIds(colorIds),"colorId");
-            List<VivoProducts> list = Lists.newArrayList();
-            for(VivoProducts item : vivoProducts){
-                if( ! localColorIds.contains(item.getColorId())){
-                    list.add(item);
-                }
-            }
-            if(CollectionUtil.isNotEmpty(list)){
-                vivoProductsRepository.save(list);
-            }
-        }
-    }
     //获取物料编码
     @LocalDataSource
     @Transactional(readOnly = false)
