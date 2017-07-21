@@ -61,9 +61,9 @@ public class VivoPullController {
         return vivoPlantSendimeiList;
     }
 
-    @RequestMapping(value = "getPlantElectronicsnList")
-    public List<VivoPlantElectronicsn> getPlantElectronicsnList(String date, String agentCode) {
-        List<VivoPlantElectronicsn> vivoPlantElectronicsnList = vivoPullService.getPlantElectronicsnList(date,agentCode);
+    @RequestMapping(value = "getItemelectronSelList")
+    public List<VivoPlantElectronicsn> getItemelectronSelList(String date, String agentCode) {
+        List<VivoPlantElectronicsn> vivoPlantElectronicsnList = vivoPullService.getItemelectronSelList(date,agentCode);
         return vivoPlantElectronicsnList;
     }
 

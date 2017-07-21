@@ -192,7 +192,7 @@ public class VivoPullService {
 
 
     @LocalDataSource
-    public  List<VivoPlantElectronicsn>  getPlantElectronicsnList(String date, String agentCode) {
+    public  List<VivoPlantElectronicsn>  getItemelectronSelList(String date, String agentCode) {
         String dateStart =date;
         String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);
