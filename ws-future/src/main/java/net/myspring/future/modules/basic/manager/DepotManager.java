@@ -1,9 +1,13 @@
 package net.myspring.future.modules.basic.manager;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -14,6 +18,7 @@ import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -31,6 +36,8 @@ public class DepotManager {
     private DepotStoreRepository depotStoreRepository;
     @Autowired
     private CloudClient cloudClient;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     public Depot save(Depot depot) {
         if(StringUtils.isNotBlank(depot.getClientId())) {
@@ -52,7 +59,7 @@ public class DepotManager {
         return CollectionUtil.extractToList(depotList,"id");
     }
 
-    public boolean isAccess(String depotId, boolean checkChain,String accountId,String officeId) {
+    public boolean isAccess(String depotId, boolean checkChain,String accountId) {
         Depot depot=depotRepository.findOne(depotId);
         List<String> depotIds = filterDepotIds(accountId);
         List<String> officeIds= RequestUtils.getOfficeIdList();
@@ -74,18 +81,31 @@ public class DepotManager {
         return false;
     }
 
-    public List<String> getChainIds(String accountId) {
+    private List<String> getChainIds(String accountId) {
         DepotQuery depotQuery=new DepotQuery();
         depotQuery.setDepotIdList(filterDepotIds(accountId));
-        List<String> chainIds = depotRepository.findChainIds(depotQuery);
-        return chainIds;
+        return depotRepository.findChainIds(depotQuery);
     }
 
+    private List<String> getMergeStoreIds(){
+        CompanyConfigCacheDto companyConfigCacheDto =  CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.MERGE_STORE_IDS.name());
+        if(companyConfigCacheDto == null || StringUtils.isBlank(companyConfigCacheDto.getValue())){
+            return null;
+        }
+        return StringUtils.getSplitList(companyConfigCacheDto.getValue(), ",");
+    }
 
     public Map<String, Integer> getCloudQtyMap(String depotId){
-        DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(depotId);
-        if(depotStore == null){
-            return new HashMap<>();
+        //针对昌东仓库做特殊处理
+        String queryDepotId = depotId;
+        List<String> mergeStoreIds = getMergeStoreIds();
+        if(CollectionUtil.isNotEmpty(mergeStoreIds) && mergeStoreIds.get(1).equals(depotId)){
+            queryDepotId = mergeStoreIds.get(0);
+        }
+
+        DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(queryDepotId);
+        if(depotStore == null || StringUtils.isBlank(depotStore.getOutId())){
+            throw new ServiceException("depotId没有对应的金蝶仓库");
         }
         List<StkInventory> inventoryList = cloudClient.findInventoriesByDepotStoreOutIds(Collections.singletonList(depotStore.getOutId()));
         Map<String, Integer> result = new HashMap<>();
@@ -94,7 +114,6 @@ public class DepotManager {
                 result.put(stkInventory.getFMaterialId(),  stkInventory.getFBaseQty());
             }
         }
-
         return result;
     }
 
@@ -111,7 +130,6 @@ public class DepotManager {
         }
         return customerReceiveDtoMap;
     }
-
 
     public CustomerReceiveDto getLatestCustomerReceive(String clientOutId) {
         CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();

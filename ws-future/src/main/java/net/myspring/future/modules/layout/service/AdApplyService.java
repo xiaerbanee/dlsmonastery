@@ -3,7 +3,6 @@ package net.myspring.future.modules.layout.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
-import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
@@ -13,14 +12,11 @@ import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.manager.SalOutStockManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.web.form.DepotAdApplyForm;
 import net.myspring.future.modules.basic.web.form.ProductAdForm;
@@ -73,8 +69,6 @@ public class AdApplyService {
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
-    private DepotStoreRepository depotStoreRepository;
-    @Autowired
     private ExpressOrderRepository expressOrderRepository;
     @Autowired
     private CacheUtils cacheUtils;
@@ -82,8 +76,6 @@ public class AdApplyService {
     private RedisTemplate redisTemplate;
     @Autowired
     private DepotManager depotManager;
-    @Autowired
-    private CloudClient cloudClient;
     @Autowired
     private SalOutStockManager salOutStockManager;
     @Autowired
@@ -139,17 +131,10 @@ public class AdApplyService {
         cacheUtils.initCacheInput(adApplyDtos);
         //同步财务库存
         if(adApplyDtos.size()>0){
-            List<String> storeId = Lists.newArrayList();
-            DepotStore depotStore = depotStoreRepository.findOne(adApplyBillTypeChangeForm.getStoreId());
-            if(StringUtils.isBlank(depotStore.getOutId())){
-                throw new ServiceException("在金蝶中不存在该仓库");
-            }
-            storeId.add(depotStore.getOutId());
-            List<StkInventory> stkInventories = cloudClient.findInventoriesByDepotStoreOutIds(storeId);
-            Map<String,StkInventory> stringStkInventoryMap = CollectionUtil.extractToMap(stkInventories,"FMaterialId");
+            Map<String, Integer> inventoryMap = depotManager.getCloudQtyMap(adApplyBillTypeChangeForm.getStoreId());
             for(AdApplyDto adApplyDto:adApplyDtos){
-                if(stringStkInventoryMap.get(adApplyDto.getProductOutId())!=null){
-                    adApplyDto.setStoreQty(stringStkInventoryMap.get(adApplyDto.getProductOutId()).getFBaseQty());
+                if(inventoryMap.get(adApplyDto.getProductOutId())!=null){
+                    adApplyDto.setStoreQty(inventoryMap.get(adApplyDto.getProductOutId()));
                 }else{
                     adApplyDto.setStoreQty(0);
                 }
@@ -251,13 +236,9 @@ public class AdApplyService {
         //生成AdGoodsOrder
         for(AdApply adApply:adApplyList){
             Integer nowBilledQty = adApplyDetailFormMap.get(adApply.getId()).getNowBilledQty();
-            Integer storeQty = adApplyDetailFormMap.get(adApply.getId()).getStoreQty();
             if(nowBilledQty != null && nowBilledQty < 0){
                 throw new ServiceException("每个货品订货数量不可以小于0");
             }
-            /*if(nowBilledQty > storeQty){
-                throw new ServiceException("每个货品订货数量不可以大于库存数量");
-            }*/
             if(!adGoodsOrderMap.containsKey(adApply.getShopId())){
                 AdGoodsOrder adGoodsOrder = new AdGoodsOrder();
                 adGoodsOrder.setBillType(adApplyBillForm.getBillType());
@@ -381,7 +362,7 @@ public class AdApplyService {
             productShopLeftQtyMap.get(adApplyDto.getProductId()).put(adApplyDto.getShopName(),leftQty+adApplyDto.getLeftQty());
         }
         for(String productId:productShopLeftQtyMap.keySet()){
-            Long totalQty = 0l;
+            Long totalQty = 0L;
             for(String shopName:productShopLeftQtyMap.get(productId).keySet()){
                 totalQty += productShopLeftQtyMap.get(productId).get(shopName);
             }
