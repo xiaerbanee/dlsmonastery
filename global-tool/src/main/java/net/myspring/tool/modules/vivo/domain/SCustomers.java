@@ -1,9 +1,7 @@
 package net.myspring.tool.modules.vivo.domain;
 
-import java.time.LocalDate;
-
 //代理商表
-public class SCustomersM13e00 {
+public class SCustomers {
 
     private String customerId;
     private String customerName;

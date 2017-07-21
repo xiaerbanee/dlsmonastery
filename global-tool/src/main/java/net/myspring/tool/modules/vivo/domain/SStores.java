@@ -2,7 +2,7 @@ package net.myspring.tool.modules.vivo.domain;
 
 import net.myspring.util.cahe.annotation.CacheInput;
 
-public class SStoresM13e00 {
+public class SStores {
     private String storeID;
     private String storeName;
     private String remark;

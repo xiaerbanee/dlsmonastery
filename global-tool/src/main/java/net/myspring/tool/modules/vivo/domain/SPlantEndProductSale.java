@@ -3,7 +3,7 @@ package net.myspring.tool.modules.vivo.domain;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class SPlantEndProductSaleM13e00 {
+public class SPlantEndProductSale {
     private String companyID;
     private String endBillID;
     private String productID;

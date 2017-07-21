@@ -1,7 +1,7 @@
 package net.myspring.tool.modules.vivo.repository
 
 import com.google.common.collect.Maps
-import net.myspring.tool.modules.vivo.domain.SCustomersM13e00
+import net.myspring.tool.modules.vivo.domain.SCustomers
 import net.myspring.tool.modules.vivo.dto.SCustomerDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 import java.time.LocalDate
 
 @Component
-class SCustomersM13e00Repository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
+class SCustomersRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
     fun deleteAll():Int{
         val map = Maps.newHashMap<String,Any>()
@@ -153,7 +153,7 @@ class SCustomersM13e00Repository @Autowired constructor(val namedParameterJdbcTe
     }
 
 
-    fun batchSave(sCustomersM13e00List: MutableList<SCustomersM13e00>): IntArray? {
+    fun batchSave(sCustomersM13e00List: MutableList<SCustomers>): IntArray? {
         val sb = StringBuffer()
         sb.append("""
            insert into S_Customers_M13E00
@@ -182,7 +182,7 @@ class SCustomersM13e00Repository @Autowired constructor(val namedParameterJdbcTe
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(), SqlParameterSourceUtils.createBatch(sCustomersM13e00List.toTypedArray()))
     }
 
-    fun batchIDvivoSave(sCustomersM13e00List: MutableList<SCustomersM13e00>,agentCode:String): IntArray? {
+    fun batchIDvivoSave(sCustomersM13e00List: MutableList<SCustomers>, agentCode:String): IntArray? {
         val sb = StringBuffer()
         sb.append("insert into ")
         sb.append(" S_Customers_"+agentCode)

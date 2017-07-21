@@ -1,6 +1,6 @@
 package net.myspring.tool.modules.vivo.domain;
 
-public class SZonesM13e00 {
+public class SZones {
 
     private String zoneId;
     private String zoneName;

@@ -1,15 +1,14 @@
 package net.myspring.tool.modules.vivo.repository
 
 import com.google.common.collect.Maps
-import net.myspring.tool.modules.vivo.domain.SPlantStockSupplyM13e00
+import net.myspring.tool.modules.vivo.domain.SPlantStockSupply
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils
 import org.springframework.stereotype.Component
-import java.time.LocalDate
 
 @Component
-class SPlantStockSupplyM13e00Repository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
+class SPlantStockSupplyRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
     fun deleteByAccountDate(dateStart: String, dateEnd: String):Int {
         val map = Maps.newHashMap<String,Any>()
@@ -37,7 +36,7 @@ class SPlantStockSupplyM13e00Repository @Autowired constructor(val namedParamete
     }
 
 
-    fun batchSave(sPlantStockSupplyM13e00List: MutableList<SPlantStockSupplyM13e00>):IntArray?{
+    fun batchSave(sPlantStockSupplyM13e00List: MutableList<SPlantStockSupply>):IntArray?{
         val sb = StringBuilder()
         sb.append("""
             insert into s_PlantStockSupply_m13e00(CompanyID,SupplyID,ProductID,CreatedTime,sumstock,useablestock,bad,AccountDate)
@@ -46,7 +45,7 @@ class SPlantStockSupplyM13e00Repository @Autowired constructor(val namedParamete
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(), SqlParameterSourceUtils.createBatch(sPlantStockSupplyM13e00List.toTypedArray()))
     }
 
-    fun batchIDvivoSave(sPlantStockSupplyM13e00List: MutableList<SPlantStockSupplyM13e00>,agentCode: String):IntArray?{
+    fun batchIDvivoSave(sPlantStockSupplyM13e00List: MutableList<SPlantStockSupply>, agentCode: String):IntArray?{
         val sb = StringBuilder()
         sb.append(" insert into s_PlantStockSupply_")
         sb.append(agentCode+" ")
