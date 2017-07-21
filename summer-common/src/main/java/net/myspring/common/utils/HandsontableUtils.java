@@ -1,4 +1,4 @@
-package net.myspring.cloud.common.utils;
+package net.myspring.common.utils;
 
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.collection.CollectionUtil;

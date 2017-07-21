@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.service;
 
+import com.alibaba.druid.sql.visitor.functions.Char;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
@@ -24,6 +25,7 @@ import net.myspring.common.constant.TreeConstant;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.common.utils.HandsontableUtils;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
@@ -36,10 +38,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.sql.Struct;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -353,7 +353,7 @@ public class OfficeService {
 
     public List<OfficeDto> change(String id){
         Office office = officeRepository.findOne(id);
-        String parentIds = office.getParentIds()+office.getId()+",";
+        String parentIds = office.getParentIds()+office.getId()+CharConstant.COMMA;
         List<Office> officeList = officeRepository.findByParentIdsLike(parentIds);
         List<OfficeDto> officeDtoList = BeanUtil.map(officeList,OfficeDto.class);
         return officeDtoList;
@@ -365,5 +365,40 @@ public class OfficeService {
             return officeList;
         }
         return null;
+    }
+
+    public void saveChange(String json){
+        List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
+        List<String> parentNameList = Lists.newArrayList();
+        for(List<Object> row: data){
+            String parentName= HandsontableUtils.getValue(row,5);
+            parentNameList.add(parentName);
+        }
+        Map<String,Office> officeNameMap = officeRepository.findByNameIn(parentNameList).stream().collect(Collectors.toMap(Office::getName,Office->Office));
+        for(List<Object> row: data){
+            String id = HandsontableUtils.getValue(row,0);
+            String parentName= HandsontableUtils.getValue(row,5);
+            String name = HandsontableUtils.getValue(row,6);
+            String taskPointStr = HandsontableUtils.getValue(row,7);
+            BigDecimal taskPoint = new BigDecimal(taskPointStr);
+
+            Office office = officeRepository.findOne(id);
+            Office parent = officeNameMap.get(parentName);
+            String newParentIds =parent.getParentIds()+parent.getId()+ CharConstant.COMMA;
+            String oldParentIds = office.getParentIds();
+            office.setName(name);
+            office.setTaskPoint(taskPoint);
+            office.setParentId(parent.getId());
+            office.setParentIds(newParentIds);
+            officeRepository.saveAndFlush(office);
+
+            List<Office> list = officeRepository.findByParentIdsLike("%," + office.getId() + ",%");
+            if(CollectionUtil.isNotEmpty(list)){
+                for (Office e : list) {
+                    e.setParentIds(e.getParentIds().replace(oldParentIds, office.getParentIds()));
+                }
+            }
+            officeRepository.save(list);
+        }
     }
 }
