@@ -50,8 +50,6 @@ public class OppoPlantAgentProductSelService {
 
     @Transactional
     public void save(String data){
-        String lxAgentCodes = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
-        Boolean isLx = StringUtils.isNotBlank(lxAgentCodes);
         List<Map<String,String>> list = ObjectMapperUtils.readValue(data, ArrayList.class);
         List<ProductEntity> productEntityList=productClient.findHasImeProduct();
         Map<String,ProductEntity> productMap=Maps.newHashMap();
@@ -67,18 +65,8 @@ public class OppoPlantAgentProductSelService {
             OppoPlantAgentProductSel agentProductSel=oppoPlantAgentProductSelMap.get(map.get("id"));
             ProductEntity defaultProduct=productMap.get(map.get("productName"));
             ProductEntity lxProduct=productMap.get(map.get("lxProductName"));
-            if(defaultProduct==null){
-                agentProductSel.setProductId(null);
-            }else{
-                agentProductSel.setProductId(defaultProduct.getId());
-            }
-            if(isLx){
-                if(lxProduct==null){
-                    agentProductSel.setLxProductId(null);
-                }else{
-                    agentProductSel.setLxProductId(lxProduct.getId());
-                }
-            }
+            agentProductSel.setProductId(defaultProduct==null?null:defaultProduct.getId());
+            agentProductSel.setLxProductId(lxProduct==null?null:lxProduct.getId());
             oppoPlantAgentProductSelRepository.save(agentProductSel);
         }
     }
