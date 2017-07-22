@@ -2,7 +2,7 @@ package net.myspring.tool.modules.oppo.web.controller;
 
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.tool.common.client.ProductClient;
+import net.myspring.tool.common.domain.ProductEntity;
 import net.myspring.tool.modules.oppo.dto.OppoPlantAgentProductSelDto;
 import net.myspring.tool.modules.oppo.service.OppoPlantAgentProductSelService;
 import net.myspring.tool.modules.oppo.web.form.OppoPlantAgentProductSelForm;
@@ -34,13 +34,16 @@ public class OppoPlantAgentProductSelController {
 
     @RequestMapping(value = "getForm")
     public OppoPlantAgentProductSelForm getForm(OppoPlantAgentProductSelForm oppoPlantAgentProductSelForm){
-        return oppoPlantAgentProductSelService.getForm(oppoPlantAgentProductSelForm);
+        oppoPlantAgentProductSelForm = oppoPlantAgentProductSelService.getForm(oppoPlantAgentProductSelForm);
+        oppoPlantAgentProductSelForm.getExtra().put("productNames", CollectionUtil.extractToList(oppoPlantAgentProductSelService.findHasImeProduct(),"name"));
+        return oppoPlantAgentProductSelForm;
     }
 
     @RequestMapping(value = "save")
     public RestResponse save(String data){
         if(StringUtils.isNotBlank(data)){
-            oppoPlantAgentProductSelService.save(data);
+            List<ProductEntity> productEntityList = oppoPlantAgentProductSelService.findHasImeProduct();
+            oppoPlantAgentProductSelService.save(productEntityList,data);
         }
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }

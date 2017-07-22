@@ -2,6 +2,7 @@ package net.myspring.tool.modules.oppo.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.*;
@@ -21,6 +22,7 @@ import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,15 +38,11 @@ import java.util.*;
 public class OppoPushSerivce {
 
     @Autowired
-    private CustomerClient customerClient;
-    @Autowired
     private DistrictClient districtClient;
     @Autowired
     private OfficeClient officeClient;
     @Autowired
     private EmployeeClient employeeClient;
-    @Autowired
-    private CompanyConfigClient companyConfigClient;
     @Autowired
     private OppoPlantAgentProductSelRepository oppoPlantAgentProductSelRepository;
     @Autowired
@@ -83,6 +81,8 @@ public class OppoPushSerivce {
     private FutureCustomerRepository futureCustomerRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
@@ -126,7 +126,7 @@ public class OppoPushSerivce {
     @LocalDataSource
     @Transactional
     public List<OppoCustomer> pushOppoCustomers(List<CustomerDto> customerDtoList,String date) {
-        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","").split(CharConstant.COMMA)[0];
+        String agentCode= CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
         List<OppoCustomer> oppoCustomers = Lists.newArrayList();
         initAreaDepotMap();
         Map<String, OppoCustomer> oppoCustomersMap = Maps.newHashMap();
@@ -376,8 +376,8 @@ public class OppoPushSerivce {
         for(EmployeeEntity employeeEntity:employeeList){
             employeeMap.put(employeeEntity.getId(),employeeEntity);
         }
-        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","").split(CharConstant.COMMA)[0];
-        String agentName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
+        String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
+        String agentName=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.COMPANY_NAME.name()).getValue();
         for(OppoCustomerSaleImei oppoCustomerSaleIme:oppoCustomerSaleImes){
             if(StringUtils.isNotBlank(oppoCustomerSaleIme.getSalepromoter())&&employeeMap.get(oppoCustomerSaleIme.getSalepromoter())!=null){
                 oppoCustomerSaleIme.setSalepromoter(employeeMap.get(oppoCustomerSaleIme.getSalepromoter()).getName());
@@ -417,7 +417,7 @@ public class OppoPushSerivce {
     @Transactional
     public List<OppoCustomerSaleCount> pushOppoCustomerSaleCounts(List<OppoCustomerSaleCount> oppoCustomerSaleCounts,String date) {
         initAreaDepotMap();
-        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","").split(CharConstant.COMMA)[0];
+        String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
         Map<String, String> productColorMap = getProductColorMap();
         for(OppoCustomerSaleCount oppoCustomerSaleCount:oppoCustomerSaleCounts) {
             String colorId=productColorMap.get(oppoCustomerSaleCount.getProductCode());
@@ -477,7 +477,7 @@ public class OppoPushSerivce {
 
 
     private void initAreaDepotMap(){
-        List<CustomerDto> customerDtosList=customerClient.findCustomerDtoList();
+        List<CustomerDto> customerDtosList=futureCustomerRepository.findOppoCustomers();
         for(CustomerDto customerDto:customerDtosList){
             if(!customerDtoMap.containsKey(customerDto.getDepotId())){
                 customerDtoMap.put(customerDto.getDepotId(),customerDto);
