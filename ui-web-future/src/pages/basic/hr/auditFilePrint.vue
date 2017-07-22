@@ -84,7 +84,7 @@
   body {
     margin: 0;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 18px;
+    font-size: 24px;
     font-weight:500;
     line-height: 26px;
     color: #333;

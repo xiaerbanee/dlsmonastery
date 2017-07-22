@@ -19,7 +19,7 @@ interface VivoPlantSendimeiRepository : BaseRepository<VivoPlantSendimei, String
 }
 interface VivoPlantSendimeiRepositoryCustom{
     fun findSynList(@Param("dateStart") dateStart: String, @Param("dateEnd") dateEnd: String, @Param("agentCodes") agentCodes: MutableList<String>): MutableList<VivoPlantSendimeiDto>
-    fun findPlantSendimei(dateStart: String, dateEnd: String, agentCodes: MutableList<String>): MutableList<VivoPlantSendimei>
+    fun findPlantSendimei(dateStart: String, dateEnd: String): MutableList<VivoPlantSendimei>
     fun findImeis( imeiList: MutableList<String>): MutableList<VivoPlantSendimei>
     fun batchSave(pullPlantSendimeis:MutableList<VivoPlantSendimei>): IntArray?
 }
@@ -47,12 +47,10 @@ class VivoPlantSendimeiRepositoryImpl @Autowired constructor(val namedParameterJ
         """,paramMap,BeanPropertyRowMapper(VivoPlantSendimeiDto::class.java));
     }
 
-    override fun findPlantSendimei(dateStart: String, dateEnd: String, agentCodes: MutableList<String>): MutableList<VivoPlantSendimei>{
+    override fun findPlantSendimei(dateStart: String, dateEnd: String): MutableList<VivoPlantSendimei>{
         var paramMap=Maps.newHashMap<String,Any>();
         paramMap.put("dateStart",dateStart);
         paramMap.put("dateEnd",dateEnd);
-        paramMap.put("agentCodes",agentCodes);
-        System.err.println("dateStart=="+dateStart+"\tdateEnd=="+dateEnd+"\tagentCodes=="+agentCodes.toString());
         return namedParameterJdbcTemplate.query("""
       select *  from vr_plant_sendimei_m13e00 t1
         where t1.createdtime >= :dateStart
