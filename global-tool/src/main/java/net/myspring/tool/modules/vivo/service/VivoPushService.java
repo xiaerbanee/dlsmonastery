@@ -10,7 +10,7 @@ import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.FutureDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
-import net.myspring.tool.common.domain.OfficeEntity;
+import net.myspring.tool.common.dto.OfficeDto;
 import net.myspring.tool.common.utils.CacheUtils;
 import net.myspring.tool.modules.vivo.domain.*;
 import net.myspring.tool.modules.vivo.dto.SCustomerDto;
@@ -78,23 +78,23 @@ public class VivoPushService {
     public  List<SZones> pushVivoZonesData(){
         logger.info(DbContextHolder.get().getCompanyName()+DbContextHolder.get().getDataSourceType());
         String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
-        List<OfficeEntity> officeEntityList = officeClient.findAll();
+        List<OfficeDto> officeDtoList = officeClient.findAll();
         List<SZones> sZonesList = Lists.newArrayList();
-        for(OfficeEntity officeEntity:officeEntityList){
+        for(OfficeDto officeDto:officeDtoList){
             SZones sZones = new SZones();
-            sZones.setZoneId(getZoneId(mainCode,officeEntity.getId()));
-            sZones.setZoneName(officeEntity.getName());
+            sZones.setZoneId(getZoneId(mainCode,officeDto.getId()));
+            sZones.setZoneName(officeDto.getName());
             sZones.setShortcut(mainCode);
-            String[] parentIds = officeEntity.getParentIds().split(CharConstant.COMMA);
+            String[] parentIds = officeDto.getParentIds().split(CharConstant.COMMA);
             sZones.setZoneDepth(parentIds.length);
             StringBuilder zonePath = new StringBuilder(CharConstant.VERTICAL_LINE);
             for(String parentId:parentIds){
                 zonePath.append(getZoneId(mainCode,parentId)).append(CharConstant.VERTICAL_LINE);
             }
-            zonePath.append(getZoneId(mainCode,officeEntity.getId())).append(CharConstant.VERTICAL_LINE);
+            zonePath.append(getZoneId(mainCode,officeDto.getId())).append(CharConstant.VERTICAL_LINE);
             sZones.setZonePath(zonePath.toString());
-            sZones.setFatherId(getZoneId(mainCode,officeEntity.getParentId()));
-            sZones.setSubCount(officeEntity.getChildCount());
+            sZones.setFatherId(getZoneId(mainCode,officeDto.getParentId()));
+            sZones.setSubCount(officeDto.getChildCount());
             sZones.setZoneTypes(CharConstant.EMPTY);
             sZonesList.add(sZones);
         }
