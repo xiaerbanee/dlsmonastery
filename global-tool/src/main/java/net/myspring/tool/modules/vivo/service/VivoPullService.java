@@ -70,16 +70,17 @@ public class VivoPullService {
     //获取物料编码
     @LocalDataSource
     @Transactional
-    public void pullPlantProducts( List<VivoPlantProducts> vivoPlantProducts){
+    public void pullPlantProducts( List<VivoPlantProducts> vivoPlantProducts,String companyName){
         if(CollectionUtil.isNotEmpty(vivoPlantProducts)) {
             for(VivoPlantProducts plantProduct:vivoPlantProducts){
                 plantProduct.setItemNumber(plantProduct.getItemNumber().trim());
             }
             List<String> itemNumbers =CollectionUtil.extractToList(vivoPlantProducts, "itemNumber");
-            List<String> localItemNumbers = CollectionUtil.extractToList(vivoPlantProductsRepository.findItemNumbers(itemNumbers),"itemNumber");
+            List<String> localItemNumbers = CollectionUtil.extractToList(vivoPlantProductsRepository.findItemNumbers(itemNumbers,companyName),"itemNumber");
             List<VivoPlantProducts> list= Lists.newArrayList();
             for(VivoPlantProducts plantProduct : vivoPlantProducts){
                 if(!localItemNumbers.contains(plantProduct.getItemNumber())){
+                    plantProduct.setCompanyName(companyName);
                     list.add(plantProduct);
                 }
             }
