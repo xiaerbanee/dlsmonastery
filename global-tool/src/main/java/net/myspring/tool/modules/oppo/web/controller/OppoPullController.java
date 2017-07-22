@@ -5,6 +5,7 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
+import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.modules.oppo.dto.OppoPlantSendImeiPpselDto;
 import net.myspring.tool.modules.oppo.dto.OppoResponseMessage;
@@ -13,6 +14,7 @@ import net.myspring.tool.modules.oppo.service.OppoPushSerivce;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.MD5Utils;
 import net.myspring.util.time.LocalDateUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,9 @@ public class OppoPullController {
 
     @RequestMapping(value = "pullFactoryData")
     public String pullFactoryData(String companyName,String date) {
-        DbContextHolder.get().setCompanyName(companyName);
+        if(StringUtils.isBlank(RequestUtils.getCompanyName())) {
+            DbContextHolder.get().setCompanyName(companyName);
+        }
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String[] agentCodes=agentCode.split(CharConstant.COMMA);
         String passWord=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_PASSWORDS.name()).replace("\"","");

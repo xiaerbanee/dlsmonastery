@@ -55,7 +55,6 @@ class VivoPlantSendimeiRepositoryImpl @Autowired constructor(val namedParameterJ
       select *  from vr_plant_sendimei_m13e00 t1
         where t1.createdtime >= :dateStart
         and t1.createdtime < :dateEnd
-        and t1.companyid in (:agentCodes)
       """,paramMap,BeanPropertyRowMapper(VivoPlantSendimei::class.java));
     }
 
