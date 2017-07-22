@@ -40,28 +40,24 @@ interface  PermissionRepository: BaseRepository<Permission, String>,PermissionRe
             RolePermission t2
         WHERE
             t1.id = t2.permissionId
-        AND t2.roleId = ?1
+        AND t2.roleId in ?1
         AND t1.enabled = 1
         AND t2.enabled = 1
      """)
-    fun findByRoleId(roleId: String): MutableList<Permission>
+    fun findByRoleIdList(roleIdList: List<String>): MutableList<Permission>
 
     @Query("""
         SELECT t1
         FROM
             #{#entityName} t1,
-            RolePermission t2,
             AccountPermission t3
         WHERE
-            t1.id = t2.permissionId
-        and t2.permissionId=t3.permissionId
-        AND t2.roleId = ?1
-        and t3.accountId=?2
+            t3.permissionId=t1.id
+        and t3.accountId=?1
         AND t1.enabled = 1
         AND t3.enabled = 1
-        AND t2.enabled = 1
      """)
-    fun findByRoleAndAccount(roleId: String, accountId: String): MutableList<Permission>
+    fun findByAccountId(accountId: String): MutableList<Permission>
 
     @Query("""
         SELECT t

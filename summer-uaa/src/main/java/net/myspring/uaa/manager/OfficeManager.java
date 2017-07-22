@@ -21,21 +21,10 @@ public class OfficeManager {
     @Autowired
     private OfficeBusinessRepository officeBusinessRepository;
 
-    public List<String> getOfficeIdList(String officeId) {
+    public List<String> getOfficeIdList(List<String> officeIds) {
         List<String> officeIdList = Lists.newLinkedList();
-        OfficeDto officeDto = officeRepository.findOne(officeId);
-        officeIdList.add(officeDto.getId());
-        if (OfficeTypeEnum.业务部门.name().equalsIgnoreCase(officeDto.getType())) {
-            officeIdList.addAll(CollectionUtil.extractToList(officeRepository.findByParentIdsLike("%,"+officeDto.getId()+",%"), "id"));
-        } else if (OfficeTypeEnum.职能部门.name().equalsIgnoreCase(officeDto.getType())) {
-            List<OfficeBusinessDto> businessList = officeBusinessRepository.findByOfficeId(officeDto.getId());
-            if (CollectionUtil.isNotEmpty(businessList)) {
-                List<String> officeIds = CollectionUtil.extractToList(businessList, "businessOfficeId");
-                officeIdList.addAll(officeIds);
-                List<OfficeDto> childOfficeList = officeRepository.findByParentIdsListLike(officeIds);
-                officeIdList.addAll(CollectionUtil.extractToList(childOfficeList, "id"));
-            }
-        }
+        officeIdList.addAll(officeIds);
+        officeIdList.addAll(CollectionUtil.extractToList(officeRepository.findByParentIdsListLike(officeIds),"id"));
         officeIdList.add("0");
         officeIdList = Lists.newArrayList(Sets.newHashSet(officeIdList));
         return officeIdList;
@@ -43,5 +32,9 @@ public class OfficeManager {
 
     public OfficeDto findOne(String id) {
         return officeRepository.findOne(id);
+    }
+
+    public List<OfficeDto> findByIds(List<String> idList) {
+        return officeRepository.findByIds(idList);
     }
 }

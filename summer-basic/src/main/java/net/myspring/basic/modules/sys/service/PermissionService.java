@@ -53,7 +53,7 @@ public class PermissionService {
     }
 
     public List<Permission> findByRoleId(String roleId) {
-        return permissionRepository.findByRoleId(roleId);
+        return permissionRepository.findByRoleIdList(Lists.newArrayList(roleId));
     }
 
     public PermissionDto findOne(PermissionDto permissionDto) {
@@ -151,7 +151,7 @@ public class PermissionService {
 
     public TreeNode findRolePermissionTree(String roleId) {
         List<BackendMenuDto> backendMenuDtoList = backendRepository.findRolePermissionByRoleId(roleId);
-        List<Permission> permissionList = permissionRepository.findByRoleId(roleId);
+        List<Permission> permissionList = permissionRepository.findByRoleIdList(Lists.newArrayList(roleId));
         TreeNode treeNode = getTreeNode(backendMenuDtoList, permissionList);
         return treeNode;
     }
