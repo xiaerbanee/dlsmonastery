@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 
 public class DbContextHolder {
     private String kingdeeName;
+    private String companyName;
     private String dataSourceType;
 
     private static ThreadLocal<DbContextHolder> threadLocal = new ThreadLocal<DbContextHolder>();
@@ -34,6 +35,17 @@ public class DbContextHolder {
 
     public void setKingdeeName(String kingdeeName) {
         this.kingdeeName = kingdeeName;
+    }
+
+    public String getCompanyName() {
+        if(StringUtils.isNotBlank(RequestUtils.getCompanyName())) {
+            companyName = RequestUtils.getCompanyName();
+        }
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public String getDataSourceType() {

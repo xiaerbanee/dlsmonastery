@@ -18,8 +18,6 @@ public class OfficeManager {
 
     @Autowired
     private OfficeRepository officeRepository;
-    @Autowired
-    private OfficeBusinessRepository officeBusinessRepository;
 
     public List<String> getOfficeIdList(List<String> officeIds) {
         List<String> officeIdList = Lists.newLinkedList();

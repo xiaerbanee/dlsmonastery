@@ -1,4 +1,4 @@
-package net.myspring.cloud.common.dataSource;
+package net.myspring.basic.common.datasource;
 
 public class DynamicRedisConnectionFactory extends AbstractRoutingRedisConnectionFactory{
 

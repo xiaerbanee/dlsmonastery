@@ -1,7 +1,10 @@
 package net.myspring.uaa.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Maps;
+import net.myspring.uaa.datasource.DynamicRedisConnectionFactory;
 import net.myspring.util.json.ObjectMapperUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -9,13 +12,15 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.security.access.method.P;
 import redis.clients.jedis.JedisPoolConfig;
+
+import java.util.Map;
 
 /**
  * Created by liuj on 2017/3/24.
@@ -23,56 +28,43 @@ import redis.clients.jedis.JedisPoolConfig;
 @Configuration
 @EnableCaching
 public class CacheConfig extends CachingConfigurerSupport {
-
-    @Value("${spring.redis.host}")
-    private String redisHost;
-
-    @Value("${spring.redis.port}")
-    private Integer redisPort;
-
-    @Value("${spring.redis.password}")
-    private String redisPassword;
-
-    @Value("${spring.redis.database}")
-    private Integer redisDatabase;
-
-    @Value("${spring.redis.max-idle}")
-    private Integer maxIdle;
-
-    @Value("${spring.redis.max-total}")
-    private Integer maxTotal;
+    @Autowired
+    private Environment environment;
+    @Value("${companyNames}")
+    private String[] companyNames;
 
     @Bean
     @Primary
-    public JedisConnectionFactory redisConnectionFactory() {
-        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
-        jedisConnectionFactory.setHostName(redisHost);
-        jedisConnectionFactory.setPort(redisPort);
-        jedisConnectionFactory.setPassword(redisPassword);
-        jedisConnectionFactory.setDatabase(redisDatabase);
-        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxIdle(maxIdle);
-        jedisPoolConfig.setMaxTotal(maxTotal);
-        jedisConnectionFactory.setPoolConfig(jedisPoolConfig);
-        return jedisConnectionFactory;
+    public DynamicRedisConnectionFactory redisConnectionFactory() {
+        Map<String,JedisConnectionFactory> targetConnections = Maps.newHashMap();
+        for(String companyName:companyNames) {
+            targetConnections.put(companyName,getConnectionFactory("spring.redis." + companyName));
+        }
+        DynamicRedisConnectionFactory dynamicRedisConnectionFactory = new DynamicRedisConnectionFactory();
+        dynamicRedisConnectionFactory.setTargetConnections(targetConnections);
+        dynamicRedisConnectionFactory.setDefaultLookupKey(companyNames[0]);
+        return dynamicRedisConnectionFactory;
     }
 
+    private JedisConnectionFactory getConnectionFactory(String prefix) {
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
+        jedisConnectionFactory.setHostName(environment.getProperty(prefix + ".host"));
+        jedisConnectionFactory.setPort(environment.getProperty(prefix + ".port",Integer.class));
+        jedisConnectionFactory.setPassword(environment.getProperty(prefix + ".password"));
+        jedisConnectionFactory.setDatabase(environment.getProperty(prefix + ".database",Integer.class));
+        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+        jedisPoolConfig.setMaxIdle(environment.getProperty(prefix + ".max-idle",Integer.class));
+        jedisPoolConfig.setMaxTotal(environment.getProperty(prefix + ".max-total",Integer.class));
+        jedisConnectionFactory.setPoolConfig(jedisPoolConfig);
+        jedisConnectionFactory.afterPropertiesSet();
+        return jedisConnectionFactory;
+    }
 
 
     @Bean(name="oauthRedisConnectionFactory")
     public JedisConnectionFactory oauthRedisConnectionFactory() {
-        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
-        jedisConnectionFactory.setHostName(redisHost);
-        jedisConnectionFactory.setPort(redisPort);
-        jedisConnectionFactory.setPassword(redisPassword);
-        jedisConnectionFactory.setDatabase(15);
-        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxIdle(maxIdle);
-        jedisPoolConfig.setMaxTotal(maxTotal);
-        jedisConnectionFactory.setPoolConfig(jedisPoolConfig);
-        return jedisConnectionFactory;
+        return getConnectionFactory("spring.redis.oauth2");
     }
-
 
 
     @Bean
