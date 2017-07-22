@@ -101,7 +101,7 @@
               {data:'itemNumber',strict: true,readOnly: true},
               {data:'productName',type: "autocomplete",allowEmpty: true,productNames:[],source:this.productNames}
             ],
-            contextMenu: ['row_above', 'row_below', 'remove_row'],
+            contextMenu: true,
           },
           date:util.currentDate(),
           rules: {},

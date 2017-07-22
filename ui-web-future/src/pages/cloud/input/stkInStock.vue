@@ -58,7 +58,7 @@
             {type: 'text',readOnly: true, strict: true},
             {type: 'numeric', format:"0,0.00", strict: true}
           ],
-          contextMenu: ['row_above', 'row_below', 'remove_row'],
+          contextMenu: true,
           afterChange: function (changes, source) {
             if (source !== 'loadData') {
               for (let i = changes.length - 1; i >= 0; i--) {

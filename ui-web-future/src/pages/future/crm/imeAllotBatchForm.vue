@@ -91,7 +91,7 @@
               strict: true,
               width: 200
             }],
-            contextMenu: ['row_above', 'row_below', 'remove_row'],
+            contextMenu: true,
           },
 
         };

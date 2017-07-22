@@ -53,7 +53,7 @@
             {type: 'numeric', format:"0,0", allowEmpty: false, strict: true},
             {allowEmpty: false, strict:true, type: 'text'}
           ],
-          contextMenu: ['row_above', 'row_below', 'remove_row'],
+          contextMenu: true,
         },
         formData:{
           billDate:new Date().toLocaleDateString(),
