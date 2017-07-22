@@ -50,7 +50,10 @@ public class VivoService {
             date = LocalDateUtils.formatLocalDate(LocalDate.now(),LocalDateUtils.FORMATTER);
         }
         String agentCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace(CharConstant.DOUBLE_QUOTATION, "");
-        String lxAgentCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name()).replace(CharConstant.DOUBLE_QUOTATION, "");
+        String lxAgentCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
+        if(StringUtils.isNotBlank(lxAgentCode)) {
+            lxAgentCode = lxAgentCode.replace(CharConstant.DOUBLE_QUOTATION, "");
+        }
         List<String> lxAgentCodes = Lists.newArrayList();
         if (StringUtils.isNotBlank(lxAgentCode)) {
             lxAgentCodes = StringUtils.getSplitList(lxAgentCode, CharConstant.COMMA);
@@ -66,7 +69,10 @@ public class VivoService {
         }
         String defaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).replace(CharConstant.DOUBLE_QUOTATION, "");
         String goodStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.GOOD_STORE_ID.name()).replace(CharConstant.DOUBLE_QUOTATION, "");
-        String lxDefaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).replace(CharConstant.DOUBLE_QUOTATION, "");
+        String lxDefaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name());
+        if(StringUtils.isNotBlank(lxDefaultStoreId)) {
+            lxDefaultStoreId= lxDefaultStoreId.replace(CharConstant.DOUBLE_QUOTATION, "");
+        }
         List<VivoPlantSendimei> vivoPlantSendimeis = vivoClient.getSendImeList(companyName,date, agentCode);
         List<ProductIme> productImes=Lists.newArrayList();
         List<ProductIme> productImeList=Lists.newArrayList();
