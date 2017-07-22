@@ -4,24 +4,21 @@
       <div class="input-group">
         <div class="title">OA SYSTEM</div>
       </div>
-      <el-form>
-         <el-form-item>
-           <el-select v-model="companyName" clearable	>
+         <div class="input-group">
+           <el-select v-model="companyName" clearable	style="width:100%">
                <el-option v-for="item in companyNames" :key="item" :label="item" :value="item"></el-option>
            </el-select>
-         </el-form-item>
-         <el-form-item>
+         </div>
+         <div class="input-group">
               <el-input :autofocus="true" :placeholder="$t('login.inputUserName')" v-model="username"></el-input>
-         </el-form-item>
-         <el-form-item>
+         </div>
+         <div class="input-group">
               <el-input :placeholder="$t('login.inputPassword')" type="password" v-model="password"></el-input>
-         </el-form-item>
-         <el-form-item>
+         </div>
+         <div class="input-group">
               <el-button @click.native="login" type="primary" :loading="isBtnLoading">{{btnText}}</el-button>
-         </el-form-item>
-     </el-form>
-
-    </div>
+         </div>
+     </div>
   </div>
 </template>
 <script>

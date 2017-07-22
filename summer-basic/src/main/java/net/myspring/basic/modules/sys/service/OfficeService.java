@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.service;
 
+import com.alibaba.druid.sql.visitor.functions.Char;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
@@ -21,9 +22,12 @@ import net.myspring.basic.modules.sys.web.form.OfficeForm;
 import net.myspring.basic.modules.sys.web.query.OfficeQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.constant.TreeConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.common.utils.HandsontableUtils;
+import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -33,10 +37,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.HtmlUtils;
 
 import java.math.BigDecimal;
+import java.rmi.ServerException;
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -70,7 +76,7 @@ public class OfficeService {
     }
 
     public List<Office> findByParentIdsLike(String parentId) {
-        List<Office> officeList = officeRepository.findByParentIdsLike("%,"+parentId+",%");
+        List<Office> officeList = officeRepository.findByParentIdsLike(parentId);
         return officeList;
     }
 
@@ -236,7 +242,7 @@ public class OfficeService {
             String oldParentIds=office.getParentIds();
             ReflectionUtil.copyProperties(officeForm, office);
             officeRepository.save(office);
-            List<Office> list = officeRepository.findByParentIdsLike("%," + office.getId() + ",%");
+            List<Office> list = officeRepository.findByParentIdsLike(office.getId());
             for (Office item : list) {
                 item.setParentIds(item.getParentIds().replace(oldParentIds, office.getParentIds()));
                 item.setAreaId(office.getAreaId());
@@ -345,6 +351,78 @@ public class OfficeService {
             return true;
         }else {
             return false;
+        }
+    }
+
+    public List<OfficeDto> change(String id){
+        Office office = officeRepository.findOne(id);
+        String parentIds = office.getParentIds()+office.getId()+CharConstant.COMMA;
+        List<Office> officeList = officeRepository.findByParentIdsLike(parentIds);
+        List<OfficeDto> officeDtoList = BeanUtil.map(officeList,OfficeDto.class);
+        cacheUtils.initCacheInput(officeDtoList);
+        return officeDtoList;
+    }
+
+    public List<Office> findByNameLike(String name){
+        if (StringUtils.isNotBlank(name)){
+            List<Office> officeList =  officeRepository.findByNameLike(name);
+            return officeList;
+        }
+        return null;
+    }
+
+    @Transactional
+    public void saveChange(String id,String json){
+        List<List<Object>> data = ObjectMapperUtils.readValue(HtmlUtils.htmlUnescape(json), ArrayList.class);
+        List<String> parentNameList = Lists.newArrayList();
+        List<String> newIdList = Lists.newArrayList();
+        BigDecimal newTaskPoint = BigDecimal.ZERO;
+        for(List<Object> row: data){
+            newIdList.add(HandsontableUtils.getValue(row,0));
+            parentNameList.add(HandsontableUtils.getValue(row,5));
+            String tempTaskPoint = HandsontableUtils.getValue(row,7);
+            if (StringUtils.isNotBlank(tempTaskPoint)){
+                newTaskPoint = newTaskPoint.add(new BigDecimal(tempTaskPoint));
+            }
+        }
+        List<OfficeDto> officeDtoList = change(id);
+        BigDecimal oldTaskPoint = BigDecimal.ZERO;
+        for (OfficeDto oldOffice : officeDtoList){
+            if (oldOffice.getTaskPoint() != null){
+                oldTaskPoint = oldTaskPoint.add(oldOffice.getTaskPoint());
+            }
+        }
+        if (newTaskPoint.compareTo(oldTaskPoint) == 0) {
+            Map<String, Office> officeNameMap = officeRepository.findByNameIn(parentNameList).stream().collect(Collectors.toMap(Office::getName, Office -> Office));
+            Map<String, Office> officeIdMap = officeRepository.findByIdIn(newIdList).stream().collect(Collectors.toMap(Office::getId, Office -> Office));
+            for (List<Object> row : data) {
+                String newId = HandsontableUtils.getValue(row, 0);
+                String parentName = HandsontableUtils.getValue(row, 5);
+                String name = HandsontableUtils.getValue(row, 6);
+                String taskPointStr = HandsontableUtils.getValue(row, 7);
+                BigDecimal taskPoint = BigDecimal.ZERO;
+                if (StringUtils.isNotBlank(taskPointStr)){
+                    taskPoint  = new BigDecimal(taskPointStr);
+                }
+                Office office = officeIdMap.get(newId);
+                Office parent = officeNameMap.get(parentName);
+                String newParentIds = parent.getParentIds() + parent.getId() + CharConstant.COMMA;
+                String oldParentIds = office.getParentIds();
+                office.setName(name);
+                office.setTaskPoint(taskPoint);
+                office.setParentId(parent.getId());
+                office.setParentIds(newParentIds);
+                officeRepository.saveAndFlush(office);
+                List<Office> list = officeRepository.findByParentIdsLike(office.getId());
+                if (CollectionUtil.isNotEmpty(list)) {
+                    for (Office e : list) {
+                        e.setParentIds(e.getParentIds().replace(oldParentIds, office.getParentIds()));
+                    }
+                }
+                officeRepository.save(list);
+            }
+        }else {
+            throw new ServiceException("任务点位总和与修改之前总和不一样");
         }
     }
 }

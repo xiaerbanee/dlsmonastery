@@ -526,6 +526,8 @@ export default {
     formatId: "编号",
     dutyType: "类型",
     dutyDate: "日期",
+    dateType:"时间类型",
+    hour:"时长",
     applyAccount: "申请人",
     add: "添加",
     filter: "过滤",

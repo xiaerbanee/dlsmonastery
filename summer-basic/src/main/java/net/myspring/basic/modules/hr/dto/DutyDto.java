@@ -18,6 +18,8 @@ public class DutyDto {
     private String dutyType;
     private String dutyDate;
     private String remarks;
+    private String dateType;
+    private Double hour;
 
     public String getPrefix() {
         return prefix;
@@ -78,4 +80,19 @@ public class DutyDto {
         this.id = id;
     }
 
+    public String getDateType() {
+        return dateType;
+    }
+
+    public void setDateType(String dateType) {
+        this.dateType = dateType;
+    }
+
+    public Double getHour() {
+        return hour;
+    }
+
+    public void setHour(Double hour) {
+        this.hour = hour;
+    }
 }

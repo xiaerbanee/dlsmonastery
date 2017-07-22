@@ -34,8 +34,7 @@ class VivoPlantProductsRepositoryImpl @Autowired constructor(val namedParameterJ
     }
 
     override fun findAllByProductId(): MutableList<VivoPlantProducts> {
-        val sb = StringBuilder()
-        sb.append("""select * from vivo_plant_products t  where t.product_Id is not null or t.lx_Product_Id is not null""")
-        return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertyRowMapper(VivoPlantProducts::class.java))
+        val sql = "select * from vivo_plant_products t  where t.product_Id is not null or t.lx_Product_Id is not null";
+        return namedParameterJdbcTemplate.query(sql,BeanPropertyRowMapper(VivoPlantProducts::class.java))
     }
 }

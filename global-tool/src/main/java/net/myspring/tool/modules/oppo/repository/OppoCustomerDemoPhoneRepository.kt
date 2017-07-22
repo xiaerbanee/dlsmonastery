@@ -12,31 +12,10 @@ interface OppoCustomerDemoPhoneRepository : BaseRepository<OppoCustomerDemoPhone
 
 }
 interface OppoCustomerDemoPhoneRepositoryCustom{
-    fun findAll(dateStart: String,dateEnd: String): MutableList<OppoCustomerDemoPhone>
     fun findByDate(dateStart:String,dateEnd:String):MutableList<OppoCustomerDemoPhone>
-
+    fun deleteByDate(dateStart: String,dateEnd: String):Int
 }
 class OppoCustomerDemoPhoneRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : OppoCustomerDemoPhoneRepositoryCustom{
-    override fun findAll(dateStart: String, dateEnd: String): MutableList<OppoCustomerDemoPhone> {
-        val paramMap = Maps.newHashMap<String, Any>();
-        paramMap.put("dateStart",dateStart);
-        paramMap.put("dateEnd",dateEnd);
-        return namedParameterJdbcTemplate.query("""
-             select
-                    demo.shop_id as customerid,
-                    demo.created_date as date,
-                    im.product_id as productCode,
-                    im.ime as imei
-                from
-                    crm_demo_phone demo,
-                    crm_product_ime im
-                where
-                    demo.product_ime_id = im.id
-                    and demo.created_date >=:dateStart
-                    and demo.created_date <:dateEnd
-                    and demo.enabled = 1
-                """,paramMap, BeanPropertyRowMapper(OppoCustomerDemoPhone::class.java));
-    }
 
     override fun findByDate(dateStart:String, dateEnd:String): MutableList<OppoCustomerDemoPhone> {
         val paramMap = Maps.newHashMap<String, Any>();
@@ -45,5 +24,12 @@ class OppoCustomerDemoPhoneRepositoryImpl @Autowired constructor(val namedParame
         return namedParameterJdbcTemplate.query("""
             select *  from oppo_push_customer_demo_phone where date >=:dateStart and date <:dateEnd
          """,paramMap, BeanPropertyRowMapper(OppoCustomerDemoPhone::class.java));
+    }
+
+    override fun deleteByDate(dateStart: String, dateEnd: String): Int {
+        val map = Maps.newHashMap<String,String>()
+        map.put("dateStart",dateStart)
+        map.put("dateEnd",dateEnd)
+        return namedParameterJdbcTemplate.update("delete from oppo_push_customer_demo_phone where date >=:dateStart and date <:dateEnd",map)
     }
 }

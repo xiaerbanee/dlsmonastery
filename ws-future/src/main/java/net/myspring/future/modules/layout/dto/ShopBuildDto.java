@@ -2,7 +2,7 @@ package net.myspring.future.modules.layout.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.common.constant.FormatterConstant;
-import net.myspring.future.common.enums.CompanyNameEnum;
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.layout.domain.ShopBuild;
 import net.myspring.util.cahe.annotation.CacheInput;

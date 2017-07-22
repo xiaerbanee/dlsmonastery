@@ -3,16 +3,16 @@ package net.myspring.tool.modules.vivo.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
 import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
-import net.myspring.tool.modules.vivo.domain.VivoProducts;
 import net.myspring.tool.modules.vivo.dto.FactoryOrderDto;
 import net.myspring.tool.modules.vivo.dto.VivoPlantSendimeiDto;
-import net.myspring.tool.modules.vivo.repository.*;
+import net.myspring.tool.modules.vivo.repository.VivoPlantElectronicsnRepository;
+import net.myspring.tool.modules.vivo.repository.VivoPlantProductsRepository;
+import net.myspring.tool.modules.vivo.repository.VivoPlantSendimeiRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -24,17 +24,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by guolm on 2017/5/12.
  */
 @Service
 @LocalDataSource
-@Transactional(readOnly = false)
+@Transactional(readOnly = true)
 public class VivoPullService {
-    @Autowired
-    private VivoProductsRepository vivoProductsRepository;
     @Autowired
     private VivoPlantProductsRepository vivoPlantProductsRepository;
     @Autowired
@@ -42,16 +41,13 @@ public class VivoPullService {
     @Autowired
     private VivoPlantElectronicsnRepository vivoPlantElectronicsnRepository;
 
-    @FactoryDataSource
-    public List<VivoProducts> getProducts() {
-        return vivoProductsRepository.findProducts();
-    }
-
+    //货品
     @FactoryDataSource
     public List<VivoPlantProducts> getPlantProducts() {
         return vivoPlantProductsRepository.findPlantProducts();
     }
 
+    //获取串码
     @FactoryDataSource
     public List<VivoPlantSendimei> getPlantSendimei(String date, List<String> agentCodes) {
         if(StringUtils.isBlank(date)){
@@ -61,6 +57,7 @@ public class VivoPullService {
         return vivoPlantSendimeiRepository.findPlantSendimei(date, dateEnd, agentCodes);
     }
 
+    //获取电子保卡
     @FactoryDataSource
     public List<VivoPlantElectronicsn> getPlantElectronicsn(String date) {
         if(StringUtils.isBlank(date)){
@@ -70,30 +67,9 @@ public class VivoPullService {
         return vivoPlantElectronicsnRepository.findPlantElectronicsn(date,dateEnd);
     }
 
-    //获取颜色编码
-    @LocalDataSource
-    @Transactional(readOnly = false)
-    public void pullVivoProducts(List<VivoProducts> vivoProducts){
-        if(CollectionUtil.isNotEmpty(vivoProducts)) {
-            for(VivoProducts vivoProduct:vivoProducts){
-                vivoProduct.setColorId(vivoProduct.getColorId().trim());
-            }
-            List<String> colorIds = CollectionUtil.extractToList(vivoProducts, "colorId");
-            List<String> localColorIds = CollectionUtil.extractToList( vivoProductsRepository.findColorIds(colorIds),"colorId");
-            List<VivoProducts> list = Lists.newArrayList();
-            for(VivoProducts item : vivoProducts){
-                if( ! localColorIds.contains(item.getColorId())){
-                    list.add(item);
-                }
-            }
-            if(CollectionUtil.isNotEmpty(list)){
-                vivoProductsRepository.save(list);
-            }
-        }
-    }
     //获取物料编码
     @LocalDataSource
-    @Transactional(readOnly = false)
+    @Transactional
     public void pullPlantProducts( List<VivoPlantProducts> vivoPlantProducts){
         if(CollectionUtil.isNotEmpty(vivoPlantProducts)) {
             for(VivoPlantProducts plantProduct:vivoPlantProducts){
@@ -103,8 +79,7 @@ public class VivoPullService {
             List<String> localItemNumbers = CollectionUtil.extractToList(vivoPlantProductsRepository.findItemNumbers(itemNumbers),"itemNumber");
             List<VivoPlantProducts> list= Lists.newArrayList();
             for(VivoPlantProducts plantProduct : vivoPlantProducts){
-                if(!localItemNumbers.contains(plantProduct.getItemNumber().trim())){
-                    plantProduct.setItemNumber(plantProduct.getItemNumber().trim());
+                if(!localItemNumbers.contains(plantProduct.getItemNumber())){
                     list.add(plantProduct);
                 }
             }
@@ -114,21 +89,12 @@ public class VivoPullService {
         }
     }
 
-    //查询发货串码
+    //同步发货串码
     @LocalDataSource
-    @Transactional(readOnly = false)
+    @Transactional
     public void pullPlantSendimeis(List<VivoPlantSendimei> vivoPlantSendimeis){
         if(CollectionUtil.isNotEmpty(vivoPlantSendimeis)){
-            List<String> imeiList = Lists.newArrayList();
-            Map<String,List<VivoPlantSendimei>> vivoPlantSendimeiMap= Maps.newHashMap();
-            for(VivoPlantSendimei vivoPlantSendimei:vivoPlantSendimeis){
-                if(!vivoPlantSendimeiMap.containsKey(vivoPlantSendimei.getCompanyId())){
-                    List<VivoPlantSendimei> plantSendimeis=Lists.newArrayList();
-                    vivoPlantSendimeiMap.put(vivoPlantSendimei.getCompanyId(),plantSendimeis);
-                }
-                imeiList.add(vivoPlantSendimei.getImei());
-                vivoPlantSendimeiMap.get(vivoPlantSendimei.getCompanyId()).add(vivoPlantSendimei);
-            }
+            List<String> imeiList = CollectionUtil.extractToList(vivoPlantSendimeis,"imei");
             List<String> localImeiList=Lists.newArrayList();
             if(CollectionUtil.isNotEmpty(imeiList)){
                 for(List<String>imes:CollectionUtil.splitList(imeiList,1000)){
@@ -139,13 +105,9 @@ public class VivoPullService {
                 }
             }
             List<VivoPlantSendimei> pullPlantSendimeis=Lists.newArrayList();
-            for(String agentCode:vivoPlantSendimeiMap.keySet()){
-                List<VivoPlantSendimei>  plantSendimeis=vivoPlantSendimeiMap.get(agentCode);
-                for(VivoPlantSendimei plantSendimei:plantSendimeis){
-                    plantSendimei.setCompanyId(agentCode);
-                    if(!localImeiList.contains(plantSendimei.getImei())){
-                        pullPlantSendimeis.add(plantSendimei);
-                    }
+            for(VivoPlantSendimei plantSendimei:vivoPlantSendimeis){
+                if(!localImeiList.contains(plantSendimei.getImei())){
+                    pullPlantSendimeis.add(plantSendimei);
                 }
             }
             if(CollectionUtil.isNotEmpty(pullPlantSendimeis)){
@@ -155,8 +117,9 @@ public class VivoPullService {
     }
 
 
-    //查询电子保卡
+    //同步电子保卡
     @LocalDataSource
+    @Transactional
     public void pullPlantElectronicsns(List<VivoPlantElectronicsn> vivoPlantElectronicsns) {
         if(CollectionUtil.isNotEmpty(vivoPlantElectronicsns)) {
             List<String> snImeis = CollectionUtil.extractToList(vivoPlantElectronicsns, "snImei");
@@ -171,7 +134,7 @@ public class VivoPullService {
             }
             List<VivoPlantElectronicsn> list = Lists.newArrayList();
             for(VivoPlantElectronicsn item : vivoPlantElectronicsns){
-                if( ! localImeiList.contains(item.getSnImei())){
+                if(!localImeiList.contains(item.getSnImei())){
                     list.add(item);
                 }
             }
@@ -201,7 +164,6 @@ public class VivoPullService {
     }
 
 
-    @Transactional(readOnly = true)
     public FactoryOrderDto factoryOrder(FactoryOrderDto factoryOrderDto){
         List<String> factoryCodeList = Lists.newArrayList(CharConstant.JX_VIVO_FACTORY_AGENT_CODES.split(CharConstant.COMMA));
         List<String> factoryNameList = Lists.newArrayList(CharConstant.JX_VIVO_FACTORY_AGENT_NAMES.split(CharConstant.COMMA));
@@ -223,7 +185,6 @@ public class VivoPullService {
         Runtime runtime = Runtime.getRuntime();
         Process process;
         String command= "c:\\vivoDes.exe "+ code;
-        System.out.println(command);
         try {
             process = runtime.exec(command);
             BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -234,7 +195,6 @@ public class VivoPullService {
             }
             br.close();
             process.destroy();
-            System.out.println(sb.toString());
             return sb.toString().trim();
         } catch (IOException e) {
             return "";

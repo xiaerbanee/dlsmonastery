@@ -83,7 +83,8 @@ class DutyFreeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
             t2.login_name as 'accountName',
             t2.leader_id AS 'account.leaderId' ,
             'MDK' AS 'prefix',
-            t1.id
+            t1.id,
+            t1.date_type as 'dateType'
             FROM
             hr_duty_free t1 ,
             hr_account t2 ,

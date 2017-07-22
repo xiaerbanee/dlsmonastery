@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.*;
-import net.myspring.cloud.common.utils.HandsontableUtils;
+import net.myspring.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.CnJournalEntityForCashDto;
 import net.myspring.cloud.modules.input.dto.CnJournalForCashDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;

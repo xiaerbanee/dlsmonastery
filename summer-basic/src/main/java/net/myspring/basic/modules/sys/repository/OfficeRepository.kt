@@ -65,7 +65,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
     @Query("""
         SELECT t
         FROM  #{#entityName} t
-        where t.parentIds like ?1
+        where t.parentIds like  concat('%',?1,'%')
         and t.enabled =1
      """)
     fun findByParentIdsLike(parentId: String): MutableList<Office>
@@ -99,6 +99,30 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
     fun findSameAreaByOfficeId(officeId: String): MutableList<Office>
 
     fun findByEnabledIsTrueAndType(type:String):MutableList<Office>
+
+    @Query("""
+        SELECT t
+        FROM  #{#entityName} t
+        where t.name like  concat('%',?1,'%')
+        and t.enabled =1
+     """)
+    fun findByNameLike(name: String): MutableList<Office>
+
+    @Query("""
+        SELECT t
+        FROM  #{#entityName} t
+        where t.name in (?1)
+        and t.enabled =1
+     """)
+    fun findByNameIn(nameList: List<String>): MutableList<Office>
+
+    @Query("""
+        SELECT t
+        FROM  #{#entityName} t
+        where t.id in (?1)
+        and t.enabled =1
+     """)
+    fun findByIdIn(idList: List<String>): MutableList<Office>
 }
 
 interface OfficeRepositoryCustom {

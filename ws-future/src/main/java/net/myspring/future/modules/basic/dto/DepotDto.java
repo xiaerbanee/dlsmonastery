@@ -2,7 +2,7 @@ package net.myspring.future.modules.basic.dto;
 
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
-import net.myspring.future.common.enums.CompanyNameEnum;
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.util.cahe.annotation.CacheInput;
@@ -337,7 +337,7 @@ public class DepotDto extends DataDto<Depot> {
     }
 
     public String getFullName() {
-        if(CompanyNameEnum.IDvivo.name().equals(RequestUtils.getCompanyName())){
+        if(CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName())){
             return name;
         }else{
             return namePinyin + CharConstant.SPACE + name + CharConstant.SPACE + code;

@@ -49,12 +49,12 @@ class OppoPlantAgentProductSelRepositoryImpl @Autowired constructor(val namedPar
             LEFT JOIN crm_product t2 ON t1.product_id = t2.id
             LEFT JOIN crm_product t3 ON t1.lx_product_id = t3.id
             WHERE 1=1
-        """);
+        """)
         if(CollectionUtils.isNotEmpty(oppoPlantAgentProductSelQuery.itemNumberList)){
             sb.append(""" AND item_number IN (:itemNumberList)""")
         }
         if(StringUtils.isNotBlank(oppoPlantAgentProductSelQuery.itemDesc)){
-            sb.append(""" AND item_desc LIKE CONCAT('%',:itemDesc,'%')""");
+            sb.append(""" AND item_desc LIKE CONCAT('%',:itemDesc,'%')""")
         }
         if(StringUtils.isNotBlank(oppoPlantAgentProductSelQuery.productName)){
             sb.append(""" AND (t2.name LIKE CONCAT('%',:productName,'%') OR t3.name LIKE CONCAT('%',:productName,'%'))""")

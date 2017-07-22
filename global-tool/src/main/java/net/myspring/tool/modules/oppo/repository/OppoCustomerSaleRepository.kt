@@ -12,33 +12,10 @@ interface OppoCustomerSaleRepository : BaseRepository<OppoCustomerSale, String>,
 
 }
 interface OppoCustomerSaleRepositoryCustom{
-    fun findAll(dateStart: String,dateEnd: String): MutableList<OppoCustomerSale>
     fun findByDate(dateStart:String,dateEnd:String):MutableList<OppoCustomerSale>
-
+    fun deleteByDate(dateStart: String,dateEnd: String):Int
 }
 class OppoCustomerSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : OppoCustomerSaleRepositoryCustom{
-    override fun findAll(dateStart: String, dateEnd: String): MutableList<OppoCustomerSale> {
-        val paramMap = Maps.newHashMap<String, Any>();
-        paramMap.put("dateStart", dateStart);
-        paramMap.put("dateEnd", dateEnd);
-
-        return namedParameterJdbcTemplate.query("""
-             select
-                    sa.shop_id as customerId,
-                    date_format(sa.created_date,'%Y-%m-%d') as date,
-                    count(*) as totalSaleQty
-                from
-                    crm_product_ime_sale sa
-                where
-                    sa.created_date >=:dateStart
-                    and sa.created_date <:dateEnd
-                    and sa.is_back = 0
-                    and sa.enabled = 1
-                group by
-                    sa.shop_id,date_format(sa.created_date,'%Y-%m-%d')
-                order by sa.shop_id,date_format(sa.created_date,'%Y-%m-%d')  asc
-             """, paramMap, BeanPropertyRowMapper(OppoCustomerSale::class.java));
-    }
 
     override fun findByDate(dateStart:String, dateEnd:String): MutableList<OppoCustomerSale> {
         val paramMap = Maps.newHashMap<String, Any>();
@@ -47,5 +24,12 @@ class OppoCustomerSaleRepositoryImpl @Autowired constructor(val namedParameterJd
         return namedParameterJdbcTemplate.query("""
             select *  from oppo_push_customer_sale where date >=:dateStart and date <:dateEnd
          """,paramMap,BeanPropertyRowMapper(OppoCustomerSale::class.java));
+    }
+
+    override fun deleteByDate(dateStart: String, dateEnd: String): Int {
+        val map = Maps.newHashMap<String,String>()
+        map.put("dateStart",dateStart)
+        map.put("dateEnd",dateEnd)
+        return namedParameterJdbcTemplate.update("delete from oppo_push_customer_sale where date >=:dateStart and date <:dateEnd",map)
     }
 }

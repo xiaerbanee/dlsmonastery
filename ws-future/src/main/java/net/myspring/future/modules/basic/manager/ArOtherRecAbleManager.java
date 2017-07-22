@@ -7,7 +7,7 @@ import net.myspring.cloud.modules.input.dto.ArOtherRecAbleFEntityDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
-import net.myspring.future.common.enums.CompanyNameEnum;
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
@@ -39,7 +39,7 @@ public class ArOtherRecAbleManager {
 
 
     public KingdeeSynReturnDto synForShopGoodsDeposit(ShopGoodsDeposit shopGoodsDeposit){
-        if (!CompanyNameEnum.IDvivo.name().equals(RequestUtils.getCompanyName())) {
+        if (!CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName())) {
             Depot depot = depotRepository.findOne(shopGoodsDeposit.getId());
             Client client = clientRepository.findByDepotId(shopGoodsDeposit.getShopId());
             ArOtherRecAbleDto otherRecAbleDto = new ArOtherRecAbleDto();
@@ -95,7 +95,7 @@ public class ArOtherRecAbleManager {
             entityDto.setEmpInfoNumber("0001");//员工
             entityDto.setExpenseTypeNumber("6602.000");//无
             entityDto.setAmount(shopDeposit.getAmount());
-            if (CompanyNameEnum.IDvivo.name().equals(RequestUtils.getCompanyName())){
+            if (CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName())){
                 if (ShopDepositTypeEnum.市场保证金.equals(type)) {
                     entityDto.setOtherTypeNumber("2241.002B");//其他应付款-客户押金（批发）-市场保证金
                     entityDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
@@ -103,7 +103,7 @@ public class ArOtherRecAbleManager {
                     entityDto.setOtherTypeNumber("2241.002A");//其他应付款-客户押金（批发）-形象押金
                     entityDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
                 } else if (ShopDepositTypeEnum.演示机押金.equals(type)) {
-                    throw new ServiceException("2241.002C");//其他应付款-客户押金（批发）-演示机押金
+                    entityDto.setOtherTypeNumber("2241.002C");//其他应付款-客户押金（批发）-演示机押金
                 }
             }else {
                 if (ShopDepositTypeEnum.市场保证金.equals(type)) {
