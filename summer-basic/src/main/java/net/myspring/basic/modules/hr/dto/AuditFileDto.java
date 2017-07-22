@@ -1,16 +1,14 @@
 package net.myspring.basic.modules.hr.dto;
 
 import com.google.common.collect.Lists;
-import com.sun.org.apache.regexp.internal.RE;
 import net.myspring.basic.common.utils.RequestUtils;
-import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.AuditFile;
+import net.myspring.common.dto.DataDto;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.general.modules.sys.dto.ActivitiDetailDto;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.StringUtils;
 
-import javax.persistence.Transient;
 import java.util.List;
 
 /**
