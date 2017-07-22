@@ -169,7 +169,7 @@
           },
           showForm:{},
           rules:{
-            pass: [{ required: true, message: this.$t('dutyTaskForm.isPass')}],
+            pass: [{ required: true, message: this.$t('dutyTaskForm.prerequisiteMessage')}],
           }
         }
       },
@@ -199,3 +199,5 @@
     }
   };
 </script>
+
+
