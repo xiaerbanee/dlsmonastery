@@ -16,7 +16,7 @@
         <el-table-column prop="remarks" :label="$t('dutyTaskList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('dutyTaskList.operation')" width="140">
           <template scope="scope">
-            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'audit',scope.row.dutyType)" v-permit="'hr_duty_edit'">{{$t('dutyTaskList.audit')}}</el-button></div>
+            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'audit',scope.row.dutyType)" v-permit="'hr:duty:edit'">{{$t('dutyTaskList.audit')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -37,7 +37,6 @@
         this.pageLoading = true;
         util.setQuery("dutyTaskList");
         axios.get('/api/basic/hr/duty').then((response) => {
-            console.log(response.data)
           this.page = response.data;
           this.pageLoading = false;
         })

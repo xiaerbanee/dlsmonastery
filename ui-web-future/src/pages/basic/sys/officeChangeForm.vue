@@ -72,10 +72,10 @@
             {type: "text", data: "parentName", allowEmpty: false, readOnly: true, strict: true},
             {type: "text", data: "name", allowEmpty: true, readOnly: true, strict: true},
             {type: 'text', data: "type", allowEmpty: false, readOnly: true,},
-            {type: "numeric", data: "taskPoint", allowEmpty: false, readOnly: true,},
+            {type: "numeric", data: "taskPoint",  format:"0,0.00000",allowEmpty: false, readOnly: true,},
             {type: "autocomplete", data: "parentName", allowEmpty: false, strict: true, officeName: [], source: this.officeName},
             {type: "text", data: "name", allowEmpty: true, strict: true},
-            {type: "numeric", data: "taskPoint", allowEmpty: false}
+            {type: "numeric", data: "taskPoint",  format:"0,0.00000",allowEmpty: false}
           ],
           contextMenu: ['row_above', 'row_below', 'remove_row'],
           afterChange: function (changes, source) {
