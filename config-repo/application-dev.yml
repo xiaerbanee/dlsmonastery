@@ -74,4 +74,4 @@ spring:
       database: 1
       max-idle: 100
       max-total: 200
-companyNames: JXOPPO,IDVIVO
+companyNames: IDVIVO,JXOPPO
