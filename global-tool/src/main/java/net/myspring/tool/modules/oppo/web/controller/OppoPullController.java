@@ -1,30 +1,23 @@
 package net.myspring.tool.modules.oppo.web.controller;
 
 import com.google.common.collect.Maps;
+import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
-import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.utils.RequestUtils;
-import net.myspring.tool.modules.oppo.domain.*;
+import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
+import net.myspring.tool.modules.oppo.domain.OppoPlantProductItemelectronSel;
+import net.myspring.tool.modules.oppo.domain.OppoPlantProductSel;
+import net.myspring.tool.modules.oppo.domain.OppoPlantSendImeiPpsel;
 import net.myspring.tool.modules.oppo.dto.OppoPlantSendImeiPpselDto;
-import net.myspring.tool.modules.oppo.dto.OppoResponseMessage;
 import net.myspring.tool.modules.oppo.service.OppoPullService;
-import net.myspring.tool.modules.oppo.service.OppoPushSerivce;
-import net.myspring.util.json.ObjectMapperUtils;
-import net.myspring.util.text.MD5Utils;
-import net.myspring.util.time.LocalDateUtils;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -34,16 +27,16 @@ public class OppoPullController {
     @Autowired
     private OppoPullService oppoPullService;
     @Autowired
-    private CompanyConfigClient companyConfigClient;
+    private RedisTemplate redisTemplate;
 
     @RequestMapping(value = "pullFactoryData")
     public String pullFactoryData(String companyName,String date) {
         if(StringUtils.isBlank(RequestUtils.getCompanyName())) {
             DbContextHolder.get().setCompanyName(companyName);
         }
-        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
+        String agentCode= CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         String[] agentCodes=agentCode.split(CharConstant.COMMA);
-        String passWord=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_PASSWORDS.name()).replace("\"","");
+        String passWord=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_PASSWORDS.name()).getValue();
         String[] passWords=passWord.split(CharConstant.COMMA);
         //同步颜色编码
         List<OppoPlantProductSel> oppoPlantProductSels=oppoPullService.getOppoPlantProductSels(agentCodes[0],passWords[0]);

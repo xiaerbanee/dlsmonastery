@@ -2,9 +2,9 @@ package net.myspring.tool.modules.vivo.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
-import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.client.OfficeClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
@@ -24,6 +24,7 @@ import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,8 +36,6 @@ import java.util.Map;
 @Service
 public class VivoPushService {
 
-    @Autowired
-    private CompanyConfigClient companyConfigClient;
     @Autowired
     private OfficeClient officeClient;
     @Autowired
@@ -69,6 +68,8 @@ public class VivoPushService {
     private SStoresRepository sStoresRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -76,7 +77,7 @@ public class VivoPushService {
     @Transactional
     public  List<SZones> pushVivoZonesData(){
         logger.info(DbContextHolder.get().getCompanyName()+DbContextHolder.get().getDataSourceType());
-        String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
+        String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
         List<OfficeEntity> officeEntityList = officeClient.findAll();
         List<SZones> sZonesList = Lists.newArrayList();
         for(OfficeEntity officeEntity:officeEntityList){
@@ -114,7 +115,7 @@ public class VivoPushService {
     @FactoryDataSource
     @Transactional
     public void pushVivoPushSCustomersData(List<SCustomerDto> futureCustomerDtoList,String date){
-        String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
+        String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
         List<SCustomers> sCustomersList = Lists.newArrayList();
         for(SCustomerDto futureCustomerDto :futureCustomerDtoList){
             SCustomers sCustomers = new SCustomers();
@@ -156,7 +157,7 @@ public class VivoPushService {
 
         String dateStart = LocalDateUtils.format(LocalDateUtils.parse(date));
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(dateStart));
-        String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
+        String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
 
         List<SPlantStockStores> sPlantStockStoresList = Lists.newArrayList();
         List<SPlantStockSupply> sPlantStockSupplyList = Lists.newArrayList();
@@ -238,7 +239,7 @@ public class VivoPushService {
 
         LocalDate dateStart = LocalDateUtils.parse(date).minusYears(1);
         LocalDate dateEnd = LocalDateUtils.parse(date).plusDays(1);
-        String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
+        String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
 
         List<SProductItemStocks> sProductItemStocksList = Lists.newArrayList();
         List<SProductItem000> sProductItem000List = Lists.newArrayList();
@@ -298,7 +299,7 @@ public class VivoPushService {
     @FactoryDataSource
     @Transactional
     public void pushDemoPhonesData(List<SProductItemLend> sProductItemLendList, Map<String,String> productColorMap, String date){
-        String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
+        String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
         if (StringUtils.isBlank(date)){
             date = LocalDateUtils.format(LocalDate.now());
         }
@@ -338,7 +339,7 @@ public class VivoPushService {
     @FactoryDataSource
     @Transactional
     public void pushProductImeSaleData(List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList,Map<String,String> productColorMap,String date){
-        String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
+        String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
         if (StringUtils.isBlank(date)){
             date = LocalDateUtils.format(LocalDate.now());
         }
@@ -368,7 +369,7 @@ public class VivoPushService {
 
     @FactoryDataSource
     public void pushSStoreData(){
-        String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
+        String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
         List<SStores> sStoresList = Lists.newArrayList();
         SStores sStores = new SStores();
         sStores.setStoreID(mainCode + "K0000");
