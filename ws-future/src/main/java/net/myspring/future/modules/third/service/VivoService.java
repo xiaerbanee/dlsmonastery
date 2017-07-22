@@ -45,14 +45,7 @@ public class VivoService {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
 
-    public void syn(){
-        logger.info("开始同步串码："+LocalDateTime.now());
-        String date=LocalDateUtils.format(LocalDate.now());
-        synVivo(date);
-        logger.info("串码同步结束："+LocalDateTime.now());
-    }
-
-    public String synVivo(String date) {
+    public String pullFactoryData(String date) {
         if (StringUtils.isBlank(date)) {
             date = LocalDateUtils.formatLocalDate(LocalDate.now(),LocalDateUtils.FORMATTER);
         }

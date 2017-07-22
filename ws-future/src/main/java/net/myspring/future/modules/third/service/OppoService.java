@@ -44,7 +44,7 @@ public class OppoService {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Transactional
-    public String synOppo(String date) {
+    public String pullFactoryData(String date) {
         if (StringUtils.isBlank(date)) {
             date = LocalDateUtils.formatLocalDate(LocalDate.now(), "yyyy-MM-dd");
         }

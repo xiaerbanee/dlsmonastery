@@ -28,12 +28,12 @@ public class FutureSchedule {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Scheduled(cron = "0 0 0/1 * * ?")
-    public void synJxoppoIme(){
+    public void pullJxoppoFactoryData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXOPPO.name())) {
             logger.info("同步串码数据开始");
             String date=LocalDateUtils.format(LocalDate.now());
-            futureClient.synOppoIme(date);
+            futureClient.pullOppoFactoryData(CompanyNameEnum.JXOPPO.name(),date);
             logger.info("同步串码数据结束");
         }
     }
