@@ -358,6 +358,7 @@ public class OfficeService {
         String parentIds = office.getParentIds()+office.getId()+CharConstant.COMMA;
         List<Office> officeList = officeRepository.findByParentIdsLike(parentIds);
         List<OfficeDto> officeDtoList = BeanUtil.map(officeList,OfficeDto.class);
+        cacheUtils.initCacheInput(officeDtoList);
         return officeDtoList;
     }
 
