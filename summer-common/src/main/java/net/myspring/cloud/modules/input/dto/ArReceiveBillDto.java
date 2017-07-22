@@ -134,10 +134,12 @@ public class ArReceiveBillDto {
             //收款用途--
             detail.put("FPURPOSEID", CollectionUtil.getMap("FNumber", "SFKYT01_SYS"));
             //对方科目代码
-            if (SettleTypeEnum.电汇.getFNumber().equals(entryDto.getFSettleTypeIdNumber())){//结算方式--电汇（JSFS04_SYS）
+            if (SettleTypeEnum.电汇.getFNumber().equals(entryDto.getFSettleTypeIdNumber())){
                 //对方科目代码--银行存款(1002)
                 detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", "1002"));
-            }else if (SettleTypeEnum.现金.getFNumber().equals(entryDto.getFSettleTypeIdNumber())){//结算方式--现金（JSFS01_SYS）
+                //我方银行账号
+                detail.put("FACCOUNTID", CollectionUtil.getMap("FNumber", entryDto.getBankAcntNumber()));
+            }else if (SettleTypeEnum.现金.getFNumber().equals(entryDto.getFSettleTypeIdNumber())){
                 //对方科目代码--库存现金(1001)
                 detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", "1001"));
             }
@@ -147,10 +149,6 @@ public class ArReceiveBillDto {
             detail.put("FSETTLERECAMOUNTFOR", entryDto.getAmount());
             //表体-实收金额
             detail.put("FREALRECAMOUNTFOR_D", entryDto.getAmount());
-            //我方银行账号
-            if("JSFS04_SYS".equals(entryDto.getFSettleTypeIdNumber())){//结算方式--电汇（JSFS04_SYS）
-                detail.put("FACCOUNTID", CollectionUtil.getMap("FNumber", entryDto.getBankAcntNumber()));
-            }
             //备注
             detail.put("FCOMMENT", entryDto.getComment());
             sumAmount = sumAmount.add(entryDto.getAmount());

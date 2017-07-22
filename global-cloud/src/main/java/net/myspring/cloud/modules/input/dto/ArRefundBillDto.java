@@ -136,6 +136,7 @@ public class ArRefundBillDto {
             if (SettleTypeEnum.电汇.getFNumber().equals(entityDto.getFSettleTypeIdNumber())){
                 //对方科目代码--银行存款(1002)
                 detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", "1002"));
+                //我方银行账号
                 detail.put("FACCOUNTID", CollectionUtil.getMap("FNumber", entityDto.getBankAcntNumber()));
             }else if (SettleTypeEnum.现金.getFNumber().equals(entityDto.getFSettleTypeIdNumber())){
                 //对方科目代码--库存现金(1001)
