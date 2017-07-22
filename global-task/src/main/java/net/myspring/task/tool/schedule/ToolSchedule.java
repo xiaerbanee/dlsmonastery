@@ -1,4 +1,4 @@
-package net.myspring.task.tool.utils;
+package net.myspring.task.tool.schedule;
 
 import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.task.tool.client.ToolClient;
@@ -16,7 +16,7 @@ import java.util.List;
 
 
 @Service
-public class ToolScheduleUtils {
+public class ToolSchedule {
     @Autowired
     private ToolClient factoryClient;
 

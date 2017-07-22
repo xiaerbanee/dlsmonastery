@@ -1,4 +1,4 @@
-package net.myspring.task.tool.utils;
+package net.myspring.task.tool.schedule;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -17,7 +17,7 @@ import net.myspring.util.time.LocalDateUtils;
 
 
 @Service
-public class FutureScheduleUtils {
+public class FutureSchedule {
     @Autowired
     private FutureClient futureClient;
 
