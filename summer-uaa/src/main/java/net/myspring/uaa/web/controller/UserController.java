@@ -70,9 +70,6 @@ public class UserController {
     @RequestMapping(value = "/user/login")
     @ResponseBody
     public Map<String, Object> login(String username, String password, String weixinCode,String accountId,String companyName) {
-        if(StringUtils.isBlank(companyName)){
-            companyName= CompanyNameEnum.JXOPPO.name();
-        }
         Map<String, Object> map = userService.login(username, password, weixinCode,accountId,companyName);
         return map;
     }

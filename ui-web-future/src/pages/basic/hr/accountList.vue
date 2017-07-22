@@ -39,13 +39,14 @@
         <el-table-column prop="employeeName" :label="$t('accountList.employeeName')"></el-table-column>
         <el-table-column prop="leaderName" sortable :label="$t('accountList.leader')" width="120"></el-table-column>
         <el-table-column prop="officeName" :label="$t('accountList.officeName')"></el-table-column>
+        <el-table-column prop="dataScopeOfficeName" label="数据部门"></el-table-column>
         <el-table-column prop="positionName" :label="$t('accountList.positionName')"></el-table-column>
         <el-table-column prop="employeeStatus" :label="$t('accountList.employeeStatus')"></el-table-column>
         <el-table-column fixed="right" :label="$t('accountList.operation')" width="140">
           <template scope="scope">
             <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'hr:account:edit'">{{$t('accountList.edit')}}</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:account:delete'">{{$t('accountList.delete')}}</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'roleEdit')" v-permit="'hr:account:edit'">角色修改</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'roleEdit')" v-permit="'hr:accountRole:edit'">角色修改</el-button>
           </template>
         </el-table-column>
       </el-table>

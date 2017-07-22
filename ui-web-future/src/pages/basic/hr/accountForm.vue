@@ -29,7 +29,7 @@
               <account-select v-model="inputForm.leaderId"></account-select>
             </el-form-item>
             <el-form-item label="数据部门" prop="officeIdList">
-              <office-select v-model="inputForm.officeIdList" multiple></office-select>
+              <office-select v-model="inputForm.officeIdList" :multiple="true"></office-select>
             </el-form-item>
             <el-form-item :label="$t('accountForm.position')" prop="positionId">
               <el-select v-model="inputForm.positionId"  filterable :placeholder="$t('accountForm.selectGroup')" :clearable=true>
@@ -130,6 +130,7 @@
           this.inputForm=response.data;
           axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
+            console.log(response.data)
           })
         });
       }
