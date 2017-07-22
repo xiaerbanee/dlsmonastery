@@ -1,0 +1,66 @@
+
+buildscript {
+    repositories {
+        mavenCentral()
+
+        maven{ url 'http://117.40.139.3:8081/repository/maven-public/'}
+        maven {url "https://artifacts.elastic.co/maven"}
+        maven {url "https://plugins.gradle.org/m2/"}
+
+        maven {
+            url 'https://dl.bintray.com/seu-as-code/gradle-plugins'
+
+        }
+    }
+    dependencies {
+
+        classpath "gradle.plugin.com.brightsparklabs:gradle-multi-git:1.3.0"
+    }
+
+}
+
+
+apply plugin: "com.brightsparklabs.gradle.multi-git"
+
+
+
+
+defaultTasks 'buildAll'
+
+task bw(dependsOn:'buildWeb') {
+}
+
+task bu(dependsOn:'buildUi') {
+}
+
+task buildAll(dependsOn:['buildWeb', 'buildUi']) {
+}
+
+task buildWeb(dependsOn:['copyWeb']) {
+}
+
+task buildUi(dependsOn:['copyUi']) {
+}
+
+task copyWeb(type: Copy, dependsOn:[':global-cloud:build', ':global-task:build', ':summer-basic:build', ':summer-discovery:build', ':summer-config:build', ':summer-general:build'
+                               , ':summer-uaa:build', ':summer-webapp:build', ':ws-future:build']) {
+    from  'global-cloud/build/libs', 'global-task/build/libs', 'summer-basic/build/libs', 'summer-discovery/build/libs', 'summer-config/build/libs', 'summer-general/build/libs',  'summer-uaa/build/libs', 'summer-webapp/build/libs','ws-future/build/libs'
+    into 'build/jars'
+    include('*.jar')
+}
+
+task copyUi(type: Copy, dependsOn:[':ui-web-future:npm_run_build']) {
+    from  'ui-web-future/build'
+    into 'build/ui-web-future'
+    include('*')
+}
+
+multiGitPluginConfig {
+    repositoriesDir = new File('C:\\Users\\qianl\\Desktop\\server3')
+    repositories = [
+            'summer': [
+                    url: 'http://ncoppo.com:66/liuj/summer.git',
+                    options: ['--branch', 'master']
+            ],
+    ]
+}
