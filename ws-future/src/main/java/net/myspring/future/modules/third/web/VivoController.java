@@ -1,5 +1,6 @@
 package net.myspring.future.modules.third.web;
 
+import net.myspring.future.common.config.AuditorContextHolder;
 import net.myspring.future.common.datasource.DbContextHolder;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.third.service.OppoService;
@@ -24,6 +25,9 @@ public class VivoController {
         logger.info("开始同步串码，同步日期："+date);
         if(StringUtils.isBlank(RequestUtils.getCompanyName())) {
             DbContextHolder.get().setCompanyName(companyName);
+        }
+        if(StringUtils.isBlank(RequestUtils.getAccountId())) {
+            AuditorContextHolder.get().setAccountId("1");
         }
         return vivoService.pullFactoryData(date);
     }

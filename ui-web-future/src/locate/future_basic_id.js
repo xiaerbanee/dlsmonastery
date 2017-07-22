@@ -433,6 +433,7 @@ export default {
     inputKey: "silahkan masukkan kata kunci",
     inputWord: "silahkan masukkan kata kunci",
     likeSearch: "pencarian",
+    blankOrComma: "空格或逗号隔开",
     remarks: "keterangan / komen",
     sure: "yakin",
     save: "simpan",
