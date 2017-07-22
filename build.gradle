@@ -56,7 +56,7 @@ task copyUi(type: Copy, dependsOn:[':ui-web-future:npm_run_build']) {
 }
 
 multiGitPluginConfig {
-    repositoriesDir = new File('C:\\Users\\qianl\\Desktop\\server3')
+    repositoriesDir = new File('.')
     repositories = [
             'summer': [
                     url: 'http://ncoppo.com:66/liuj/summer.git',
