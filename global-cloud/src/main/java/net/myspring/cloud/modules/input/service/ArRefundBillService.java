@@ -174,10 +174,15 @@ public class ArRefundBillService {
             }
 
         }
+        List<KingdeeSynDto> kingdeeSynDtoList = Lists.newArrayList();
         List<ArRefundBillDto> billList = Lists.newArrayList(refundBillForDHMap.values());
-        List<KingdeeSynDto> kingdeeSynDtoList = save(billList,kingdeeBook,accountKingdeeBook);
+        if (CollectionUtil.isNotEmpty(billList)){
+            kingdeeSynDtoList.addAll(save(billList,kingdeeBook,accountKingdeeBook));
+        }
         List<ArRefundBillDto> cashBillList = Lists.newArrayList(refundBillForCashMap.values());
-        kingdeeSynDtoList.addAll(save(cashBillList,kingdeeBook,accountKingdeeBook));
+        if (CollectionUtil.isNotEmpty(cashBillList)) {
+            kingdeeSynDtoList.addAll(save(cashBillList, kingdeeBook, accountKingdeeBook));
+        }
         return kingdeeSynDtoList;
     }
 
