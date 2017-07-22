@@ -2,7 +2,7 @@ package net.myspring.future.modules.layout.dto;
 
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.IdDto;
-import net.myspring.future.common.enums.CompanyNameEnum;
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
 import net.myspring.util.cahe.annotation.CacheInput;
@@ -74,16 +74,16 @@ public class AdGoodsOrderDetailExportDto extends IdDto<AdGoodsOrderDetail> {
     private Integer shippedQty;
 
     public String getExpressCompanyOPPO() {
-        if(CompanyNameEnum.JXOPPO.name().equalsIgnoreCase(RequestUtils.getCompanyName())){
+        if(CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyName())){
             return CompanyNameEnum.JXOPPO.name();
-        }else if(CompanyNameEnum.JXvivo.name().equalsIgnoreCase(RequestUtils.getCompanyName())){
-            return CompanyNameEnum.JXvivo.name();
-        }else if(CompanyNameEnum.IDVIVO.name().equalsIgnoreCase(RequestUtils.getCompanyName())){
+        }else if(CompanyNameEnum.JXVIVO.name().equals(RequestUtils.getCompanyName())){
+            return CompanyNameEnum.JXVIVO.name();
+        }else if(CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName())){
             return CompanyNameEnum.IDVIVO.name();
-        }else if(CompanyNameEnum.JXDJ.name().equalsIgnoreCase(RequestUtils.getCompanyName())){
+        }else if(CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())){
             return CompanyNameEnum.JXDJ.name();
-        }else{
-            return CompanyNameEnum.JXIMOO.name();
+        } else {
+            return CompanyNameEnum.JXDJ.name();
         }
     }
 

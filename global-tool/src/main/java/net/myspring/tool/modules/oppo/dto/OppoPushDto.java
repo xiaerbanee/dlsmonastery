@@ -1,11 +1,13 @@
 package net.myspring.tool.modules.oppo.dto;
 
+import net.myspring.tool.common.dto.CustomerDto;
 import net.myspring.tool.modules.oppo.domain.*;
 
 import java.util.List;
 
 public class OppoPushDto {
     private String date;
+    private List<CustomerDto> customerDtos;
     private List<OppoCustomerAllot> oppoCustomerAllots;
     private List<OppoCustomerStock> oppoCustomerStocks;
     private List<OppoCustomerImeiStock> oppoCustomerImeiStocks;
@@ -21,6 +23,14 @@ public class OppoPushDto {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public List<CustomerDto> getCustomerDtos() {
+        return customerDtos;
+    }
+
+    public void setCustomerDtos(List<CustomerDto> customerDtos) {
+        this.customerDtos = customerDtos;
     }
 
     public List<OppoCustomerAllot> getOppoCustomerAllots() {

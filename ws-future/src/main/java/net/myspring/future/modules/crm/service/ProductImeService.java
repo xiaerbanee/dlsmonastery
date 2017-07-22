@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
-import net.myspring.future.common.enums.CompanyNameEnum;
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.future.common.enums.InputTypeEnum;
 import net.myspring.future.common.enums.OutTypeEnum;
 import net.myspring.future.common.enums.SumTypeEnum;

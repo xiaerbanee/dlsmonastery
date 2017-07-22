@@ -10,7 +10,7 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.BillTypeEnum;
-import net.myspring.future.common.enums.CompanyNameEnum;
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Client;

@@ -47,6 +47,7 @@ public class OppoPushController {
 
         OppoPushDto oppoPushDto = new OppoPushDto();
         oppoPushDto.setDate(date);
+        oppoPushDto.setCustomerDtos(oppoPushSerivce.getOppoCustomers());
         oppoPushDto.setOppoCustomerAllots(oppoPushSerivce.getFutureOppoCustomerAllot(date));
         oppoPushDto.setOppoCustomerStocks(oppoPushSerivce.getFutureOppoCustomerStock(date));
         oppoPushDto.setOppoCustomerImeiStocks(oppoPushSerivce.getFutureOppoCustomerImeiStock(date));

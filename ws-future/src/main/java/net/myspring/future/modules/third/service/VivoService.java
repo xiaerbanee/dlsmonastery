@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.future.modules.basic.client.CompanyConfigClient;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
@@ -53,10 +54,10 @@ public class VivoService {
 
     public String synVivo(String date) {
         if (StringUtils.isBlank(date)) {
-            date = LocalDateUtils.formatLocalDate(LocalDate.now(), "yyyy-MM-dd");
+            date = LocalDateUtils.formatLocalDate(LocalDate.now(),LocalDateUtils.FORMATTER);
         }
-        String agentCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"", "");
-        String lxAgentCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name()).replace("\"", "");
+        String agentCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace(CharConstant.DOUBLE_QUOTATION, "");
+        String lxAgentCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name()).replace(CharConstant.DOUBLE_QUOTATION, "");
         List<String> lxAgentCodes = Lists.newArrayList();
         if (StringUtils.isNotBlank(lxAgentCode)) {
             lxAgentCodes = StringUtils.getSplitList(lxAgentCode, CharConstant.COMMA);
@@ -66,13 +67,13 @@ public class VivoService {
             agentCodes = StringUtils.getSplitList(agentCode, CharConstant.COMMA);
         }
         String goodStoreProduct = "";
-        String companyName = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"", "");
-        if (!"IDVIVO".equals(companyName)) {
+        String companyName = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace(CharConstant.DOUBLE_QUOTATION, "");
+        if (!CompanyNameEnum.IDVIVO.equals(companyName)) {
              goodStoreProduct = "49";
         }
-        String defaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).replace("\"", "");
-        String goodStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.GOOD_STORE_ID.name()).replace("\"", "");
-        String lxDefaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).replace("\"", "");
+        String defaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).replace(CharConstant.DOUBLE_QUOTATION, "");
+        String goodStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.GOOD_STORE_ID.name()).replace(CharConstant.DOUBLE_QUOTATION, "");
+        String lxDefaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).replace(CharConstant.DOUBLE_QUOTATION, "");
         List<VivoPlantSendimei> vivoPlantSendimeis = vivoClient.getSendImeList(date, agentCode);
         List<ProductIme> productImes=Lists.newArrayList();
         List<ProductIme> productImeList=Lists.newArrayList();
