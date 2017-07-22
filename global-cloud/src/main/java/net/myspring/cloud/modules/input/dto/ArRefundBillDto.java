@@ -111,7 +111,7 @@ public class ArRefundBillDto {
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
         model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "SKTKDLX01_SYS"));
-        model.put("FDATE", LocalDateUtils.format(getDate(),"yyyy-MM-dd"));
+        model.put("FDATE", LocalDateUtils.format(getDate(),"yyyy-M-dd"));
         model.put("FCONTACTUNITTYPE", "BD_Customer");
         model.put("FCONTACTUNIT", CollectionUtil.getMap("FNumber", getCustomerNumber()));
         model.put("FRECTUNITTYPE", "BD_Customer");
@@ -131,13 +131,13 @@ public class ArRefundBillDto {
         for (ArRefundBillEntityDto entityDto : getArRefundBillEntityDtoList()){
             Map<String, Object> detail = Maps.newLinkedHashMap();
             detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", entityDto.getFSettleTypeIdNumber()));
-            detail.put("FACCOUNTID", CollectionUtil.getMap("FNumber", entityDto.getBankAcntNumber()));
             detail.put("FPURPOSEID", CollectionUtil.getMap("FNumber", "SFKYT01_SYS"));
             //对方科目代码
-            if (SettleTypeEnum.电汇.getFNumber().equals(entityDto.getFSettleTypeIdNumber())){//结算方式--电汇（JSFS04_SYS）
+            if (SettleTypeEnum.电汇.getFNumber().equals(entityDto.getFSettleTypeIdNumber())){
                 //对方科目代码--银行存款(1002)
                 detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", "1002"));
-            }else if (SettleTypeEnum.现金.getFNumber().equals(entityDto.getFSettleTypeIdNumber())){//结算方式--现金（JSFS01_SYS）
+                detail.put("FACCOUNTID", CollectionUtil.getMap("FNumber", entityDto.getBankAcntNumber()));
+            }else if (SettleTypeEnum.现金.getFNumber().equals(entityDto.getFSettleTypeIdNumber())){
                 //对方科目代码--库存现金(1001)
                 detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", "1001"));
             }
