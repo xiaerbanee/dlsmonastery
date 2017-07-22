@@ -26,7 +26,7 @@ public class VivoPullController {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value="pullFactoryData")
-    public String pullFactoryData(String date,String companyName){
+    public String pullFactoryData(String companyName,String date){
         DbContextHolder.get().setCompanyName(companyName);
         //同步物料编码
          List<VivoPlantProducts> vivoPlantProducts=vivoPullService.getPlantProducts(companyName);
@@ -41,13 +41,15 @@ public class VivoPullController {
     }
 
     @RequestMapping(value="getSendImeList")
-    public List<VivoPlantSendimeiDto> getSendImeList (String date, String agentCode){
+    public List<VivoPlantSendimeiDto> getSendImeList (String companyName,String date, String agentCode){
+        DbContextHolder.get().setCompanyName(companyName);
         List<VivoPlantSendimeiDto> vivoPlantSendimeiList=vivoPullService.getSendImeList(date,agentCode);
         return vivoPlantSendimeiList;
     }
 
     @RequestMapping(value = "getItemelectronSelList")
-    public List<VivoPlantElectronicsn> getItemelectronSelList(String date, String agentCode) {
+    public List<VivoPlantElectronicsn> getItemelectronSelList(String companyName,String date, String agentCode) {
+        DbContextHolder.get().setCompanyName(companyName);
         List<VivoPlantElectronicsn> vivoPlantElectronicsnList = vivoPullService.getItemelectronSelList(date,agentCode);
         return vivoPlantElectronicsnList;
     }
