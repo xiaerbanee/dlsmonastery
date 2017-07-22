@@ -6,6 +6,8 @@ import com.google.common.collect.Sets;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.enums.CompanyNameEnum;
+import net.myspring.future.common.datasource.DbContextHolder;
 import net.myspring.future.modules.basic.client.CompanyConfigClient;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
@@ -46,6 +48,7 @@ public class OppoService {
 
     @Transactional
     public String pullFactoryData(String date) {
+        String companyName = DbContextHolder.get().getCompanyName();
         if (StringUtils.isBlank(date)) {
             date = LocalDateUtils.formatLocalDate(LocalDate.now(), "yyyy-MM-dd");
         }
@@ -60,8 +63,7 @@ public class OppoService {
             agentCodes = StringUtils.getSplitList(agentCode, CharConstant.COMMA);
         }
         String goodStoreProduct = "";
-        String companyName = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.COMPANY_NAME.name()).getValue();
-        if (!"WZOPPO".equals(companyName)) {
+        if (!CompanyNameEnum.WZOPPO.name().equals(companyName)) {
             goodStoreProduct = "7070";
         }
         String defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue();
