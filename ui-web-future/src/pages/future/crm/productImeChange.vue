@@ -79,7 +79,7 @@
               source: [],
               width: 300
             }],
-            contextMenu: ['row_above', 'row_below', 'remove_row'],
+            contextMenu: true,
           }, rules: {},
           submitDisabled: false,
         };

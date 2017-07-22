@@ -38,7 +38,7 @@
           startCols: 5,
           manualRowResize: true,
           manualColumnResize: true,
-          contextMenu: ['row_above', 'row_below', 'remove_row'],
+          contextMenu: true,
           columns: [
             {
               data: "idStr",

@@ -62,7 +62,7 @@
           colHeaders: [],
           columns: [],
           data:{},
-          contextMenu: ['row_above', 'row_below', 'remove_row'],
+          contextMenu: true,
           afterChange: function (changes, source) {
             if (source !== 'loadData') {
               for (let i = changes.length - 1; i >= 0; i--) {

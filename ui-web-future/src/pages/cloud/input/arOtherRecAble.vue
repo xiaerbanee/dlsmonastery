@@ -40,7 +40,7 @@
             {type: "autocomplete", strict: true, allowEmpty: false, expenseTypeName:[],source: this.expenseTypeName},
             {type: "autocomplete", strict: true, allowEmpty: false, customerForName:[],source: this.customerForName},
           ],
-          contextMenu: ['row_above', 'row_below', 'remove_row'],
+          contextMenu: true,
           afterChange: function (changes, source) {
             if (source !== 'loadData') {
               let data=table.getData();
