@@ -16,18 +16,8 @@ spring:
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
-      JXVIVO:
-        url: jdbc:mysql://168.192.1.17:3316/summer_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
-        username: root
-        password: bbk@123456
-        driver-class-name: com.mysql.jdbc.Driver
     summer-basic:
       JXOPPO:
-        url: jdbc:mysql://168.192.1.17:3316/summer_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
-        username: root
-        password: bbk@123456
-        driver-class-name: com.mysql.jdbc.Driver
-      JXVIVO:
         url: jdbc:mysql://168.192.1.17:3316/summer_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         password: bbk@123456
@@ -43,27 +33,25 @@ spring:
         username: sa
         password: bbk@123456
         driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-      JXVIVO:
-        url: jdbc:sqlserver://168.192.1.13:1433;DatabaseName=AIS2017040100OPPO
-        username: sa
-        password: bbk@123456
-        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     factory:
       JXOPPO:
         url: jdbc:jtds:sqlserver://121.10.21.123:1439/plantesaleweb
         username: Agent
         password: gz86!*%
         driver-class-name: net.sourceforge.jtds.jdbc.Driver
-      JXVIVO:
-        url: jdbc:jtds:sqlserver://218.16.99.180:13120/plantesaleweb
-        username: user_m13e00
-        password: user_m13e00
-        driver-class-name: net.sourceforge.jtds.jdbc.Driver
   redis:
-    host: localhost
-    password:
-    port: 6379
-    database: 0
-    max-idle: 100
-    max-total: 200
-companyNames: JXOPPO,JXVIVO
+    :
+      host: localhost
+      password:
+      port: 6379
+      database: 0
+      max-idle: 100
+      max-total: 200
+    oauth2:
+      host: localhost
+      password:
+      port: 6379
+      database: 15
+      max-idle: 100
+      max-total: 200
+companyNames: JXOPPO
