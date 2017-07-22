@@ -11,12 +11,22 @@ spring:
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
     ws-future:
+      JXOPPO:
+        url: jdbc:mysql://168.192.1.17:3316/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
       IDVIVO:
         url: jdbc:mysql://168.192.1.243:3306/db_idvivo_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
     summer-basic:
+      JXOPPO:
+        url: jdbc:mysql://168.192.1.17:3316/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
       IDVIVO:
         url: jdbc:mysql://168.192.1.243:3306/db_idvivo_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
@@ -28,23 +38,40 @@ spring:
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
     kingdee:
+      JXOPPO:
+        url: jdbc:sqlserver://168.192.1.13:1433;DatabaseName=AISTESTOPPO
+        username: sa
+        password: bbk@123456
+        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
       IDVIVO:
         url: jdbc:sqlserver://168.192.1.13:1433;DatabaseName=TESTIDVIVO
         username: sa
         password: bbk@123456
         driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     factory:
+      JXOPPO:
+        url: jdbc:jtds:sqlserver://121.10.21.123:1439/plantesaleweb
+        username: Agent
+        password: gz86!*%
+        driver-class-name: net.sourceforge.jtds.jdbc.Driver
       IDVIVO:
         url: jdbc:jtds:sqlserver://id-transfer.vivo.xyz/PlantESaleWeb
         username: user_m13e00
         password: user_m13e00
         driver-class-name: net.sourceforge.jtds.jdbc.Driver
   redis:
-    IDVIVO:
+    JXOPPO:
       host: localhost
       password:
       port: 6379
       database: 0
       max-idle: 100
       max-total: 200
-companyNames: IDVIVO
+    IDVIVO:
+      host: localhost
+      password:
+      port: 6379
+      database: 1
+      max-idle: 100
+      max-total: 200
+companyNames: JXOPPO,IDVIVO
