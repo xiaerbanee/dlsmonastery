@@ -40,11 +40,9 @@ public class OppoPushController {
 
 
     //将需要上抛的数据先同步到本地数据库
-    @RequestMapping(value = "synToLocal")
-    public String synToLocal(String date) {
-        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
+    @RequestMapping(value = "pushToLocal")
+    public String pushToLocal(String date,String companyName) {
         DbContextHolder.get().setCompanyName(companyName);
-
         OppoPushDto oppoPushDto = new OppoPushDto();
         oppoPushDto.setDate(date);
         oppoPushDto.setCustomerDtos(oppoPushSerivce.getOppoCustomers());
@@ -64,7 +62,7 @@ public class OppoPushController {
 
     //代理商经销商基础数据上抛
     @RequestMapping(value = "pullCustomers", method = RequestMethod.GET)
-    public OppoResponseMessage pullOppoCustomers(String key, String createdDate,HttpServletResponse response) throws IOException {
+    public OppoResponseMessage pullOppoCustomers(String key, String createdDate) throws IOException {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + createdDate);

@@ -31,7 +31,7 @@ public class ToolSchedule {
         if(companyNameList.contains(CompanyNameEnum.JXOPPO.name())) {
             logger.info("同步工厂数据开始");
             String date=LocalDateUtils.format(LocalDate.now());
-            factoryClient.pullJxoppoFactoryData(date);
+            factoryClient.pullFactoryData(date);
             logger.info("同步工厂数据结束");
         }
     }
@@ -39,12 +39,12 @@ public class ToolSchedule {
 
 
     @Scheduled(cron = "0 0 21,22,23 * * ?")
-    public void synJxoppoToLocal(){
+    public void pushJxoppoToLocal(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXOPPO.name())) {
             logger.info("工厂上抛数据开始");
             String date= LocalDateUtils.format(LocalDate.now());
-            factoryClient.synJxoppoToLocal(date);
+            factoryClient.pushToLocal(CompanyNameEnum.JXOPPO.name(),date);
             logger.info("工厂上抛数据结束");
         }
     }

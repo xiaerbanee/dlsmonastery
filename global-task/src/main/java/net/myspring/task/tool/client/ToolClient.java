@@ -15,10 +15,10 @@ import java.util.List;
 public interface ToolClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/factory/oppo/pullFactoryData")
-    String pullJxoppoFactoryData(@RequestParam(value="date") String date);
+    String pullFactoryData(@RequestParam(value="date") String date);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/factory/oppo/synToLocal")
-    String synJxoppoToLocal(@RequestParam(value="date") String date);
+    @RequestMapping(method = RequestMethod.GET, value = "/factory/oppo/pushToLocal")
+    String pushToLocal(@RequestParam(value="companyName") String companyName,@RequestParam(value="date") String date);
 
 
 }
