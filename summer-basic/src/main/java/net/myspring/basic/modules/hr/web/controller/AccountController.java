@@ -31,6 +31,7 @@ import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -166,7 +167,7 @@ public class AccountController {
         List<String> roleIdList = RequestUtils.getRoleIdList();
         Map<String, Object> map = Maps.newHashMap();
         AccountDto accountDto = accountService.getAccountDto(accountId);
-        List<String> authorityList = accountService.getAuthorityList();
+        List<String> authorityList = accountService.getAuthorityList(accountId);
         if(isMobile){
             List<Map<String, Object>> mobileMenus = menuService.findMobileMenus(accountId,roleIdList);
             map.put("menus", mobileMenus);

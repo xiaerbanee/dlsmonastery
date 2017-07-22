@@ -26,23 +26,4 @@ public class PermissionManager {
     private PermissionRepository permissionRepository;
     @Autowired
     private AccountPermissionRepository accountPermissionRepository;
-
-    public List<String> getPermissionList(String accountId,List<String> roleIdList){
-        List<PermissionDto> permissionList;
-        if(StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(accountId)){
-            permissionList=permissionRepository.findAllEnabled();
-        }else {
-            List<String> accountPermissions=accountPermissionRepository.findPermissionIdByAccountId(accountId);
-            if(CollectionUtil.isNotEmpty(accountPermissions)){
-                permissionList=permissionRepository.findByAccountId(accountId);
-            }else {
-                permissionList=permissionRepository.findByRoleIdList(roleIdList);
-            }
-        }
-        List<String> list= Lists.newArrayList();
-        if(CollectionUtil.isNotEmpty(permissionList)){
-            list=CollectionUtil.extractToList(permissionList,"permission");
-        }
-       return list;
-    }
 }
