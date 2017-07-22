@@ -40,4 +40,6 @@ class FutureProductImeRepository @Autowired constructor(val namedParameterJdbcTe
                     group by de.id,pro.id asc
             """, paramMap, BeanPropertyRowMapper(OppoCustomerStock::class.java));
     }
+
+
 }
