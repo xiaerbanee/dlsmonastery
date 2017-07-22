@@ -37,6 +37,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.HtmlUtils;
 
 import java.math.BigDecimal;
 import java.rmi.ServerException;
@@ -75,7 +76,7 @@ public class OfficeService {
     }
 
     public List<Office> findByParentIdsLike(String parentId) {
-        List<Office> officeList = officeRepository.findByParentIdsLike("%,"+parentId+",%");
+        List<Office> officeList = officeRepository.findByParentIdsLike(parentId);
         return officeList;
     }
 
@@ -241,7 +242,7 @@ public class OfficeService {
             String oldParentIds=office.getParentIds();
             ReflectionUtil.copyProperties(officeForm, office);
             officeRepository.save(office);
-            List<Office> list = officeRepository.findByParentIdsLike("%," + office.getId() + ",%");
+            List<Office> list = officeRepository.findByParentIdsLike(office.getId());
             for (Office item : list) {
                 item.setParentIds(item.getParentIds().replace(oldParentIds, office.getParentIds()));
                 item.setAreaId(office.getAreaId());
@@ -372,21 +373,26 @@ public class OfficeService {
 
     @Transactional
     public void saveChange(String id,String json){
-        List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
+        List<List<Object>> data = ObjectMapperUtils.readValue(HtmlUtils.htmlUnescape(json), ArrayList.class);
         List<String> parentNameList = Lists.newArrayList();
         List<String> newIdList = Lists.newArrayList();
         BigDecimal newTaskPoint = BigDecimal.ZERO;
         for(List<Object> row: data){
             newIdList.add(HandsontableUtils.getValue(row,0));
             parentNameList.add(HandsontableUtils.getValue(row,5));
-            newTaskPoint = newTaskPoint.add(new BigDecimal(HandsontableUtils.getValue(row,7)));
+            String tempTaskPoint = HandsontableUtils.getValue(row,7);
+            if (StringUtils.isNotBlank(tempTaskPoint)){
+                newTaskPoint = newTaskPoint.add(new BigDecimal(tempTaskPoint));
+            }
         }
         List<OfficeDto> officeDtoList = change(id);
         BigDecimal oldTaskPoint = BigDecimal.ZERO;
         for (OfficeDto oldOffice : officeDtoList){
-            oldTaskPoint = oldTaskPoint.add(oldOffice.getTaskPoint());
+            if (oldOffice.getTaskPoint() != null){
+                oldTaskPoint = oldTaskPoint.add(oldOffice.getTaskPoint());
+            }
         }
-        if (newTaskPoint.equals(oldTaskPoint)) {
+        if (newTaskPoint.compareTo(oldTaskPoint) == 0) {
             Map<String, Office> officeNameMap = officeRepository.findByNameIn(parentNameList).stream().collect(Collectors.toMap(Office::getName, Office -> Office));
             Map<String, Office> officeIdMap = officeRepository.findByIdIn(newIdList).stream().collect(Collectors.toMap(Office::getId, Office -> Office));
             for (List<Object> row : data) {
@@ -394,8 +400,10 @@ public class OfficeService {
                 String parentName = HandsontableUtils.getValue(row, 5);
                 String name = HandsontableUtils.getValue(row, 6);
                 String taskPointStr = HandsontableUtils.getValue(row, 7);
-                BigDecimal taskPoint = new BigDecimal(taskPointStr);
-
+                BigDecimal taskPoint = BigDecimal.ZERO;
+                if (StringUtils.isNotBlank(taskPointStr)){
+                    taskPoint  = new BigDecimal(taskPointStr);
+                }
                 Office office = officeIdMap.get(newId);
                 Office parent = officeNameMap.get(parentName);
                 String newParentIds = parent.getParentIds() + parent.getId() + CharConstant.COMMA;
@@ -405,8 +413,7 @@ public class OfficeService {
                 office.setParentId(parent.getId());
                 office.setParentIds(newParentIds);
                 officeRepository.saveAndFlush(office);
-
-                List<Office> list = officeRepository.findByParentIdsLike("%," + office.getId() + ",%");
+                List<Office> list = officeRepository.findByParentIdsLike(office.getId());
                 if (CollectionUtil.isNotEmpty(list)) {
                     for (Office e : list) {
                         e.setParentIds(e.getParentIds().replace(oldParentIds, office.getParentIds()));
