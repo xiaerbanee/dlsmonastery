@@ -7,8 +7,7 @@ Page({
     response: {},
     submitDisabled: false,
     submitHidden: false,
-    options: null
-  },
+    options: null,  },
   onLoad: function (options) {
     var that = this;
     that.data.options = options;
@@ -52,6 +51,7 @@ Page({
     wx.getLocation({
       type: 'wgs84',
       success: function (res) {
+        console.log(res)
         that.setData({ "formData.longitude": res.longitude, "formData.latitude": res.latitude, "formData.accuracy": res.accuracy })
         wx.getNetworkType({
           success: function (res) {
@@ -129,7 +129,7 @@ Page({
             that.setData({ "formProperty.images": that.data.formProperty.images });
           }
         }
-      } 
+      }
     });
   },
   formSubmit: function (e) {
@@ -143,12 +143,12 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
+        console.log(res.data)
         if (res.data.success) {
           wx.navigateBack();
-        } else if (res.data.hasOwnProperty("extra")){
+        } else {
+          that.setData({ "response.error": res.data.message, submitDisabled: false })
           that.setData({ "response.data": res.data.extra.errors, submitDisabled: false });
-        }else {
-          that.setData({ "response.error": res.data.message,submitDisabled: false})
         }
       }
     })

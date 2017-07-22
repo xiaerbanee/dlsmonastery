@@ -26,14 +26,14 @@ public class VivoPullController {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value="pullFactoryData")
-    public String pullFactoryData(String date){
+    public String pullFactoryData(String date,String companyName){
         String agentCode="M13E00,M13D00,M13H00,M13I00,M13A00,M13C00,M13G00";
         List<String> agentCodes= Arrays.asList(agentCode.split(CharConstant.COMMA));
         DbContextHolder.get().setCompanyName("JXVIVO");
         //同步物料编码
          List<VivoPlantProducts> vivoPlantProducts=vivoPullService.getPlantProducts();
         logger.info("vivoPlantProducts=="+vivoPlantProducts.toString());
-        vivoPullService.pullPlantProducts(vivoPlantProducts);
+        vivoPullService.pullPlantProducts(vivoPlantProducts,companyName);
         //同步发货串码
         List<VivoPlantSendimei> vivoPlantSendimeis=vivoPullService.getPlantSendimei(date,agentCodes);
         vivoPullService.pullPlantSendimeis(vivoPlantSendimeis);

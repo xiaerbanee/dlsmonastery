@@ -11,6 +11,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="vivo_plant_products")
 public class VivoPlantProducts extends IdEntity<VivoPlantProducts> {
+    private String companyName;
     private String typeId;
     private String colorId;
     private String colorName;
@@ -30,6 +31,15 @@ public class VivoPlantProducts extends IdEntity<VivoPlantProducts> {
     private String codeRecordType;
     private String productId;
     private String lxProductId;
+
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 
     public String getTypeId() {
         return typeId;
