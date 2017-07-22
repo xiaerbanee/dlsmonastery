@@ -98,16 +98,18 @@ public class CustomUserDetailsService implements UserDetailsService {
             Set<SimpleGrantedAuthority> authList = Sets.newHashSet();
             authList.add(new SimpleGrantedAuthority(accountDto.getPositionId()));
             //将用户权限设置到缓存中
-            permissionManager.getPermissionList(accountDto.getId(),accountDto.getRoleId());
+            List<String> roleIdList=StringUtils.getSplitList(accountDto.getRoleIds(),CharConstant.COMMA);
+            List<String> officeIds=StringUtils.getSplitList(accountDto.getOfficeIds(),CharConstant.COMMA);
+            permissionManager.getPermissionList(accountDto.getId(),roleIdList);
             Boolean admin = StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(accountDto.getId());
-            OfficeDto officeDto = officeManager.findOne(accountDto.getOfficeId());
-            Boolean allDataScope = officeDto.getAllDataScope();
+            List<OfficeDto> officeList = officeManager.findByIds(officeIds);
+            Boolean allDataScope = CollectionUtil.extractToList(officeList,"allDataScope").contains(true);
             if(admin) {
                 allDataScope = true;
             }
             List<String> officeIdList = Lists.newArrayList();
             if(!allDataScope) {
-                officeIdList = officeManager.getOfficeIdList(accountDto.getOfficeId());
+                officeIdList = officeManager.getOfficeIdList(officeIds);
             }
             customUserDetails = new CustomUserDetails(
                     accountDto.getLoginName(),
@@ -122,7 +124,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                     accountDto.getOfficeId(),
                     accountDto.getEmployeeId(),
                     accountDto.getCompanyName(),
-                    accountDto.getRoleId(),
+                    roleIdList,
                     officeIdList,
                     admin
             );

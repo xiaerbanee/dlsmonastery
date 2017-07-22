@@ -3,10 +3,11 @@ package net.myspring.future.modules.third.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
-import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.client.CompanyConfigClient;
+import net.myspring.common.enums.CompanyNameEnum;
+import net.myspring.future.common.datasource.DbContextHolder;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.third.client.OppoClient;
@@ -18,7 +19,7 @@ import net.myspring.util.text.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -37,19 +38,21 @@ public class OppoService {
     @Autowired
     private OppoClient oppoClient;
     @Autowired
-    private CompanyConfigClient companyConfigClient;
-    @Autowired
     private ProductImeRepository productImeRepository;
+    @Autowired
+    private RedisTemplate redisTemplate;
+
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Transactional
-    public String synOppo(String date) {
+    public String pullFactoryData(String date) {
+        String companyName = DbContextHolder.get().getCompanyName();
         if (StringUtils.isBlank(date)) {
             date = LocalDateUtils.formatLocalDate(LocalDate.now(), "yyyy-MM-dd");
         }
-        String agentCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"", "");
-        String lxAgentCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name()).replace("\"", "");
+        String agentCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
+        String lxAgentCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name()).getValue();
         List<String> lxAgentCodes = Lists.newArrayList();
         if (StringUtils.isNotBlank(lxAgentCode)) {
             lxAgentCodes = StringUtils.getSplitList(lxAgentCode, CharConstant.COMMA);
@@ -59,14 +62,13 @@ public class OppoService {
             agentCodes = StringUtils.getSplitList(agentCode, CharConstant.COMMA);
         }
         String goodStoreProduct = "";
-        String companyName = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"", "");
-        if (!"WZOPPO".equals(companyName)) {
+        if (!CompanyNameEnum.WZOPPO.name().equals(companyName)) {
             goodStoreProduct = "7070";
         }
-        String defaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).replace("\"", "");
-        String goodStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.GOOD_STORE_ID.name()).replace("\"", "");
-        String lxDefaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).replace("\"", "");
-        List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels = oppoClient.getSendImeList(date, agentCode);
+        String defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue();
+        String goodStoreId = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.GOOD_STORE_ID.name()).getValue();
+        String lxDefaultStoreId = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).getValue();
+        List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels = oppoClient.getSendImeList(companyName,date, agentCode);
         List<ProductIme> productImes=Lists.newArrayList();
         List<ProductIme> productImeList=Lists.newArrayList();
         //判断绑定货品是否为空
@@ -142,7 +144,7 @@ public class OppoService {
         }
         //同步电子保卡
         List<ProductIme> localProductImeList=Lists.newArrayList();
-        List<OppoPlantProductItemelectronSel>  oppoPlantProductItemelectronSels=oppoClient.getItemelectronSelList(date,agentCode);
+        List<OppoPlantProductItemelectronSel>  oppoPlantProductItemelectronSels=oppoClient.getItemelectronSelList(companyName,date,agentCode);
         if(CollectionUtil.isNotEmpty(oppoPlantProductItemelectronSels)){
             Map<String,OppoPlantProductItemelectronSel> productItemelectronSelMap=Maps.newHashMap();
             for(OppoPlantProductItemelectronSel oppoPlantProductItemelectronSel:oppoPlantProductItemelectronSels){

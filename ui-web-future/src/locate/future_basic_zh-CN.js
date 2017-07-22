@@ -434,6 +434,7 @@ export default {
     inputKey: "请输入关键字",
     inputWord: "请输入关键词",
     likeSearch: "模糊搜索",
+    blankOrComma: "空格或逗号隔开",
     remarks: "备注",
     sure: "确定",
     save: "保存",

@@ -1,22 +1,18 @@
-package net.myspring.tool.common.client;
+package net.myspring.task.tool.client;
 
-import net.myspring.tool.common.dto.CustomerDto;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 /**
  * Created by guolm on 2017/6/11.
  */
 
 @FeignClient("ws-future")
-public interface CustomerClient {
+public interface FutureVivoClient {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/basic/depot/findOppoCustomers")
-    List<CustomerDto> findCustomerDtoList();
-
+    @RequestMapping(method = RequestMethod.GET, value = "/third/factory/vivo/pullFactoryData")
+    String pullFactoryData(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "date") String date);
 
 }

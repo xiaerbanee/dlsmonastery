@@ -1,7 +1,6 @@
 package net.myspring.basic.modules.hr.web.controller;
 
 import gui.ava.html.image.generator.HtmlImageGenerator;
-import net.myspring.common.enums.BoolEnum;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.basic.modules.hr.dto.AuditFileDto;
@@ -10,8 +9,6 @@ import net.myspring.basic.modules.hr.web.form.AuditFileForm;
 import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.util.text.StringUtils;
-import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.HtmlUtils;
-import sun.misc.Request;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;

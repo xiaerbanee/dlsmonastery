@@ -1,8 +1,10 @@
 package net.myspring.tool.modules.oppo.repository
 
 import com.google.common.collect.Maps
+import net.myspring.tool.common.domain.ProductEntity
 import net.myspring.tool.modules.oppo.domain.OppoCustomerStock
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
@@ -40,4 +42,6 @@ class FutureProductImeRepository @Autowired constructor(val namedParameterJdbcTe
                     group by de.id,pro.id asc
             """, paramMap, BeanPropertyRowMapper(OppoCustomerStock::class.java));
     }
+
+
 }

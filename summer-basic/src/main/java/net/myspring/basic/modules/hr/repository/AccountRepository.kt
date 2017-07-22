@@ -91,16 +91,23 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         var sb = StringBuilder()
         sb.append("""
             SELECT
-            t1.*,t2.name as employeeName,t3.name as positionName,office.name as officeName,leader.login_name as leaderName,
-            t2.entry_date,t2.leave_date,t2.regular_date,t2.status as employeeStatus
-            FROM
-            hr_account t1,hr_employee t2,hr_position t3,sys_office office,hr_account leader
-            WHERE
-            t1.enabled=1
-            and t1.office_id=office.id
-            and t1.employee_id=t2.id
-            AND t1.position_id=t3.id
-            and t1.leader_id=leader.id
+	        t2.name AS employeeName,
+	        t3.name AS positionName,
+	        office.name AS officeName,
+	        leader.login_name AS leaderName,
+	        t2.entry_date,
+	        t2.leave_date,
+	        t2.regular_date,
+	        t2.status AS employeeStatus,
+	        t1.*
+        FROM
+	        hr_account t1
+	        LEFT JOIN hr_employee t2 ON t1.employee_id = t2.id
+	        LEFT JOIN hr_position t3 ON t1.position_id = t3.id
+	        LEFT JOIN sys_office office ON t1.office_id = office.id
+	        LEFT JOIN hr_account leader ON t1.leader_id = leader.id
+        WHERE
+	        t1.enabled = 1
             and t1.id in (:idList)
         """)
         var paramMap = HashMap<String, Any>()

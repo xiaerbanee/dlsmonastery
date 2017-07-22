@@ -131,9 +131,9 @@ public class CnJournalForBankService {
         Map<String, String> otherTypeNameMap = Maps.newHashMap();
         Map<String, String> expenseTypeNameMap = Maps.newHashMap();
         for (BasAssistant basAssistant :basAssistantList){
-            if ("其他类".equals(basAssistant.getFType())){
+            if (BasAssistantTypeEnum.其他类.name().equals(basAssistant.getFType())){
                 otherTypeNameMap.put(basAssistant.getFDataValue(),basAssistant.getFNumber());
-            }else if("费用类".equals(basAssistant.getFType())){
+            }else if(BasAssistantTypeEnum.费用类.name().equals(basAssistant.getFType())){
                 expenseTypeNameMap.put(basAssistant.getFDataValue(),basAssistant.getFNumber());
             }
         }
@@ -199,8 +199,8 @@ public class CnJournalForBankService {
         map.put("bankAcntNameList",cnBankAcntRepository.findAll().stream().map(CnBankAcnt::getFName).collect(Collectors.toList()));
         map.put("empInfoNameList",hrEmpInfoRepository.findAll().stream().map(HrEmpInfo::getFName).collect(Collectors.toList()));
         map.put("departmentNameList",bdDepartmentRepository.findAll().stream().map(BdDepartment::getFFullName).collect(Collectors.toList()));
-        map.put("otherTypeNameList",basAssistantRepository.findByType("其他类").stream().map(BasAssistant::getFDataValue).collect(Collectors.toList()));
-        map.put("expenseTypeNameList",basAssistantRepository.findByType("费用类").stream().map(BasAssistant::getFDataValue).collect(Collectors.toList()));
+        map.put("otherTypeNameList",basAssistantRepository.findByType(BasAssistantTypeEnum.其他类.name()).stream().map(BasAssistant::getFDataValue).collect(Collectors.toList()));
+        map.put("expenseTypeNameList",basAssistantRepository.findByType(BasAssistantTypeEnum.费用类.name()).stream().map(BasAssistant::getFDataValue).collect(Collectors.toList()));
         if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBook.getName()) || KingdeeTypeEnum.proxy.name().equals(kingdeeBook.getType())) {
             map.put("customerForFlag",true);
             map.put("customerNameForList",bdCustomerRepository.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList()));

@@ -43,18 +43,18 @@ public class VivoPullService {
 
     //货品
     @FactoryDataSource
-    public List<VivoPlantProducts> getPlantProducts() {
-        return vivoPlantProductsRepository.findPlantProducts();
+    public List<VivoPlantProducts> getPlantProducts(String companyName) {
+        return vivoPlantProductsRepository.findPlantProducts(companyName);
     }
 
     //获取串码
     @FactoryDataSource
-    public List<VivoPlantSendimei> getPlantSendimei(String date, List<String> agentCodes) {
+    public List<VivoPlantSendimei> getPlantSendimei(String date) {
         if(StringUtils.isBlank(date)){
             date= LocalDateUtils.format(LocalDate.now());
         }
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        return vivoPlantSendimeiRepository.findPlantSendimei(date, dateEnd, agentCodes);
+        return vivoPlantSendimeiRepository.findPlantSendimei(date, dateEnd);
     }
 
     //获取电子保卡
@@ -70,16 +70,17 @@ public class VivoPullService {
     //获取物料编码
     @LocalDataSource
     @Transactional
-    public void pullPlantProducts( List<VivoPlantProducts> vivoPlantProducts){
+    public void pullPlantProducts( List<VivoPlantProducts> vivoPlantProducts,String companyName){
         if(CollectionUtil.isNotEmpty(vivoPlantProducts)) {
             for(VivoPlantProducts plantProduct:vivoPlantProducts){
                 plantProduct.setItemNumber(plantProduct.getItemNumber().trim());
             }
             List<String> itemNumbers =CollectionUtil.extractToList(vivoPlantProducts, "itemNumber");
-            List<String> localItemNumbers = CollectionUtil.extractToList(vivoPlantProductsRepository.findItemNumbers(itemNumbers),"itemNumber");
+            List<String> localItemNumbers = CollectionUtil.extractToList(vivoPlantProductsRepository.findItemNumbers(itemNumbers,companyName),"itemNumber");
             List<VivoPlantProducts> list= Lists.newArrayList();
             for(VivoPlantProducts plantProduct : vivoPlantProducts){
                 if(!localItemNumbers.contains(plantProduct.getItemNumber())){
+                    plantProduct.setCompanyName(companyName);
                     list.add(plantProduct);
                 }
             }

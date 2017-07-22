@@ -9,23 +9,23 @@
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('accountList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" method="get" :label-width="formLabelWidth">
-              <el-form-item :label="$t('accountList.loginName')">
-                <el-input v-model="formData.loginName" auto-complete="off" :placeholder="$t('accountList.likeSearch')"></el-input>
-              </el-form-item>
-              <el-form-item :label="$t('accountList.employeeName')">
-                <el-input v-model="formData.employeeName" auto-complete="off" :placeholder="$t('accountList.likeSearch')"></el-input>
-              </el-form-item>
-              <el-form-item :label="$t('accountList.officeName')">
-                <office-select v-model="formData.officeId"></office-select>
-              </el-form-item>
-              <el-form-item :label="$t('accountList.leader')">
-                <el-input v-model="formData.leaderName" auto-complete="off" :placeholder="$t('accountList.likeSearch')"></el-input>
-              </el-form-item>
-              <el-form-item :label="$t('accountList.positionName')">
-                <el-select v-model="formData.positionId" clearable filterable :placeholder="$t('accountList.selectGroup')">
-                  <el-option v-for="position in formData.extra.positionList" :key="position.id" :label="position.name" :value="position.id"></el-option>
-                </el-select>
-              </el-form-item>
+          <el-form-item :label="$t('accountList.loginName')">
+            <el-input v-model="formData.loginName" auto-complete="off" :placeholder="$t('accountList.likeSearch')"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('accountList.employeeName')">
+            <el-input v-model="formData.employeeName" auto-complete="off" :placeholder="$t('accountList.likeSearch')"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('accountList.officeName')">
+            <office-select v-model="formData.officeId"></office-select>
+          </el-form-item>
+          <el-form-item :label="$t('accountList.leader')">
+            <el-input v-model="formData.leaderName" auto-complete="off" :placeholder="$t('accountList.likeSearch')"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('accountList.positionName')">
+            <el-select v-model="formData.positionId" clearable filterable :placeholder="$t('accountList.selectGroup')">
+              <el-option v-for="position in formData.extra.positionList" :key="position.id" :label="position.name" :value="position.id"></el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="exportData()">{{$t('accountList.export')}}</el-button>
@@ -45,6 +45,7 @@
           <template scope="scope">
             <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'hr:account:edit'">{{$t('accountList.edit')}}</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:account:delete'">{{$t('accountList.delete')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'roleEdit')" v-permit="'hr:account:edit'">角色修改</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -111,12 +112,14 @@
       },itemAction:function(id,action){
         if(action=="edit") {
           this.$router.push({ name: 'accountForm', query: { id: id }})
+        } else  if(action=="roleEdit") {
+          this.$router.push({ name: 'accountRoleForm', query: { id: id }})
         } else if(action=="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
-          axios.get('/api/basic/hr/account/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
-          });
+            axios.get('/api/basic/hr/account/delete',{params:{id:id}}).then((response) =>{
+              this.$message(response.data.message);
+              this.pageRequest();
+            });
           }).catch(()=>{});
         }
       }
