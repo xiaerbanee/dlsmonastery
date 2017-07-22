@@ -40,7 +40,7 @@ spring:
         password: gz86!*%
         driver-class-name: net.sourceforge.jtds.jdbc.Driver
   redis:
-    :
+    IDVIVO:
       host: localhost
       password:
       port: 6379
