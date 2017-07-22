@@ -12,10 +12,10 @@ import java.util.List;
  */
 
 @FeignClient("global-tool")
-public interface ToolClient {
+public interface ToolOppoClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/factory/oppo/pullFactoryData")
-    String pullFactoryData(@RequestParam(value="date") String date);
+    String pullFactoryData(@RequestParam(value="companyName") String companyName,@RequestParam(value="date") String date);
 
     @RequestMapping(method = RequestMethod.GET, value = "/factory/oppo/pushToLocal")
     String pushToLocal(@RequestParam(value="companyName") String companyName,@RequestParam(value="date") String date);

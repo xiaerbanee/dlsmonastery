@@ -1,7 +1,7 @@
 package net.myspring.task.tool.schedule;
 
 import net.myspring.common.enums.CompanyNameEnum;
-import net.myspring.task.tool.client.ToolClient;
+import net.myspring.task.tool.client.ToolVivoClient;
 import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +16,9 @@ import java.util.List;
 
 
 @Service
-public class ToolSchedule {
+public class ToolVivoSchedule {
     @Autowired
-    private ToolClient factoryClient;
+    private ToolVivoClient toolVivoClient;
 
     @Value("${companyNames}")
     private String[] companyNames;
@@ -26,12 +26,12 @@ public class ToolSchedule {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Scheduled(cron = "0 0 0/1 * * ?")
-    public void pullJxoppoData(){
+    public void pullIdvivoData(){
         List<String> companyNameList = Arrays.asList(companyNames);
-        if(companyNameList.contains(CompanyNameEnum.JXOPPO.name())) {
+        if(companyNameList.contains(CompanyNameEnum.IDVIVO.name())) {
             logger.info("同步工厂数据开始");
             String date=LocalDateUtils.format(LocalDate.now());
-            factoryClient.pullFactoryData(date);
+            toolVivoClient.pullFactoryData(CompanyNameEnum.IDVIVO.name(),date);
             logger.info("同步工厂数据结束");
         }
     }
@@ -39,12 +39,12 @@ public class ToolSchedule {
 
 
     @Scheduled(cron = "0 0 21,22,23 * * ?")
-    public void pushJxoppoToLocal(){
+    public void pushIdvivoToLocal(){
         List<String> companyNameList = Arrays.asList(companyNames);
-        if(companyNameList.contains(CompanyNameEnum.JXOPPO.name())) {
+        if(companyNameList.contains(CompanyNameEnum.IDVIVO.name())) {
             logger.info("工厂上抛数据开始");
             String date= LocalDateUtils.format(LocalDate.now());
-            factoryClient.pushToLocal(CompanyNameEnum.JXOPPO.name(),date);
+            toolVivoClient.pushToLocal(CompanyNameEnum.IDVIVO.name(),date);
             logger.info("工厂上抛数据结束");
         }
     }
