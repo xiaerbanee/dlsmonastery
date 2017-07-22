@@ -7,9 +7,7 @@ Page({
     response: {},
     submitDisabled: false,
     submitHidden: false,
-    options: null,
-    address:["a","b"]
-  },
+    options: null,  },
   onLoad: function (options) {
     var that = this;
     that.data.options = options;
@@ -131,7 +129,7 @@ Page({
             that.setData({ "formProperty.images": that.data.formProperty.images });
           }
         }
-      } 
+      }
     });
   },
   formSubmit: function (e) {
@@ -148,8 +146,8 @@ Page({
         console.log(res.data)
         if (res.data.success) {
           wx.navigateBack();
-        } else{
-          that.setData({ "response.error": res.data.message})
+        } else {
+          that.setData({ "response.error": res.data.message, submitDisabled: false })
           that.setData({ "response.data": res.data.extra.errors, submitDisabled: false });
         }
       }
