@@ -10,6 +10,8 @@
         <el-table-column fixed prop="formatId" :label="$t('dutyTaskList.formatId')" sortable></el-table-column>
         <el-table-column prop="dutyType"  :label="$t('dutyTaskList.dutyType')" ></el-table-column>
         <el-table-column prop="dutyDate" :label="$t('dutyTaskList.dutyDate')"></el-table-column>
+        <el-table-column prop="dateType" :label="$t('dutyTaskList.dateType')"></el-table-column>
+        <el-table-column prop="hour" :label="$t('dutyTaskList.hour')"></el-table-column>
         <el-table-column prop="accountName" :label="$t('dutyTaskList.applyAccount')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('dutyTaskList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('dutyTaskList.operation')" width="140">
@@ -35,6 +37,7 @@
         this.pageLoading = true;
         util.setQuery("dutyTaskList");
         axios.get('/api/basic/hr/duty').then((response) => {
+            console.log(response.data)
           this.page = response.data;
           this.pageLoading = false;
         })

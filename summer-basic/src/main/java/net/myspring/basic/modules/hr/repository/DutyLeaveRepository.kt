@@ -97,7 +97,7 @@ class DutyLeaveRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         paramMap.put("dateStart", dateStart)
         return namedParameterJdbcTemplate.query("""
             SELECT
-            '请假' as dutyType,t1.duty_date,t1.remarks,t2.login_name as 'accountName' ,'QJ' AS 'prefix',t1.id
+            '请假' as dutyType,t1.duty_date,t1.remarks,t2.login_name as 'accountName' ,'QJ' AS 'prefix',t1.id,t1.date_type as 'dateType'
             FROM
             hr_duty_leave t1, hr_account t2,hr_employee t3
             WHERE
