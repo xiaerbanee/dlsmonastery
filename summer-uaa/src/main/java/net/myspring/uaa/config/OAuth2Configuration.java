@@ -30,7 +30,6 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
     private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
-    @Qualifier("oauthRedisConnectionFactory")
     private RedisConnectionFactory redisConnectionFactory;
 
     @Bean

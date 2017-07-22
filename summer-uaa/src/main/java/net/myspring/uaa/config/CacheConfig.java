@@ -60,13 +60,6 @@ public class CacheConfig extends CachingConfigurerSupport {
         return jedisConnectionFactory;
     }
 
-
-    @Bean(name="oauthRedisConnectionFactory")
-    public JedisConnectionFactory oauthRedisConnectionFactory() {
-        return getConnectionFactory("spring.redis.oauth2");
-    }
-
-
     @Bean
     RedisTemplate<Object, Object> redisTemplate() {
         RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<Object, Object>();
