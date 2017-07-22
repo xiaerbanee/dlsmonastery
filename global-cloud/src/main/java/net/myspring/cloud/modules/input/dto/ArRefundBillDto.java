@@ -29,7 +29,6 @@ public class ArRefundBillDto {
     private String customerNumber;
     private String departmentNumber;
     private BigDecimal amount;
-    private String kingdeeName;
 
     private List<ArRefundBillEntityDto> arRefundBillEntityDtoList;
 
@@ -87,14 +86,6 @@ public class ArRefundBillDto {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
-    }
-
-    public String getKingdeeName() {
-        return kingdeeName;
-    }
-
-    public void setKingdeeName(String kingdeeName) {
-        this.kingdeeName = kingdeeName;
     }
 
     public List<ArRefundBillEntityDto> getArRefundBillEntityDtoList() {

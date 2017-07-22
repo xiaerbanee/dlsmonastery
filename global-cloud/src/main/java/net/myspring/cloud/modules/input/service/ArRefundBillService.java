@@ -136,7 +136,6 @@ public class ArRefundBillService {
                     ArRefundBillDto arRefundBill = new ArRefundBillDto();
                     arRefundBill.setExtendType(ExtendTypeEnum.收款退款单_k3.name());
                     arRefundBill.setCreatorK3(accountKingdeeBook.getUsername());
-                    arRefundBill.setKingdeeName(kingdeeBook.getName());
                     arRefundBill.setCustomerNumber(customerNameMap.get(customerName));
                     arRefundBill.setDate(billDate);
                     arRefundBill.setAmount(amount);
@@ -156,7 +155,6 @@ public class ArRefundBillService {
                     ArRefundBillDto arRefundBill = new ArRefundBillDto();
                     arRefundBill.setExtendType(ExtendTypeEnum.收款退款单_k3.name());
                     arRefundBill.setCreatorK3(accountKingdeeBook.getUsername());
-                    arRefundBill.setKingdeeName(kingdeeBook.getName());
                     arRefundBill.setCustomerNumber(customerNameMap.get(customerName));
                     arRefundBill.setDate(billDate);
                     arRefundBill.setAmount(amount);
