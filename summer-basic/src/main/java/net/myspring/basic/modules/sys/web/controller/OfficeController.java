@@ -129,7 +129,8 @@ public class OfficeController {
     }
 
     @RequestMapping(value = "findByIds")
-    public List<OfficeDto> findByIds(@RequestParam("ids") List<String> ids){
+    public List<OfficeDto> findByIds(String idStr){
+        List<String> ids=StringUtils.getSplitList(idStr,CharConstant.COMMA);
         List<OfficeDto> officeDtoList = officeService.findByIds(ids);
         return officeDtoList;
     }
