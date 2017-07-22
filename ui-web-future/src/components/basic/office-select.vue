@@ -60,9 +60,6 @@
         });
       },initItemList(val, create){
         //在setValue之前被调用，确保相应的id有对应的记录，可以正确显示label
-        if(val){
-            return;
-        }
         if(this.remote){
           return this.doSearchByIds(val);
         }else if(create){
@@ -89,7 +86,16 @@
       },
       doSearchByIds(val){
         if(val){
-          return axios.get('/api/basic/sys/office/findByIds', {params: {ids: val}}).then((response)=>{
+          this.innerId=val;
+          let idStr=this.innerId;
+          if(this.multiple && this.innerId){
+            idStr=this.innerId;
+          }
+          if(util.isBlank(idStr)) {
+            return;
+          }
+          this.remoteLoading = true;
+          return axios.get('/api/basic/sys/office/findByIds?idStr='+ idStr).then((response)=>{
             if(response.data){
               this.itemList=response.data;
             }else{
@@ -111,16 +117,21 @@
         return this.innerId === item.id;
       }
     },created () {
-        if(util.isBlank(this.value)){ return; }
+        if(util.isBlank(this.value)){
+            return;
+        }
       this.initItemList(this.value, true).then(()=>{
         this.setValue(this.value);
       });
     },watch: {
-      value :function (newVal) {
-          if(util.isBlank(newVal)){ return; }
-        this.initItemList(newVal, false).then(()=>{
-          this.setValue(newVal);
-        });
+      value: function (newVal) {
+        if (util.isBlank(newVal) || newVal.lengt==0) {
+          return;
+        } else {
+          this.initItemList(newVal, false).then(() => {
+            this.setValue(newVal);
+          });
+        }
       }
     }
   };
