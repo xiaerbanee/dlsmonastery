@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 
 interface VivoPlantElectronicsnRepository : BaseRepository<VivoPlantElectronicsn, String>, VivoPlantElectronicsnRepositoryCustom {
-    @Query("select  t.snImei from #{#entityName}  t where t.snImei in (?1)")
+    @Query("select  t from #{#entityName}  t where t.snImei in (?1)")
     fun findSnImeis(snImeis: MutableList<String>): MutableList<VivoPlantElectronicsn>
 }
 

@@ -161,15 +161,15 @@ public class AccountController {
     @RequestMapping(value = "getAccountInfo")
     public Map<String, Object> getAccountInfo(boolean isMobile) {
         String accountId = RequestUtils.getAccountId();
-        String roleId = RequestUtils.getRoleId();
+        List<String> roleIdList = RequestUtils.getRoleIdList();
         Map<String, Object> map = Maps.newHashMap();
         AccountDto accountDto = accountService.getAccountDto(accountId);
         List<String> authorityList = accountService.getAuthorityList();
         if(isMobile){
-            List<Map<String, Object>> mobileMenus = menuService.findMobileMenus(accountId,roleId);
+            List<Map<String, Object>> mobileMenus = menuService.findMobileMenus(accountId,roleIdList);
             map.put("menus", mobileMenus);
         }else {
-            List<BackendMenuDto> menus = menuService.getMenusMap(accountId,roleId);
+            List<BackendMenuDto> menus = menuService.getMenusMap(accountId,roleIdList);
             map.put("menus", menus);
         }
         map.put("account", accountDto);

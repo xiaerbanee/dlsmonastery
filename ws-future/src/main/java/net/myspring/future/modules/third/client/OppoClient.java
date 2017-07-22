@@ -13,8 +13,8 @@ import java.util.List;
 public interface OppoClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/factory/oppo/getSendImeList")
-    List<OppoPlantSendImeiPpsel> getSendImeList(@RequestParam(value = "date")String date, @RequestParam(value="agentCode")String agentCode);
+    List<OppoPlantSendImeiPpsel> getSendImeList(@RequestParam(value = "companyName")String companyName, @RequestParam(value = "date")String date, @RequestParam(value="agentCode")String agentCode);
 
     @RequestMapping(method = RequestMethod.GET, value = "/factory/oppo/getItemelectronSelList")
-    List<OppoPlantProductItemelectronSel>  getItemelectronSelList(@RequestParam(value = "date")String date, @RequestParam(value="agentCode")String agentCode);
+    List<OppoPlantProductItemelectronSel>  getItemelectronSelList(@RequestParam(value = "companyName")String companyName, @RequestParam(value = "date")String date, @RequestParam(value="agentCode")String agentCode);
 }

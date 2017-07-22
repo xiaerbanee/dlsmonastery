@@ -26,7 +26,7 @@ class PermissionRepository @Autowired constructor(val namedParameterJdbcTemplate
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertyRowMapper(PermissionDto::class.java))
     }
 
-    fun findByRoleId(roleId:String): MutableList<PermissionDto> {
+    fun findByRoleIdList(roleIdList:List<String>): MutableList<PermissionDto> {
         var sb = StringBuilder();
         sb.append("""
             SELECT t1.*
@@ -35,34 +35,29 @@ class PermissionRepository @Autowired constructor(val namedParameterJdbcTemplate
             sys_role_permission t2
         WHERE
             t1.id = t2.permission_id
-        AND t2.role_id = :roleId
+        AND t2.role_id in (:roleIdList)
         AND t1.enabled = 1
         AND t2.enabled = 1
         """)
-        var paramMap = Maps.newHashMap<String, String>();
-        paramMap.put("roleId",roleId)
+        var paramMap = Maps.newHashMap<String, Any>();
+        paramMap.put("roleIdList",roleIdList)
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap,BeanPropertyRowMapper(PermissionDto::class.java))
     }
 
-    fun findByRoleAndAccount(roleId:String,accountId:String): MutableList<PermissionDto> {
+    fun findByAccountId(accountId:String): MutableList<PermissionDto> {
         var sb = StringBuilder();
         sb.append("""
                   SELECT t1.*
         FROM
             sys_permission t1,
-            sys_role_permission t2,
             hr_account_permission t3
         WHERE
-            t1.id = t2.permission_id
-        and t2.permission_id=t3.permission_id
-        AND t2.role_id = :roleId
+            t1.id = t3.permission_id
         and t3.account_id=:accountId
         AND t1.enabled = 1
         AND t3.enabled = 1
-        AND t2.enabled = 1
         """)
         var paramMap = Maps.newHashMap<String, String>();
-        paramMap.put("roleId",roleId)
         paramMap.put("accountId",accountId)
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap,BeanPropertyRowMapper(PermissionDto::class.java))
     }

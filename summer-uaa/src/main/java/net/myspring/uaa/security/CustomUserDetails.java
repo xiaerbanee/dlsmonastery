@@ -25,7 +25,7 @@ public class CustomUserDetails implements UserDetails {
     private final String employeeId;
     @JsonIgnore
     private String password;
-    private String roleId;
+    private List<String> roleIdList;
     private List<String> officeIdList;
     //是否是超级用户
     private Boolean admin;
@@ -43,7 +43,7 @@ public class CustomUserDetails implements UserDetails {
             ,String officeId
             ,String employeeId
             ,String companyName
-            ,String roleId
+            ,List<String> roleIdList
             ,List<String> officeIdList
             ,Boolean admin) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
@@ -61,7 +61,7 @@ public class CustomUserDetails implements UserDetails {
         this.officeId=officeId;
         this.employeeId=employeeId;
         this.companyName=companyName;
-        this.roleId=roleId;
+        this.roleIdList=roleIdList;
         this.officeIdList = officeIdList;
         this.admin = admin;
     }
@@ -122,8 +122,8 @@ public class CustomUserDetails implements UserDetails {
         return companyName;
     }
 
-    public String getRoleId() {
-        return roleId;
+    public List<String> getRoleIdList() {
+        return roleIdList;
     }
 
     public List<String> getOfficeIdList() {

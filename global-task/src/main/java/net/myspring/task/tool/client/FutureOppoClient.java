@@ -10,12 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 
 @FeignClient("ws-future")
-public interface FutureClient {
+public interface FutureOppoClient {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/third/factory/oppo/synIme")
-    String synOppoIme(@RequestParam(value = "date") String date);
-
-    @RequestMapping(method = RequestMethod.GET, value = "/third/factory/vivo/synIme")
-    String synVivoIme(@RequestParam(value = "date") String date);
+    @RequestMapping(method = RequestMethod.GET, value = "/third/factory/oppo/pullFactoryData")
+    String pullFactoryData(@RequestParam(value = "companyName") String companyName,@RequestParam(value = "date") String date);
 
 }

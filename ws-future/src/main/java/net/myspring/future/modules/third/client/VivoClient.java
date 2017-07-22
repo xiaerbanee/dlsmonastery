@@ -13,8 +13,8 @@ import java.util.List;
 public interface VivoClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/factory/vivo/getSendImeList")
-    List<VivoPlantSendimei> getSendImeList(@RequestParam(value = "date") String date, @RequestParam(value = "agentCode") String agentCode);
+    List<VivoPlantSendimei> getSendImeList(@RequestParam(value = "companyName")String companyName, @RequestParam(value = "date") String date, @RequestParam(value = "agentCode") String agentCode);
 
     @RequestMapping(method = RequestMethod.GET, value = "/factory/vivo/getItemelectronSelList")
-    List<VivoPlantElectronicsn>  getItemelectronSelList(@RequestParam(value = "date") String date, @RequestParam(value = "agentCode") String agentCode);
+    List<VivoPlantElectronicsn>  getItemelectronSelList(@RequestParam(value = "companyName")String companyName, @RequestParam(value = "date") String date, @RequestParam(value = "agentCode") String agentCode);
 }
