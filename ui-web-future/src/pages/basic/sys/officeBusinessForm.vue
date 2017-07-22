@@ -11,23 +11,14 @@
             <el-form-item :label="$t('officeForm.officeName')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
+            <el-form-item label="所有数据权限" prop="allDataScope" v-show="!isBusiness">
+              <bool-radio-group v-model="inputForm.allDataScope"></bool-radio-group>
+            </el-form-item>
             <el-form-item label="部门管理人" prop="leaderIdList">
               <account-select v-model="inputForm.leaderIdList" :multiple="true"></account-select>
             </el-form-item>
-            <el-form-item label="业务类型" prop="officeRuleId" v-show="isBusiness">
-              <el-select v-model="inputForm.officeRuleId" filterable >
-                <el-option v-for="item in inputForm.extra.officeRuleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item :label="$t('officeForm.jointType')" prop="jointType">
-              <el-select v-model="inputForm.jointType" filterable>
-                <el-option v-for="item in inputForm.extra.jointTypeList" :key="item" :label="item" :value="item"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="机构级别" prop="jointLevel">
-              <el-select v-model="inputForm.jointLevel" filterable>
-                <el-option v-for="item in inputForm.extra.jointLevelList" :key="item" :label="item" :value="item"></el-option>
-              </el-select>
+            <el-form-item :label="$t('officeForm.sort')" prop="sort">
+              <el-input v-model="inputForm.sort"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('officeForm.save')}}
@@ -35,14 +26,18 @@
             </el-form-item>
           </el-col>
           <el-col :span = "10" v-show="!isBusiness">
-            <el-form-item :label="$t('officeForm.point')" prop="point" v-show="isBusiness">
-              <el-input v-model="inputForm.point"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('officeForm.taskPoint')" prop="taskPoint" v-show="isBusiness">
-              <el-input v-model="inputForm.taskPoint"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('officeForm.sort')" prop="sort">
-              <el-input v-model="inputForm.sort"></el-input>
+            <el-form-item  label="授权" prop="officeIdList">
+              <el-tree
+                :data="treeData"
+                show-checkbox
+                node-key="id"
+                ref="tree"
+                check-strictly
+                :default-checked-keys="checked"
+                :default-expanded-keys="checked"
+                @check-change="handleCheckChange"
+                :props="defaultProps">
+              </el-tree>
             </el-form-item>
           </el-col>
         </el-row>
@@ -69,14 +64,11 @@
           isCreate: this.$route.query.id == null,
           multiple:true,
           submitDisabled: false,
-          isBusiness:false,
           inputForm: {
               extra:{}
           },
           rules: {
             name: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
-            officeType: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
-            jointType: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}]
           },
           remoteLoading: false,
           treeData:[],
@@ -93,7 +85,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            this.inputForm.type='业务部门'
+            this.inputForm.type='职能部门'
             axios.post('/api/basic/sys/office/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response) => {
               if(response.data.success){
                 this.$message(response.data.message);
@@ -118,15 +110,30 @@
             this.submitDisabled = false;
           }
         })
-      }, initPage(){
+      },
+      handleCheckChange(data, checked, indeterminate) {
+        var officeIdList=new Array()
+        var check=this.$refs.tree.getCheckedKeys();
+        for(var index in check){
+          if(check[index]!=0){
+            officeIdList.push(check[index])
+          }
+        }
+        this.inputForm.officeIdList=officeIdList;
+      },initPage(){
         axios.get('/api/basic/sys/office/getForm').then((response) => {
           this.inputForm = response.data;
           axios.get('/api/basic/sys/office/findOne', {params: {id: this.$route.query.id}}).then((response) => {
             util.copyValue(response.data,this.inputForm);
+            this.checked=response.data.businessIdList
+            this.inputForm.officeIdList = response.data.businessIdList;
           })
         })
       }
     },created () {
+      axios.get('/api/basic/sys/office/getOfficeTree', {params: {id: this.inputForm.id}}).then((response) => {
+        this.treeData =new Array(response.data);
+      })
       this.initPage();
     }
   }

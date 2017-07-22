@@ -1,4 +1,5 @@
 insert into sys_company_config values (1023,'公司名称','COMPANY_NAME','IDVIVO','1','2017-06-26 17:19:10','1','2017-06-26 17:19:13','1','0','0','1','1');
+insert into sys_company_config values (1024,'EXPRESS_PRINT_QTY','EXPRESS_PRINT_QTY','14','1','2017-06-26 17:19:10','1','2017-06-26 17:19:13','1','0','0','1','1');
 
 INSERT INTO `sys_office_rule`(name,code,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,has_point,parent_id,parent_ids,level)VALUES('大区','districtOffice','1','2017-04-26 13:56:21','1','2017-06-26 18:10:41',NULL ,'0','0','1','1','0',NULL ,'0,','1');
 INSERT INTO `sys_office_rule`(name,code,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,has_point,parent_id,parent_ids,level)VALUES('省份','provinceOffice','1','2017-04-26 13:56:21','1','2017-06-26 18:10:41',NULL ,'0','0','1','1','0',1 ,'0,1,','1');
@@ -34,4 +35,7 @@ update hr_position set role_id=24 WHERE id in(116);
 update hr_position set role_id=25 WHERE id in(79,122);
 update hr_position set role_id=35 WHERE id in(57);
 update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='办事处业务') where (t1.role_id is NULL OR t1.role_id=1);
-update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='管理员') where (t1.name="管理员");
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='管理员') where (t1.name='管理员');
+
+update hr_account t1,hr_position t2 SET t1.role_ids=t2.role_id where t1.position_id=t2.id;
+update hr_account t1 SET t1.office_ids=t1.office_id;

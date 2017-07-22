@@ -138,34 +138,36 @@ public class DepotStoreService {
     @Transactional
     public void syn() {
         List<BdStock> bdstocks = cloudClient.getAllStock();
-        List<DepotStore> outIdDepotStoreList=depotStoreRepository.findByOutIdIn(CollectionUtil.extractToList(bdstocks,"FStockId"));
-        Map<String,DepotStore> depotStoreMap=CollectionUtil.extractToMap(outIdDepotStoreList,"outId");
-        List<Depot> depotList=depotRepository.findByNameList(CollectionUtil.extractToList(bdstocks,"FName"));
-        Map<String,Depot> depotMap=CollectionUtil.extractToMap(depotList,"name");
-        for(BdStock bdStock:bdstocks){
-            DepotStore store=depotStoreMap.get(bdStock.getFStockId());
-            if(store==null){
-                store=new DepotStore();
+        if(CollectionUtil.isNotEmpty(bdstocks)){
+            List<DepotStore> outIdDepotStoreList=depotStoreRepository.findByOutIdIn(CollectionUtil.extractToList(bdstocks,"FStockId"));
+            Map<String,DepotStore> depotStoreMap=CollectionUtil.extractToMap(outIdDepotStoreList,"outId");
+            List<Depot> depotList=depotRepository.findByNameList(CollectionUtil.extractToList(bdstocks,"FName"));
+            Map<String,Depot> depotMap=CollectionUtil.extractToMap(depotList,"name");
+            for(BdStock bdStock:bdstocks){
+                DepotStore store=depotStoreMap.get(bdStock.getFStockId());
+                if(store==null){
+                    store=new DepotStore();
+                }
+                Depot depot=depotMap.get(bdStock.getFName());
+                if(depot==null){
+                    depot=new Depot();
+                }
+                store.setOutId(bdStock.getFStockId());
+                store.setOutGroupId(bdStock.getFGroup());
+                store.setOutGroupName(bdStock.getFGroupName());
+                store.setOutDate(bdStock.getFModifyDate());
+                store.setOutCode(bdStock.getFNumber());
+                store.setEnabled(true);
+                depotStoreRepository.save(store);
+                depot.setName(bdStock.getFName());
+                store.setEnabled(true);
+                depot.setIsHidden(false);
+                depot.setNamePinyin(StringUtils.getFirstSpell(depot.getName()));
+                depot.setDepotStoreId(store.getId());
+                depotRepository.save(depot);
+                store.setDepotId(depot.getId());
+                depotStoreRepository.save(store);
             }
-            Depot depot=depotMap.get(bdStock.getFName());
-            if(depot==null){
-                depot=new Depot();
-            }
-            store.setOutId(bdStock.getFStockId());
-            store.setOutGroupId(bdStock.getFGroup());
-            store.setOutGroupName(bdStock.getFGroupName());
-            store.setOutDate(bdStock.getFModifyDate());
-            store.setOutCode(bdStock.getFNumber());
-            store.setEnabled(true);
-            depotStoreRepository.save(store);
-            depot.setName(bdStock.getFName());
-            store.setEnabled(true);
-            depot.setIsHidden(false);
-            depot.setNamePinyin(StringUtils.getFirstSpell(depot.getName()));
-            depot.setDepotStoreId(store.getId());
-            depotRepository.save(depot);
-            store.setDepotId(depot.getId());
-            depotStoreRepository.save(store);
         }
     }
 }

@@ -14,15 +14,12 @@ class AccountDtoRepository @Autowired constructor(val namedParameterJdbcTemplate
         var accountDto = namedParameterJdbcTemplate.queryForObject("""
                     SELECT
                     t1.*,
-                    t2.leave_date,
-                    t3.role_id
+                    t2.leave_date
                     FROM
                     hr_account t1,
-                    hr_employee t2,
-                    hr_position t3
+                    hr_employee t2
                     WHERE
                     t1.employee_id = t2.id
-                    and t1.position_id=t3.id
                     and t1.login_name= :loginName
                 """, Collections.singletonMap("loginName",loginName), BeanPropertyRowMapper(AccountDto::class.java))
                 return accountDto;
@@ -32,15 +29,12 @@ class AccountDtoRepository @Autowired constructor(val namedParameterJdbcTemplate
         return namedParameterJdbcTemplate.queryForObject("""
                     SELECT
                     t1.*,
-                    t2.leave_date ,
-                    t3.role_id
+                    t2.leave_date
                     FROM
                     hr_account t1,
-                    hr_employee t2,
-                    hr_position t3
+                    hr_employee t2
                     WHERE
                     t1.employee_id = t2.id
-                    and t1.position_id=t3.id
                     and t1.id= :id
                 """,Collections.singletonMap("id",id),BeanPropertyRowMapper(AccountDto::class.java))
     }

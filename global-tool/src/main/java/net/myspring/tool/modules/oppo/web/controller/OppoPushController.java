@@ -5,6 +5,7 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
+import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.modules.oppo.dto.OppoPlantSendImeiPpselDto;
 import net.myspring.tool.modules.oppo.dto.OppoPushDto;
@@ -14,6 +15,7 @@ import net.myspring.tool.modules.oppo.service.OppoPullService;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.MD5Utils;
 import net.myspring.util.time.LocalDateUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +42,11 @@ public class OppoPushController {
 
 
     //将需要上抛的数据先同步到本地数据库
-    @RequestMapping(value = "synToLocal")
-    public String synToLocal(String date) {
-        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
-        DbContextHolder.get().setCompanyName(companyName);
-
+    @RequestMapping(value = "pushToLocal")
+    public String pushToLocal(String companyName,String date) {
+        if(StringUtils.isBlank(RequestUtils.getCompanyName())) {
+            DbContextHolder.get().setCompanyName(companyName);
+        }
         OppoPushDto oppoPushDto = new OppoPushDto();
         oppoPushDto.setDate(date);
         oppoPushDto.setCustomerDtos(oppoPushSerivce.getOppoCustomers());
@@ -64,7 +66,7 @@ public class OppoPushController {
 
     //代理商经销商基础数据上抛
     @RequestMapping(value = "pullCustomers", method = RequestMethod.GET)
-    public OppoResponseMessage pullOppoCustomers(String key, String createdDate,HttpServletResponse response) throws IOException {
+    public OppoResponseMessage pullOppoCustomers(String key, String createdDate) throws IOException {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + createdDate);

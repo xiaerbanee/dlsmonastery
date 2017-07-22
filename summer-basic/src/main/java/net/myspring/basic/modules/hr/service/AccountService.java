@@ -145,7 +145,7 @@ public class AccountService {
 
     public List<String> getAuthorityList() {
         String accountId= RequestUtils.getAccountId();
-        String roleId = roleManager.findIdByAccountId(accountId);
+        List<String> roleIdList = RequestUtils.getRoleIdList();
         List<String> authorityList;
         List<Permission> permissionList;
         if(RequestUtils.getAdmin()){
@@ -153,9 +153,9 @@ public class AccountService {
         }else {
             List<String> accountPermissions=accountPermissionRepository.findPermissionIdByAccountId(accountId);
             if(CollectionUtil.isNotEmpty(accountPermissions)){
-                permissionList=permissionRepository.findByRoleAndAccount(roleId,accountId);
+                permissionList=permissionRepository.findByAccountId(accountId);
             }else {
-                permissionList=permissionRepository.findByRoleId(roleId);
+                permissionList=permissionRepository.findByRoleIdList(roleIdList);
             }
         }
         authorityList= CollectionUtil.extractToList(permissionList,"permission");

@@ -25,6 +25,19 @@ class OfficeRepository @Autowired constructor(val namedParameterJdbcTemplate: Na
         return namedParameterJdbcTemplate.queryForObject(sql, Collections.singletonMap("id",id), BeanPropertyRowMapper(OfficeDto::class.java))
     }
 
+    fun findByIds(idList: List<String>): MutableList<OfficeDto> {
+        var sql = """
+             SELECT
+                t1.*
+                FROM
+                sys_office t1
+                WHERE
+                t1.enabled=1
+                and t1.id in (:idList)
+        """;
+        return namedParameterJdbcTemplate.query(sql, Collections.singletonMap("idList",idList), BeanPropertyRowMapper(OfficeDto::class.java))
+    }
+
     fun findByParentIdsLike(parentId:String):MutableList<OfficeDto>{
         var sql = """
             SELECT t1.*

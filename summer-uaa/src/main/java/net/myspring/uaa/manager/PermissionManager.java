@@ -28,16 +28,16 @@ public class PermissionManager {
     private AccountPermissionRepository accountPermissionRepository;
 
     @CachePut(key = "#p0",value="authorityCache")
-    public List<String> getPermissionList(String accountId,String roleId){
+    public List<String> getPermissionList(String accountId,List<String> roleIdList){
         List<PermissionDto> permissionList;
         if(StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(accountId)){
             permissionList=permissionRepository.findAllEnabled();
         }else {
             List<String> accountPermissions=accountPermissionRepository.findPermissionIdByAccountId(accountId);
             if(CollectionUtil.isNotEmpty(accountPermissions)){
-                permissionList=permissionRepository.findByRoleAndAccount(roleId,accountId);
+                permissionList=permissionRepository.findByAccountId(accountId);
             }else {
-                permissionList=permissionRepository.findByRoleId(roleId);
+                permissionList=permissionRepository.findByRoleIdList(roleIdList);
             }
         }
         List<String> list= Lists.newArrayList();
