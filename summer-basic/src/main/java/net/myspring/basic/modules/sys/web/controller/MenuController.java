@@ -72,8 +72,8 @@ public class MenuController {
     @RequestMapping(value = "getMobileMenus")
     public List<Map<String,Object>> getMenus(){
         String accountId= RequestUtils.getAccountId();
-        String roleId= RequestUtils.getRoleId();
-        return menuService.findMobileMenus(accountId,roleId);
+        List<String> roleIdList= RequestUtils.getRoleIdList();
+        return menuService.findMobileMenus(accountId,roleIdList);
     }
 
     @RequestMapping(value = "getForm")

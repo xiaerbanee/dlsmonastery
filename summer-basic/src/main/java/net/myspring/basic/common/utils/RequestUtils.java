@@ -17,8 +17,8 @@ public class RequestUtils {
         return (String) getSecurityMap().get("accountId");
     }
 
-    public static String getRoleId() {
-        return (String) getSecurityMap().get("roleId");
+    public static List<String> getRoleIdList() {
+        return (List<String>) getSecurityMap().get("roleIdList");
     }
 
     public static String getCompanyName() {

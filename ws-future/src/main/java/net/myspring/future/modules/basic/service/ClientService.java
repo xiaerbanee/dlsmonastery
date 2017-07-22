@@ -113,7 +113,7 @@ public class ClientService {
     @Transactional
     public void syn(){
         LocalDateTime outDate=clientRepository.findMaxOutDate();
-        List<BdCustomer> bdCustomers=cloudClient.findCustomerByMaxModifyDate(outDate.toString());
+        List<BdCustomer> bdCustomers=cloudClient.findCustomerByMaxModifyDate(outDate.minusHours(1).toString());
         if(CollectionUtil.isNotEmpty(bdCustomers)){
             List<Client> clientList=clientRepository.findByOutIdIn(CollectionUtil.extractToList(bdCustomers,"FCustId"));
             Map<String,Client> outIdClientMap=CollectionUtil.extractToMap(clientList,"outId");

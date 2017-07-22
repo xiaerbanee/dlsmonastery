@@ -68,12 +68,12 @@ interface MenuRepositoryCustom{
 
     fun findPage(pageable: Pageable, menuQuery: MenuQuery): Page<MenuDto>?
 
-    fun findByMenuIdsAndMobile(menuIds:MutableList<String>,isMobile:Boolean,roleId: String):MutableList<Menu>
+    fun findByMenuIdsAndMobile(menuIds:MutableList<String>,isMobile:Boolean,roleIdList: List<String>):MutableList<Menu>
 
 }
 
 class MenuRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): MenuRepositoryCustom{
-    override fun findByMenuIdsAndMobile(menuIds: MutableList<String>, isMobile: Boolean,roleId:String): MutableList<Menu> {
+    override fun findByMenuIdsAndMobile(menuIds: MutableList<String>, isMobile: Boolean,roleIdList:List<String>): MutableList<Menu> {
             var sb = StringBuilder("""
                    SELECT DISTINCT t4.*
                    FROM
@@ -98,13 +98,13 @@ class MenuRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: 
             }
         if(!RequestUtils.getAdmin()) {
             sb.append("""
-                    and t6.role_id=:roleId
+                    and t6.role_id in (:roleIdList)
                 """);
         }
         sb.append("  and t4.id in (:menuIds)    ");
         var paramMap= Maps.newHashMap<String,Any>();
         paramMap.put("menuIds",menuIds);
-        paramMap.put("roleId",roleId);
+        paramMap.put("roleIdList",roleIdList);
         return namedParameterJdbcTemplate.query(sb.toString(),paramMap, BeanPropertyRowMapper(Menu::class.java));
     }
 

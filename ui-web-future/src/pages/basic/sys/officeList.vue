@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'sys:office:edit'">{{$t('officeList.add')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'sys:office:view'">{{$t('officeList.filter')}}</el-button>
-        <el-button type="primary" @click="officeChange" icon="document" v-permit="'sys:office:edit'">机构调整</el-button>
+        <el-button type="primary" @click="officeChange" icon="document" v-permit="'sys:office:officeChange:edit'">机构调整</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('officeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
