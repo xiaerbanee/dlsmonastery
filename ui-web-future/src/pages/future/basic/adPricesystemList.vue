@@ -38,7 +38,7 @@
         <el-table-column fixed="right" :label="$t('adPricesystemList.operation')" width="140">
           <template scope="scope">
             <div class="action" v-permit="'crm:adPricesystem:edit'"><el-button size="small"  @click.native="itemAction(scope.row.id,'edit')">{{$t('adPricesystemList.edit')}}</el-button></div>
-            <div class="action" v-permit="'crm:adPricesystem:edit'"><el-button size="small"  @click.native="itemAction(scope.row.id,'delete')">{{$t('adPricesystemList.delete')}}</el-button></div>
+            <div class="action" v-permit="'crm:adPricesystem:delete'"><el-button size="small"  @click.native="itemAction(scope.row.id,'delete')">{{$t('adPricesystemList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
