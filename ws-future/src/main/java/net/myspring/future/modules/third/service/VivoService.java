@@ -3,10 +3,11 @@ package net.myspring.future.modules.third.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.enums.CompanyNameEnum;
-import net.myspring.future.modules.basic.client.CompanyConfigClient;
+import net.myspring.future.common.datasource.DbContextHolder;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.third.client.VivoClient;
@@ -18,7 +19,7 @@ import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,28 +33,26 @@ import java.util.Set;
  * Created by guolm on 2017/5/23.
  */
 @Service
-@Transactional(readOnly = false)
+@Transactional(readOnly = true)
 public class VivoService {
 
     @Autowired
     private VivoClient vivoClient;
     @Autowired
-    private CompanyConfigClient companyConfigClient;
-    @Autowired
     private ProductImeRepository productImeRepository;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-
+    @Transactional
     public String pullFactoryData(String date) {
         if (StringUtils.isBlank(date)) {
             date = LocalDateUtils.formatLocalDate(LocalDate.now(),LocalDateUtils.FORMATTER);
         }
-        String agentCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace(CharConstant.DOUBLE_QUOTATION, "");
-        String lxAgentCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
-        if(StringUtils.isNotBlank(lxAgentCode)) {
-            lxAgentCode = lxAgentCode.replace(CharConstant.DOUBLE_QUOTATION, "");
-        }
+        String companyName = DbContextHolder.get().getCompanyName();
+        String agentCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
+        String lxAgentCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name()).getValue();
         List<String> lxAgentCodes = Lists.newArrayList();
         if (StringUtils.isNotBlank(lxAgentCode)) {
             lxAgentCodes = StringUtils.getSplitList(lxAgentCode, CharConstant.COMMA);
@@ -63,16 +62,12 @@ public class VivoService {
             agentCodes = StringUtils.getSplitList(agentCode, CharConstant.COMMA);
         }
         String goodStoreProduct = "";
-        String companyName = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace(CharConstant.DOUBLE_QUOTATION, "");
         if (!CompanyNameEnum.IDVIVO.equals(companyName)) {
              goodStoreProduct = "49";
         }
-        String defaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).replace(CharConstant.DOUBLE_QUOTATION, "");
-        String goodStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.GOOD_STORE_ID.name()).replace(CharConstant.DOUBLE_QUOTATION, "");
-        String lxDefaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name());
-        if(StringUtils.isNotBlank(lxDefaultStoreId)) {
-            lxDefaultStoreId= lxDefaultStoreId.replace(CharConstant.DOUBLE_QUOTATION, "");
-        }
+        String defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue();
+        String goodStoreId = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.GOOD_STORE_ID.name()).getValue();
+        String lxDefaultStoreId = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).getValue();
         List<VivoPlantSendimei> vivoPlantSendimeis = vivoClient.getSendImeList(companyName,date, agentCode);
         List<ProductIme> productImes=Lists.newArrayList();
         List<ProductIme> productImeList=Lists.newArrayList();
@@ -81,7 +76,7 @@ public class VivoService {
         if(CollectionUtil.isNotEmpty(vivoPlantSendimeis)){
             for (VivoPlantSendimei vivoPlantSendimei : vivoPlantSendimeis) {
                 if (CollectionUtil.isNotEmpty(lxAgentCodes) && lxAgentCodes.contains(vivoPlantSendimei.getCompanyId())) {
-                    if (StringUtils.isEmpty(vivoPlantSendimei.getLxProductId())) {
+                    if (StringUtils.isBlank(vivoPlantSendimei.getLxProductId())) {
                         itemNumberSet.add(vivoPlantSendimei.getProductId());
                     }
                 } else {
