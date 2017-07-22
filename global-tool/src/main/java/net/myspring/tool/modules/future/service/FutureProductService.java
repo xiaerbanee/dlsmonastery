@@ -5,11 +5,13 @@ import net.myspring.tool.modules.future.dto.ProductDto;
 import net.myspring.tool.modules.future.repository.FutureProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@FutureDataSource
 @Service
+@FutureDataSource
+@Transactional(readOnly = true)
 public class FutureProductService {
     @Autowired
     private FutureProductRepository futureProductRepository;

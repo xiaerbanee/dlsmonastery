@@ -8,11 +8,13 @@ import net.myspring.tool.modules.vivo.dto.SCustomerDto;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @FutureDataSource
+@Transactional(readOnly = true)
 public class FutureCustomerService {
     @Autowired
     private FutureCustomerRepository futureCustomerRepository;

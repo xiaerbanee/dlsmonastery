@@ -66,18 +66,6 @@ public class OppoPushSerivce {
     @Autowired
     private OppoCustomerDemoPhoneRepository oppoCustomerDemoPhoneRepository;
     @Autowired
-    private FutureAfterSaleRepository futureAfterSaleRepository;
-    @Autowired
-    private FutureStoreAllotRepository futureStoreAllotRepository;
-    @Autowired
-    private FutureDemoPhoneRepository futureDemoPhoneRepository;
-    @Autowired
-    private FutureImeAllotRepository futureImeAllotRepository;
-    @Autowired
-    private FutureProductImeSaleRepository futureProductImeSaleRepository;
-    @Autowired
-    private FutureProductImeRepository futureProductImeRepository;
-    @Autowired
     private FutureCustomerRepository futureCustomerRepository;
     @Autowired
     private CacheUtils cacheUtils;
@@ -530,6 +518,7 @@ public class OppoPushSerivce {
             return false;
         }
     }
+
     private Boolean isShop(CustomerDto customerDto){
         String jointLeavel=customerDto.getJointLeavel();
         String storeId=customerDto.getStoreId();
