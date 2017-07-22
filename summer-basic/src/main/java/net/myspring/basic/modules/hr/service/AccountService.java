@@ -32,11 +32,13 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Cacheable;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -143,8 +145,8 @@ public class AccountService {
         return accountDtoList;
     }
 
-    public List<String> getAuthorityList() {
-        String accountId= RequestUtils.getAccountId();
+    @CachePut(key = "#p0",value="authorityCache")
+    public List<String> getAuthorityList(String accountId) {
         List<String> roleIdList = RequestUtils.getRoleIdList();
         List<String> authorityList;
         List<Permission> permissionList;

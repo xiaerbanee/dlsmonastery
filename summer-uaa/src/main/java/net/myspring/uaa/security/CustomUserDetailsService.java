@@ -100,7 +100,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             //将用户权限设置到缓存中
             List<String> roleIdList=StringUtils.getSplitList(accountDto.getRoleIds(),CharConstant.COMMA);
             List<String> officeIds=StringUtils.getSplitList(accountDto.getOfficeIds(),CharConstant.COMMA);
-            permissionManager.getPermissionList(accountDto.getId(),roleIdList);
             Boolean admin = StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(accountDto.getId());
             List<OfficeDto> officeList = officeManager.findByIds(officeIds);
             Boolean allDataScope = CollectionUtil.extractToList(officeList,"allDataScope").contains(true);
