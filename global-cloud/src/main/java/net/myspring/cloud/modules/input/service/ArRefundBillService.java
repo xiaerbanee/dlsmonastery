@@ -143,9 +143,7 @@ public class ArRefundBillService {
                     arRefundBill.setDepartmentNumber(customerNameToDepartmentNumberMap.get(customerName));
                     ArRefundBillEntityDto arRefundBillEntityDto = new ArRefundBillEntityDto();
                     arRefundBillEntityDto.setFSettleTypeIdNumber(SettleTypeEnum.电汇.getFNumber());
-                    if (StringUtils.isNotBlank(bankAcntName)){
-                        arRefundBillEntityDto.setBankAcntNumber(bankAcntNameMap.get(bankAcntName));
-                    }
+                    arRefundBillEntityDto.setBankAcntNumber(bankAcntNameMap.get(bankAcntName));
                     arRefundBillEntityDto.setNote(remarks);
                     arRefundBill.setArRefundBillEntityDtoList(Lists.newArrayList(arRefundBillEntityDto));
                     refundBillForDHMap.put(billKey, arRefundBill);
