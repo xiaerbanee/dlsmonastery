@@ -3,6 +3,7 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
+import net.myspring.cloud.common.enums.BasAssistantTypeEnum;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.common.utils.HandsontableUtils;
@@ -123,9 +124,9 @@ public class ArOtherRecAbleService {
         Map<String, String> otherTypeNameMap = Maps.newHashMap();
         Map<String, String> expenseTypeNameMap = Maps.newHashMap();
         for (BasAssistant basAssistant :basAssistantList){
-            if ("其他类".equals(basAssistant.getFType())){
+            if (BasAssistantTypeEnum.其他类.name().equals(basAssistant.getFType())){
                otherTypeNameMap.put(basAssistant.getFDataValue(),basAssistant.getFNumber());
-            }else if("费用类".equals(basAssistant.getFType())){
+            }else if(BasAssistantTypeEnum.费用类.name().equals(basAssistant.getFType())){
                 expenseTypeNameMap.put(basAssistant.getFDataValue(),basAssistant.getFNumber());
             }
         }
@@ -197,8 +198,8 @@ public class ArOtherRecAbleService {
         map.put("accountNameList",bdAccountRepository.findAll().stream().map(BdAccount::getFName).collect(Collectors.toList()));
         map.put("staffNameList",hrEmpInfoRepository.findAll().stream().map(HrEmpInfo::getFName).collect(Collectors.toList()));
         map.put("departmentNameList",bdDepartmentRepository.findAll().stream().map(BdDepartment::getFFullName).collect(Collectors.toList()));
-        map.put("otherTypeNameList",basAssistantRepository.findByType("其他类").stream().map(BasAssistant::getFDataValue).collect(Collectors.toList()));
-        map.put("expenseTypeNameList",basAssistantRepository.findByType("费用类").stream().map(BasAssistant::getFDataValue).collect(Collectors.toList()));
+        map.put("otherTypeNameList",basAssistantRepository.findByType(BasAssistantTypeEnum.其他类.name()).stream().map(BasAssistant::getFDataValue).collect(Collectors.toList()));
+        map.put("expenseTypeNameList",basAssistantRepository.findByType(BasAssistantTypeEnum.费用类.name()).stream().map(BasAssistant::getFDataValue).collect(Collectors.toList()));
         map.put("customerNameList",bdCustomerRepository.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList()));
         arOtherRecAbleForm.setExtra(map);
         return arOtherRecAbleForm;

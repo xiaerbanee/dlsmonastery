@@ -3,6 +3,7 @@ package net.myspring.cloud.modules.input.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.common.enums.SettleTypeEnum;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -133,10 +134,10 @@ public class ArReceiveBillDto {
             //收款用途--
             detail.put("FPURPOSEID", CollectionUtil.getMap("FNumber", "SFKYT01_SYS"));
             //对方科目代码
-            if ("JSFS04_SYS".equals(entryDto.getFSettleTypeIdNumber())){//结算方式--电汇（JSFS04_SYS）
+            if (SettleTypeEnum.电汇.getFNumber().equals(entryDto.getFSettleTypeIdNumber())){//结算方式--电汇（JSFS04_SYS）
                 //对方科目代码--银行存款(1002)
                 detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", "1002"));
-            }else if ("JSFS01_SYS".equals(entryDto.getFSettleTypeIdNumber())){//结算方式--现金（JSFS01_SYS）
+            }else if (SettleTypeEnum.现金.getFNumber().equals(entryDto.getFSettleTypeIdNumber())){//结算方式--现金（JSFS01_SYS）
                 //对方科目代码--库存现金(1001)
                 detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", "1001"));
             }

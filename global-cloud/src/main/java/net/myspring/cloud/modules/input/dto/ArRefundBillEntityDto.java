@@ -4,9 +4,11 @@ package net.myspring.cloud.modules.input.dto;
  * Created by lihx on 2017/6/20.
  */
 public class ArRefundBillEntityDto {
+    //银行账户编码
     private String BankAcntNumber;
+    //结算方式编码
     private String FSettleTypeIdNumber;
-    private String accountNumber;
+    //备注
     private String note;
 
     public String getBankAcntNumber() {
@@ -23,14 +25,6 @@ public class ArRefundBillEntityDto {
 
     public void setFSettleTypeIdNumber(String FSettleTypeIdNumber) {
         this.FSettleTypeIdNumber = FSettleTypeIdNumber;
-    }
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
     }
 
     public String getNote() {
