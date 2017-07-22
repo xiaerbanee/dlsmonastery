@@ -1,10 +1,13 @@
 package net.myspring.tool.modules.future.repository
 
+import com.google.common.collect.Maps
 import net.myspring.tool.modules.future.dto.CustomerDto
+import net.myspring.tool.modules.vivo.dto.SCustomerDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
+import java.time.LocalDate
 
 @Component
 class FutureCustomerRepository @Autowired constructor(val namedParameterJdbcTemplate:NamedParameterJdbcTemplate){
@@ -43,5 +46,54 @@ class FutureCustomerRepository @Autowired constructor(val namedParameterJdbcTemp
             order by de.id asc
         """)
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertyRowMapper(CustomerDto::class.java))
+    }
+
+
+    fun findVivoCustomers(date: LocalDate): MutableList<SCustomerDto> {
+        val map = Maps.newHashMap<String, Any>()
+        map.put("date",date)
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+                de.area_id AS customerId,
+                de.NAME AS customerName,
+                de.office_id AS zoneId,
+                :date AS recordDate,
+                1 AS customerLevel,
+                '' AS customerStr1,
+                de.area_id AS customerStr4
+            FROM
+                crm_depot de
+            WHERE
+                de.area_id IS NOT NULL
+            OR de.area_id <> ''
+            GROUP BY
+                de.area_id
+            UNION
+                SELECT
+                    de.id AS customerId,
+                    de.NAME AS customerName,
+                    de.area_id AS zoneId,
+                    :date AS recordDate,
+                    2 AS customerLevel,
+                    de.area_type AS customerStr1,
+                    de.area_id AS customerStr4
+                FROM
+                    crm_depot de
+                WHERE
+                    de.id IN (
+                        SELECT
+                            depot_id
+                        FROM
+                            crm_depot_shop
+                        WHERE
+                            depot_id NOT IN
+                            (
+                                SELECT
+                                    depot_id
+                                FROM
+                                    crm_depot_store
+                            )
+                    )
+        """,map, BeanPropertyRowMapper(SCustomerDto::class.java))
     }
 }

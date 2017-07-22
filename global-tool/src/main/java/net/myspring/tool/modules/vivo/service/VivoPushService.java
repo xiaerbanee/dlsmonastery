@@ -8,7 +8,6 @@ import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.OfficeClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
-import net.myspring.tool.common.dataSource.annotation.FutureDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.modules.future.dto.OfficeDto;
 import net.myspring.tool.common.utils.CacheUtils;
@@ -34,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@FactoryDataSource
 public class VivoPushService {
 
     @Autowired
@@ -42,10 +42,6 @@ public class VivoPushService {
     private SZonesRepository sZonesRepository;
     @Autowired
     private SCustomersRepository sCustomersRepository;
-    @Autowired
-    private SPlantCustomerStockRepository sPlantCustomerStockRepository;
-    @Autowired
-    private SPlantCustomerStockDetailRepository sPlantCustomerStockDetailRepository;
     @Autowired
     private VivoPlantProductsRepository vivoPlantProductsRepository;
     @Autowired
@@ -61,8 +57,6 @@ public class VivoPushService {
     @Autowired
     private SProductItemLendRepository sProductItemLendRepository;
     @Autowired
-    private VivoCustomerSaleImeiRepository vivoCustomerSaleImeiRepository;
-    @Autowired
     private SPlantEndProductSaleRepository sPlantEndProductSaleRepository;
     @Autowired
     private SStoresRepository sStoresRepository;
@@ -73,7 +67,6 @@ public class VivoPushService {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-    @FactoryDataSource
     @Transactional
     public  List<SZones> pushVivoZonesData(){
         logger.info(DbContextHolder.get().getCompanyName()+DbContextHolder.get().getDataSourceType());
@@ -105,14 +98,7 @@ public class VivoPushService {
         return sZonesList;
     }
 
-    @FutureDataSource
-    public List<SCustomerDto> getVivoCustomersData(String date){
-        List<SCustomerDto> sCustomerDtoList = sCustomersRepository.findVivoCustomers(LocalDateUtils.parse(date));
-        cacheUtils.initCacheInput(sCustomerDtoList);
-        return sCustomerDtoList;
-    }
 
-    @FactoryDataSource
     @Transactional
     public void pushVivoPushSCustomersData(List<SCustomerDto> futureCustomerDtoList,String date){
         String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
@@ -142,16 +128,7 @@ public class VivoPushService {
         logger.info("上抛客户数据完成"+LocalDateTime.now());
     }
 
-    @FutureDataSource
-    public List<SPlantCustomerStockDto> getCustomerStockData(String date){
-        LocalDate dateStart = LocalDateUtils.parse(date).minusYears(1);
-        LocalDate dateEnd = LocalDateUtils.parse(date).plusDays(1);
-        List<SPlantCustomerStockDto> sPlantCustomerStockDtoList = sPlantCustomerStockRepository.findCustomerStockData(dateStart,dateEnd);
-        cacheUtils.initCacheInput(sPlantCustomerStockDtoList);
-        return sPlantCustomerStockDtoList;
-    }
 
-    @FactoryDataSource
     @Transactional
     public void pushCustomerStockData(List<SPlantCustomerStockDto> sPlantCustomerStockDtoList,Map<String,String> productColorMap,String date){
 
@@ -225,15 +202,6 @@ public class VivoPushService {
         logger.info("上抛经销商库存数据成功"+LocalDateTime.now());
     }
 
-    @FutureDataSource
-    public List<SPlantCustomerStockDetailDto> getCustomerStockDetailData(String date){
-        LocalDate dateStart = LocalDateUtils.parse(date).minusYears(1);
-        LocalDate dateEnd = LocalDateUtils.parse(date).plusDays(1);
-        List<SPlantCustomerStockDetailDto> sPlantCustomerStockDetailDtoList = sPlantCustomerStockDetailRepository.findCustomerStockDetailData(dateStart,dateEnd);
-        return sPlantCustomerStockDetailDtoList;
-    }
-
-    @FactoryDataSource
     @Transactional
     public void pushCustomerStockDetailData(List<SPlantCustomerStockDetailDto> sPlantCustomerStockDetailDtoList,Map<String,String> productColorMap,String date){
 
@@ -286,17 +254,6 @@ public class VivoPushService {
         logger.info("同步库存串码明细数据完成:"+LocalDateTime.now());
     }
 
-    @FutureDataSource
-    public List<SProductItemLend> getDemoPhonesData(String date){
-        if (StringUtils.isBlank(date)){
-            date = LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart = date;
-        String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        return sProductItemLendRepository.findDemoPhones(dateStart,dateEnd);
-    }
-
-    @FactoryDataSource
     @Transactional
     public void pushDemoPhonesData(List<SProductItemLend> sProductItemLendList, Map<String,String> productColorMap, String date){
         String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
@@ -326,17 +283,6 @@ public class VivoPushService {
         logger.info("上抛借机数据结束:"+LocalDateTime.now());
     }
 
-    @FutureDataSource
-    public List<VivoCustomerSaleImeiDto> getProductImeSaleData(String date){
-        if (StringUtils.isBlank(date)){
-            date = LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart = date;
-        String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        return vivoCustomerSaleImeiRepository.findProductSaleImei(dateStart,dateEnd);
-    }
-
-    @FactoryDataSource
     @Transactional
     public void pushProductImeSaleData(List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList,Map<String,String> productColorMap,String date){
         String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
@@ -367,7 +313,7 @@ public class VivoPushService {
         logger.info("上抛核销记录数据结束:"+LocalDateTime.now());
     }
 
-    @FactoryDataSource
+    @Transactional
     public void pushSStoreData(){
         String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
         List<SStores> sStoresList = Lists.newArrayList();
