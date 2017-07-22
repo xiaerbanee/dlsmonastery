@@ -58,7 +58,10 @@ public class OppoPullController {
 
 
     @RequestMapping(value = "getSendImeList")
-    public List<OppoPlantSendImeiPpselDto> getSendImeList(String date, String agentCode) {
+    public List<OppoPlantSendImeiPpselDto> getSendImeList(String companyName,String date, String agentCode) {
+        if(StringUtils.isBlank(RequestUtils.getCompanyName())) {
+            DbContextHolder.get().setCompanyName(companyName);
+        }
         List<OppoPlantSendImeiPpselDto> oppoPlantSendImeiPpselDtos = oppoPullService.getSendImeList(date,agentCode);
         return oppoPlantSendImeiPpselDtos;
     }
