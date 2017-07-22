@@ -18,7 +18,7 @@
                 <bool-select v-model="formData.hasIme"></bool-select>
               </el-form-item>
               <el-form-item :label="$t('productAdEdit.code')" :label-width="formLabelWidth">
-                <el-input v-model="formData.code" auto-complete="off" :placeholder="$t('productAdEdit.likeSearch')"></el-input>
+                <el-input type="textarea" v-model="formData.code" :placeholder="$t('productAdEdit.blankOrComma')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('productAdEdit.visible')" :label-width="formLabelWidth">
                 <bool-select v-model="formData.visible"></bool-select>
