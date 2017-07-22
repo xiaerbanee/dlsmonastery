@@ -46,4 +46,4 @@ spring:
     database: 0
     max-idle: 100
     max-total: 200
-companyNames: IDVIVO,
+companyNames: IDVIVO
