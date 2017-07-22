@@ -8,7 +8,6 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.future.common.datasource.DbContextHolder;
-import net.myspring.future.modules.basic.client.CompanyConfigClient;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.third.client.OppoClient;

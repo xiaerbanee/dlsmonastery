@@ -8,6 +8,7 @@ import net.myspring.tool.modules.oppo.service.OppoPlantAgentProductSelService;
 import net.myspring.tool.modules.oppo.web.form.OppoPlantAgentProductSelForm;
 import net.myspring.tool.modules.oppo.web.query.OppoPlantAgentProductSelQuery;
 import net.myspring.util.collection.CollectionUtil;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
