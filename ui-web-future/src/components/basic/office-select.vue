@@ -111,17 +111,13 @@
         return this.innerId === item.id;
       }
     },created () {
-        if(util.isBlank(this.value)){
-            return;
-        }
+        if(util.isBlank(this.value)){ return; }
       this.initItemList(this.value, true).then(()=>{
         this.setValue(this.value);
       });
     },watch: {
       value :function (newVal) {
-          if(util.isBlank(this.value)){
-              return;
-          }
+          if(util.isBlank(newVal)){ return; }
         this.initItemList(newVal, false).then(()=>{
           this.setValue(newVal);
         });
