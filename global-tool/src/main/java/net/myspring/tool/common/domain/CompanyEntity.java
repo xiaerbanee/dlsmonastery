@@ -1,7 +1,7 @@
 package net.myspring.tool.common.domain;
 
 
-import net.myspring.cloud.common.utils.RequestUtils;
+import net.myspring.tool.common.utils.RequestUtils;
 
 import javax.persistence.MappedSuperclass;
 
