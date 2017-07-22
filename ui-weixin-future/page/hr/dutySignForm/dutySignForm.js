@@ -7,7 +7,8 @@ Page({
     response: {},
     submitDisabled: false,
     submitHidden: false,
-    options: null
+    options: null,
+    address:["a","b"]
   },
   onLoad: function (options) {
     var that = this;
@@ -52,6 +53,7 @@ Page({
     wx.getLocation({
       type: 'wgs84',
       success: function (res) {
+        console.log(res)
         that.setData({ "formData.longitude": res.longitude, "formData.latitude": res.latitude, "formData.accuracy": res.accuracy })
         wx.getNetworkType({
           success: function (res) {
@@ -143,12 +145,12 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
+        console.log(res.data)
         if (res.data.success) {
           wx.navigateBack();
-        } else if (res.data.hasOwnProperty("extra")){
+        } else{
+          that.setData({ "response.error": res.data.message})
           that.setData({ "response.data": res.data.extra.errors, submitDisabled: false });
-        }else {
-          that.setData({ "response.error": res.data.message,submitDisabled: false})
         }
       }
     })
