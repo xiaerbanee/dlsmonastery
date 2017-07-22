@@ -32,13 +32,25 @@
           columns: [
             {type: "autocomplete", strict: true, allowEmpty: false, supplierName:[],source: this.supplierName},
             {type: "autocomplete", strict: true, allowEmpty: false, departmentName:[],source: this.departmentName},
-            {type: "autocomplete", strict: true, allowEmpty: false, bankAcntName:[],source: this.bankAcntName},
+            {type: "autocomplete", strict: true, allowEmpty: true, bankAcntName:[],source: this.bankAcntName},
             {type: "autocomplete", strict: true, allowEmpty: false, settleTypeName:[],source: this.settleTypeName},
             {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true},
             {type: "text", allowEmpty: true, strict: true},
             {type: "autocomplete", strict: true, allowEmpty: false, accountName:[],source: this.accountName},
           ],
-          contextMenu: ['row_above', 'row_below', 'remove_row'],
+          contextMenu: true,
+          afterChange: function (changes, source) {
+            if (source !== 'loadData') {
+              for (let i = changes.length - 1; i >= 0; i--) {
+                let row = changes[i][0];
+                let column = changes[i][1];
+                if(column === 3 &&　changes[i][3] === '现金') {
+                  table.setDataAtCell(row, 2, '');
+                  table.setDataAtCell(row, 5, '批量开单');
+                }
+              }
+            }
+          }
         },
         formData:{
           billDate:new Date().toLocaleDateString(),

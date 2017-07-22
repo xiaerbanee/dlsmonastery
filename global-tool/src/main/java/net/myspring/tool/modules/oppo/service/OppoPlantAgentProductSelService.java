@@ -5,12 +5,10 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
-import net.myspring.tool.common.dataSource.annotation.FutureDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.modules.future.dto.ProductDto;
 import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
 import net.myspring.tool.modules.oppo.dto.OppoPlantAgentProductSelDto;
-import net.myspring.tool.modules.future.repository.FutureProductRepository;
 import net.myspring.tool.modules.oppo.repository.OppoPlantAgentProductSelRepository;
 import net.myspring.tool.modules.oppo.web.form.OppoPlantAgentProductSelForm;
 import net.myspring.tool.modules.oppo.web.query.OppoPlantAgentProductSelQuery;
@@ -33,13 +31,6 @@ public class OppoPlantAgentProductSelService {
     private RedisTemplate redisTemplate;
     @Autowired
     private OppoPlantAgentProductSelRepository oppoPlantAgentProductSelRepository;
-    @Autowired
-    private FutureProductRepository futureProductRepository;
-
-    @FutureDataSource
-    public List<ProductDto> findHasImeProduct(){
-        return futureProductRepository.findHasImeProduct();
-    }
 
 
     public List<OppoPlantAgentProductSelDto> findAll(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){

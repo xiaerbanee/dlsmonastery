@@ -88,7 +88,7 @@
               strict: true,
               width: 100
             }],
-            contextMenu: ['row_above', 'row_below', 'remove_row'],
+            contextMenu: true,
           }, rules: {},
           submitDisabled: false,
         };

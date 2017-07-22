@@ -22,17 +22,6 @@ class SPlantStockDealerRepository @Autowired constructor(val namedParameterJdbcT
         return namedParameterJdbcTemplate.update(sb.toString(),map)
     }
 
-    fun deleteIDvivoByAccountDate(dateStart: String, dateEnd: String,agentCode:String):Int {
-        val map = Maps.newHashMap<String,Any>()
-        map.put("dateStart",dateStart)
-        map.put("dateEnd",dateEnd)
-        val sb = StringBuilder()
-        sb.append("delete from S_PlantStockDealer_")
-        sb.append(agentCode+" ")
-        sb.append(" where AccountDate >= :dateStart and AccountDate < :dateEnd")
-        return namedParameterJdbcTemplate.update(sb.toString(),map)
-    }
-
 
     fun batchSave(sPlantStockDealerM13e00List: MutableList<SPlantStockDealer>):IntArray?{
         val sb = StringBuilder()
