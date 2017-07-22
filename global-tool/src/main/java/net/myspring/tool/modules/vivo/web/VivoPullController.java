@@ -26,7 +26,7 @@ public class VivoPullController {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value="pullFactoryData")
-    public String pullFactoryData(String date,String companyName){
+    public String pullFactoryData(String companyName,String date){
         DbContextHolder.get().setCompanyName(companyName);
         //同步物料编码
          List<VivoPlantProducts> vivoPlantProducts=vivoPullService.getPlantProducts(companyName);

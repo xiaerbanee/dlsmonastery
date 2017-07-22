@@ -41,7 +41,7 @@ public class OppoPushController {
 
     //将需要上抛的数据先同步到本地数据库
     @RequestMapping(value = "pushToLocal")
-    public String pushToLocal(String date,String companyName) {
+    public String pushToLocal(String companyName,String date) {
         DbContextHolder.get().setCompanyName(companyName);
         OppoPushDto oppoPushDto = new OppoPushDto();
         oppoPushDto.setDate(date);

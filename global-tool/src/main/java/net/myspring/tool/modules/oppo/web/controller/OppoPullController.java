@@ -35,14 +35,13 @@ public class OppoPullController {
     private CompanyConfigClient companyConfigClient;
 
     @RequestMapping(value = "pullFactoryData")
-    public String pullFactoryData(String date) {
+    public String pullFactoryData(String companyName,String date) {
+        DbContextHolder.get().setCompanyName(companyName);
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String[] agentCodes=agentCode.split(CharConstant.COMMA);
         String passWord=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_PASSWORDS.name()).replace("\"","");
         String[] passWords=passWord.split(CharConstant.COMMA);
         //同步颜色编码
-        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
-        DbContextHolder.get().setCompanyName(companyName);
         List<OppoPlantProductSel> oppoPlantProductSels=oppoPullService.getOppoPlantProductSels(agentCodes[0],passWords[0]);
         oppoPullService.pullPlantProductSels(oppoPlantProductSels);
         //同步物料编码

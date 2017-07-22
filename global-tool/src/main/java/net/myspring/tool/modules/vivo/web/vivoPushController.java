@@ -22,7 +22,7 @@ public class vivoPushController {
     private VivoPushService vivoPushService;
 
     @RequestMapping(value = "pushVivoData")
-    public void pushVivoData(String date,String companyName){
+    public void pushVivoData(String companyName,String date){
         DbContextHolder.get().setCompanyName(companyName);
         //机构数据
         vivoPushService.pushVivoZonesData();
