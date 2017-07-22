@@ -43,18 +43,18 @@ public class VivoPullService {
 
     //货品
     @FactoryDataSource
-    public List<VivoPlantProducts> getPlantProducts() {
-        return vivoPlantProductsRepository.findPlantProducts();
+    public List<VivoPlantProducts> getPlantProducts(String companyName) {
+        return vivoPlantProductsRepository.findPlantProducts(companyName);
     }
 
     //获取串码
     @FactoryDataSource
-    public List<VivoPlantSendimei> getPlantSendimei(String date, List<String> agentCodes) {
+    public List<VivoPlantSendimei> getPlantSendimei(String date) {
         if(StringUtils.isBlank(date)){
             date= LocalDateUtils.format(LocalDate.now());
         }
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        return vivoPlantSendimeiRepository.findPlantSendimei(date, dateEnd, agentCodes);
+        return vivoPlantSendimeiRepository.findPlantSendimei(date, dateEnd);
     }
 
     //获取电子保卡

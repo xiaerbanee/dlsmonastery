@@ -27,15 +27,12 @@ public class VivoPullController {
 
     @RequestMapping(value="pullFactoryData")
     public String pullFactoryData(String date,String companyName){
-        String agentCode="M13E00,M13D00,M13H00,M13I00,M13A00,M13C00,M13G00";
-        List<String> agentCodes= Arrays.asList(agentCode.split(CharConstant.COMMA));
-        DbContextHolder.get().setCompanyName("JXVIVO");
+        DbContextHolder.get().setCompanyName(companyName);
         //同步物料编码
-         List<VivoPlantProducts> vivoPlantProducts=vivoPullService.getPlantProducts();
-        logger.info("vivoPlantProducts=="+vivoPlantProducts.toString());
+         List<VivoPlantProducts> vivoPlantProducts=vivoPullService.getPlantProducts(companyName);
         vivoPullService.pullPlantProducts(vivoPlantProducts,companyName);
         //同步发货串码
-        List<VivoPlantSendimei> vivoPlantSendimeis=vivoPullService.getPlantSendimei(date,agentCodes);
+        List<VivoPlantSendimei> vivoPlantSendimeis=vivoPullService.getPlantSendimei(date);
         vivoPullService.pullPlantSendimeis(vivoPlantSendimeis);
         //同步电子保卡
         List<VivoPlantElectronicsn> vivoPlantElectronicsns = vivoPullService.getPlantElectronicsn(date);
