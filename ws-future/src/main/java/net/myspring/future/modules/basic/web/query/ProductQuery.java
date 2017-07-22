@@ -1,8 +1,11 @@
 package net.myspring.future.modules.basic.web.query;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.query.BaseQuery;
+import net.myspring.util.text.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -109,5 +112,14 @@ public class ProductQuery extends BaseQuery {
 
     public void setIds(List<String> ids) {
         this.ids = ids;
+    }
+
+    public List<String> getCodeList(){
+        if(StringUtils.isNotBlank(code)){
+            return Arrays.asList(code.split(CharConstant.COMMA+CharConstant.VERTICAL_LINE+CharConstant.ENTER+CharConstant.VERTICAL_LINE+CharConstant.SPACE));
+        }else {
+            return null;
+        }
+
     }
 }

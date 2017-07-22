@@ -257,9 +257,6 @@ class ProductRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         if (StringUtils.isNotEmpty(productQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
         }
-        if (StringUtils.isNotEmpty(productQuery.code)) {
-            sb.append("""  and t1.code LIKE CONCAT('%',:code,'%') """)
-        }
         if (productQuery.hasIme != null && productQuery.hasIme) {
             sb.append("""  and t1.has_ime = 1 """)
         }
@@ -290,9 +287,13 @@ class ProductRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         if (StringUtils.isNotEmpty(productQuery.netType)) {
             sb.append("""  and t1.net_type =:netType """)
         }
+        if(CollectionUtil.isNotEmpty(productQuery.codeList)){
+            sb.append(""" and t1.code in (:codeList) """)
+        }
         if (CollectionUtil.isNotEmpty(productQuery.ids)) {
             sb.append("""  and t1.id in (:ids) """)
         }
+        sb.append(""" order by t1.code asc """)
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productQuery), BeanPropertyRowMapper(ProductDto::class.java))
     }
 
