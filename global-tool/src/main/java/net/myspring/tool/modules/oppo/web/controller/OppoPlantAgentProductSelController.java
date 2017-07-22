@@ -2,13 +2,12 @@ package net.myspring.tool.modules.oppo.web.controller;
 
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.tool.common.domain.ProductEntity;
+import net.myspring.tool.common.dto.ProductDto;
 import net.myspring.tool.modules.oppo.dto.OppoPlantAgentProductSelDto;
 import net.myspring.tool.modules.oppo.service.OppoPlantAgentProductSelService;
 import net.myspring.tool.modules.oppo.web.form.OppoPlantAgentProductSelForm;
 import net.myspring.tool.modules.oppo.web.query.OppoPlantAgentProductSelQuery;
 import net.myspring.util.collection.CollectionUtil;
-import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,8 +42,8 @@ public class OppoPlantAgentProductSelController {
     @RequestMapping(value = "save")
     public RestResponse save(String data){
         if(StringUtils.isNotBlank(data)){
-            List<ProductEntity> productEntityList = oppoPlantAgentProductSelService.findHasImeProduct();
-            oppoPlantAgentProductSelService.save(productEntityList,data);
+            List<ProductDto> productDtoList = oppoPlantAgentProductSelService.findHasImeProduct();
+            oppoPlantAgentProductSelService.save(productDtoList,data);
         }
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }

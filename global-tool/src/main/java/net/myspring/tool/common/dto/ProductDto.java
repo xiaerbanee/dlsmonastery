@@ -1,7 +1,7 @@
-package net.myspring.tool.common.domain;
+package net.myspring.tool.common.dto;
 import java.math.BigDecimal;
 
-public class ProductEntity {
+public class ProductDto {
     private String id;
     private String name;
     private String code;

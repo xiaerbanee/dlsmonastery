@@ -7,14 +7,13 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.dataSource.annotation.FutureDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
-import net.myspring.tool.common.domain.ProductEntity;
+import net.myspring.tool.common.dto.ProductDto;
 import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
 import net.myspring.tool.modules.oppo.dto.OppoPlantAgentProductSelDto;
 import net.myspring.tool.modules.oppo.repository.FutureProductRepository;
 import net.myspring.tool.modules.oppo.repository.OppoPlantAgentProductSelRepository;
 import net.myspring.tool.modules.oppo.web.form.OppoPlantAgentProductSelForm;
 import net.myspring.tool.modules.oppo.web.query.OppoPlantAgentProductSelQuery;
-import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ public class OppoPlantAgentProductSelService {
     private FutureProductRepository futureProductRepository;
 
     @FutureDataSource
-    public List<ProductEntity> findHasImeProduct(){
+    public List<ProductDto> findHasImeProduct(){
         return futureProductRepository.findHasImeProduct();
     }
 
@@ -56,11 +55,11 @@ public class OppoPlantAgentProductSelService {
     }
 
     @Transactional
-    public void save(List<ProductEntity> productEntityList,String data){
+    public void save(List<ProductDto> productDtoList, String data){
         List<Map<String,String>> list = ObjectMapperUtils.readValue(data, ArrayList.class);
-        Map<String,ProductEntity> productMap=Maps.newHashMap();
-        for(ProductEntity productEntity:productEntityList){
-            productMap.put(productEntity.getName(),productEntity);
+        Map<String,ProductDto> productMap=Maps.newHashMap();
+        for(ProductDto productDto:productDtoList){
+            productMap.put(productDto.getName(),productDto);
         }
         List<OppoPlantAgentProductSel> oppoPlantAgentProductSels=oppoPlantAgentProductSelRepository.findAll();
         Map<String,OppoPlantAgentProductSel> oppoPlantAgentProductSelMap=Maps.newHashMap();
@@ -69,8 +68,8 @@ public class OppoPlantAgentProductSelService {
         }
         for(Map<String,String> map:list){
             OppoPlantAgentProductSel agentProductSel=oppoPlantAgentProductSelMap.get(map.get("id"));
-            ProductEntity defaultProduct=productMap.get(map.get("productName"));
-            ProductEntity lxProduct=productMap.get(map.get("lxProductName"));
+            ProductDto defaultProduct=productMap.get(map.get("productName"));
+            ProductDto lxProduct=productMap.get(map.get("lxProductName"));
             agentProductSel.setProductId(defaultProduct==null?null:defaultProduct.getId());
             agentProductSel.setLxProductId(lxProduct==null?null:lxProduct.getId());
             oppoPlantAgentProductSelRepository.save(agentProductSel);

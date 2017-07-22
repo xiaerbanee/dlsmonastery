@@ -1,4 +1,4 @@
-package net.myspring.tool.common.domain;
+package net.myspring.tool.common.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -6,7 +6,7 @@ import java.time.LocalDate;
 /**
  * Created by admin on 2017/4/5.
  */
-public class EmployeeEntity  {
+public class EmployeeDto {
     private String id;
     private String officeId;
     private String code;

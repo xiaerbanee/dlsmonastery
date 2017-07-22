@@ -1,13 +1,10 @@
-package net.myspring.tool.common.domain;
+package net.myspring.tool.common.dto;
 
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
-@Entity
-public class OfficeEntity  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class OfficeDto {
     protected String id;
     private String name;
     private BigDecimal point;
