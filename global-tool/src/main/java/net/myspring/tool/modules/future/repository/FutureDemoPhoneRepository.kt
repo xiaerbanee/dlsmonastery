@@ -1,4 +1,4 @@
-package net.myspring.tool.modules.oppo.repository
+package net.myspring.tool.modules.future.repository
 
 import com.google.common.collect.Maps
 import net.myspring.tool.modules.oppo.domain.OppoCustomerDemoPhone
