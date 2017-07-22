@@ -2,7 +2,9 @@ const employeeList  = r => require.ensure([], () => r(require('pages/basic/hr/em
 const employeeForm  = r => require.ensure([], () => r(require('pages/basic/hr/employeeForm.vue')));
 const employeeEditForm  = r => require.ensure([], () => r(require('pages/basic/hr/employeeEditForm.vue')));
 const accountList  = r => require.ensure([], () => r(require('pages/basic/hr/accountList.vue')));
-const accountForm  = r => require.ensure([], () => r(require('pages/basic/hr/accountForm.vue')));
+const accountForm  = r => require.ensure([], () => r(require('pages/basic/hr/accountForm.vue')))
+const accountRoleForm  = r => require.ensure([], () => r(require('pages/basic/hr/accountRoleForm.vue')));
+
 const accountChangeList  = r => require.ensure([], () => r(require('pages/basic/hr/accountChangeList.vue')));
 const accountChangeForm  = r => require.ensure([], () => r(require('pages/basic/hr/accountChangeForm.vue')));
 const positionList = r => require.ensure([],() => r(require('pages/basic/hr/positionList.vue')));
@@ -47,6 +49,8 @@ let routes = [
   {path:'/basic/hr/dutyFreeList',component:dutyFreeList,name:'dutyFreeList'},
   {path:'/basic/hr/dutyPublicFreeList',component:dutyPublicFreeList,name:'dutyPublicFreeList'},
   {path:'/basic/hr/accountList',component:accountList,name:'accountList'},
+
+  {path:'/basic/hr/accountRoleForm',component:accountRoleForm,name:'accountRoleForm',meta:{menu:"accountList",keepAlive:true}},
   {path:'/basic/hr/accountForm',component:accountForm,name:'accountForm',meta:{menu:"accountList",keepAlive:true}},
   {path:'/basic/hr/accountChangeList',component:accountChangeList,name:'accountChangeList'},
   {path:'/basic/hr/accountChangeForm',component:accountChangeForm,name:'accountChangeForm',meta:{menu:"accountChangeList",keepAlive:false}},
