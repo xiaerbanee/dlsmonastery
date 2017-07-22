@@ -28,13 +28,24 @@
           colHeaders: ["往来单位", "我方银行账号", "业务日期", "收款金额", "结算方式", "备注"],
           columns: [
             {type: "autocomplete", strict: true, allowEmpty: false, customerName:[],source: this.customerName},
-            {type: "autocomplete", strict: true, allowEmpty: false, bankAcntName:[],source: this.bankAcntName},
+            {type: "autocomplete", strict: true, allowEmpty: true, bankAcntName:[],source: this.bankAcntName},
             {type: 'date',strict: true, allowEmpty: false,dateFormat:'YYYY-MM-DD',correctFormat: true},
             {type: "numeric",strict: true,allowEmpty: false, format:"0,0.00"},
             {type: "autocomplete",strict: true, allowEmpty: false, settleTypeName:[],source: this.settleTypeName},
             {type: "text",strict: true, allowEmpty: false }
           ],
           contextMenu: ['row_above', 'row_below', 'remove_row'],
+          afterChange: function (changes, source) {
+            if (source !== 'loadData') {
+              for (let i = changes.length - 1; i >= 0; i--) {
+                let row = changes[i][0];
+                let column = changes[i][1];
+                if(column === 4 &&　changes[i][3] === '现金') {
+                  table.setDataAtCell(row, 1, '');
+                }
+              }
+            }
+          }
         },
         formData:{
           json:[],

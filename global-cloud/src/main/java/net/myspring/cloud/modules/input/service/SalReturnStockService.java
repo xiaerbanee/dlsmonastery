@@ -80,9 +80,9 @@ public class SalReturnStockService {
             if(isLogin) {
                 for (SalReturnStockDto salReturnStockDto : salReturnStockDtoList) {
                     if (SalReturnStockBillTypeEnum.标准销售退货单.name().equals(salReturnStockDto.getBillType())) {
-                        salReturnStockDto.setFBillTypeIdNumber("XSTHD01_SYS");
+                        salReturnStockDto.setFBillTypeIdNumber(SalReturnStockBillTypeEnum.标准销售退货单.getFNumber());
                     } else if(SalReturnStockBillTypeEnum.现销退货单.name().equals(salReturnStockDto.getBillType())){
-                        salReturnStockDto.setFBillTypeIdNumber("XSTHD06_SYS");
+                        salReturnStockDto.setFBillTypeIdNumber(SalReturnStockBillTypeEnum.现销退货单.getFNumber());
                     }
                     KingdeeSynExtendDto kingdeeSynExtendDto = save(salReturnStockDto, kingdeeBook);
                     kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
@@ -108,7 +108,8 @@ public class SalReturnStockService {
         Map<String, String> customerDepartmentMap = Maps.newHashMap();
 
         List<String> departmentIdList = Lists.newArrayList();
-        for (BdCustomer bdCustomer : bdCustomerRepository.findByNameList(customerNameList)) {
+        List<BdCustomer> bdCustomerList = bdCustomerRepository.findByNameList(customerNameList);
+        for (BdCustomer bdCustomer : bdCustomerList) {
             customerNumMap.put(bdCustomer.getFName(), bdCustomer.getFNumber());
             customerDepartmentMap.put(bdCustomer.getFName(), bdCustomer.getFSalDeptId());
             departmentIdList.add(bdCustomer.getFSalDeptId());
@@ -158,7 +159,8 @@ public class SalReturnStockService {
         }
         Map<String, String> customerDepartmentMap = Maps.newHashMap();
         List<String> departmentIdList = Lists.newArrayList();
-        for (BdCustomer bdCustomer : bdCustomerRepository.findByNumberList(customerNumberList)) {
+        List<BdCustomer> bdCustomerList = bdCustomerRepository.findByNumberList(customerNumberList);
+        for (BdCustomer bdCustomer : bdCustomerList) {
             customerDepartmentMap.put(bdCustomer.getFNumber(), bdCustomer.getFSalDeptId());
             departmentIdList.add(bdCustomer.getFSalDeptId());
         }

@@ -3,6 +3,7 @@ package net.myspring.cloud.modules.input.dto;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
+import net.myspring.common.enums.SettleTypeEnum;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -133,7 +134,13 @@ public class ArRefundBillDto {
             detail.put("FACCOUNTID", CollectionUtil.getMap("FNumber", entityDto.getBankAcntNumber()));
             detail.put("FPURPOSEID", CollectionUtil.getMap("FNumber", "SFKYT01_SYS"));
             //对方科目代码
-            detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", entityDto.getAccountNumber()));
+            if (SettleTypeEnum.电汇.getFNumber().equals(entityDto.getFSettleTypeIdNumber())){//结算方式--电汇（JSFS04_SYS）
+                //对方科目代码--银行存款(1002)
+                detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", "1002"));
+            }else if (SettleTypeEnum.现金.getFNumber().equals(entityDto.getFSettleTypeIdNumber())){//结算方式--现金（JSFS01_SYS）
+                //对方科目代码--库存现金(1001)
+                detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", "1001"));
+            }
             detail.put("FREFUNDAMOUNTFOR", getAmount());
             detail.put("FREFUNDAMOUNTFOR_E", getAmount());
             detail.put("FREALREFUNDAMOUNTFOR_D", getAmount());

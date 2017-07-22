@@ -6,6 +6,7 @@ import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
+import net.myspring.common.enums.SettleTypeEnum;
 import net.myspring.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.ArRefundBillDto;
 import net.myspring.cloud.modules.input.dto.ArRefundBillEntityDto;
@@ -129,7 +130,7 @@ public class ArRefundBillService {
             String settleType = HandsontableUtils.getValue(row, 4);
             String remarks = HandsontableUtils.getValue(row, 5);
             String billKey = "";
-            if ("电汇".equals(settleType)) {
+            if (SettleTypeEnum.电汇.name().equals(settleType)) {
                 billKey = customerName + CharConstant.COMMA + bankAcntName + CharConstant.COMMA + billDate + CharConstant.COMMA + amount + CharConstant.COMMA + remarks;
                 if (!refundBillForDHMap.containsKey(billKey)) {
                     ArRefundBillDto arRefundBill = new ArRefundBillDto();
@@ -141,12 +142,9 @@ public class ArRefundBillService {
                     arRefundBill.setAmount(amount);
                     arRefundBill.setDepartmentNumber(customerNameToDepartmentNumberMap.get(customerName));
                     ArRefundBillEntityDto arRefundBillEntityDto = new ArRefundBillEntityDto();
-                    arRefundBillEntityDto.setFSettleTypeIdNumber("JSFS04_SYS");//电汇
+                    arRefundBillEntityDto.setFSettleTypeIdNumber(SettleTypeEnum.电汇.getFNumber());
                     if (StringUtils.isNotBlank(bankAcntName)){
                         arRefundBillEntityDto.setBankAcntNumber(bankAcntNameMap.get(bankAcntName));
-                    }
-                    if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBook.getName())) {
-                        arRefundBillEntityDto.setAccountNumber("1002");//银行存款
                     }
                     arRefundBillEntityDto.setNote(remarks);
                     arRefundBill.setArRefundBillEntityDtoList(Lists.newArrayList(arRefundBillEntityDto));
@@ -167,8 +165,7 @@ public class ArRefundBillService {
                     arRefundBill.setDepartmentNumber(customerNameToDepartmentNumberMap.get(customerName));
                     ArRefundBillEntityDto arRefundBillEntityDto = new ArRefundBillEntityDto();
                     arRefundBillEntityDto.setNote(remarks);
-                    arRefundBillEntityDto.setFSettleTypeIdNumber("JSFS01_SYS");//现金
-                    arRefundBillEntityDto.setAccountNumber("1001");//库存现金
+                    arRefundBillEntityDto.setFSettleTypeIdNumber(SettleTypeEnum.现金.getFNumber());
                     arRefundBill.setArRefundBillEntityDtoList(Lists.newArrayList(arRefundBillEntityDto));
                     refundBillForCashMap.put(billKey, arRefundBill);
                 } else {

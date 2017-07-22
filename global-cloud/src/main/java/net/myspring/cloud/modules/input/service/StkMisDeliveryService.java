@@ -69,9 +69,9 @@ public class StkMisDeliveryService {
                 for (StkMisDeliveryDto misDelivery : stkMisDeliveryDtoList) {
                     //库存方向
                     if (StkMisDeliveryTypeEnum.出库.name().equals(misDelivery.getMisDeliveryType())) {
-                        misDelivery.setFStockDirect("GENERAL");
+                        misDelivery.setFStockDirect(StkMisDeliveryTypeEnum.出库.getFNumber());
                     } else if(StkMisDeliveryTypeEnum.退货.name().equals(misDelivery.getMisDeliveryType())){
-                        misDelivery.setFStockDirect("RETURN");
+                        misDelivery.setFStockDirect(StkMisDeliveryTypeEnum.退货.getFNumber());
                     }
                     KingdeeSynDto kingdeeSynDto = save(misDelivery, kingdeeBook);
                     kingdeeSynDtoList.add(kingdeeSynDto);
@@ -92,9 +92,9 @@ public class StkMisDeliveryService {
                 stkMisDeliveryDto.setCreator(accountKingdeeBook.getUsername());
                 //库存方向
                 if (StkMisDeliveryTypeEnum.出库.name().equals(stkMisDeliveryDto.getMisDeliveryType())) {
-                    stkMisDeliveryDto.setFStockDirect("GENERAL");
+                    stkMisDeliveryDto.setFStockDirect(StkMisDeliveryTypeEnum.出库.getFNumber());
                 }else if(StkMisDeliveryTypeEnum.退货.name().equals(stkMisDeliveryDto.getMisDeliveryType())){
-                    stkMisDeliveryDto.setFStockDirect("RETURN");
+                    stkMisDeliveryDto.setFStockDirect(StkMisDeliveryTypeEnum.退货.getFNumber());
                 }
                 kingdeeSynDto = save(stkMisDeliveryDto, kingdeeBook);
             }else{
@@ -112,11 +112,11 @@ public class StkMisDeliveryService {
             stkMisDeliveryDto.setCreator(accountKingdeeBook.getUsername());
             //领料部门
             if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBook.getName())) {
-                stkMisDeliveryDto.setFDeptIdNumber("300");
+                stkMisDeliveryDto.setFDeptIdNumber(DefaultBdDepartmentEnum.综合.getFNumber());
             }else if(KingdeeNameEnum.JXDJ.name().equals(kingdeeBook.getName())){
-                stkMisDeliveryDto.setFDeptIdNumber("101");
+                stkMisDeliveryDto.setFDeptIdNumber(DefaultBdDepartmentEnum.电教.getFNumber());
             }else {
-                stkMisDeliveryDto.setFDeptIdNumber("0001");
+                stkMisDeliveryDto.setFDeptIdNumber(DefaultBdDepartmentEnum.省公司.getFNumber());
             }
             kingdeeSynDto = save(stkMisDeliveryDto, kingdeeBook,accountKingdeeBook);
             return kingdeeSynDto;
