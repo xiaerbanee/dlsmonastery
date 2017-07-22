@@ -17,6 +17,7 @@ import net.myspring.basic.modules.sys.manager.RoleManager;
 import net.myspring.basic.modules.sys.service.MenuService;
 import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.basic.modules.sys.service.PermissionService;
+import net.myspring.basic.modules.sys.service.RoleService;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.common.enums.BoolEnum;
@@ -71,7 +72,7 @@ public class AccountController {
     @Autowired
     private PermissionService permissionService;
     @Autowired
-    private RoleManager roleManager;
+    private RoleService roleService;
     @Autowired
     private OfficeService officeService;
 
@@ -107,6 +108,7 @@ public class AccountController {
     public AccountForm getForm(AccountForm accountForm) {
         accountForm.getExtra().put("positionDtoList", positionService.findAll());
         accountForm.getExtra().put("boolMap", BoolEnum.getMap());
+        accountForm.getExtra().put("roleList", roleService.findByEnabledIsTrue());
         return accountForm;
     }
 
@@ -205,8 +207,8 @@ public class AccountController {
 
     @RequestMapping(value = "getTreeNode")
     public TreeNode getTreeNode() {
-        String roleId = roleManager.findIdByAccountId(RequestUtils.getAccountId());
-        TreeNode treeNode = permissionService.findRolePermissionTree(roleId);
+        List<String> roleIdList = roleService.findByAccountId(RequestUtils.getAccountId());
+        TreeNode treeNode = permissionService.findRolePermissionTree(roleIdList);
         return treeNode;
     }
 

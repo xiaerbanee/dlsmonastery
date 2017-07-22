@@ -22,8 +22,8 @@
       },setValue(val) {
         var range = [];
         if(util.isNotBlank(val)) {
-          range[0] = new Date(val.split(" - ")[0].replace(/-/,"/"));
-          range[1] = new Date(val.split(" - ")[1].replace(/-/,"/"));
+          range[0] = new Date(val.split(" - ")[0].replace(/-/g,"/"));
+          range[1] = new Date(val.split(" - ")[1].replace(/-/g,"/"));
         }
         this.innerDateRange =range;
       }

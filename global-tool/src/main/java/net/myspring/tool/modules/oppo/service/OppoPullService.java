@@ -2,7 +2,6 @@ package net.myspring.tool.modules.oppo.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.modules.oppo.domain.*;

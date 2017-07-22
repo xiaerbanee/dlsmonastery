@@ -2,6 +2,7 @@ package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
+import net.myspring.basic.modules.sys.manager.RoleManager;
 import net.myspring.basic.modules.sys.repository.RoleModuleRepository;
 import net.myspring.basic.modules.sys.domain.Role;
 import net.myspring.basic.modules.sys.domain.RoleModule;
@@ -35,6 +36,8 @@ public class RoleService {
     private RoleModuleRepository roleModuleRepository;
     @Autowired
     private RolePermissionRepository rolePermissionRepository;
+    @Autowired
+    private RoleManager roleManager;
     @Autowired
     private CacheUtils cacheUtils;
 
@@ -137,5 +140,17 @@ public class RoleService {
         List<RoleDto> roleDtoList = BeanUtil.map(roleList, RoleDto.class);
         cacheUtils.initCacheInput(roleDtoList);
         return  roleDtoList;
+    }
+
+    public List<RoleDto> findByEnabledIsTrue(){
+        List<Role> roleList=roleRepository.findByEnabledIsTrue();
+        List<RoleDto> roleDtoList = BeanUtil.map(roleList, RoleDto.class);
+        cacheUtils.initCacheInput(roleDtoList);
+        return  roleDtoList;
+    }
+
+    public List<String> findByAccountId(String accountId){
+        List<String> roleIdList=roleManager.findByAccountId(accountId);
+       return roleIdList;
     }
 }
