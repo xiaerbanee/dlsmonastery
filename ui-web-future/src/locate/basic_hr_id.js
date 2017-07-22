@@ -526,6 +526,8 @@ export default {
     formatId: "jumlah",
     dutyType: "jenis",
     dutyDate: "tanggal",
+    dateType:"tipe waktu",
+    hour:"时长",
     applyAccount: "formulir akun",
     add: "tambah",
     filter: "saring",

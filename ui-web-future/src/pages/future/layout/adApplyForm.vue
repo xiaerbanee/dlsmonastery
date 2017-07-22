@@ -156,6 +156,9 @@
         }
         return tempList;
       }, onchange(){
+         if(!this.inputForm.billType){
+           return;
+         }
           axios.get('api/ws/future/basic/product/findAdProductAndAllowOrder',{params:{billType:this.inputForm.billType}}).then((response) =>{
             this.setProductList(response.data);
           });
