@@ -40,19 +40,7 @@ interface RoleRepository: BaseRepository<Role, String>,RoleRepositoryCustom {
      """)
     fun findByNameLike(name: String): MutableList<Role>
 
-    @Query("""
-       SELECT t1
-        from #{#entityName} t1,Position t2,Account t3
-        where t1.enabled=1
-        and t3.positionId=t2.id
-        and t2.roleId=t1.id
-        and t3.enabled=1
-        and t2.enabled=1
-        and t3.id=?1
-     """)
-    fun findByAccountId(accountId: String): Role
-
-
+    fun findByEnabledIsTrue(): MutableList<Role>
 }
 
 

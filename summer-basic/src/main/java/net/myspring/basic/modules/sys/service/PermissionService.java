@@ -149,9 +149,9 @@ public class PermissionService {
         return treeNode;
     }
 
-    public TreeNode findRolePermissionTree(String roleId) {
-        List<BackendMenuDto> backendMenuDtoList = backendRepository.findRolePermissionByRoleId(roleId);
-        List<Permission> permissionList = permissionRepository.findByRoleIdList(Lists.newArrayList(roleId));
+    public TreeNode findRolePermissionTree(List<String> roleIdList) {
+        List<BackendMenuDto> backendMenuDtoList = backendRepository.findRolePermissionByRoleId(roleIdList);
+        List<Permission> permissionList = permissionRepository.findByRoleIdList(roleIdList);
         TreeNode treeNode = getTreeNode(backendMenuDtoList, permissionList);
         return treeNode;
     }
