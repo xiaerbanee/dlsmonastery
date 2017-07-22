@@ -37,7 +37,6 @@
         this.pageLoading = true;
         util.setQuery("dutyTaskList");
         axios.get('/api/basic/hr/duty').then((response) => {
-            console.log(response.data)
           this.page = response.data;
           this.pageLoading = false;
         })
