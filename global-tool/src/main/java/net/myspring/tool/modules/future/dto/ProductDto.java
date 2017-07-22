@@ -1,4 +1,4 @@
-package net.myspring.tool.common.dto;
+package net.myspring.tool.modules.future.dto;
 import java.math.BigDecimal;
 
 public class ProductDto {

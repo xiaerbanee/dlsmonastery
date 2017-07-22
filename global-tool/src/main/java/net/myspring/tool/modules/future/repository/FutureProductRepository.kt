@@ -1,6 +1,6 @@
-package net.myspring.tool.modules.oppo.repository
+package net.myspring.tool.modules.future.repository
 
-import net.myspring.tool.common.dto.ProductDto
+import net.myspring.tool.modules.future.dto.ProductDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate

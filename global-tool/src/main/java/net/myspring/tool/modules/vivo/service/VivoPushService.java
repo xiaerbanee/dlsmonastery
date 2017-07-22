@@ -10,7 +10,7 @@ import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.FutureDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
-import net.myspring.tool.common.dto.OfficeDto;
+import net.myspring.tool.modules.future.dto.OfficeDto;
 import net.myspring.tool.common.utils.CacheUtils;
 import net.myspring.tool.modules.vivo.domain.*;
 import net.myspring.tool.modules.vivo.dto.SCustomerDto;

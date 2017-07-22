@@ -1,7 +1,6 @@
-package net.myspring.tool.common.dto;
+package net.myspring.tool.modules.future.dto;
 
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 
 public class OfficeDto {

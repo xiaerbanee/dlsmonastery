@@ -1,6 +1,6 @@
 package net.myspring.tool.common.client;
 
-import net.myspring.tool.common.dto.EmployeeDto;
+import net.myspring.tool.modules.future.dto.EmployeeDto;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

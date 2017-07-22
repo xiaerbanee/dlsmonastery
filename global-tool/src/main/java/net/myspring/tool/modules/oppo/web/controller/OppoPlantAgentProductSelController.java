@@ -2,7 +2,7 @@ package net.myspring.tool.modules.oppo.web.controller;
 
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.tool.common.dto.ProductDto;
+import net.myspring.tool.modules.future.dto.ProductDto;
 import net.myspring.tool.modules.oppo.dto.OppoPlantAgentProductSelDto;
 import net.myspring.tool.modules.oppo.service.OppoPlantAgentProductSelService;
 import net.myspring.tool.modules.oppo.web.form.OppoPlantAgentProductSelForm;
