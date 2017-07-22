@@ -14,7 +14,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -30,21 +32,6 @@ import java.util.Map;
 public class CacheConfig extends CachingConfigurerSupport {
     @Autowired
     private Environment environment;
-    @Value("${companyNames}")
-    private String[] companyNames;
-
-    @Bean
-    @Primary
-    public DynamicRedisConnectionFactory redisConnectionFactory() {
-        Map<String,JedisConnectionFactory> targetConnections = Maps.newHashMap();
-        for(String companyName:companyNames) {
-            targetConnections.put(companyName,getConnectionFactory("spring.redis." + companyName));
-        }
-        DynamicRedisConnectionFactory dynamicRedisConnectionFactory = new DynamicRedisConnectionFactory();
-        dynamicRedisConnectionFactory.setTargetConnections(targetConnections);
-        dynamicRedisConnectionFactory.setDefaultLookupKey(companyNames[0]);
-        return dynamicRedisConnectionFactory;
-    }
 
     private JedisConnectionFactory getConnectionFactory(String prefix) {
         JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
@@ -58,6 +45,11 @@ public class CacheConfig extends CachingConfigurerSupport {
         jedisConnectionFactory.setPoolConfig(jedisPoolConfig);
         jedisConnectionFactory.afterPropertiesSet();
         return jedisConnectionFactory;
+    }
+
+    @Bean
+    public RedisConnectionFactory redisConnectionFactory() {
+        return getConnectionFactory("spring.redis.oauth2");
     }
 
     @Bean

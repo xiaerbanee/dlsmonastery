@@ -112,7 +112,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 officeIdList = officeManager.getOfficeIdList(officeIds);
             }
             customUserDetails = new CustomUserDetails(
-                    accountDto.getLoginName(),
+                    accountDto.getCompanyName() + "_" + accountDto.getLoginName(),
                     accountDto.getPassword(),
                     accountDto.getEnabled(),
                     accountNoExpired,

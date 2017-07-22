@@ -27,7 +27,6 @@ public class PermissionManager {
     @Autowired
     private AccountPermissionRepository accountPermissionRepository;
 
-    @CachePut(key = "#p0",value="authorityCache")
     public List<String> getPermissionList(String accountId,List<String> roleIdList){
         List<PermissionDto> permissionList;
         if(StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(accountId)){
