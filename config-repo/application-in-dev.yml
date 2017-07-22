@@ -40,13 +40,6 @@ spring:
         password: user_m13e00
         driver-class-name: net.sourceforge.jtds.jdbc.Driver
   redis:
-    session:
-      host: localhost
-      password:
-      port: 6379
-      database: 14
-      max-idle: 100
-      max-total: 200
     IDVIVO:
       host: localhost
       password:
