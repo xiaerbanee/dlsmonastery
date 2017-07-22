@@ -1,17 +1,13 @@
 package net.myspring.future.modules.crm.web.query;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.query.BaseQuery;
-import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by wangzm on 2017/6/7.
