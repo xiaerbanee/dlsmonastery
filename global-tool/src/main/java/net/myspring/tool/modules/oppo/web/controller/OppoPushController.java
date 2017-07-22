@@ -6,6 +6,7 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.utils.RequestUtils;
+import net.myspring.tool.modules.future.service.*;
 import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.modules.oppo.dto.OppoPlantSendImeiPpselDto;
 import net.myspring.tool.modules.oppo.dto.OppoPushDto;
@@ -37,6 +38,21 @@ public class OppoPushController {
     private OppoPushSerivce oppoPushSerivce;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private FutureCustomerService futureCustomerService;
+    @Autowired
+    private FutureProductImeService futureProductImeService;
+    @Autowired
+    private FutureDemoPhoneService futureDemoPhoneService;
+    @Autowired
+    private FutureProductImeSaleService futureProductImeSaleService;
+    @Autowired
+    private FutureStoreAllotService futureStoreAllotService;
+    @Autowired
+    private FutureImeAllotService futureImeAllotService;
+    @Autowired
+    private FutureAfterSaleService futureAfterSaleService;
+
 
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
@@ -50,15 +66,15 @@ public class OppoPushController {
         }
         OppoPushDto oppoPushDto = new OppoPushDto();
         oppoPushDto.setDate(date);
-        oppoPushDto.setCustomerDtos(oppoPushSerivce.getOppoCustomers());
-        oppoPushDto.setOppoCustomerAllots(oppoPushSerivce.getFutureOppoCustomerAllot(date));
-        oppoPushDto.setOppoCustomerStocks(oppoPushSerivce.getFutureOppoCustomerStock(date));
-        oppoPushDto.setOppoCustomerImeiStocks(oppoPushSerivce.getFutureOppoCustomerImeiStock(date));
-        oppoPushDto.setOppoCustomerSales(oppoPushSerivce.getFutureOppoCustomerSale(date));
-        oppoPushDto.setOppoCustomerSaleImeis(oppoPushSerivce.getFutureOppoCustomerSaleImeis(date));
-        oppoPushDto.setOppoCustomerSaleCounts(oppoPushSerivce.getFutureOppoCustomerSaleCounts(date));
-        oppoPushDto.setOppoCustomerAfterSaleImeis(oppoPushSerivce.getFutureOppoCustomerAfterSaleImeis(date));
-        oppoPushDto.setOppoCustomerDemoPhones(oppoPushSerivce.getFutureOppoCustomerDemoPhone(date));
+        oppoPushDto.setCustomerDtos(futureCustomerService.getOppoCustomers());
+        oppoPushDto.setOppoCustomerAllots(futureStoreAllotService.getFutureOppoCustomerAllot(date));
+        oppoPushDto.setOppoCustomerStocks(futureProductImeService.getFutureOppoCustomerStock(date));
+        oppoPushDto.setOppoCustomerImeiStocks(futureImeAllotService.getFutureOppoCustomerImeiStock(date));
+        oppoPushDto.setOppoCustomerSales(futureProductImeSaleService.getFutureOppoCustomerSale(date));
+        oppoPushDto.setOppoCustomerSaleImeis(futureProductImeSaleService.getFutureOppoCustomerSaleImeis(date));
+        oppoPushDto.setOppoCustomerSaleCounts(futureProductImeSaleService.getFutureOppoCustomerSaleCounts(date));
+        oppoPushDto.setOppoCustomerAfterSaleImeis(futureAfterSaleService.getFutureOppoCustomerAfterSaleImeis(date));
+        oppoPushDto.setOppoCustomerDemoPhones(futureDemoPhoneService.getFutureOppoCustomerDemoPhone(date));
 
         oppoPushSerivce.pushToLocal(oppoPushDto);
 
