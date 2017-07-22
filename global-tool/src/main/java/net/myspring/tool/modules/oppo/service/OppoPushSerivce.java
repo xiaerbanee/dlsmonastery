@@ -6,7 +6,6 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.*;
-import net.myspring.tool.common.dataSource.annotation.FutureDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.modules.future.dto.DistrictDto;
 import net.myspring.tool.modules.future.dto.EmployeeDto;
@@ -117,11 +116,6 @@ public class OppoPushSerivce {
         pushOppoCustomerDemoPhone(oppoPushDto.getOppoCustomerDemoPhones(),oppoPushDto.getDate());
     }
 
-    @FutureDataSource
-    public List<CustomerDto> getOppoCustomers(){
-        List<CustomerDto> customerDtoList = futureCustomerRepository.findOppoCustomers();
-        return customerDtoList;
-    }
 
     //上抛oppo门店数据,只上抛二代和渠道门店
     @LocalDataSource
@@ -564,94 +558,6 @@ public class OppoPushSerivce {
         return productColorMap;
     }
 
-
-    @FutureDataSource
-    public List<OppoCustomerAllot> getFutureOppoCustomerAllot(String date){
-        if(StringUtils.isEmpty(date)){
-            date=LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart= date;
-        String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerAllot> oppoCustomerAllots=futureStoreAllotRepository.findAll(dateStart,dateEnd);
-        return oppoCustomerAllots;
-    }
-
-    @FutureDataSource
-    public List<OppoCustomerStock> getFutureOppoCustomerStock(String date){
-        if(StringUtils.isEmpty(date)){
-            date=LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart= LocalDateUtils.format(LocalDateUtils.parse(date).plusMonths(-12));
-        String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerStock> oppoCustomerStocks=futureProductImeRepository.findAll(dateStart,dateEnd,date);
-        return oppoCustomerStocks;
-    }
-
-    @FutureDataSource
-    public List<OppoCustomerImeiStock>  getFutureOppoCustomerImeiStock(String date){
-        if(StringUtils.isEmpty(date)){
-            date=LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart= date;
-        String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerImeiStock>  oppoCustomerImeiStocks=futureImeAllotRepository.findAll(dateStart,dateEnd);
-        return oppoCustomerImeiStocks;
-    }
-
-    @FutureDataSource
-    public List<OppoCustomerSale> getFutureOppoCustomerSale(String date){
-        if(StringUtils.isEmpty(date)){
-            date=LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart= date;
-        String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerSale>  oppoCustomerSales=futureProductImeSaleRepository.findCustomerSales(dateStart,dateEnd);
-        return oppoCustomerSales;
-    }
-
-    @FutureDataSource
-    public List<OppoCustomerSaleImei> getFutureOppoCustomerSaleImeis(String date){
-        if(StringUtils.isEmpty(date)){
-            date=LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart= date;
-        String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerSaleImei> oppoCustomerSaleImeis=futureProductImeSaleRepository.findCustomerSaleImeis(dateStart,dateEnd);
-        return oppoCustomerSaleImeis;
-    }
-
-    @FutureDataSource
-    public List<OppoCustomerSaleCount> getFutureOppoCustomerSaleCounts(String date){
-        if(StringUtils.isEmpty(date)){
-            date=LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart= date;
-        String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerSaleCount> oppoCustomerSaleCounts=futureProductImeSaleRepository.findCustomerSaleCounts(dateStart,dateEnd);
-        return oppoCustomerSaleCounts;
-    }
-
-    @FutureDataSource
-    public List<OppoCustomerAfterSaleImei> getFutureOppoCustomerAfterSaleImeis(String date){
-        if(StringUtils.isEmpty(date)){
-            date=LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart= date;
-        String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=futureAfterSaleRepository.findAll(dateStart,dateEnd);
-        return oppoCustomerAfterSaleImeis;
-    }
-
-    @FutureDataSource
-    public  List<OppoCustomerDemoPhone> getFutureOppoCustomerDemoPhone(String date){
-        if(StringUtils.isEmpty(date)){
-            date=LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart= date;
-        String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=futureDemoPhoneRepository.findAll(dateStart,dateEnd);
-        return oppoCustomerDemoPhones;
-    }
 
     @LocalDataSource
     public List<OppoCustomer>  getOppoCustomersByDate(String createdDate){
