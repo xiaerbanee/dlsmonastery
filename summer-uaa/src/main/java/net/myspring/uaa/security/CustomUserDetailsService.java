@@ -2,16 +2,13 @@ package net.myspring.uaa.security;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.uaa.datasource.DbContextHolder;
 import net.myspring.uaa.dto.AccountDto;
 import net.myspring.uaa.dto.AccountWeixinDto;
 import net.myspring.uaa.dto.OfficeDto;
 import net.myspring.uaa.dto.WeixinSessionDto;
 import net.myspring.uaa.manager.OfficeManager;
-import net.myspring.uaa.manager.PermissionManager;
 import net.myspring.uaa.manager.WeixinManager;
 import net.myspring.uaa.repository.AccountDtoRepository;
 import net.myspring.uaa.repository.AccountWeixinDtoRepository;
@@ -50,8 +47,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     private WeixinManager weixinManager;
     @Autowired
     private OfficeManager officeManager;
-    @Autowired
-    private PermissionManager permissionManager;
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
