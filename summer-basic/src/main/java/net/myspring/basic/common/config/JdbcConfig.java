@@ -4,7 +4,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.SummerBasicApplication;
-import net.myspring.basic.common.dataSource.DynamicDataSource;
+import net.myspring.basic.common.datasource.DynamicDataSource;
 import net.myspring.common.enums.CompanyNameEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
