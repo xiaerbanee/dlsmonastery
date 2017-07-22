@@ -2,7 +2,7 @@ package net.myspring.basic.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
-import net.myspring.basic.common.dataSource.DynamicRedisConnectionFactory;
+import net.myspring.basic.common.datasource.DynamicRedisConnectionFactory;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

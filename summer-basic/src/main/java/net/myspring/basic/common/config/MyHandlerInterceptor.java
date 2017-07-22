@@ -1,7 +1,7 @@
 package net.myspring.basic.common.config;
 
-import net.myspring.basic.common.dataSource.DbContextHolder;
-import org.springframework.beans.factory.annotation.Value;
+
+import net.myspring.basic.common.datasource.DbContextHolder;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
