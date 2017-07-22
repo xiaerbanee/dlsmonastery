@@ -1,6 +1,6 @@
 package net.myspring.tool.common.client;
 
-import net.myspring.tool.common.domain.DistrictEntity;
+import net.myspring.tool.modules.future.dto.DistrictDto;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,5 +11,5 @@ import java.util.List;
 public interface DistrictClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/sys/district/findAll")
-    List<DistrictEntity> findDistrictList();
+    List<DistrictDto> findDistrictList();
 }

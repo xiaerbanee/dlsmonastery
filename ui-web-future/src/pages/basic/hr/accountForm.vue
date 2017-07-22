@@ -28,6 +28,9 @@
             <el-form-item :label="$t('accountForm.leader')" prop="leaderId">
               <account-select v-model="inputForm.leaderId"></account-select>
             </el-form-item>
+            <el-form-item label="数据部门" prop="officeIdList">
+              <office-select v-model="inputForm.officeIdList" multiple></office-select>
+            </el-form-item>
             <el-form-item :label="$t('accountForm.position')" prop="positionId">
               <el-select v-model="inputForm.positionId"  filterable :placeholder="$t('accountForm.selectGroup')" :clearable=true>
                 <el-option v-for="position in inputForm.extra.positionDtoList" :key="position.id" :label="position.name" :value="position.id"></el-option>

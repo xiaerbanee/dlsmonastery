@@ -58,7 +58,7 @@ interface BackendRepositoryCustom{
 
     fun findByRoleId(roleId:String):MutableList<BackendMenuDto>
 
-    fun findRolePermissionByRoleId(roleId:String):MutableList<BackendMenuDto>
+    fun findRolePermissionByRoleId(roleIdList:MutableList<String>):MutableList<BackendMenuDto>
 
 }
 
@@ -139,7 +139,7 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
         return Lists.newArrayList(backendMenuDtoMap.values);
     }
 
-    override fun findRolePermissionByRoleId(roleId: String): MutableList<BackendMenuDto> {
+    override fun findRolePermissionByRoleId(roleIdList: MutableList<String>): MutableList<BackendMenuDto> {
         var list= namedParameterJdbcTemplate.queryForList("""
                         SELECT
                         t1.id,
@@ -171,8 +171,8 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
                         and t4.enabled=1
                         and t5.enabled=1
                         and t6.enabled=1
-                        and t6.role_id=:roleId
-                """, Collections.singletonMap("roleId",roleId));
+                        and t6.role_id= in (:roleIdList)
+                """, Collections.singletonMap("roleIdList",roleIdList));
         var backendMenuDtoMap = Maps.newLinkedHashMap<String,BackendMenuDto>();
         for(item in list) {
             var id = StringUtils.toString(item["id"]);

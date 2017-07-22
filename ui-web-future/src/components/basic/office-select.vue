@@ -60,6 +60,9 @@
         });
       },initItemList(val, create){
         //在setValue之前被调用，确保相应的id有对应的记录，可以正确显示label
+        if(val){
+            return;
+        }
         if(this.remote){
           return this.doSearchByIds(val);
         }else if(create){
@@ -108,11 +111,13 @@
         return this.innerId === item.id;
       }
     },created () {
+        if(util.isBlank(this.value)){ return; }
       this.initItemList(this.value, true).then(()=>{
         this.setValue(this.value);
       });
     },watch: {
       value :function (newVal) {
+          if(util.isBlank(newVal)){ return; }
         this.initItemList(newVal, false).then(()=>{
           this.setValue(newVal);
         });

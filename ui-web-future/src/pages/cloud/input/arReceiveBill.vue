@@ -42,6 +42,7 @@
                 let column = changes[i][1];
                 if(column === 4 &&　changes[i][3] === '现金') {
                   table.setDataAtCell(row, 1, '');
+                  table.setDataAtCell(row, 5, '批量开单');
                 }
               }
             }

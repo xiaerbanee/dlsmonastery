@@ -2,9 +2,11 @@ package net.myspring.basic.modules.hr.dto;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.RequestUtils;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 
 import java.time.LocalDate;
@@ -31,6 +33,81 @@ public class AccountDto extends DataDto<Account> {
     private LocalDate regularDate;
     private String employeeName;
     private String employeeStatus;
+    private String roleIds;
+    private List<String> roleIdList=Lists.newArrayList();
+    private String officeIds;
+    private List<String> officeIdList=Lists.newArrayList();
+    @CacheInput(inputKey = "roles",inputInstance = "roleIdList",outputInstance = "name")
+    private List<String> roleNameList=Lists.newArrayList();
+    @CacheInput(inputKey = "offices",inputInstance = "officeIdList",outputInstance = "name")
+    private List<String> officeNameList=Lists.newArrayList();
+
+    private String dataScopeOfficeName;
+
+    public String getDataScopeOfficeName() {
+        if(StringUtils.isBlank(dataScopeOfficeName)&&CollectionUtil.isNotEmpty(officeNameList)){
+            this.dataScopeOfficeName=StringUtils.join(officeNameList,CharConstant.COMMA);
+        }
+        return dataScopeOfficeName;
+    }
+
+    public void setDataScopeOfficeName(String dataScopeOfficeName) {
+        this.dataScopeOfficeName = dataScopeOfficeName;
+    }
+
+    public String getRoleIds() {
+        return roleIds;
+    }
+
+    public void setRoleIds(String roleIds) {
+        this.roleIds = roleIds;
+    }
+
+    public List<String> getRoleIdList() {
+        if(CollectionUtil.isEmpty(roleIdList)&&StringUtils.isNotBlank(roleIds)){
+            this.roleIdList=StringUtils.getSplitList(roleIds, CharConstant.COMMA);
+        }
+        return roleIdList;
+    }
+
+    public void setRoleIdList(List<String> roleIdList) {
+        this.roleIdList = roleIdList;
+    }
+
+    public String getOfficeIds() {
+        return officeIds;
+    }
+
+    public void setOfficeIds(String officeIds) {
+        this.officeIds = officeIds;
+    }
+
+    public List<String> getOfficeIdList() {
+        if(CollectionUtil.isEmpty(officeIdList)&&StringUtils.isNotBlank(officeIds)){
+            this.officeIdList=StringUtils.getSplitList(officeIds, CharConstant.COMMA);
+        }
+        return officeIdList;
+    }
+
+    public void setOfficeIdList(List<String> officeIdList) {
+        this.officeIdList = officeIdList;
+    }
+
+    public List<String> getRoleNameList() {
+        return roleNameList;
+    }
+
+    public void setRoleNameList(List<String> roleNameList) {
+        this.roleNameList = roleNameList;
+    }
+
+    public List<String> getOfficeNameList() {
+        return officeNameList;
+    }
+
+    public void setOfficeNameList(List<String> officeNameList) {
+        this.officeNameList = officeNameList;
+    }
 
     private boolean admin=RequestUtils.getAdmin();
 

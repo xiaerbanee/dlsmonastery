@@ -1,6 +1,6 @@
 package net.myspring.tool.modules.oppo.dto;
 
-import net.myspring.tool.common.dto.CustomerDto;
+import net.myspring.tool.modules.future.dto.CustomerDto;
 import net.myspring.tool.modules.oppo.domain.*;
 
 import java.util.List;

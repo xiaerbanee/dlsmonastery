@@ -1,7 +1,6 @@
-package net.myspring.tool.common.dto;
+package net.myspring.tool.modules.future.dto;
 
 public class DistrictDto {
-
     private String id;
     private String name;
     private String parentId;
@@ -23,10 +22,6 @@ public class DistrictDto {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getFullName() {
-        return province +", "+ city+", " + county;
     }
 
     public String getName() {

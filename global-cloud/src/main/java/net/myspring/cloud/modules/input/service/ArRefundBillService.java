@@ -136,16 +136,13 @@ public class ArRefundBillService {
                     ArRefundBillDto arRefundBill = new ArRefundBillDto();
                     arRefundBill.setExtendType(ExtendTypeEnum.收款退款单_k3.name());
                     arRefundBill.setCreatorK3(accountKingdeeBook.getUsername());
-                    arRefundBill.setKingdeeName(kingdeeBook.getName());
                     arRefundBill.setCustomerNumber(customerNameMap.get(customerName));
                     arRefundBill.setDate(billDate);
                     arRefundBill.setAmount(amount);
                     arRefundBill.setDepartmentNumber(customerNameToDepartmentNumberMap.get(customerName));
                     ArRefundBillEntityDto arRefundBillEntityDto = new ArRefundBillEntityDto();
                     arRefundBillEntityDto.setFSettleTypeIdNumber(SettleTypeEnum.电汇.getFNumber());
-                    if (StringUtils.isNotBlank(bankAcntName)){
-                        arRefundBillEntityDto.setBankAcntNumber(bankAcntNameMap.get(bankAcntName));
-                    }
+                    arRefundBillEntityDto.setBankAcntNumber(bankAcntNameMap.get(bankAcntName));
                     arRefundBillEntityDto.setNote(remarks);
                     arRefundBill.setArRefundBillEntityDtoList(Lists.newArrayList(arRefundBillEntityDto));
                     refundBillForDHMap.put(billKey, arRefundBill);
@@ -158,7 +155,6 @@ public class ArRefundBillService {
                     ArRefundBillDto arRefundBill = new ArRefundBillDto();
                     arRefundBill.setExtendType(ExtendTypeEnum.收款退款单_k3.name());
                     arRefundBill.setCreatorK3(accountKingdeeBook.getUsername());
-                    arRefundBill.setKingdeeName(kingdeeBook.getName());
                     arRefundBill.setCustomerNumber(customerNameMap.get(customerName));
                     arRefundBill.setDate(billDate);
                     arRefundBill.setAmount(amount);
@@ -174,10 +170,15 @@ public class ArRefundBillService {
             }
 
         }
+        List<KingdeeSynDto> kingdeeSynDtoList = Lists.newArrayList();
         List<ArRefundBillDto> billList = Lists.newArrayList(refundBillForDHMap.values());
-        List<KingdeeSynDto> kingdeeSynDtoList = save(billList,kingdeeBook,accountKingdeeBook);
+        if (CollectionUtil.isNotEmpty(billList)){
+            kingdeeSynDtoList.addAll(save(billList,kingdeeBook,accountKingdeeBook));
+        }
         List<ArRefundBillDto> cashBillList = Lists.newArrayList(refundBillForCashMap.values());
-        kingdeeSynDtoList.addAll(save(cashBillList,kingdeeBook,accountKingdeeBook));
+        if (CollectionUtil.isNotEmpty(cashBillList)) {
+            kingdeeSynDtoList.addAll(save(cashBillList, kingdeeBook, accountKingdeeBook));
+        }
         return kingdeeSynDtoList;
     }
 

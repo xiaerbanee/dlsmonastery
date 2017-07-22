@@ -2,17 +2,18 @@ package net.myspring.tool.modules.oppo.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.*;
-import net.myspring.tool.common.dataSource.annotation.FutureDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
-import net.myspring.tool.common.domain.DistrictEntity;
-import net.myspring.tool.common.domain.EmployeeEntity;
-import net.myspring.tool.common.domain.OfficeEntity;
+import net.myspring.tool.modules.future.dto.DistrictDto;
+import net.myspring.tool.modules.future.dto.EmployeeDto;
+import net.myspring.tool.modules.future.dto.OfficeDto;
 import net.myspring.tool.common.utils.CacheUtils;
+import net.myspring.tool.modules.future.repository.*;
 import net.myspring.tool.modules.oppo.domain.*;
-import net.myspring.tool.common.dto.CustomerDto;
+import net.myspring.tool.modules.future.dto.CustomerDto;
 import net.myspring.tool.modules.oppo.dto.OppoPushDto;
 import net.myspring.tool.modules.oppo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
@@ -21,6 +22,7 @@ import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,15 +38,11 @@ import java.util.*;
 public class OppoPushSerivce {
 
     @Autowired
-    private CustomerClient customerClient;
-    @Autowired
     private DistrictClient districtClient;
     @Autowired
     private OfficeClient officeClient;
     @Autowired
     private EmployeeClient employeeClient;
-    @Autowired
-    private CompanyConfigClient companyConfigClient;
     @Autowired
     private OppoPlantAgentProductSelRepository oppoPlantAgentProductSelRepository;
     @Autowired
@@ -68,21 +66,11 @@ public class OppoPushSerivce {
     @Autowired
     private OppoCustomerDemoPhoneRepository oppoCustomerDemoPhoneRepository;
     @Autowired
-    private FutureAfterSaleRepository futureAfterSaleRepository;
-    @Autowired
-    private FutureStoreAllotRepository futureStoreAllotRepository;
-    @Autowired
-    private FutureDemoPhoneRepository futureDemoPhoneRepository;
-    @Autowired
-    private FutureImeAllotRepository futureImeAllotRepository;
-    @Autowired
-    private FutureProductImeSaleRepository futureProductImeSaleRepository;
-    @Autowired
-    private FutureProductImeRepository futureProductImeRepository;
-    @Autowired
     private FutureCustomerRepository futureCustomerRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
@@ -116,29 +104,24 @@ public class OppoPushSerivce {
         pushOppoCustomerDemoPhone(oppoPushDto.getOppoCustomerDemoPhones(),oppoPushDto.getDate());
     }
 
-    @FutureDataSource
-    public List<CustomerDto> getOppoCustomers(){
-        List<CustomerDto> customerDtoList = futureCustomerRepository.findOppoCustomers();
-        return customerDtoList;
-    }
 
     //上抛oppo门店数据,只上抛二代和渠道门店
     @LocalDataSource
     @Transactional
     public List<OppoCustomer> pushOppoCustomers(List<CustomerDto> customerDtoList,String date) {
-        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","").split(CharConstant.COMMA)[0];
+        String agentCode= CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
         List<OppoCustomer> oppoCustomers = Lists.newArrayList();
         initAreaDepotMap();
         Map<String, OppoCustomer> oppoCustomersMap = Maps.newHashMap();
-        List<DistrictEntity>  districtList=districtClient.findDistrictList();
-        Map<String,DistrictEntity>  districtMap=Maps.newHashMap();
-        for(DistrictEntity districtEntity:districtList){
-            districtMap.put(districtEntity.getId(),districtEntity);
+        List<DistrictDto>  districtList=districtClient.findDistrictList();
+        Map<String,DistrictDto>  districtMap=Maps.newHashMap();
+        for(DistrictDto districtDto:districtList){
+            districtMap.put(districtDto.getId(),districtDto);
         }
-        List<OfficeEntity> offices=officeClient.findAll();
-        Map<String,OfficeEntity>  officeMap=Maps.newHashMap();
-        for(OfficeEntity officeEntity:offices){
-            officeMap.put(officeEntity.getId(),officeEntity);
+        List<OfficeDto> offices=officeClient.findAll();
+        Map<String,OfficeDto>  officeMap=Maps.newHashMap();
+        for(OfficeDto officeDto:offices){
+            officeMap.put(officeDto.getId(),officeDto);
         }
         for(CustomerDto customerDto:customerDtoList){
             String depotId=getDepotId(customerDto);
@@ -366,18 +349,18 @@ public class OppoPushSerivce {
     @Transactional
     public List<OppoCustomerSaleImei> pushOppoCustomerSaleImes(List<OppoCustomerSaleImei> oppoCustomerSaleImes,String date) {
         initAreaDepotMap();
-        List<DistrictEntity>  districtList=districtClient.findDistrictList();
-        Map<String,DistrictEntity>  districtMap=Maps.newHashMap();
-        for(DistrictEntity districtEntity:districtList){
-            districtMap.put(districtEntity.getId(),districtEntity);
+        List<DistrictDto>  districtList=districtClient.findDistrictList();
+        Map<String,DistrictDto>  districtMap=Maps.newHashMap();
+        for(DistrictDto districtDto:districtList){
+            districtMap.put(districtDto.getId(),districtDto);
         }
-        Map<String,EmployeeEntity>  employeeMap=Maps.newHashMap();
-        List<EmployeeEntity> employeeList=employeeClient.findAll();
-        for(EmployeeEntity employeeEntity:employeeList){
-            employeeMap.put(employeeEntity.getId(),employeeEntity);
+        Map<String,EmployeeDto>  employeeMap=Maps.newHashMap();
+        List<EmployeeDto> employeeList=employeeClient.findAll();
+        for(EmployeeDto employeeDto:employeeList){
+            employeeMap.put(employeeDto.getId(),employeeDto);
         }
-        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","").split(CharConstant.COMMA)[0];
-        String agentName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
+        String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
+        String agentName=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.COMPANY_NAME.name()).getValue();
         for(OppoCustomerSaleImei oppoCustomerSaleIme:oppoCustomerSaleImes){
             if(StringUtils.isNotBlank(oppoCustomerSaleIme.getSalepromoter())&&employeeMap.get(oppoCustomerSaleIme.getSalepromoter())!=null){
                 oppoCustomerSaleIme.setSalepromoter(employeeMap.get(oppoCustomerSaleIme.getSalepromoter()).getName());
@@ -417,7 +400,7 @@ public class OppoPushSerivce {
     @Transactional
     public List<OppoCustomerSaleCount> pushOppoCustomerSaleCounts(List<OppoCustomerSaleCount> oppoCustomerSaleCounts,String date) {
         initAreaDepotMap();
-        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","").split(CharConstant.COMMA)[0];
+        String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
         Map<String, String> productColorMap = getProductColorMap();
         for(OppoCustomerSaleCount oppoCustomerSaleCount:oppoCustomerSaleCounts) {
             String colorId=productColorMap.get(oppoCustomerSaleCount.getProductCode());
@@ -477,7 +460,7 @@ public class OppoPushSerivce {
 
 
     private void initAreaDepotMap(){
-        List<CustomerDto> customerDtosList=customerClient.findCustomerDtoList();
+        List<CustomerDto> customerDtosList=futureCustomerRepository.findOppoCustomers();
         for(CustomerDto customerDto:customerDtosList){
             if(!customerDtoMap.containsKey(customerDto.getDepotId())){
                 customerDtoMap.put(customerDto.getDepotId(),customerDto);
@@ -535,6 +518,7 @@ public class OppoPushSerivce {
             return false;
         }
     }
+
     private Boolean isShop(CustomerDto customerDto){
         String jointLeavel=customerDto.getJointLeavel();
         String storeId=customerDto.getStoreId();
@@ -563,94 +547,6 @@ public class OppoPushSerivce {
         return productColorMap;
     }
 
-
-    @FutureDataSource
-    public List<OppoCustomerAllot> getFutureOppoCustomerAllot(String date){
-        if(StringUtils.isEmpty(date)){
-            date=LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart= date;
-        String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerAllot> oppoCustomerAllots=futureStoreAllotRepository.findAll(dateStart,dateEnd);
-        return oppoCustomerAllots;
-    }
-
-    @FutureDataSource
-    public List<OppoCustomerStock> getFutureOppoCustomerStock(String date){
-        if(StringUtils.isEmpty(date)){
-            date=LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart= LocalDateUtils.format(LocalDateUtils.parse(date).plusMonths(-12));
-        String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerStock> oppoCustomerStocks=futureProductImeRepository.findAll(dateStart,dateEnd,date);
-        return oppoCustomerStocks;
-    }
-
-    @FutureDataSource
-    public List<OppoCustomerImeiStock>  getFutureOppoCustomerImeiStock(String date){
-        if(StringUtils.isEmpty(date)){
-            date=LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart= date;
-        String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerImeiStock>  oppoCustomerImeiStocks=futureImeAllotRepository.findAll(dateStart,dateEnd);
-        return oppoCustomerImeiStocks;
-    }
-
-    @FutureDataSource
-    public List<OppoCustomerSale> getFutureOppoCustomerSale(String date){
-        if(StringUtils.isEmpty(date)){
-            date=LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart= date;
-        String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerSale>  oppoCustomerSales=futureProductImeSaleRepository.findCustomerSales(dateStart,dateEnd);
-        return oppoCustomerSales;
-    }
-
-    @FutureDataSource
-    public List<OppoCustomerSaleImei> getFutureOppoCustomerSaleImeis(String date){
-        if(StringUtils.isEmpty(date)){
-            date=LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart= date;
-        String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerSaleImei> oppoCustomerSaleImeis=futureProductImeSaleRepository.findCustomerSaleImeis(dateStart,dateEnd);
-        return oppoCustomerSaleImeis;
-    }
-
-    @FutureDataSource
-    public List<OppoCustomerSaleCount> getFutureOppoCustomerSaleCounts(String date){
-        if(StringUtils.isEmpty(date)){
-            date=LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart= date;
-        String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerSaleCount> oppoCustomerSaleCounts=futureProductImeSaleRepository.findCustomerSaleCounts(dateStart,dateEnd);
-        return oppoCustomerSaleCounts;
-    }
-
-    @FutureDataSource
-    public List<OppoCustomerAfterSaleImei> getFutureOppoCustomerAfterSaleImeis(String date){
-        if(StringUtils.isEmpty(date)){
-            date=LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart= date;
-        String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=futureAfterSaleRepository.findAll(dateStart,dateEnd);
-        return oppoCustomerAfterSaleImeis;
-    }
-
-    @FutureDataSource
-    public  List<OppoCustomerDemoPhone> getFutureOppoCustomerDemoPhone(String date){
-        if(StringUtils.isEmpty(date)){
-            date=LocalDateUtils.format(LocalDate.now());
-        }
-        String dateStart= date;
-        String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=futureDemoPhoneRepository.findAll(dateStart,dateEnd);
-        return oppoCustomerDemoPhones;
-    }
 
     @LocalDataSource
     public List<OppoCustomer>  getOppoCustomersByDate(String createdDate){
