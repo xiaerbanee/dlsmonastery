@@ -1,6 +1,7 @@
 spring:
   session:
     store-type: redis
+    namespace: session
     timeout: 5
 management:
   security:
