@@ -20,7 +20,7 @@ public class DutySign extends AuditEntity<DutySign> {
     private String lat;
     private Integer version = 0;
     private String uuid;
-    private Integer accuracy;
+    private String  accuracy;
     private String operatorType;
     private String netType;
     private String employeeId;
@@ -91,11 +91,11 @@ public class DutySign extends AuditEntity<DutySign> {
         this.uuid = uuid;
     }
 
-    public Integer getAccuracy() {
+    public String getAccuracy() {
         return accuracy;
     }
 
-    public void setAccuracy(Integer accuracy) {
+    public void setAccuracy(String accuracy) {
         this.accuracy = accuracy;
     }
 
