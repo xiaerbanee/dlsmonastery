@@ -10,3 +10,5 @@ cd ..
 call gradle clean buildAll -x test
 
 cd ..
+
+pause
