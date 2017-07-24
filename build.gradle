@@ -19,11 +19,7 @@ buildscript {
 
 }
 
-
 apply plugin: "com.brightsparklabs.gradle.multi-git"
-
-
-
 
 defaultTasks 'buildAll'
 
