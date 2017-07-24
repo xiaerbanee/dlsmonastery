@@ -163,7 +163,9 @@
       },synData(){
         if(this.date){
           this.loading = true;
-          axios.get('/api/ws/future/third/factory/oppo/synIme?date='+this.date).then((response)=>{
+          let companyName = JSON.parse(window.localStorage.getItem("account")).companyName;
+          console.log("companyName:"+companyName);
+          axios.get('/api/ws/future/third/factory/oppo/pullFactoryData?companyName='+companyName+'&date='+this.date).then((response)=>{
             this.loading = false;
             this.$message(response.data);
           }).catch(function () {
