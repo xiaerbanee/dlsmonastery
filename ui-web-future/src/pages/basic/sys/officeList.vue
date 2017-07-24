@@ -4,6 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'sys:office:edit'">{{$t('officeList.add')}}</el-button>
+        <el-button type="primary" @click="itemBusinessAdd" icon="plus" v-permit="'sys:office:businessEdit'">职能部门添加</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'sys:office:view'">{{$t('officeList.filter')}}</el-button>
         <el-button type="primary" @click="officeChange" icon="document" v-permit="'sys:office:officeChange:edit'">机构调整</el-button>
         <span v-html="searchText"></span>
@@ -41,8 +42,8 @@
         <el-table-column prop="remarks" :label="$t('officeList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('officeList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'sys:office:edit'">{{$t('officeList.edit')}}</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'sys:office:delete'">{{$t('officeList.delete')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit',scope.row.type)" v-permit="'sys:office:edit'">{{$t('officeList.edit')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete',scope.row.type)" v-permit="'sys:office:delete'">{{$t('officeList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -96,11 +97,17 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({name: 'officeForm'})
+      },itemBusinessAdd(){
+        this.$router.push({name: 'officeBusinessForm'})
       },officeChange(){
         this.$router.push({name: 'officeChangeForm'})
-      },itemAction:function(id,action){
+      },itemAction:function(id,action,type){
         if(action=="edit") {
-          this.$router.push({ name: 'officeForm', query: { id: id }})
+          if('业务部门'==type){
+              this.$router.push({ name: 'officeForm', query: { id: id }})
+          }else if('职能部门'==type){
+              this.$router.push({ name: 'officeBusinessForm', query: { id: id }})
+          }
         } else if(action=="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/basic/sys/office/delete',{params:{id:id}}).then((response) =>{
