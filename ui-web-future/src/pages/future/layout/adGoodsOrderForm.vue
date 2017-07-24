@@ -83,8 +83,7 @@
   import employeeSelect from 'components/basic/employee-select';
   import depotSelect from 'components/future/depot-select';
   import expressCompanySelect from 'components/future/express-company-select';
-  import productSelect from 'components/future/product-select'
-  import util from "../../../utils/util";
+  import productSelect from 'components/future/product-select';
 
   export default{
     components: {
