@@ -1,10 +1,10 @@
 rd/s/q summer
 
-git clone http://ncoppo.com:66/liuj/summer.git
+call git clone http://ncoppo.com:66/liuj/summer.git
 
 cd summer/ui-web-future
-cnpm install
-npm run build
+call cnpm install
+call npm run build
 
 cd ..
-gradle clean buildAll -x test
+call gradle clean buildAll -x test
