@@ -6,6 +6,7 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.AdGoodsOrderStatusEnum;
 import net.myspring.future.common.enums.BillTypeEnum;
@@ -252,15 +253,33 @@ public class AdGoodsOrderService {
         adGoodsOrderRepository.logicDelete(id);
     }
 
-    public List<AdGoodsOrderDetailSimpleDto> findDetailListForNewOrEdit(String adGoodsOrderId, boolean includeNotAllowOrderProduct) {
+    public List<AdGoodsOrderDetailSimpleDto> findDetailListForNewOrEdit(String adGoodsOrderId,String outShopId) {
 
         List<String> outGroupIdList = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
 
         List<AdGoodsOrderDetailSimpleDto> result;
         if (StringUtils.isBlank(adGoodsOrderId)) {
-            result = adGoodsOrderDetailRepository.findDetailListForNew(outGroupIdList, includeNotAllowOrderProduct);
+            result = adGoodsOrderDetailRepository.findDetailListForNew(outGroupIdList);
         } else {
-            result = adGoodsOrderDetailRepository.findDetailListForEdit(adGoodsOrderId, outGroupIdList, includeNotAllowOrderProduct);
+            result = adGoodsOrderDetailRepository.findDetailListForEdit(adGoodsOrderId, outGroupIdList);
+        }
+        if(StringUtils.isNotBlank(outShopId)){
+            Depot depot = depotRepository.findOne(outShopId);
+            if(depot != null && RequestUtils.getCompanyName().equalsIgnoreCase(CompanyNameEnum.JXDJ.name())){
+                if(depot.getCode().startsWith("IM0")){
+                    for(AdGoodsOrderDetailSimpleDto adGoodsOrderDetailSimpleDto : result){
+                        if(!adGoodsOrderDetailSimpleDto.getProductCode().startsWith("I")){
+                            result.remove(adGoodsOrderDetailSimpleDto);
+                        }
+                    }
+                }else if(depot.getCode().startsWith("DJ")){
+                    for(AdGoodsOrderDetailSimpleDto adGoodsOrderDetailSimpleDto : result){
+                        if(!adGoodsOrderDetailSimpleDto.getProductCode().startsWith("D")){
+                            result.remove(adGoodsOrderDetailSimpleDto);
+                        }
+                    }
+                }
+            }
         }
         cacheUtils.initCacheInput(result);
         return result;

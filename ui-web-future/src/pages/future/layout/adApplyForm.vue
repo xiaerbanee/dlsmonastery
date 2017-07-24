@@ -9,7 +9,7 @@
           </el-select>
         </el-form-item>
         <el-form-item  :label="$t('adApplyForm.shopName')" prop="shopId">
-          <depot-select v-if="this.inputForm.billType=='POP'" v-model="inputForm.shopId" category="popShop"></depot-select>
+          <depot-select v-if="this.inputForm.billType=='POP'" v-model="inputForm.shopId" category="popShop" @input = "onchange"></depot-select>
           <depot-select v-if="this.inputForm.billType=='配件赠品'" v-model="inputForm.shopId" category="directShop"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('adApplyForm.remarks')" prop="remarks">
@@ -159,7 +159,7 @@
          if(!this.inputForm.billType){
            return;
          }
-          axios.get('api/ws/future/basic/product/findAdProductAndAllowOrder',{params:{billType:this.inputForm.billType}}).then((response) =>{
+          axios.get('api/ws/future/basic/product/findAdProductAndAllowOrder',{params:{billType:this.inputForm.billType,depotId:this.inputForm.shopId}}).then((response) =>{
             this.setProductList(response.data);
           });
        },initPage(){
