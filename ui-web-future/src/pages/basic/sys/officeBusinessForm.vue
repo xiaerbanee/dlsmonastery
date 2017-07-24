@@ -11,21 +11,21 @@
             <el-form-item :label="$t('officeForm.officeName')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="所有数据权限" prop="allDataScope" v-show="!isBusiness">
+            <el-form-item label="所有数据权限" prop="allDataScope" >
               <bool-radio-group v-model="inputForm.allDataScope"></bool-radio-group>
             </el-form-item>
             <el-form-item label="部门管理人" prop="leaderIdList">
               <account-select v-model="inputForm.leaderIdList" :multiple="true"></account-select>
             </el-form-item>
             <el-form-item :label="$t('officeForm.sort')" prop="sort">
-              <el-input v-model="inputForm.sort"></el-input>
+              <el-input  v-model.number="inputForm.sort"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('officeForm.save')}}
               </el-button>
             </el-form-item>
           </el-col>
-          <el-col :span = "10" v-show="!isBusiness">
+          <el-col :span = "10" >
             <el-form-item  label="授权" prop="officeIdList">
               <el-tree
                 :data="treeData"
@@ -60,6 +60,13 @@
     },
     methods: {
       getData(){
+        var checkSort=(rule,value,callback)=>{
+            if(value==""){
+                callback(new Error(this.$t('officeForm.prerequisiteMessage')))
+            }else if(isNaN(value)){
+                callback(new Error(this.$t('bankInForm.prerequisiteAndPositiveNumberMessage')))
+            }
+        }
         return {
           isCreate: this.$route.query.id == null,
           multiple:true,
@@ -69,6 +76,7 @@
           },
           rules: {
             name: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
+            sort:[{ required: true, validator:checkSort}],
           },
           remoteLoading: false,
           treeData:[],
@@ -125,6 +133,7 @@
           this.inputForm = response.data;
           axios.get('/api/basic/sys/office/findOne', {params: {id: this.$route.query.id}}).then((response) => {
             util.copyValue(response.data,this.inputForm);
+            this.$refs.tree.setCheckedKeys(response.data.businessIdList);
             this.checked=response.data.businessIdList
             this.inputForm.officeIdList = response.data.businessIdList;
           })

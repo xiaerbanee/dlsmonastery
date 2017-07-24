@@ -216,7 +216,10 @@ public class AfterSaleService {
         Map<String, AfterSale> afterSaleMap = findByImeList(badImeList);
         if (afterSaleMap.size() > 0) {
             String goodStoreId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.GOOD_STORE_ID.name()).getValue();
-            List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
+            List<ProductIme> productImeList =Lists.newArrayList();
+            if(CollectionUtil.isNotEmpty(imeList)){
+                productImeList =productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
+            }
             List<Depot> depotList = depotRepository.findByNameList(depotNameList);
             List<Product> productList =Lists.newArrayList();
             if(CollectionUtil.isNotEmpty(productNameList)){

@@ -55,6 +55,7 @@ export default {
       goodsOrderCategory:"订货管理",
     },
     menu:{
+      officeBusinessForm:'职能部门编辑',
       goodsOrderMallForm:"商城订单",
       roleList:"角色管理",
       roleAuthorityForm:"角色权限",

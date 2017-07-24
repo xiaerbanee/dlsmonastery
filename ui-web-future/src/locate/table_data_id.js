@@ -55,6 +55,7 @@ export default {
       cloudSysCategory:"系统设置"
     },
     menu:{
+      officeBusinessForm:'职能部门编辑',
       roleList:"角色管理",
       storeInventoryReport:"仓库报表",
       depotShopList:"门店管理",
