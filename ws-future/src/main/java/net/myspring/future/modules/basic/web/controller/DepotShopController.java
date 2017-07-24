@@ -127,6 +127,15 @@ public class DepotShopController {
         }
     }
 
+    @RequestMapping(value = "findDepotIdsByAccountId")
+    public List<String> findDepotIdsByAccountId(String accountId){
+        List<String> list=Lists.newArrayList();
+        if(StringUtils.isNotBlank(accountId)){
+            list=depotShopService.findDepotIdListByAccountId(accountId);
+        }
+        return list;
+    }
+
     @RequestMapping(value = "saveDepotAccount")
     public RestResponse saveDepotAccount(DepotAccountForm depotAccountForm){
         depotShopService.saveDepotAccount(depotAccountForm);

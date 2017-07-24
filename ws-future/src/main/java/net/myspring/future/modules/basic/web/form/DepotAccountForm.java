@@ -11,15 +11,33 @@ import java.util.List;
  */
 public class DepotAccountForm extends BaseForm<DepotShop>{
 
-    private String shopId;
+    private String depotId;
     private List<String> accountIds = Lists.newArrayList();
+    private String accountId;
+    private List<String> depotIdList=Lists.newArrayList();
 
-    public String getShopId() {
-        return shopId;
+    public String getAccountId() {
+        return accountId;
     }
 
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public List<String> getDepotIdList() {
+        return depotIdList;
+    }
+
+    public void setDepotIdList(List<String> depotIdList) {
+        this.depotIdList = depotIdList;
+    }
+
+    public String getDepotId() {
+        return depotId;
+    }
+
+    public void setDepotId(String depotId) {
+        this.depotId = depotId;
     }
 
     public List<String> getAccountIds() {
