@@ -117,7 +117,7 @@ Page({
         console.log(res.data)
         if (res.data.success) {
           wx.navigateBack();
-        } else if (res.data.hasOwnProperty("extra")) {
+        } else if (res.data.extra.hasOwnProperty("errots")) {
           that.setData({ 'response.data': res.data.extra.errors, submitDisabled: false });
         } else {
           that.setData({ "response.error": res.data.message, submitDisabled: false })

@@ -7,7 +7,8 @@ Page({
     response: {},
     submitDisabled: false,
     submitHidden: false,
-    options: null,  },
+    options: null,
+  },
   onLoad: function (options) {
     var that = this;
     that.data.options = options;
@@ -143,11 +144,11 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
-        console.log(res.data)
+        console.log(res)
         if (res.data.success) {
           wx.navigateBack();
         } else {
-          that.setData({ "response.error": res.data.message, submitDisabled: false })
+          that.setData({ "response.error": res.data.message, submitDisabled: false });
           that.setData({ "response.data": res.data.extra.errors, submitDisabled: false });
         }
       }
