@@ -122,9 +122,9 @@ public class AccountService {
         if(CollectionUtil.isEmpty(accountForm.getOfficeIdList())){
             accountForm.setOfficeIdList(Lists.newArrayList(accountForm.getOfficeId()));
         }
-        Position position=positionRepository.findOne(accountForm.getPositionId());
-        accountForm.setRoleIds(position.getRoleId());
         if (accountForm.isCreate()) {
+            Position position=positionRepository.findOne(accountForm.getPositionId());
+            accountForm.setRoleIds(position.getRoleId());
             account = BeanUtil.map(accountForm, Account.class);
             accountRepository.save(account);
         } else {
