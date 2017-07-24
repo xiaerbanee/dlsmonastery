@@ -6,10 +6,12 @@ import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.AccountPermission;
 import net.myspring.basic.modules.hr.domain.Employee;
+import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.repository.AccountPermissionRepository;
 import net.myspring.basic.modules.hr.repository.AccountRepository;
 import net.myspring.basic.modules.hr.repository.EmployeeRepository;
+import net.myspring.basic.modules.hr.repository.PositionRepository;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.basic.modules.sys.domain.Office;
@@ -63,7 +65,7 @@ public class AccountService {
     @Autowired
     private OfficeManager officeManager;
     @Autowired
-    private OfficeRepository officeRepository;
+    private PositionRepository positionRepository;
     @Autowired
     private AccountPermissionRepository accountPermissionRepository;
 
@@ -117,6 +119,11 @@ public class AccountService {
                 accountForm.setPassword(accountRepository.findOne(accountForm.getId()).getPassword());
             }
         }
+        if(CollectionUtil.isEmpty(accountForm.getOfficeIdList())){
+            accountForm.setOfficeIdList(Lists.newArrayList(accountForm.getOfficeId()));
+        }
+        Position position=positionRepository.findOne(accountForm.getPositionId());
+        accountForm.setRoleIds(position.getRoleId());
         if (accountForm.isCreate()) {
             account = BeanUtil.map(accountForm, Account.class);
             accountRepository.save(account);
