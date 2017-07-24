@@ -60,6 +60,13 @@
     },
     methods: {
       getData(){
+        var checkSort=(rule,value,callback)=>{
+            if(value==""){
+                callback(new Error(this.$t('officeForm.prerequisiteMessage')))
+            }else if(isNaN(value)){
+                callback(new Error(this.$t('bankInForm.prerequisiteAndPositiveNumberMessage')))
+            }
+        }
         return {
           isCreate: this.$route.query.id == null,
           multiple:true,
@@ -69,7 +76,7 @@
           },
           rules: {
             name: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
-            sort:[{ required: true, type:"number", message: this.$t('bankInForm.prerequisiteAndPositiveNumberMessage')}],
+            sort:[{ required: true, validator:checkSort}],
           },
           remoteLoading: false,
           treeData:[],
