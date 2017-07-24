@@ -5,16 +5,16 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
-import net.myspring.tool.common.client.*;
-import net.myspring.tool.common.dataSource.annotation.FutureDataSource;
+import net.myspring.tool.common.client.DistrictClient;
+import net.myspring.tool.common.client.EmployeeClient;
+import net.myspring.tool.common.client.OfficeClient;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
+import net.myspring.tool.common.utils.CacheUtils;
+import net.myspring.tool.modules.future.dto.CustomerDto;
 import net.myspring.tool.modules.future.dto.DistrictDto;
 import net.myspring.tool.modules.future.dto.EmployeeDto;
 import net.myspring.tool.modules.future.dto.OfficeDto;
-import net.myspring.tool.common.utils.CacheUtils;
-import net.myspring.tool.modules.future.repository.*;
 import net.myspring.tool.modules.oppo.domain.*;
-import net.myspring.tool.modules.future.dto.CustomerDto;
 import net.myspring.tool.modules.oppo.dto.OppoPushDto;
 import net.myspring.tool.modules.oppo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
@@ -28,7 +28,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by guolm on 2017/6/10.
@@ -67,8 +69,6 @@ public class OppoPushSerivce {
     @Autowired
     private OppoCustomerDemoPhoneRepository oppoCustomerDemoPhoneRepository;
     @Autowired
-    private FutureCustomerRepository futureCustomerRepository;
-    @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private RedisTemplate redisTemplate;
@@ -76,8 +76,8 @@ public class OppoPushSerivce {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static Map<String,String> areaDepotMap=Maps.newHashMap();
-    private static Map<String,CustomerDto> customerDtoMap=Maps.newHashMap();
+    private Map<String,String> areaDepotMap=Maps.newHashMap();
+    private Map<String,CustomerDto> customerDtoMap=Maps.newHashMap();
 
 
     @LocalDataSource

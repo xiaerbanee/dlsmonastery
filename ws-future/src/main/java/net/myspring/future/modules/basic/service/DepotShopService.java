@@ -220,12 +220,22 @@ public class DepotShopService {
         return depotShopRepository.findAccountIdsByDepotId(depotId);
     }
 
+    public List<String> findDepotIdListByAccountId(String accountId){
+        return depotShopRepository.findDepotIdListByAccountId(accountId);
+    }
+
     @Transactional
     public void saveDepotAccount(DepotAccountForm depotAccountForm){
-        //先删除表中的depot-account
-        depotShopRepository.deleteDepotAccountByDepotId(depotAccountForm.getShopId());
-        if(CollectionUtil.isNotEmpty(depotAccountForm.getAccountIds())){
-            depotShopRepository.saveDepotAccount(depotAccountForm.getShopId(),depotAccountForm.getAccountIds());
+        if(StringUtils.isNotBlank(depotAccountForm.getDepotId())){
+            depotShopRepository.deleteDepotAccountByDepotId(depotAccountForm.getDepotId());
+            if(CollectionUtil.isNotEmpty(depotAccountForm.getAccountIds())){
+                depotShopRepository.saveDepotAccount(depotAccountForm);
+            }
+        }else if(StringUtils.isNotBlank(depotAccountForm.getAccountId())){
+            depotShopRepository.deleteDepotAccountByAccountId(depotAccountForm.getAccountId());
+            if(CollectionUtil.isNotEmpty(depotAccountForm.getDepotIdList())){
+                depotShopRepository.saveDepotAccount(depotAccountForm);
+            }
         }
     }
 
