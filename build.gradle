@@ -45,7 +45,7 @@ task copyWeb(type: Copy, dependsOn:[':global-cloud:build', ':global-task:build',
     include('*.jar')
 }
 
-task copyUi(type: Copy, dependsOn:[':ui-web-future:npm_run_build']) {
+task copyUi(type: Copy) {
     from  'ui-web-future/build'
     into 'build/ui-web-future'
     include('*')
