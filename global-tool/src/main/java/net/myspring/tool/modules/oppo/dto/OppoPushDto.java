@@ -1,9 +1,11 @@
 package net.myspring.tool.modules.oppo.dto;
 
+import com.google.common.collect.Maps;
 import net.myspring.tool.modules.future.dto.CustomerDto;
 import net.myspring.tool.modules.oppo.domain.*;
 
 import java.util.List;
+import java.util.Map;
 
 public class OppoPushDto {
     private String date;
@@ -12,10 +14,13 @@ public class OppoPushDto {
     private List<OppoCustomerStock> oppoCustomerStocks;
     private List<OppoCustomerImeiStock> oppoCustomerImeiStocks;
     private List<OppoCustomerSale> oppoCustomerSales;
-    private  List<OppoCustomerSaleImei> oppoCustomerSaleImeis;
+    private List<OppoCustomerSaleImei> oppoCustomerSaleImeis;
     private List<OppoCustomerSaleCount> oppoCustomerSaleCounts;
     private List<OppoCustomerAfterSaleImei>  oppoCustomerAfterSaleImeis;
     private List<OppoCustomerDemoPhone> oppoCustomerDemoPhones;
+
+    private Map<String,String> areaDepotMap = Maps.newHashMap();
+    private Map<String,CustomerDto> customerDtoMap = Maps.newHashMap();
 
     public String getDate() {
         return date;
@@ -95,5 +100,21 @@ public class OppoPushDto {
 
     public void setOppoCustomerDemoPhones(List<OppoCustomerDemoPhone> oppoCustomerDemoPhones) {
         this.oppoCustomerDemoPhones = oppoCustomerDemoPhones;
+    }
+
+    public Map<String, String> getAreaDepotMap() {
+        return areaDepotMap;
+    }
+
+    public void setAreaDepotMap(Map<String, String> areaDepotMap) {
+        this.areaDepotMap = areaDepotMap;
+    }
+
+    public Map<String, CustomerDto> getCustomerDtoMap() {
+        return customerDtoMap;
+    }
+
+    public void setCustomerDtoMap(Map<String, CustomerDto> customerDtoMap) {
+        this.customerDtoMap = customerDtoMap;
     }
 }
