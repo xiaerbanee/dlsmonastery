@@ -35,7 +35,7 @@ Page({
   },
   formSubmit: function (e) {
     var that = this;
-    that.setData({ disabled: true });
+    that.setData({ submitDisabled: true });
     wx.request({
       url: $util.getUrl("basic/hr/dutyOvertime/save"),
       data: e.detail.value,
@@ -46,8 +46,7 @@ Cookie:"JSESSIONID="+app.globalData.sessionId
         if (res.data.success) {
           wx.navigateBack();
         } else {
-          that.setData({ "response.error": res.data.message, disabled: false})
-          that.setData({ 'response.data': res.data.extra.errors, disabled: false });
+          that.setData({ "response.error": res.data.message, 'response.data': res.data.extra.errors, submitDisabled: false})
         }
       }
     })

@@ -148,8 +148,7 @@ Page({
         if (res.data.success) {
           wx.navigateBack();
         } else {
-          that.setData({ "response.error": res.data.message, submitDisabled: false });
-          that.setData({ "response.data": res.data.extra.errors, submitDisabled: false });
+          that.setData({ "response.error": res.data.message, "response.data": res.data.extra.errors, submitDisabled: false });
         }
       }
     })
