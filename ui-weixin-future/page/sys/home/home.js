@@ -98,7 +98,7 @@ Page({
     }
   },
   logoutCompany:function(e){
-    app.globalData.company=null;
-    this.setData({ companyHidden: false, weixinAccountsHidden:true});
+    app.globalData.companyName=null;
+    this.setData({ companyHidden: false, weixinAccountsHidden: true,tip:''});
   }
 })
