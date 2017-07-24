@@ -3,8 +3,6 @@
     <head-tab active="officeForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-        <el-row :gutter="20">
-          <el-col :span="10">
             <el-form-item :label="$t('officeForm.parentId')" prop="parentId">
               <office-select v-model="inputForm.parentId" ></office-select>
             </el-form-item>
@@ -14,7 +12,7 @@
             <el-form-item label="部门管理人" prop="leaderIdList">
               <account-select v-model="inputForm.leaderIdList" :multiple="true"></account-select>
             </el-form-item>
-            <el-form-item label="业务类型" prop="officeRuleId" v-show="isBusiness">
+            <el-form-item label="业务类型" prop="officeRuleId">
               <el-select v-model="inputForm.officeRuleId" filterable >
                 <el-option v-for="item in inputForm.extra.officeRuleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
@@ -29,23 +27,19 @@
                 <el-option v-for="item in inputForm.extra.jointLevelList" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('officeForm.save')}}
-              </el-button>
-            </el-form-item>
-          </el-col>
-          <el-col :span = "10" v-show="!isBusiness">
-            <el-form-item :label="$t('officeForm.point')" prop="point" v-show="isBusiness">
+            <el-form-item :label="$t('officeForm.point')" prop="point" >
               <el-input v-model="inputForm.point"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('officeForm.taskPoint')" prop="taskPoint" v-show="isBusiness">
+            <el-form-item :label="$t('officeForm.taskPoint')" prop="taskPoint" >
               <el-input v-model="inputForm.taskPoint"></el-input>
             </el-form-item>
             <el-form-item :label="$t('officeForm.sort')" prop="sort">
               <el-input v-model="inputForm.sort"></el-input>
             </el-form-item>
-          </el-col>
-        </el-row>
+           <el-form-item>
+              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('officeForm.save')}}
+              </el-button>
+            </el-form-item>
       </el-form>
     </div>
   </div>
@@ -75,6 +69,8 @@
           },
           rules: {
             name: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
+            officeRuleId: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
+            jointLevel: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
             officeType: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
             jointType: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}]
           },
