@@ -56,14 +56,9 @@ class AccountChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
         if (accountChangeQuery.type != null) {
             sb.append(" and t1.type = :type ")
         }
-        if (accountChangeQuery.createdByName != null) {
+        if (accountChangeQuery.accountName != null) {
             sb.append("""
-                and t1.account_id in(
-                select t2.id
-                from hr_account t2
-                where t2.login_name like concat('%',:createdByName,'%')
-                and t2.enabled=1
-                )
+                and account.login_name like concat('%',:accountName,'%')
             """)
         }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(), pageable)

@@ -14,8 +14,8 @@
           <el-form-item :label="$t('accountChangeList.createdDate')">
             <date-range-picker v-model="formData.createdDate"></date-range-picker>
           </el-form-item>
-          <el-form-item :label="$t('accountChangeList.createdBy')">
-            <el-input v-model="formData.createdByName" auto-complete="off" :placeholder="$t('accountChangeList.likeSearch')"></el-input>
+          <el-form-item label="申请人">
+            <el-input v-model="formData.accountName" auto-complete="off" :placeholder="$t('accountChangeList.likeSearch')"></el-input>
           </el-form-item>
           <el-form-item :label="$t('accountChangeList.areaName')">
             <el-select v-model="formData.officeId" filterable clearable :placeholder="$t('accountChangeList.inputKey')">
@@ -36,7 +36,7 @@
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
         <el-table-column fixed prop="id" :label="$t('accountChangeList.id')" sortable></el-table-column>
         <el-table-column  prop="areaName" :label="$t('accountChangeList.areaName')" sortable></el-table-column>
-        <el-table-column  prop="createdByName" :label="$t('accountChangeList.applyAccount')" sortable></el-table-column>
+        <el-table-column  prop="accountName" :label="$t('accountChangeList.applyAccount')" sortable></el-table-column>
         <el-table-column  prop="createdDate" :label="$t('accountChangeList.applyDate')" sortable></el-table-column>
         <el-table-column  prop="type" :label="$t('accountChangeList.type')" sortable></el-table-column>
         <el-table-column  prop="oldLabel" :label="$t('accountChangeList.oldValue')" sortable></el-table-column>
