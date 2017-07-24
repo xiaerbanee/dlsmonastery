@@ -151,7 +151,7 @@ public class AdGoodsOrderService {
     }
 
     @Transactional
-    private void startAndSaveProcessFlowInfo(AdGoodsOrder adGoodsOrder) {
+    public void startAndSaveProcessFlowInfo(AdGoodsOrder adGoodsOrder) {
 
         ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("柜台订货", adGoodsOrder.getId(), AdGoodsOrder.class.getSimpleName(), adGoodsOrder.getOutShopId()));
 
@@ -166,7 +166,7 @@ public class AdGoodsOrderService {
     }
 
     @Transactional
-    private void saveExpressOrderInfo(AdGoodsOrder adGoodsOrder, AdGoodsOrderForm adGoodsOrderForm) {
+    public void saveExpressOrderInfo(AdGoodsOrder adGoodsOrder, AdGoodsOrderForm adGoodsOrderForm) {
 
         ExpressOrder expressOrder;
 
@@ -199,7 +199,7 @@ public class AdGoodsOrderService {
     }
 
     @Transactional
-    private void saveAdGoodsOrderDetailInfo(AdGoodsOrder adGoodsOrder, List<AdGoodsOrderDetailForm> detailFormList) {
+    public void saveAdGoodsOrderDetailInfo(AdGoodsOrder adGoodsOrder, List<AdGoodsOrderDetailForm> detailFormList) {
 
         List<AdGoodsOrderDetail> toBeSaved = new ArrayList<>();
         for (AdGoodsOrderDetailForm adGoodsOrderDetailForm : detailFormList) {
@@ -361,7 +361,7 @@ public class AdGoodsOrderService {
     }
 
     @Transactional
-    private List<AdGoodsOrderDetail> saveDetailInfoWhenBill(AdGoodsOrder adGoodsOrder, List<AdGoodsOrderBillDetailForm> detailFormList, Map<String, Product> productMap) {
+    public List<AdGoodsOrderDetail> saveDetailInfoWhenBill(AdGoodsOrder adGoodsOrder, List<AdGoodsOrderBillDetailForm> detailFormList, Map<String, Product> productMap) {
 
         Map<String, AdPricesystemDetail> priceMap = Maps.newHashMap();
         Depot depot = depotRepository.findOne(adGoodsOrder.getShopId());
@@ -414,7 +414,7 @@ public class AdGoodsOrderService {
     }
 
     @Transactional
-    private void splitAdGoodsOrder(AdGoodsOrder adGoodsOrder, AdGoodsOrderBillForm adGoodsOrderBillForm, List<AdGoodsOrderDetail> detailList) {
+    public void splitAdGoodsOrder(AdGoodsOrder adGoodsOrder, AdGoodsOrderBillForm adGoodsOrderBillForm, List<AdGoodsOrderDetail> detailList) {
 
         //开始保存拆分后的newAdGoodsOrder的基本信息
         AdGoodsOrder newAdGoodsOrder = new AdGoodsOrder();
@@ -478,7 +478,7 @@ public class AdGoodsOrderService {
     }
 
     @Transactional
-    private void synWhenBill(AdGoodsOrder adGoodsOrder, ExpressOrder expressOrder) {
+    public void synWhenBill(AdGoodsOrder adGoodsOrder, ExpressOrder expressOrder) {
         KingdeeSynReturnDto kingdeeSynReturnDto = salOutStockManager.synForAdGoodsOrder(adGoodsOrder);
 
         adGoodsOrder.setCloudSynId(kingdeeSynReturnDto.getId());
@@ -491,7 +491,7 @@ public class AdGoodsOrderService {
     }
 
     @Transactional
-    private ExpressOrder saveExpressOrderInfoWhenBill(AdGoodsOrder adGoodsOrder, AdGoodsOrderBillForm adGoodsOrderBillForm, List<AdGoodsOrderDetail> detailList) {
+    public ExpressOrder saveExpressOrderInfoWhenBill(AdGoodsOrder adGoodsOrder, AdGoodsOrderBillForm adGoodsOrderBillForm, List<AdGoodsOrderDetail> detailList) {
 
         ExpressOrder expressOrder = expressOrderRepository.findOne(adGoodsOrder.getExpressOrderId());
         expressOrder.setFromDepotId(adGoodsOrder.getStoreId());
@@ -550,7 +550,7 @@ public class AdGoodsOrderService {
     }
 
     @Transactional
-    private void saveExpressOrderInfoWhenShip(AdGoodsOrder adGoodsOrder, AdGoodsOrderShipForm adGoodsOrderShipForm) {
+    public void saveExpressOrderInfoWhenShip(AdGoodsOrder adGoodsOrder, AdGoodsOrderShipForm adGoodsOrderShipForm) {
         ExpressOrder expressOrder = expressOrderRepository.findOne(adGoodsOrder.getExpressOrderId());
         expressOrder.setExpressCompanyId(adGoodsOrderShipForm.getExpressOrderExpressCompanyId());
         expressOrder.setExpressCodes(adGoodsOrderShipForm.getExpressOrderExpressCodes());
@@ -563,7 +563,7 @@ public class AdGoodsOrderService {
     }
 
     @Transactional
-    private boolean saveDetailInfoWhenShip(AdGoodsOrderShipForm adGoodsOrderShipForm) {
+    public boolean saveDetailInfoWhenShip(AdGoodsOrderShipForm adGoodsOrderShipForm) {
         Map<String, AdGoodsOrderShipDetailForm> adGoodsOrderShipFormMap = CollectionUtil.extractToMap(adGoodsOrderShipForm.getAdGoodsOrderDetailList(), "id");
         List<AdGoodsOrderDetail> adGoodsOrderDetailList = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrderShipForm.getId());
         boolean isAllShipped = true;
@@ -585,7 +585,7 @@ public class AdGoodsOrderService {
     }
 
     @Transactional
-    private void doAndSaveProcessInfo(AdGoodsOrder adGoodsOrder, boolean pass, String comment) {
+    public void doAndSaveProcessInfo(AdGoodsOrder adGoodsOrder, boolean pass, String comment) {
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
         activitiCompleteForm.setPass(pass);
         activitiCompleteForm.setComment(comment);
@@ -764,7 +764,8 @@ public class AdGoodsOrderService {
         Map<String, BigDecimal> ysMap = Maps.newHashMap();
         AdPricesystem defaultAdPricesystem = adpricesystemRepository.findByEnabledIsTrueAndName( "A类物料运费");//TODO 默认的ADPriceSystem，应该写成constant或者在companyConfig中配置
         if (defaultAdPricesystem != null) {
-            for (AdPricesystemDetail adPricesystemDetail : adPricesystemDetailRepository.findByEnabledIsTrueAndAdPricesystemId(defaultAdPricesystem.getId())) {
+            List<AdPricesystemDetail> adPricesystemDetails = adPricesystemDetailRepository.findByEnabledIsTrueAndAdPricesystemId(defaultAdPricesystem.getId());
+            for (AdPricesystemDetail adPricesystemDetail : adPricesystemDetails) {
                 ysMap.put(adPricesystemDetail.getProductId(), adPricesystemDetail.getPrice());
             }
         }
