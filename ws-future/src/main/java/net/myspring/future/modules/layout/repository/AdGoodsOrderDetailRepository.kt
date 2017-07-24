@@ -29,9 +29,9 @@ interface AdGoodsOrderDetailRepository : BaseRepository<AdGoodsOrderDetail,Strin
 
 interface AdGoodsOrderDetailRepositoryCustom{
 
-    fun findDetailListForNew(outGroupIdList:List<String>, includeNotAllowOrderProduct : Boolean): List<AdGoodsOrderDetailSimpleDto>
+    fun findDetailListForNew(outGroupIdList:List<String>): List<AdGoodsOrderDetailSimpleDto>
 
-    fun findDetailListForEdit(adGoodsOrderId: String, outGroupIdList:List<String>, includeNotAllowOrderProduct : Boolean): List<AdGoodsOrderDetailSimpleDto>
+    fun findDetailListForEdit(adGoodsOrderId: String, outGroupIdList:List<String>): List<AdGoodsOrderDetailSimpleDto>
 
     fun findDtoListByAdGoodsOrderId(adGoodsOrderId :String): MutableList<AdGoodsOrderDetailSimpleDto>
 
@@ -256,11 +256,10 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
           """, Collections.singletonMap("adGoodsOrderId", adGoodsOrderId), BeanPropertyRowMapper(AdGoodsOrderDetailSimpleDto::class.java))
     }
 
-    override fun findDetailListForEdit(adGoodsOrderId: String, outGroupIdList:List<String>, includeNotAllowOrderProduct : Boolean): List<AdGoodsOrderDetailSimpleDto> {
+    override fun findDetailListForEdit(adGoodsOrderId: String, outGroupIdList:List<String>): List<AdGoodsOrderDetailSimpleDto> {
         val paramMap = HashMap<String, Any>()
         paramMap.put("adGoodsOrderId",adGoodsOrderId)
         paramMap.put("outGroupIdList",outGroupIdList)
-        paramMap.put("includeNotAllowOrderProduct",includeNotAllowOrderProduct)
 
         return namedParameterJdbcTemplate.query("""
         SELECT
@@ -308,7 +307,7 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
                             t1.enabled = 1
                         AND t1.out_group_id IN (:outGroupIdList)
                         AND t1.visible = 1
-                        AND ( :includeNotAllowOrderProduct OR t1.allow_order = 1)
+                        AND t1.allow_order = 1
                         AND NOT EXISTS (
                             SELECT *
                             FROM crm_ad_goods_order_detail detail
@@ -322,10 +321,9 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
 
     }
 
-    override fun findDetailListForNew(outGroupIdList:List<String>, includeNotAllowOrderProduct : Boolean): List<AdGoodsOrderDetailSimpleDto> {
+    override fun findDetailListForNew(outGroupIdList:List<String>): List<AdGoodsOrderDetailSimpleDto> {
         val paramMap = HashMap<String, Any>()
         paramMap.put("outGroupIdList",outGroupIdList)
-        paramMap.put("includeNotAllowOrderProduct",includeNotAllowOrderProduct)
 
         return namedParameterJdbcTemplate.query("""
         SELECT
@@ -343,7 +341,7 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
           t1.enabled = 1
           AND t1.out_group_id IN (:outGroupIdList)
           AND t1.visible = 1
-          AND ( :includeNotAllowOrderProduct OR t1.allow_order = 1)
+          AND t1.allow_order = 1
 
           """, paramMap, BeanPropertyRowMapper(AdGoodsOrderDetailSimpleDto::class.java))
     }
