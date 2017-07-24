@@ -121,10 +121,8 @@ Page({
 
         if (res.data.success) {
           wx.navigateBack();
-        } else if (res.data.extra.hasOwnProperty("errors")) {
-          that.setData({ 'response.data': res.data.extra.errors, submitDisabled: false });
-        } else {
-          that.setData({ "response.error": res.data.message, submitDisabled: false })
+        } else{
+          that.setData({ 'response.data': res.data.extra.errors, "response.error": res.data.message, submitDisabled: false });
         }
       }
     })

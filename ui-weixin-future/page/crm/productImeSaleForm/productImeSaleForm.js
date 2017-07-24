@@ -8,8 +8,8 @@ Page({
     formProperty: {},
     response: {},
     shops: [],
-    shopId:null,
-    shopName:null,
+    shopId: null,
+    shopName: null,
     submitDisabled: false,
     saleShopId: null,
   },
@@ -79,8 +79,6 @@ Page({
   },
   bindSaleShop: function (e) {
     var that = this;
-    console.log(">>>>",that.data.shops);
-    console.log(e)
     that.setData({
       shopId: that.data.shops[e.detail.value].id,
       shopName: that.data.shops[e.detail.value].name,
@@ -90,9 +88,7 @@ Page({
   formSubmit: function (e) {
     var that = this;
     that.setData({ submitDisabled: true });
-    if (that.data.productImeSearchResult.length!=0){
-      console.log(that.data.productImeSearchResult)
-
+    if (that.data.productImeSearchResult.length != 0) {
       var productImeSaleDetailList = new Array();
       if (that.data.saleShopId) {
         productImeSaleDetailList.push({ saleShopId: that.data.saleShopId, productImeId: that.data.productImeSearchResult[0].id });
@@ -107,19 +103,17 @@ Page({
           Cookie: "JSESSIONID=" + app.globalData.sessionId,
         },
         success: function (res) {
-          console.log(res.data)
+          console.log(res)
           if (res.data.success) {
-            that.setData({ "response.data": res.data });
             wx.navigateBack();
           } else if (res.data.message) {
-            that.setData({ "response.error": res.data.message })
+            that.setData({ submitDisabled:false,"response.error": res.data.message })
           } else {
-            that.setData({ "response.error": res.data });
+            that.setData({ submitDisabled: false, "response.error": res.data });
           }
-          that.setData({ submitDisabled: false });
         }
       })
-    }else{
+    } else {
       that.setData({ submitDisabled: false });
     }
   },
