@@ -20,7 +20,7 @@
               <account-select v-model="inputForm.accountId" category="shop" @input="accountSelectd"></account-select>
             </el-form-item>
             <el-form-item label="门店绑定" prop="depotIdList" >
-              <depot-select v-model="inputForm.depotIdList" multiple="multiple"></depot-select>
+              <depot-select v-model="inputForm.depotIdList" multiple="multiple" category="shop"></depot-select>
             </el-form-item>
           </el-col>
         </el-row>
