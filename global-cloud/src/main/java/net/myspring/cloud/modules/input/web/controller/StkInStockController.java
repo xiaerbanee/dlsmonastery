@@ -58,7 +58,8 @@ public class StkInStockController {
 
     @RequestMapping(value = "save")
     public RestResponse save(StkInStockForm stkInStockForm) {
-        RestResponse restResponse =  new RestResponse("开单失败",null);
+        RestResponse restResponse;
+        StringBuilder message = new StringBuilder();
         try {
             KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
             AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
@@ -67,9 +68,10 @@ public class StkInStockController {
                 kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
                 for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
                     if (kingdeeSynDto.getSuccess()) {
-                        restResponse = new RestResponse("采购入库成功：" + kingdeeSynDto.getBillNo(), null, true);
+                        message.append(kingdeeSynDto.getBillNo()+",");
                     }
                 }
+                restResponse = new RestResponse("采购入库成功：" + message, null, true);
             }else {
                 restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
             }

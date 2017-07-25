@@ -5,4 +5,5 @@ package net.myspring.cloud.common.enums;
  */
 public enum  KingdeeNameEnum {
     WZOPPO,INAVIVO,JXDJ,JXOPPO,
+    TESTIDVIVO
 }

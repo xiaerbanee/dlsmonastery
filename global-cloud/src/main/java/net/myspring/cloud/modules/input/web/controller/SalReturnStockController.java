@@ -48,7 +48,8 @@ public class SalReturnStockController {
 
     @RequestMapping(value = "save")
     public RestResponse save(SalStockForm salStockForm) {
-        RestResponse restResponse = new RestResponse("",null,true);
+        RestResponse restResponse;
+        StringBuilder message = new StringBuilder();
         try {
             KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
             AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
@@ -57,9 +58,10 @@ public class SalReturnStockController {
                 kingdeeSynService.save(BeanUtil.map(kingdeeSynExtendDtoList, KingdeeSyn.class));
                 for (KingdeeSynReturnDto kingdeeSynExtendDto : kingdeeSynExtendDtoList) {
                     if (kingdeeSynExtendDto.getSuccess()) {
-                        restResponse = new RestResponse("开单退货成功：" + kingdeeSynExtendDto.getNextBillNo(), null, true);
+                        message.append(kingdeeSynExtendDto.getBillNo()+",");
                     }
                 }
+                restResponse = new RestResponse("开单退货成功：" + message, null, true);
             }else {
                 restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
             }

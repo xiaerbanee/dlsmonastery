@@ -82,8 +82,8 @@ public class StkInStockService {
         List<String> materialNameForADList = Lists.newArrayList();
         List<String> materialNameForSHList = Lists.newArrayList();
         for (List<Object> row : data){
-            materialNameForADList.add(HandsontableUtils.getValue(row,6));
-            materialNameForSHList.add(HandsontableUtils.getValue(row,8));
+            materialNameForSHList.add(HandsontableUtils.getValue(row,6));
+            materialNameForADList.add(HandsontableUtils.getValue(row,8));
         }
         Map<String,String> materialNameForADMap = bdMaterialRepository.findByNameList(materialNameForADList).stream().collect(Collectors.toMap(BdMaterial::getFName, BdMaterial::getFNumber));
         Map<String,String> materialNameForSHMap = bdMaterialRepository.findByNameList(materialNameForSHList).stream().collect(Collectors.toMap(BdMaterial::getFName, BdMaterial::getFNumber));
@@ -101,12 +101,12 @@ public class StkInStockService {
             BigDecimal price = StringUtils.isEmpty(priceStr) ? BigDecimal.ZERO : new BigDecimal(priceStr);
             Integer qty = Integer.valueOf(HandsontableUtils.getValue(row,3));
             String remarks = HandsontableUtils.getValue(row,4);
-            String RLForADStr = HandsontableUtils.getValue(row,5);
-            BigDecimal RLForAD = StringUtils.isEmpty(RLForADStr) ? BigDecimal.ZERO : new BigDecimal(RLForADStr);
-            String productType = HandsontableUtils.getValue(row,6);
-            String RLForSHStr = HandsontableUtils.getValue(row,7);
+            String RLForSHStr = HandsontableUtils.getValue(row,5);
             BigDecimal RLForSH = StringUtils.isEmpty(RLForSHStr) ? BigDecimal.ZERO : new BigDecimal(RLForSHStr);
-            String afterSaleType = HandsontableUtils.getValue(row,8);
+            String afterSaleType = HandsontableUtils.getValue(row,6);
+            String RLForADStr = HandsontableUtils.getValue(row,7);
+            BigDecimal RLForAD = StringUtils.isEmpty(RLForADStr) ? BigDecimal.ZERO : new BigDecimal(RLForADStr);
+            String productType = HandsontableUtils.getValue(row,8);
             
             StkInStockFEntryDto stkInStockFEntryDto = new StkInStockFEntryDto();
             stkInStockFEntryDto.setMaterialNumber(productNumber);
@@ -130,10 +130,9 @@ public class StkInStockService {
                 purMrbFEntryDtoList.add(purMrbFEntityDto);
             }
             //如果是售后让利
-            if (RLForSH.compareTo(BigDecimal.ZERO) == 1 && KingdeeNameEnum.INAVIVO.name().equals(kingdeeBook.getName())) {
+            if (RLForSH.compareTo(BigDecimal.ZERO) == 1 && (KingdeeNameEnum.INAVIVO.name().equals(kingdeeBook.getName()) || KingdeeNameEnum.TESTIDVIVO.name().equals(kingdeeBook.getName()))) {
                 BigDecimal returnPrice = price.multiply(RLForSH).multiply(new BigDecimal(0.01));
                 BigDecimal returnAmount = new BigDecimal(qty).multiply(returnPrice).setScale(2, BigDecimal.ROUND_HALF_UP);
-
                 PurMrbFEntityDto purMrbFEntityDto = new PurMrbFEntityDto();
                 purMrbFEntityDto.setStockNumber(stockNumber);
                 purMrbFEntityDto.setMaterialNumber(materialNameForSHMap.get(afterSaleType));
@@ -163,7 +162,7 @@ public class StkInStockService {
             typeList.add("电玩广告让利");
             typeList.add("电话广告让利");
             typeList.add("imoo广告让利");
-        }else if(KingdeeNameEnum.INAVIVO.name().equals(kingdeeBook.getName())){
+        }else if(KingdeeNameEnum.INAVIVO.name().equals(kingdeeBook.getName()) || KingdeeNameEnum.TESTIDVIVO.name().equals(kingdeeBook.getName())){
             typeList.add("vivo售后服务费");
         }
         stkInStockForm.getTypeList().addAll(typeList);
