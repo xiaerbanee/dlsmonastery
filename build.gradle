@@ -9,16 +9,32 @@ buildscript {
 
 defaultTasks 'buildAll'
 
-task buildAll(dependsOn:['buildWeb']) {
+task buildAll(dependsOn:['buildWeb', 'buildUi']) {
 }
 
 task buildWeb(dependsOn:['copyWeb']) {
 }
 
 task copyWeb(type: Copy, dependsOn:[':global-tool:build', ':global-cloud:build', ':global-task:build', ':summer-discovery:build', ':summer-gateway:build', ':summer-basic:build', ':summer-config:build', ':summer-general:build'
-                               , ':summer-uaa:build', ':summer-webapp:build', ':ws-future:build']) {
-    from  'global-tool/build/libs', 'global-cloud/build/libs', 'global-task/build/libs', 'summer-gateway/build/libs', 'summer-basic/build/libs', 'summer-discovery/build/libs', 'summer-config/build/libs', 'summer-general/build/libs',  'summer-uaa/build/libs', 'summer-webapp/build/libs','ws-future/build/libs'
+                               , ':summer-uaa:build', ':ws-future:build']) {
+    from  'global-tool/build/libs', 'global-cloud/build/libs', 'global-task/build/libs', 'summer-gateway/build/libs', 'summer-basic/build/libs', 'summer-discovery/build/libs', 'summer-config/build/libs', 'summer-general/build/libs',  'summer-uaa/build/libs', 'ws-future/build/libs'
     into 'build/jars'
     include('*.jar')
 }
 
+task buildUi (dependsOn:['copyUiJar']) {
+}
+
+task copyUiJar(type: Copy, dependsOn:[':summer-webapp:build']) {
+    from 'summer-webapp/build/libs'
+    into 'build/jars'
+    include('*.jar')
+}
+
+tasks.getByPath(':summer-webapp:compileJava').dependsOn('copyUiStatic')
+
+task copyUiStatic(type: Copy, dependsOn:[':ui-web-future:npm_run_build']) {
+    from   'ui-web-future/dist'
+    into 'summer-webapp/src/main/resources/static'
+    include('**/*')
+}
