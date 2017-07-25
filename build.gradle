@@ -7,12 +7,12 @@ buildscript {
     }
 }
 
-defaultTasks 'buildAll'
+defaultTasks ':buildAll'
 
-task buildAll(dependsOn:['buildWeb', 'buildUi']) {
+task buildAll(dependsOn:[':buildWeb', ':buildUi']) {
 }
 
-task buildWeb(dependsOn:['copyWeb']) {
+task buildWeb(dependsOn:[':copyWeb']) {
 }
 
 task copyWeb(type: Copy, dependsOn:[':global-tool:build', ':global-cloud:build', ':global-task:build', ':summer-discovery:build', ':summer-gateway:build', ':summer-basic:build', ':summer-config:build', ':summer-general:build'
@@ -22,7 +22,7 @@ task copyWeb(type: Copy, dependsOn:[':global-tool:build', ':global-cloud:build',
     include('*.jar')
 }
 
-task buildUi (dependsOn:['copyUiJar']) {
+task buildUi (dependsOn:[':copyUiJar']) {
 }
 
 task copyUiJar(type: Copy, dependsOn:[':summer-webapp:build']) {
@@ -31,7 +31,7 @@ task copyUiJar(type: Copy, dependsOn:[':summer-webapp:build']) {
     include('*.jar')
 }
 
-tasks.getByPath(':summer-webapp:compileJava').dependsOn('copyUiStatic')
+tasks.getByPath(':summer-webapp:compileJava').dependsOn(':copyUiStatic')
 
 task copyUiStatic(type: Copy, dependsOn:[':ui-web-future:npm_run_build']) {
     from   'ui-web-future/dist'
