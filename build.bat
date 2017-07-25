@@ -7,8 +7,8 @@ call cnpm install
 call npm run build
 
 cd ..
-md summer-webapp/src/main/resources/static
-xcopy ui-web-future/dist/*.* summer-webapp/src/main/resources/static /e /h
+md summer-webapp\src\main\resources\static
+xcopy ui-web-future\dist\*.* summer-webapp\src\main\resources\static /s /e /h
 
 call gradle clean buildAll -x test
 
