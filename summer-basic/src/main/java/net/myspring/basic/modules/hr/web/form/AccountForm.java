@@ -68,8 +68,6 @@ public class AccountForm extends BaseForm<Account> {
     public String getOfficeIds() {
         if(StringUtils.isBlank(officeIds)&&CollectionUtil.isNotEmpty(officeIdList)){
             this.officeIds=StringUtils.join(officeIdList,CharConstant.COMMA);
-        }else  if(StringUtils.isBlank(officeIds)&&CollectionUtil.isEmpty(officeIdList)){
-            this.officeIds=officeId;
         }
         return officeIds;
     }

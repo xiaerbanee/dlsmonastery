@@ -119,14 +119,19 @@ public class AccountService {
                 accountForm.setPassword(accountRepository.findOne(accountForm.getId()).getPassword());
             }
         }
+        if(CollectionUtil.isEmpty(accountForm.getOfficeIdList())){
+            accountForm.setOfficeIdList(Lists.newArrayList(accountForm.getOfficeId()));
+        }
         if (accountForm.isCreate()) {
             Position position=positionRepository.findOne(accountForm.getPositionId());
             accountForm.setRoleIds(position.getRoleId());
             account = BeanUtil.map(accountForm, Account.class);
             accountRepository.save(account);
         } else {
-            accountForm.setOfficeIds(StringUtils.join(accountForm.getOfficeIdList(),CharConstant.COMMA));
             account = accountRepository.findOne(accountForm.getId());
+            if(StringUtils.isBlank(accountForm.getOutPassword())&&StringUtils.isNotBlank(account.getOutPassword())){
+                accountForm.setOutPassword(account.getOutPassword());
+            }
             ReflectionUtil.copyProperties(accountForm,account);
             accountRepository.save(account);
         }

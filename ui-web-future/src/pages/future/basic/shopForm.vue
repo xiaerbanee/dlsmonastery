@@ -111,6 +111,8 @@
                   axios.get("/api/ws/future/basic/depotShop/checkName?name="+value).then((response)=>{
                       if(response.data){
                           return callback(new Error(response.data.message))
+                      }else{
+                          return callback();
                       }
                   })
               }
