@@ -9,24 +9,16 @@ buildscript {
 
 defaultTasks 'buildAll'
 
-task buildAll(dependsOn:['buildWeb', 'buildUi']) {
+task buildAll(dependsOn:['buildWeb']) {
 }
 
 task buildWeb(dependsOn:['copyWeb']) {
 }
 
-task buildUi(dependsOn:['copyUi']) {
-}
-
-task copyWeb(type: Copy, dependsOn:[':global-cloud:build', ':global-task:build', ':summer-basic:build', ':summer-discovery:build', ':summer-config:build', ':summer-general:build'
+task copyWeb(type: Copy, dependsOn:[':global-tool:build', ':global-cloud:build', ':global-task:build', ':summer-discovery:build', ':summer-gateway:build', ':summer-basic:build', ':summer-config:build', ':summer-general:build'
                                , ':summer-uaa:build', ':summer-webapp:build', ':ws-future:build']) {
-    from  'global-cloud/build/libs', 'global-task/build/libs', 'summer-basic/build/libs', 'summer-discovery/build/libs', 'summer-config/build/libs', 'summer-general/build/libs',  'summer-uaa/build/libs', 'summer-webapp/build/libs','ws-future/build/libs'
+    from  'global-tool/build/libs', 'global-cloud/build/libs', 'global-task/build/libs', 'summer-gateway/build/libs', 'summer-basic/build/libs', 'summer-discovery/build/libs', 'summer-config/build/libs', 'summer-general/build/libs',  'summer-uaa/build/libs', 'summer-webapp/build/libs','ws-future/build/libs'
     into 'build/jars'
     include('*.jar')
 }
 
-task copyUi(type: Copy) {
-    from  'ui-web-future/build'
-    into 'build/ui-web-future'
-    include('*')
-}
