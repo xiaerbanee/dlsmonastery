@@ -53,7 +53,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item :label="$t('productImeList.productType')">
-                <product-select v-model="formData.productId" @afterInit="setSearchText" hasIme=true ></product-select>
+                <product-select v-model="formData.productId" @afterInit="setSearchText" :hasIme="true" ></product-select>
               </el-form-item>
               <el-form-item :label="$t('productImeList.createdDate')">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
@@ -176,7 +176,7 @@
           this.$router.push({ name: 'productImeDetail', query: { id: id }});
         }
       },exportData(){
-        util.confirmBeforeExportData(this).then(() => {
+        util.confirmBeforeAction(this, "确认导出（最多50000条）吗？").then(() => {
           window.location.href="/api/ws/future/crm/productIme/export?"+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
       }

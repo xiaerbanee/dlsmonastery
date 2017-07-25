@@ -6,6 +6,8 @@ import net.myspring.future.modules.basic.dto.EmployeePhoneDto;
 import net.myspring.future.modules.basic.service.EmployeePhoneService;
 import net.myspring.future.modules.basic.web.form.EmployeePhoneForm;
 import net.myspring.future.modules.basic.web.query.EmployeePhoneQuery;
+import net.myspring.util.excel.ExcelView;
+import net.myspring.util.excel.SimpleExcelBook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping(value = "basic/employeePhone")
@@ -59,8 +64,9 @@ public class EmployeePhoneController {
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
-    public String export(EmployeePhoneQuery employeePhoneQuery) {
-        Workbook workbook = new SXSSFWorkbook(10000);
-        return employeePhoneService.export(workbook,employeePhoneQuery);
+    public ModelAndView export(EmployeePhoneQuery employeePhoneQuery) {
+        SimpleExcelBook simpleExcelSheet = employeePhoneService.findSimpleExcelSheet(employeePhoneQuery);
+        ExcelView excelView = new ExcelView();
+        return new ModelAndView(excelView, "simpleExcelBook", simpleExcelSheet);
     }
 }

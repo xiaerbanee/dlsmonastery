@@ -146,6 +146,14 @@ public class DepotShopController {
         return depotShopDto;
     }
 
+    @RequestMapping(value="checkName")
+    public RestResponse checkName(String name){
+        if(depotShopService.checkName(name)){
+            return new RestResponse("门店名称不能重复",ResponseCodeEnum.saved.name());
+        }
+        return null;
+    }
+
     @RequestMapping(value = "delete")
     public RestResponse delete(String id){
         depotShopService.logicDelete(id);

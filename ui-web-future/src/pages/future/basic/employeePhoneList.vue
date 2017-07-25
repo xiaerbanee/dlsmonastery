@@ -3,8 +3,8 @@
     <head-tab active="employeePhoneList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:employeePhoneDepositList:view'">{{$t('employeePhoneList.employeePhoneDepositList')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'hr:employeePhone:view'">{{$t('employeePhoneList.filter')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:employeePhoneDeposit:view'">{{$t('employeePhoneList.employeePhoneDepositList')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:employeePhone:view'">{{$t('employeePhoneList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('employeePhoneList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -101,9 +101,9 @@
       },exportData(){
         this.formVisible = false;
         var submitData = util.deleteExtra(this.formData);
-        axios.get('/api/ws/future/basic/employeePhone/export?'+qs.stringify(submitData)).then((response)=> {
-          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-        });
+        util.confirmBeforeExportData(this).then(() => {
+          window.location.href="/api/ws/future/basic/employeePhone/export?"+qs.stringify(submitData);
+        }).catch(()=>{});
       }
     },created () {
        this.pageHeight = 0.75*window.innerHeight;
