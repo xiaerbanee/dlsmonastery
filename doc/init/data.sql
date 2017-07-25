@@ -37,5 +37,5 @@ update hr_position set role_id=35 WHERE id in(57);
 update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='办事处业务') where (t1.role_id is NULL OR t1.role_id=1);
 update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='管理员') where (t1.name='管理员');
 
-update hr_account t1,hr_position t2 SET t1.role_ids=t2.role_id where t1.position_id=t2.id;
-update hr_account t1 SET t1.office_ids=t1.office_id;
+update hr_account t1,hr_position t2 SET t1.role_ids=t2.role_id where t1.position_id=t2.id and t1.role_ids is NULL;
+update hr_account t1 SET t1.office_ids=t1.office_id where t1.office_ids is NULL ;
