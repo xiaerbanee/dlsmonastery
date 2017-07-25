@@ -8,6 +8,11 @@
             <el-form-item :label="$t('positionForm.name')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
+            <el-form-item label="绑定角色" prop="roleId">
+              <el-select v-model="inputForm.roleId" filterable  :placeholder="$t('accountForm.inputWord')" >
+                <el-option v-for="item in inputForm.extra.roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item :label="$t('positionForm.permission')" prop="permission">
               <el-input v-model="inputForm.permission"></el-input>
             </el-form-item>

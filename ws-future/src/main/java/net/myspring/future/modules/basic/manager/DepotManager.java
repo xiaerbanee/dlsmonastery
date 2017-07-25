@@ -40,9 +40,6 @@ public class DepotManager {
     private RedisTemplate redisTemplate;
 
     public Depot save(Depot depot) {
-        if(StringUtils.isNotBlank(depot.getClientId())) {
-            depot.setAdShop(true);
-        }
         depotRepository.save(depot);
         if(StringUtils.isNotBlank(depot.getDelegateDepotId())) {
             Depot delegateDepot = depotRepository.findOne(depot.getDelegateDepotId());
