@@ -116,8 +116,8 @@ public class ProductController {
     }
 
     @RequestMapping(value = "findAdProductAndAllowOrder")
-    public List<ProductAdApplyDto> findAdProductAndAllowOrder(String billType){
-        return productService.findAdProductAndAllowOrder(billType);
+    public List<ProductAdApplyDto> findAdProductAndAllowOrder(String billType,String depotId){
+        return productService.findAdProductAndAllowOrder(billType,depotId);
     }
 
     @RequestMapping(value = "findAdProductCodeAndAllowOrder")

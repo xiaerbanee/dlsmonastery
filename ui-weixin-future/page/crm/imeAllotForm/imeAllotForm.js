@@ -63,6 +63,7 @@ Page({
       data: e.detail.value,
       header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
+        console.log(res)
         if (res.data.success) {
           wx.navigateBack();
         } else if (res.data.hasOwnProperty("extra")){

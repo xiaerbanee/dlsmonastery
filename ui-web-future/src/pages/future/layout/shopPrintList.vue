@@ -124,7 +124,7 @@
       }
     },created () {
       var that = this;
-      that.pageHeight = window.outerHeight -320;
+      that.pageHeight = 0.75*window.innerHeight;
       this.initPromise = axios.get('/api/ws/future/layout/shopPrint/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);

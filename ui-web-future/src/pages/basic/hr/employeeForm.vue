@@ -64,7 +64,6 @@
         </el-row>
       </el-form>
     </div>
-
     <div>
       <el-form :model="accountForm"   ref="accountForm" :rules="accountRules" label-width="120px"  class="form input-form">
         <el-row :gutter="24">
@@ -84,6 +83,9 @@
               <el-select v-model="accountForm.positionId"  filterable :placeholder="$t('employeeForm.selectGroup')" :clearable=true  :disabled="!isCreate&&!hasPermit">
                 <el-option v-for="position in accountForm.extra.positionDtoList" :key="position.id" :label="position.name" :value="position.id"></el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item label="数据部门" prop="officeIdList">
+              <office-select v-model="accountForm.officeIdList" :multiple="true"></office-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">

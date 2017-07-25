@@ -81,8 +81,10 @@ Page({
         success: function (res) {
           if (res.data.success) {
             wx.navigateBack();
-          } else {
+          } else if(res.data.extra.hasOwnProperty("errors")){
             that.setData({ 'response.data': res.data.extra.errors, submitDisabled: false });
+          }else{
+            that.setData({ "response.error": res.data.message, submitDisabled: false })
           }
         }
       })
@@ -92,10 +94,13 @@ Page({
         data: e.detail.value,
         header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
         success: function (res) {
+          console.log(res)
           if (res.data.success) {
             wx.navigateBack();
-          } else {
-            that.setData({ 'response.data': res.data.extra.errors, submitDisabled: false });
+          } else if(res.data.hasOwnProperty("extra")){
+            that.setData({ "response.data": res.data.extra.errors, submitDisabled: false });
+          }else{
+            that.setData({ "response.error": res.data, submitDisabled: false})
           }
         }
       })
