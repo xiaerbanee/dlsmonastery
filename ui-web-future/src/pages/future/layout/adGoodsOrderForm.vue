@@ -83,7 +83,7 @@
   import employeeSelect from 'components/basic/employee-select';
   import depotSelect from 'components/future/depot-select';
   import expressCompanySelect from 'components/future/express-company-select';
-  import productSelect from 'components/future/product-select'
+  import productSelect from 'components/future/product-select';
 
   export default{
     components: {
@@ -184,8 +184,7 @@
             this.imageDeposit =0;
             return;
           }
-
-        axios.get('/api/ws/future/basic/depot/findByIds' + '?idStr=' + this.inputForm.outShopId).then((response) => {
+          axios.get('/api/ws/future/basic/depot/findByIds' + '?idStr=' + this.inputForm.outShopId).then((response) => {
               if(response.data[0].jointType === '代理'){
                 this.isDelegateShop = true;
                 this.inputForm.shopId = null;
@@ -205,17 +204,8 @@
                     }
                 });
               }
-          /*if (response.data[0].jointType === '代理') {
-            this.isDelegateShop = true;
-            this.inputForm.shopId = null;
-            this.recentSaleDescription='';
-            this.imageDeposit =0;
-          }else{
-            this.isDelegateShop = false;
-            this.inputForm.shopId = this.inputForm.outShopId;
-            this.refreshRecentMonthSaleAmount();
-          }*/
-        });
+          });
+          this.getDetailList();
       },shopChanged(){
         this.refreshRecentMonthSaleAmount();
       },itemAction:function(productImage,action){
@@ -311,26 +301,18 @@
           }
         }
         return tempList;
-      }, initPage(){
-
+      },getDetailList(){
+        axios.get('/api/ws/future/layout/adGoodsOrder/findDetailListForNewOrEdit', {params: {adGoodsOrderId: this.$route.query.id, outShopId: this.inputForm.outShopId}}).then((response) => {
+          this.setAdGoodsOrderDetailList(response.data);
+        });
+      },
+      initPage(){
         axios.get('/api/ws/future/layout/adGoodsOrder/getForm').then((response) => {
           this.inputForm = response.data;
-          axios.get('/api/ws/future/layout/adGoodsOrder/findDetailListForNewOrEdit', {params: {adGoodsOrderId: this.$route.query.id, includeNotAllowOrderProduct: false}}).then((response) => {
-            this.setAdGoodsOrderDetailList(response.data);
-          });
+          this.getDetailList();
           if(!this.isCreate){
             axios.get('/api/ws/future/layout/adGoodsOrder/findDto', {params: {id: this.$route.query.id}}).then((response) => {
-              this.inputForm.id = response.data.id;
-              this.inputForm.outShopId = response.data.outShopId;
-              this.inputForm.shopId = response.data.shopId;
-              this.inputForm.investInCause = response.data.investInCause;
-              this.inputForm.employeeId = response.data.employeeId;
-              this.inputForm.expressOrderExpressCompanyId = response.data.expressOrderExpressCompanyId;
-              this.inputForm.expressOrderAddress = response.data.expressOrderAddress;
-              this.inputForm.expressOrderExpressCodes = response.data.expressOrderExpressCodes;
-              this.inputForm.expressOrderContator = response.data.expressOrderContator;
-              this.inputForm.expressOrderMobilePhone = response.data.expressOrderMobilePhone;
-              this.inputForm.remarks = response.data.remarks;
+              util.copyValue(response.data,this.inputForm);
               this.processStatus = response.data.processStatus;
 
               this.refreshRecentMonthSaleAmount();

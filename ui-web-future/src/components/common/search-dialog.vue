@@ -111,14 +111,27 @@
     background: rgba(0, 0, 0, .3);
     z-index: 101;
   }
-  .vodal.vodal-dialog-tiny .vodal-dialog{
-    width: 25%;
+  @media screen and (max-width: 1300px){
+    .vodal.vodal-dialog-tiny .vodal-dialog{
+      width: 38%;
+    }
+    .vodal.vodal-dialog-medium .vodal-dialog{
+      width: 72%;
+    }
+    .vodal.vodal-dialog-large .vodal-dialog{
+      width: 86%;
+    }
   }
-  .vodal.vodal-dialog-medium .vodal-dialog{
-    width: 55%;
-  }
-  .vodal.vodal-dialog-large .vodal-dialog{
-    width: 65%;
+  @media screen and (min-width: 1300px){
+    .vodal.vodal-dialog-tiny .vodal-dialog{
+      width: 25%;
+    }
+    .vodal.vodal-dialog-medium .vodal-dialog{
+      width: 55%;
+    }
+    .vodal.vodal-dialog-large .vodal-dialog{
+      width: 65%;
+    }
   }
   .vodal-dialog {
     position: absolute;

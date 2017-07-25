@@ -48,11 +48,11 @@ public class DepotForm extends BaseForm<Depot> {
     // 快递公司
     private String expressCompanyId;
     //是否打印价格
-    private Boolean printPrice;
+    private Boolean printPrice=false;
     // 打印类型，批量打印时用于分批打印
     private String printType;
     // 是否让利
-    private Boolean rebate;
+    private Boolean rebate=false;
     //税务名称
     private String taxName;
     //是否是广告门店

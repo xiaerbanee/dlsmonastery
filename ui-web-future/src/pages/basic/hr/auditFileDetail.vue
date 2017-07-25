@@ -40,7 +40,7 @@
               <bool-radio-group v-model="submitData.pass"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('auditFileDetail.comment')" prop="comment" v-if="isAudit">
-              <el-input v-model="submitData.comment"></el-input>
+              <el-input v-model="submitData.comment" type="textarea" :rows="5"></el-input>
             </el-form-item>
             <el-form-item v-if="isAudit">
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" >{{$t('auditFileDetail.save')}}</el-button>

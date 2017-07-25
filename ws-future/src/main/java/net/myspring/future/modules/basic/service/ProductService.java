@@ -10,7 +10,9 @@ import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.ProductAdApplyDto;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.web.form.ProductBatchForm;
 import net.myspring.util.text.IdUtils;
@@ -47,6 +49,8 @@ public class ProductService {
     private ProductRepository productRepository;
     @Autowired
     private CloudClient cloudClient;
+    @Autowired
+    private DepotRepository depotRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -123,7 +127,7 @@ public class ProductService {
         return productDtoList;
     }
 
-    public  List<ProductAdApplyDto> findAdProductAndAllowOrder(String billType){
+    public  List<ProductAdApplyDto> findAdProductAndAllowOrder(String billType,String depotId){
         List<String> outGroupIds =Lists.newArrayList();
         if(BillTypeEnum.POP.name().equals(billType)){
             String value = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue();
@@ -132,7 +136,29 @@ public class ProductService {
             String value = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue();
             outGroupIds = IdUtils.getIdList(value);
         }
-        List<ProductAdApplyDto> productAdApplyDtos  = BeanUtil.map(productRepository.findByOutGroupIdInAndAllowOrderIsTrue(outGroupIds),ProductAdApplyDto.class);
+        List<Product> products = productRepository.findByOutGroupIdInAndAllowOrderIsTrue(outGroupIds);
+        //电教系统POP货品选择
+        if(StringUtils.isNotBlank(depotId)){
+            Depot depot = depotRepository.findOne(depotId);
+            if(depot != null&&BillTypeEnum.POP.name().equalsIgnoreCase(billType)&&
+                    RequestUtils.getCompanyName().equalsIgnoreCase(CompanyNameEnum.JXDJ.name())){
+                if(depot.getCode().startsWith("IM0")){
+                    for(Product product : products){
+                        if(!product.getOutGroupName().startsWith("immo")){
+                            products.remove(product);
+                        }
+                    }
+                }else if(depot.getCode().startsWith("DJ")){
+                    for(Product product : products){
+                        if(!product.getOutGroupName().startsWith("电玩")){
+                            products.remove(product);
+                        }
+                    }
+                }
+            }
+        }
+
+        List<ProductAdApplyDto> productAdApplyDtos  = BeanUtil.map(products,ProductAdApplyDto.class);
         return productAdApplyDtos;
     }
 

@@ -4,6 +4,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.DepotShop
 import net.myspring.future.modules.basic.dto.DepotReportDto
 import net.myspring.future.modules.basic.dto.DepotShopDto
+import net.myspring.future.modules.basic.web.form.DepotAccountForm
 import net.myspring.future.modules.basic.web.query.DepotQuery
 import net.myspring.future.modules.basic.web.query.DepotShopQuery
 import net.myspring.future.modules.crm.web.query.ReportQuery
@@ -48,13 +49,35 @@ interface DepotShopRepositoryCustom{
 
     fun deleteDepotAccountByDepotId(depotId:String):Int
 
-    fun saveDepotAccount(depotId: String,accountIds: MutableList<String>):Int
+    fun deleteDepotAccountByAccountId(accountId: String):Int
+
+    fun saveDepotAccount(depotAccountForm:DepotAccountForm):Int
 
     fun findAccountIdsByDepotId(depotId: String):MutableList<String>
+
+    fun findDepotIdListByAccountId(accountId: String):MutableList<String>
 
 }
 
 class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DepotShopRepositoryCustom{
+    override fun deleteDepotAccountByAccountId(accountId: String): Int {
+        return namedParameterJdbcTemplate.update("""
+          DELETE FROM
+              crm_account_depot
+          where account_id=:accountId
+        """,Collections.singletonMap("accountId",accountId))
+    }
+
+    override fun findDepotIdListByAccountId(accountId: String): MutableList<String> {
+        return namedParameterJdbcTemplate.queryForList("""
+            SELECT
+                t1.depot_id
+            FROM
+                crm_account_depot t1
+            WHERE
+                t1.account_id = :accountId
+        """,Collections.singletonMap("accountId",accountId),String::class.java)
+    }
 
     override fun findFilter(depotShopQuery: DepotShopQuery): MutableList<DepotShopDto> {
         val sb = StringBuffer()
@@ -542,12 +565,18 @@ t5.name as 'chainName',
                 t1.depot_id = :depotId
         """,Collections.singletonMap("depotId",depotId),String::class.java)
     }
-    override fun saveDepotAccount(depotId: String,accountIds: MutableList<String>):Int{
-        val sb = StringBuilder("""
-            INSERT INTO crm_account_depot(account_id,depot_id) values
-        """)
-        for(accountId in accountIds){
-            sb.append("("+accountId+","+depotId+"),")
+    override fun saveDepotAccount(depotAccountForm:DepotAccountForm):Int{
+        val sb = StringBuilder();
+        sb.append("INSERT INTO crm_account_depot(account_id,depot_id) values")
+        if(StringUtils.isNotBlank(depotAccountForm.depotId)){
+            for(accountId in depotAccountForm.accountIds){
+                sb.append("("+accountId+","+depotAccountForm.depotId+"),")
+            }
+        }
+        if(StringUtils.isNotBlank(depotAccountForm.accountId)){
+            for(depotId in depotAccountForm.depotIdList){
+                sb.append("("+depotAccountForm.accountId+","+depotId+"),")
+            }
         }
         sb.deleteCharAt(sb.length -1)
         return namedParameterJdbcTemplate.update(sb.toString(),HashMap<String,Any>())

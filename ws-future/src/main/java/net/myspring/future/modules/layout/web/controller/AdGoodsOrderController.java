@@ -189,8 +189,8 @@ public class  AdGoodsOrderController {
 
     @RequestMapping(value = "findDetailListForNewOrEdit")
     @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:view')")
-    public List<AdGoodsOrderDetailSimpleDto> findDetailListForNewOrEdit(String adGoodsOrderId, boolean includeNotAllowOrderProduct) {
-        return adGoodsOrderService.findDetailListForNewOrEdit(adGoodsOrderId, includeNotAllowOrderProduct);
+    public List<AdGoodsOrderDetailSimpleDto> findDetailListForNewOrEdit(String adGoodsOrderId, String outShopId) {
+        return adGoodsOrderService.findDetailListForNewOrEdit(adGoodsOrderId, outShopId);
     }
 
     @RequestMapping(value = "findDetailListForBill")

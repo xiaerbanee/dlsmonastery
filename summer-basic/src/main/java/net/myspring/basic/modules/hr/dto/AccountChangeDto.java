@@ -17,6 +17,25 @@ public class AccountChangeDto extends DataDto<AccountChange> {
     private String officeId;
     @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
     private String areaName;
+    private String accountId;
+    @CacheInput(inputKey = "accounts",inputInstance = "accountId",outputInstance = "loginName")
+    private String accountName;
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
 
     public String getOldLabel() {
         return oldLabel;
