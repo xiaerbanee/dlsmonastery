@@ -63,8 +63,6 @@ public class DepotShopController {
     @Autowired
     private PricesystemService pricesystemService;
     @Autowired
-    private OfficeClient officeClient;
-    @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
     private DictEnumClient dictEnumClient;

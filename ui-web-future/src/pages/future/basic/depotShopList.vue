@@ -4,7 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAddDepot" icon="plus" >添加</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search">过滤或导出</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search">过滤或导出</el-button>
         <el-button type="primary" @click="itemBindAccount" icon="plus">账户绑定</el-button>
         <span v-html="searchText"></span>
       </el-row>
