@@ -175,7 +175,7 @@
           this.loading = true;
           let companyName = JSON.parse(window.localStorage.getItem("account")).companyName;
           console.log("companyName:"+companyName);
-          axios.get('/api/ws/future/third/factory/vivo/vivoPlantProducts?companyName='+companyName+'&date='+this.date).then((response)=>{
+          axios.get('/api/ws/future/third/factory/vivo/pullFactoryData?companyName='+companyName+'&date='+this.date).then((response)=>{
             this.loading = false;
             this.$message(response.data);
           }).catch(function () {
