@@ -1,6 +1,5 @@
-package net.myspring.tool.modules.vivo.web;
+package net.myspring.tool.modules.vivo.web.controller;
 
-import net.myspring.common.constant.CharConstant;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RestController

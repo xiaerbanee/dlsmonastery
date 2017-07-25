@@ -6,6 +6,8 @@ import net.myspring.tool.common.repository.BaseRepository
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts
 import net.myspring.tool.modules.vivo.dto.VivoPlantProductsDto
 import net.myspring.tool.modules.vivo.web.query.VivoPlantProductsQuery
+import net.myspring.util.text.StringUtils
+import org.apache.commons.collections.CollectionUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
@@ -48,7 +50,19 @@ class VivoPlantProductsRepositoryImpl @Autowired constructor(val namedParameterJ
 
     override fun findAll(vivoPlantProductsQuery: VivoPlantProductsQuery): MutableList<VivoPlantProductsDto> {
         val sb = StringBuilder()
-        sb.append("SELECT * FROM vivo_plant_products WHERE 1=1")
+        sb.append(" SELECT * FROM vivo_plant_products WHERE 1=1 ")
+        if (StringUtils.isNotBlank(vivoPlantProductsQuery.itemDesc)){
+            sb.append(" AND item_desc LIKE CONCAT('%',:itemDesc,'%') ")
+        }
+        if (StringUtils.isNotBlank(vivoPlantProductsQuery.colorName)){
+            sb.append(" AND color_name LIKE CONCAT('%',:colorName,'%') ")
+        }
+        if (StringUtils.isNotBlank(vivoPlantProductsQuery.typeName)){
+            sb.append(" AND type_name LIKE CONCAT('%',:typeName,'%') ")
+        }
+        if (CollectionUtils.isNotEmpty(vivoPlantProductsQuery.itemNumberList)){
+            sb.append(" AND item_number in (:itemNumberList) ")
+        }
         return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(vivoPlantProductsQuery),BeanPropertyRowMapper(VivoPlantProductsDto::class.java))
     }
 }

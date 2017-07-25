@@ -1,4 +1,4 @@
-package net.myspring.tool.modules.vivo.web;
+package net.myspring.tool.modules.vivo.web.controller;
 
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.utils.RequestUtils;

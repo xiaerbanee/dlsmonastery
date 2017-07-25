@@ -31,7 +31,7 @@
           <el-select v-model="inputForm.status"  :placeholder="$t('employeePhoneForm.inputWord')" :clearable=true>
             <el-option v-for="item in inputForm.extra.statusList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
-          <el-form-item v-permit="'hr:employeePhone:remarks'" label="备注" prop="remarks">
+          <el-form-item v-permit="'crm:employeePhone:remarks'" label="备注" prop="remarks">
             <el-input v-model="inputForm.remarks"></el-input>
           </el-form-item>
         </el-form-item>

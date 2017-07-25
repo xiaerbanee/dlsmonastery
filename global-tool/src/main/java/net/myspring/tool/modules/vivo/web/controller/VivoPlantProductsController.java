@@ -42,4 +42,9 @@ public class VivoPlantProductsController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
+    @RequestMapping(value = "findByProductName")
+    public List<ProductDto> findByProductName(String name){
+        List<ProductDto> productDtoList = futureProductService.findByNameLike(name);
+        return productDtoList;
+    }
 }

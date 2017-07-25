@@ -19,6 +19,7 @@ import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,8 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
@@ -78,7 +81,8 @@ public class EmployeePhoneService {
         return page;
     }
 
-    public String export(Workbook workbook,EmployeePhoneQuery employeePhoneQuery){
+    public SimpleExcelBook findSimpleExcelSheet(EmployeePhoneQuery employeePhoneQuery)  {
+        Workbook workbook = new SXSSFWorkbook(10000);
         employeePhoneQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         List<EmployeePhoneDto> employeePhoneDtoList = employeePhoneRepository.findFilter(employeePhoneQuery);
         cacheUtils.initCacheInput(employeePhoneDtoList);
@@ -96,7 +100,7 @@ public class EmployeePhoneService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"imeStr","串码"));
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("导购用机",employeePhoneDtoList,simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"导购用机"+ LocalDateTimeUtils.format(LocalDateTime.now())+".xlsx",simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        return null;
+        ExcelUtils.doWrite(workbook,simpleExcelSheet);
+        return simpleExcelBook;
     }
 }
