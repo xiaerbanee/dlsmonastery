@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.future.service.*;
@@ -86,6 +87,9 @@ public class OppoPushController {
     //代理商经销商基础数据上抛
     @RequestMapping(value = "pullCustomers", method = RequestMethod.GET)
     public OppoResponseMessage pullOppoCustomers(String key, String createdDate) throws IOException {
+        if (StringUtils.isBlank(DbContextHolder.get().getCompanyName())){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
+        }
         String agentCode= CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + createdDate);
@@ -104,6 +108,9 @@ public class OppoPushController {
     //运营商属性上抛
     @RequestMapping(value = "pullCustomerOperatortype", method = RequestMethod.GET)
     public OppoResponseMessage pullOppoCustomerOperatortype(String key, String createdDate) {
+        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
+        }
         String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + createdDate);
@@ -123,6 +130,9 @@ public class OppoPushController {
     //发货退货调拨数据上抛
     @RequestMapping(value ="pullCustomerAllot", method = RequestMethod.GET)
     public OppoResponseMessage pullOppoCustomersAllot(String key, String dateStart, String dateEnd) {
+        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
+        }
         String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey=MD5Utils.encode(factoryAgentName+dateStart+dateEnd);
@@ -143,6 +153,9 @@ public class OppoPushController {
     //库存数据上抛
     @RequestMapping(value ="pullCustomerStock", method = RequestMethod.GET)
     public OppoResponseMessage pullCustomerStock(String key,String createdDate)  {
+        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
+        }
         String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey=MD5Utils.encode(factoryAgentName+createdDate);
@@ -165,6 +178,9 @@ public class OppoPushController {
     //门店条码调拨明细上抛
     @RequestMapping(value ="pullCustomerImeStock", method = RequestMethod.GET)
     public OppoResponseMessage pullCustomerImeStock(String key,String dateStart,String dateEnd)  {
+        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
+        }
         String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey=MD5Utils.encode(factoryAgentName+dateStart+dateEnd);
@@ -185,6 +201,9 @@ public class OppoPushController {
     //店总数据上抛
     @RequestMapping(value ="pullCustomerSale", method = RequestMethod.GET)
     public OppoResponseMessage pullCustomerSale(String key,String dateStart,String dateEnd) {
+        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
+        }
         String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
@@ -205,6 +224,9 @@ public class OppoPushController {
     //门店销售明细
     @RequestMapping(value ="pullCustomerSaleIme", method = RequestMethod.GET)
     public OppoResponseMessage pullCustomerSaleIme(String key,String dateStart,String dateEnd)  {
+        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
+        }
         String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
@@ -225,6 +247,9 @@ public class OppoPushController {
     //门店销售数据汇总
     @RequestMapping(value ="pullCustomerSaleCount", method = RequestMethod.GET)
     public OppoResponseMessage pullCustomerSaleCount(String key,String dateStart,String dateEnd)  {
+        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
+        }
         String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
@@ -247,6 +272,9 @@ public class OppoPushController {
     //门店售后零售退货条码数据
     @RequestMapping(value ="pullCustomerAfterSaleIme", method = RequestMethod.GET)
     public OppoResponseMessage pullCustomerAfterSaleIme(String key,String dateStart,String dateEnd)  {
+        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
+        }
         String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
@@ -269,6 +297,9 @@ public class OppoPushController {
     //演示机条码数据
     @RequestMapping(value ="pullCustomerDemoPhone", method = RequestMethod.GET)
     public OppoResponseMessage pullCustomerDemoPhone(String key,String dateStart,String dateEnd)  {
+        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
+        }
         String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);

@@ -75,7 +75,7 @@
         </el-row>
       </el-form>
       <el-input v-model="filterValue" @change="filterProducts" :placeholder="$t('goodsOrderBill.selectTowKey')" style="width:200px;"></el-input>
-      <el-table :data="filterDetailList" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('goodsOrderBill.loading')" stripe border>
+      <el-table :data="filterDetailList" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('goodsOrderBill.loading')" :row-class-name="tableRowClassName" stripe border>
         <el-table-column  prop="productName" :label="$t('goodsOrderBill.productName')" sortable width="300"></el-table-column>
         <el-table-column prop="areaQty" sortable :label="$t('goodsOrderBill.areaBillQty')"></el-table-column>
         <el-table-column prop="storeQty" :label="$t('goodsOrderBill.stock')"></el-table-column>
@@ -156,6 +156,15 @@
       }
     },
     methods:{
+      tableRowClassName(row){
+        if(this.inputForm.storeId && row.qty){
+          if(row.storeQty && (row.qty < row.storeQty)){
+            return ""
+          }else{
+            return "danger-row"
+          }
+        }
+      },
       formSubmit(){
         this.submitDisabled = true;
         let form = this.$refs["inputForm"];
@@ -310,3 +319,11 @@
     }
   }
 </script>
+<style>
+  .el-table .danger-row,.el-table .el-table__row--striped.danger-row>td {
+    background: #FF8888 !important;
+  }
+  .el-table .danger-row:hover>td{
+    background: #FF8888 !important;
+  }
+</style>
