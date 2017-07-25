@@ -4,7 +4,7 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-row :gutter="20">
-          <el-col :span="8">
+          <el-col :span="10">
             <el-form-item label="选择门店" prop="depotId">
               <depot-select v-model="inputForm.depotId" category="shop" @input="shopSelectd"></depot-select>
             </el-form-item>
@@ -15,7 +15,7 @@
               <el-button type="primary" :disabled="submitDisabled"  @click="formSubmit()">保存</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="10">
             <el-form-item label="选择账户" prop="accountId">
               <account-select v-model="inputForm.accountId" category="shop" @input="accountSelectd"></account-select>
             </el-form-item>
