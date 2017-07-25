@@ -4,7 +4,7 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px"  class="form input-form">
         <el-row >
-          <el-col :span="8">
+          <el-col :span="10">
             <el-form-item :label="$t('adGoodsOrderForm.outShopId')" prop="outShopId">
               <depot-select :disabled="afterBill" v-model="inputForm.outShopId" category="directShop" @input="outShopChanged"></depot-select>
             </el-form-item>
@@ -35,7 +35,7 @@
               </el-form-item>
             </div>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="10">
             <el-form-item :label="$t('adGoodsOrderForm.contact')" prop="expressOrderContator">
               <el-input v-model="inputForm.expressOrderContator"></el-input>
             </el-form-item>

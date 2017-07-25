@@ -4,7 +4,7 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-row :gutter = "20">
-          <el-col :span = "7">
+          <el-col :span = "10">
             <el-form-item label="名称" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>

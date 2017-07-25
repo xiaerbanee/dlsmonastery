@@ -4,7 +4,7 @@
     <div>
       <el-form :model="shopPrint" :rules="rules" ref="shopPrint" label-width="120px" class="form input-form">
         <el-row :gutter="20">
-          <el-col :span="8">
+          <el-col :span="10">
             <el-form-item :label="$t('shopPrintDetail.code')">
               {{shopPrint.id}}
             </el-form-item>
@@ -22,7 +22,7 @@
               </el-upload>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="10">
             <el-form-item :label="$t('shopPrintDetail.address')">
               {{shopPrint.address}}
             </el-form-item>

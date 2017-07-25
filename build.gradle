@@ -33,7 +33,7 @@ task copyUiJar(type: Copy, dependsOn:[':summer-webapp:build']) {
 
 tasks.getByPath(':summer-webapp:compileJava').dependsOn(':copyUiStatic')
 
-task copyUiStatic(type: Copy, dependsOn:[':ui-web-future:npm_run_build']) {
+task copyUiStatic(type: Copy) {
     from   'ui-web-future/dist'
     into 'summer-webapp/src/main/resources/static'
     include('**/*')
