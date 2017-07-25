@@ -61,7 +61,7 @@ public class SalReturnStockController {
                         message.append(kingdeeSynExtendDto.getBillNo()+",");
                     }
                 }
-                restResponse = new RestResponse("开单退货成功：" + message, null, true);
+                restResponse = new RestResponse("销售退货成功：" + message, null, true);
             }else {
                 restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
             }
