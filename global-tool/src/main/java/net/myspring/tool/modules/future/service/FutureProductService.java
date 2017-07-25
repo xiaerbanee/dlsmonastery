@@ -19,4 +19,8 @@ public class FutureProductService {
     public List<ProductDto> findHasImeProduct(){
         return futureProductRepository.findHasImeProduct();
     }
+
+    public List<ProductDto> findByNameLike(String name){
+        return futureProductRepository.findByNameLike(name);
+    }
 }
