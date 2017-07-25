@@ -4,11 +4,12 @@ spring:
   cloud:
     config:
       server:
-        native:
-          searchLocations:  file:////D:///server///summer///config-repo///
-  profiles:
-    active: native
-
+        git:
+          uri: http://ncoppo.com:66/liuj/summer.git
+          search-paths: config-repo
+          username: config
+          password: configconfig
+          timeout: 300
 server:
   port: 9900
 

@@ -3,8 +3,10 @@ package net.myspring.tool.modules.vivo.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
+import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
 import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
@@ -166,8 +168,16 @@ public class VivoPullService {
 
 
     public FactoryOrderDto factoryOrder(FactoryOrderDto factoryOrderDto){
-        List<String> factoryCodeList = Lists.newArrayList(CharConstant.JX_VIVO_FACTORY_AGENT_CODES.split(CharConstant.COMMA));
-        List<String> factoryNameList = Lists.newArrayList(CharConstant.JX_VIVO_FACTORY_AGENT_NAMES.split(CharConstant.COMMA));
+        String companyName = RequestUtils.getCompanyName();
+        List<String> factoryCodeList;
+        List<String> factoryNameList;
+        if (CompanyNameEnum.IDVIVO.name().equals(companyName)){
+            factoryCodeList = Lists.newArrayList(CharConstant.ID_VIVO_FACTORY_AGENT_CODES.split(CharConstant.COMMA));
+            factoryNameList = Lists.newArrayList(CharConstant.ID_VIVO_FACTORY_AGENT_NAMES.split(CharConstant.COMMA));
+        }else {
+            factoryCodeList = Lists.newArrayList(CharConstant.JX_VIVO_FACTORY_AGENT_CODES.split(CharConstant.COMMA));
+            factoryNameList = Lists.newArrayList(CharConstant.JX_VIVO_FACTORY_AGENT_NAMES.split(CharConstant.COMMA));
+        }
         if(CollectionUtil.isNotEmpty(factoryCodeList)&&CollectionUtil.isNotEmpty(factoryNameList)){
             Map<String,String> map = Maps.newHashMap();
             for(int i = 0; i < factoryCodeList.size(); i++){

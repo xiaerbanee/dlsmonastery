@@ -2,6 +2,7 @@ package net.myspring.tool.modules.vivo.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.tool.common.utils.CacheUtils;
 import net.myspring.tool.modules.future.dto.ProductDto;
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
@@ -9,6 +10,7 @@ import net.myspring.tool.modules.vivo.dto.VivoPlantProductsDto;
 import net.myspring.tool.modules.vivo.repository.VivoPlantProductsRepository;
 import net.myspring.tool.modules.vivo.web.query.VivoPlantProductsQuery;
 import net.myspring.util.json.ObjectMapperUtils;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ public class VivoPlantProductsService {
     private CacheUtils cacheUtils;
 
     public List<VivoPlantProductsDto> findAll(VivoPlantProductsQuery vivoPlantProductsQuery){
+        vivoPlantProductsQuery.setItemNumberList(StringUtils.getSplitList(vivoPlantProductsQuery.getItemNumberStr(), CharConstant.ENTER));
         List<VivoPlantProductsDto> vivoPlantProductsDtoList = vivoPlantProductsRepository.findAll(vivoPlantProductsQuery);
         cacheUtils.initCacheInput(vivoPlantProductsDtoList);
         return vivoPlantProductsDtoList;
