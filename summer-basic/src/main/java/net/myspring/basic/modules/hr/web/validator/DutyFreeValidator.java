@@ -37,7 +37,7 @@ public class DutyFreeValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "freeDate", "error.freeDate", "必填信息");
 
         if (dutyFree.getDateType() != null && dutyFree.getFreeDate() != null) {
-            if (ChronoUnit.DAYS.between(dutyFree.getFreeDate(), LocalDateTime.now()) > 10) {
+            if (ChronoUnit.DAYS.between(dutyFree.getFreeDate(), LocalDateTime.now()) > 30) {
                 errors.rejectValue("freeDate", "error.freeDate", "只能申请10天内数据");
             }
             List<DutyFree> freeList = dutyFreeService.findByDate(dutyFree.getFreeDate(), RequestUtils.getEmployeeId());

@@ -40,7 +40,7 @@ public class DutyRestValidator implements Validator {
                 }
                 ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dateType", "error.dateType", "必填信息");
             }
-            if(dutyRest.getDutyDate()!=null&&ChronoUnit.DAYS.between(dutyRest.getDutyDate(), LocalDateTime.now())>10){
+            if(dutyRest.getDutyDate()!=null&&ChronoUnit.DAYS.between(dutyRest.getDutyDate(), LocalDateTime.now())>30){
                 errors.rejectValue("dutyDate","error.dutyDate","只能申请10天内数据");
             }
         }
