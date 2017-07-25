@@ -412,7 +412,10 @@ public class OfficeService {
                 office.setTaskPoint(taskPoint);
                 office.setParentId(parent.getId());
                 office.setParentIds(newParentIds);
-                officeRepository.saveAndFlush(office);
+                if(name.contains("废弃")||name.contains("停用")){
+                    office.setEnabled(false);
+                }
+                officeRepository.save(office);
                 List<Office> list = officeRepository.findByParentIdsLike(office.getId());
                 if (CollectionUtil.isNotEmpty(list)) {
                     for (Office e : list) {

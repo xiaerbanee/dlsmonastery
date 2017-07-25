@@ -45,7 +45,7 @@
       },formSubmit(){
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
-          axios.post('api/global/tool/vivo/factoryOrder?', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=>{
+          axios.post('api/global/tool/factory/vivo/factoryOrder?', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=>{
             this.inputForm = response.data;
             this.showList = true;
           })
@@ -66,7 +66,7 @@
         }
       }
     },created(){
-      axios.get('api/global/tool/vivo/factoryOrder').then((response)=>{
+      axios.get('api/global/tool/factory/vivo/factoryOrder').then((response)=>{
         this.inputForm = response.data;
       })
     }

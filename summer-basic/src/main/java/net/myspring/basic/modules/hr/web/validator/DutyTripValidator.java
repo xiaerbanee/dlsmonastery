@@ -30,7 +30,7 @@ public class DutyTripValidator implements Validator {
                 errors.rejectValue("dateStart","error.dateStart","开始日期必须小于等于结束日期");
                 errors.rejectValue("dateEnd","error.dateEnd","开始日期必须大于等于结束日期");
             }
-            if(ChronoUnit.DAYS.between(dutyTrip.getDateStart(), LocalDateTime.now())>10){
+            if(ChronoUnit.DAYS.between(dutyTrip.getDateStart(), LocalDateTime.now())>30){
                 errors.rejectValue("dateStart","error.dateStart","只能申请10天内数据");
             }
         }

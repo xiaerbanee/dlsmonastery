@@ -11,8 +11,11 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-button type="primary" :disabled="submitDisabled" @click="getTableData" icon="view">搜索</el-button>
+          <el-col :span="4">
+            <el-form-item>
+              <el-button type="primary" :disabled="submitDisabled" @click="getTableData" icon="view">搜索</el-button>
+              <el-button type="primary" :disabled="submitDisabled = false " @click="formSubmit" icon="check">保存</el-button>
+            </el-form-item>
           </el-col>
         </el-row>
         <el-form-item label="原任务点位" >
@@ -22,9 +25,6 @@
           <span  id="newTaskPoint"></span>
         </el-form-item>
         <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
-        <el-form-item>
-          <el-button type="primary" :disabled="submitDisabled = false " @click="formSubmit" icon="check">保存</el-button>
-        </el-form-item>
       </el-form>
     </div>
   </div>
@@ -38,7 +38,6 @@
   var newTaskPoint = 0;
   var oldTaskPoint = 0;
   var setNewTaskPoint = function (datas) {
-
     let newTaskPoint=0;
     for(let i=0;i<datas.length; i++) {
       if(datas[i][7]) {
@@ -141,7 +140,7 @@
         })
       },getTableData(){
           if (this.formData.id !== '') {
-            util.setQuery("adPricesystemChangeForm", this.formData.id);
+            util.setQuery("officeChangeForm", this.formData.id);
             axios.get('/api/basic/sys/office/change?id=' + this.formData.id).then((response) => {
               this.settings.data = response.data;
               table.loadData(this.settings.data);
