@@ -26,7 +26,6 @@ Page({
       method: 'GET',
       header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
-        console.log(">>>>>>",res.data)
         that.setData({ 'formProperty.imageTypeList': res.data.extra.imageTypeList });
         wx.request({
           url: $util.getUrl("ws/future/layout/shopImage/findOne?id=" + options.id),
@@ -39,7 +38,6 @@ Page({
             $util.downloadFile(images, res.data.image, app.globalData.sessionId, 9, function () {
               that.setData({ "formProperty.images": images });
             });
-            console.log("=======",res.data)
             that.setData({ formData: res.data })
           }
         })
@@ -123,10 +121,8 @@ Page({
 
         if (res.data.success) {
           wx.navigateBack();
-        } else if (res.data.hasOwnProperty("extra")) {
-          that.setData({ 'response.data': res.data.extra.errors, submitDisabled: false });
-        } else {
-          that.setData({ "response.error": res.data.message, submitDisabled: false })
+        } else{
+          that.setData({ 'response.data': res.data.extra.errors, "response.error": res.data.message, submitDisabled: false });
         }
       }
     })
