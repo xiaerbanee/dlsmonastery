@@ -4,7 +4,7 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" label-width="120px" class="form input-form">
         <el-row :gutter="20">
-          <el-col :span="6">
+          <el-col :span="10">
             <el-form-item :label="$t('shopAdDetail.shopAdTypeId')" prop="shopAdTypeId">
               {{inputForm.shopAdTypeName}}
             </el-form-item>
@@ -34,7 +34,7 @@
               </el-upload>
             </el-form-item>
           </el-col>
-          <el-col :span="10" :offset="2">
+          <el-col :span="10">
             <el-form-item :label="$t('shopAdDetail.pass')"  v-if="isAudit">
               <bool-radio-group v-model="formData.pass"></bool-radio-group>
             </el-form-item>
