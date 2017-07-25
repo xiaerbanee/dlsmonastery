@@ -82,11 +82,40 @@
             colHeaders: ['ID', '统计型号', '颜色', '物料编码', '物料名称', '产品名称'],
             columns: [
               {data:'id',strict: true,readOnly: true},
+              {data:'typeName',strict: true,readOnly: true},
               {data:'colorName',strict: true,readOnly: true},
-              {data:'brandType',strict: true,readOnly: true},
               {data:'itemNumber',strict: true,readOnly: true},
               {data:'itemDesc',strict: true,readOnly: true},
-              {data:'productName',type: "autocomplete",allowEmpty: true,productNames:[],source:this.productNames}
+              {
+                data:'productName',
+                type: "autocomplete",
+                allowEmpty: true,
+                tempProductNames:[],
+                source: function (query, process) {
+                  var that = this;
+                  if (that.tempProductNames.indexOf(query) >= 0) {
+                    process(that.tempProductNames);
+                  } else {
+                    var productNames = new Array();
+                    if (query.length >= 2) {
+                      axios.get('/api/global/tool/factory/vivo/vivoPlantProducts/?name=' + query).then((response) => {
+                        if (response.data.length > 0) {
+                          for (var index in response.data) {
+                            var productName = response.data[index].name;
+                            productNames.push(productName);
+                            if (that.tempProductNames.indexOf(productName) < 0) {
+                              that.tempProductNames.push(productName);
+                            }
+                          }
+                        }
+                        process(productNames);
+                      });
+                    } else {
+                      process(productNames);
+                    }
+                  }
+                },
+              }
             ],
             contextMenu: true,
           },
@@ -108,20 +137,14 @@
               if (!table.isEmptyRow(item)) {
                 let row = list[item];
                 let createForm = {};
-                if(this.inputForm.lx){
-                  createForm.id = row[0];
-                  createForm.productName = row[6];
-                  createForm.lxProductName = row[7];
-                }else{
-                  createForm.id = row[0];
-                  createForm.productName = row[6];
-                }
+                createForm.id = row[0];
+                createForm.productName = row[6];
                 tableData.push(createForm);
               }
             }
             console.log(tableData.length);
             this.inputForm.dataList = JSON.stringify(tableData);
-            axios.post('/api/global/tool/factory/oppo/oppoPlantAgentProductSel/save', qs.stringify({data: this.inputForm.dataList}, {allowDots: true})).then((response) => {
+            axios.post('/api/global/tool/factory/vivo/vivoPlantProducts/save', qs.stringify({data: this.inputForm.dataList}, {allowDots: true})).then((response) => {
               this.$message(response.data.message);
               this.submitDisabled = false;
               if(response.data.success){
@@ -138,7 +161,7 @@
       },getTableData(){
         let submitData = util.deleteExtra(this.formData);
         util.setQuery("oppoPlantAgentProductSelList",submitData);
-        axios.get('/api/global/tool/factory/vivo/vivoPlantAgentProductSel/findAll', {params: submitData}).then((response) => {
+        axios.get('/api/global/tool/factory/vivo/vivoPlantProducts/findAll', {params: submitData}).then((response) => {
           this.settings.data = response.data;
           console.log(response.data.length);
           table.loadData(this.settings.data);
@@ -152,7 +175,7 @@
           this.loading = true;
           let companyName = JSON.parse(window.localStorage.getItem("account")).companyName;
           console.log("companyName:"+companyName);
-          axios.get('/api/ws/future/third/factory/oppo/pullFactoryData?companyName='+companyName+'&date='+this.date).then((response)=>{
+          axios.get('/api/ws/future/third/factory/vivo/vivoPlantProducts?companyName='+companyName+'&date='+this.date).then((response)=>{
             this.loading = false;
             this.$message(response.data);
           }).catch(function () {
@@ -164,12 +187,12 @@
         }
       },exportData(){
         if(this.date){
-          window.location.href='/api/global/tool/factory/oppo/oppoPlantSendImeiPpsel/export?date='+this.date;
+          window.location.href='/api/global/tool/factory/vivo/vivoPlantProducts/export?date='+this.date;
         }else{
           this.$message({message:"请选择发货串码导出日期",type:'warning'})
         }
       },initPage(){
-        axios.get('/api/global/tool/factory/oppo/oppoPlantAgentProductSel/getQuery').then((response)=>{
+        axios.get('/api/global/tool/factory/vivo/vivoPlantProducts/getQuery').then((response)=>{
           this.formData = response.data;
         })
       }
