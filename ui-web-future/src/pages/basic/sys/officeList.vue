@@ -6,7 +6,7 @@
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'sys:office:edit'">{{$t('officeList.add')}}</el-button>
         <el-button type="primary" @click="itemBusinessAdd" icon="plus" v-permit="'sys:office:businessEdit'">职能部门添加</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'sys:office:view'">{{$t('officeList.filter')}}</el-button>
-        <el-button type="primary" @click="officeChange" icon="document" v-permit="'sys:office:officeChange:edit'">机构调整</el-button>
+        <el-button type="primary" @click="officeChange" icon="document" v-permit="'sys:officeChange:edit'">机构调整</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('officeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -123,7 +123,7 @@
       }
     },created () {
         var that=this;
-        that.pageHeight = window.outerHeight -320;
+        that.pageHeight = 0.75*window.innerHeight;
         this.initPromise=axios.get('/api/basic/sys/office/getQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);

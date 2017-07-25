@@ -15,9 +15,9 @@
           <view class="weui-label">地址</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <picker name="address" range="{{formProperty.addressList}}" value="{{formProperty.addressIndex?formProperty.addressList[formProperty.addressIndex]:''}}" bindchange="bindAddressChange">
+         <picker name="address" range="{{formProperty.addressList}}" value="{{formProperty.addressIndex?formProperty.addressList[formProperty.addressIndex]:''}}" bindchange="bindAddressChange">
             <view class="weui-input">{{formProperty.addressList[formProperty.addressIndex]}}</view>
-          </picker>
+          </picker  > 
         </view>
         <view class="weui-cell__ft" wx:if="{{response.data.address}}">
           <icon type="warn" class="warn"></icon>

@@ -104,7 +104,7 @@
       }
     },created () {
       const that = this;
-      that.pageHeight = window.outerHeight -320;
+      that.pageHeight = 0.75*window.innerHeight;
       that.initPromise=axios.get('/api/ws/future/crm/reportScore/getQuery').then((response) =>{
       that.formData=response.data;
         that.formData.sort="scoreDate,desc"

@@ -156,7 +156,7 @@
       }
     },created () {
       var that = this;
-      that.pageHeight = window.outerHeight -320;
+      that.pageHeight = 0.75*window.innerHeight;
       this.initPromise = axios.get('/api/basic/hr/employee/getQuery').then((response) =>{
         that.formData=response.data;
         console.log(response.data)
