@@ -104,6 +104,19 @@
     },
     methods:{
       getData() {
+          var checkShop=(ruel,value,callback)=>{
+              if(value==""){
+                  return callback(new Error(this.$t('dictMapForm.prerequisiteMessage')))
+              }else{
+                  axios.get("/api/ws/future/basic/depotShop/checkName?name="+value).then((response)=>{
+                      if(response.data){
+                          return callback(new Error(response.data.message))
+                      }else{
+                          return callback();
+                      }
+                  })
+              }
+          }
       return{
         clientList:{},
         isCreate:this.$route.query.id == null,
@@ -114,7 +127,7 @@
         remoteLoading:false,
         rules: {
           depotShopId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          name: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
+          name: [{ required: true,validator:checkShop}],
           officeId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           contator: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           mobilePhone: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
