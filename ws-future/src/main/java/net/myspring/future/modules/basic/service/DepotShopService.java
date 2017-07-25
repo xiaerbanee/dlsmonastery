@@ -274,6 +274,11 @@ public class DepotShopService {
         return depotReportList;
     }
 
+    public boolean checkName(String name){
+        Depot depotShop=depotRepository.findByName(name);
+        return depotShop!=null;
+    }
+
     private Integer setPercentage(List<DepotReportDto> depotReportList) {
         Integer sum = 0;
         for (DepotReportDto depotReport : depotReportList) {
@@ -284,4 +289,5 @@ public class DepotShopService {
         }
         return sum;
     }
+
 }
