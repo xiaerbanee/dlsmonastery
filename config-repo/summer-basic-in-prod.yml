@@ -1,0 +1,11 @@
+weixin:
+  appid: wxae56bca22b46a54d
+  appsecret: d60f48376a76ddfac41eda8c74a0656c
+  app:
+    name: inphone
+  audit:
+    menuId: 14,15,16,17,34,130,131,170
+map:
+  key: AIzaSyAXmDmtlbFiHHdEG9Aiv6jxkmw-eAbUTZU
+amap:
+  key: AIzaSyAXmDmtlbFiHHdEG9Aiv6jxkmw-eAbUTZU
