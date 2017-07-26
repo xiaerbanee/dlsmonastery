@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Modifying
+import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -21,12 +23,15 @@ interface ProductImeUploadRepository : BaseRepository<ProductImeUpload, String>,
 
     fun findByProductImeId(productImeId: String): MutableList<ProductImeUpload>
 
+
 }
 
 interface ProductImeUploadRepositoryCustom{
     fun findPage(pageable: Pageable, productImeUploadQuery : ProductImeUploadQuery): Page<ProductImeUploadDto>
 
     fun findDto(id: String): ProductImeUploadDto
+
+    fun setDepotIdForMerge(fromDepotId:String,toDepotId:String):Int
 }
 
 class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeUploadRepositoryCustom {
@@ -97,5 +102,13 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJd
 
     }
 
+    override fun setDepotIdForMerge(fromDepotId:String,toDepotId:String):Int{
+        val params = HashMap<String, Any>()
+        params.put("fromDepotId", fromDepotId)
+        params.put("toDepotId", toDepotId)
 
+        val sb = java.lang.StringBuilder()
+        sb.append(""" update crm_product_ime_upload t set t.shop_id = :toDepotId where t.shop_id = :fromDepotId """)
+        return namedParameterJdbcTemplate.update(sb.toString(),params)
+    }
 }
