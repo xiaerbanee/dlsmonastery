@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
@@ -84,6 +85,8 @@ interface ProductImeRepositoryCustom{
     fun findStoreReport(productImeReportQuery: ReportQuery) : MutableList<ProductImeReportDto>
 
     fun batchSave(productImes:MutableList<ProductIme>):IntArray?
+
+    fun setDepotIdForMerge(fromDepotId:String,toDepotId:String):Int
 }
 
 class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeRepositoryCustom {
@@ -653,5 +656,15 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         sb.append("insert into crm_product_ime (depot_id,retail_shop_id,product_id,ime,created_time,ime2,item_number,color_id,meid,box_ime,input_type,bill_id,ime_reverse,created_by,created_date,last_modified_by,last_modified_date,version,locked,enabled) values ")
         sb.append("(:depotId,:retailShopId,:productId,:ime,:createdTime,:ime2,:itemNumber,:colorId,:meid,:boxIme,:inputType,:billId,:imeReverse,:createdBy,:createdDate,:lastModifiedBy,:lastModifiedDate,:version,:locked,:enabled)")
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(), SqlParameterSourceUtils.createBatch(productImes.toTypedArray()));
+    }
+
+    override fun setDepotIdForMerge(fromDepotId:String,toDepotId:String):Int{
+        val params = HashMap<String, Any>()
+        params.put("fromDepotId", fromDepotId)
+        params.put("toDepotId", toDepotId)
+
+        val sb = StringBuilder()
+        sb.append(""" update crm_product_ime t set t.depot_id = :toDepotId where t.depot_id = :fromDepotId """)
+        return namedParameterJdbcTemplate.update(sb.toString(),params)
     }
 }

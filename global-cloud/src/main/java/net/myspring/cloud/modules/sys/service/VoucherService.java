@@ -212,7 +212,7 @@ public class VoucherService {
             sb.append("借贷方金额必须相等");
         }
         if (StringUtils.isNotBlank(sb)){
-           return new RestResponse(sb.toString(),null,false);
+            return new RestResponse(sb.toString(),null,false);
         }else {
             return new RestResponse("检测合符条件",null,true);
         }
@@ -306,7 +306,7 @@ public class VoucherService {
         }
         return result;
     }
-    
+
     public List<String> getHeaders(List<BdFlexItemGroup> bdFlexItemGroupList) {
         List<String> list = Lists.newLinkedList();
         list.add("摘要");

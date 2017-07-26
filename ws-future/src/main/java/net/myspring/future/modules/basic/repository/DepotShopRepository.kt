@@ -477,11 +477,12 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                 t1.mobile_phone mobilePhone,
                 t2.*,
                 t3.name as 'pricesystemName',
-t5.name as 'chainName',
+                t5.name as 'chainName',
                 t4.name as 'clientName',
                 t6.name as 'parentName'
             FROM
-                crm_depot t1 left join crm_pricesystem t3 on t1.pricesystem_id=t3.id
+                crm_depot t1
+                left join crm_pricesystem t3 on t1.pricesystem_id=t3.id
                 left join crm_client t4 on t1.client_id=t4.id
                 left join crm_chain t5 on t1.chain_id =t5.id
                 left join crm_depot t6 on t1.parent_id=t6.id,

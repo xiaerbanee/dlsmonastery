@@ -69,7 +69,7 @@ public class ArReceiveBillController {
             }
             return restResponse;
         }catch (Exception e){
-           return new RestResponse(e.getMessage(), ResponseCodeEnum.invalid.name(), false);
+            return new RestResponse(e.getMessage(), ResponseCodeEnum.invalid.name(), false);
         }
     }
 

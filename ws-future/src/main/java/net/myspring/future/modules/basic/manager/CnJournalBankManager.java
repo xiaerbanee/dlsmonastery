@@ -59,7 +59,7 @@ public class CnJournalBankManager {
         if (departmentNumber != null){
             entityForBankDto.setDepartmentNumber(departmentNumber);
         }else{
-            throw new ServiceException("该部门没有编码，不能开单");
+            throw new ServiceException("部门不能为空");
         }
         if (bank.getCode() != null){
             entityForBankDto.setBankAccountNumber(bank.getCode());
@@ -121,7 +121,7 @@ public class CnJournalBankManager {
                 if (employeePhoneDeposit.getDepartment() != null) {
                     entityForBankDto.setDepartmentNumber(employeePhoneDeposit.getDepartment());
                 } else {
-                    throw new ServiceException("该部门没有编码，不能开单");
+                    throw new ServiceException("部门不能为空");
                 }
                 if (bank.getCode() != null) {
                     entityForBankDto.setBankAccountNumber(bank.getCode());
@@ -165,7 +165,7 @@ public class CnJournalBankManager {
             if (departmentNumber != null) {
                 entityForBankDto.setDepartmentNumber(departmentNumber);
             } else {
-                throw new ServiceException("该部门没有编码，不能开单");
+                throw new ServiceException("部门不能为空");
             }
             if (bank.getCode() != null) {
                 entityForBankDto.setBankAccountNumber(bank.getCode());

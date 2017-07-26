@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import common from './common'
 import basicHr from './basic_hr'
 import basicSys from './basic_sys'
+import basicSalary from './basic_salary'
 import businessBasic from './future_basic'
 import businessCrm from './future_crm'
 import businessLayout from './future_layout'
@@ -23,6 +24,7 @@ const routes = [
   ...common,
   ...basicHr,
   ...basicSys,
+  ...basicSalary,
   ...businessBasic,
   ...businessCrm,
   ...businessLayout,

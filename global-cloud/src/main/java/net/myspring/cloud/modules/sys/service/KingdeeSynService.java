@@ -61,7 +61,7 @@ public class KingdeeSynService {
     @Transactional
     public void save(KingdeeSyn kingdeeSyn) {
         if(kingdeeSyn != null) {
-           kingdeeSynRepository.save(kingdeeSyn);
+            kingdeeSynRepository.save(kingdeeSyn);
         }
     }
 
