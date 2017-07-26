@@ -59,6 +59,11 @@ spring:
         username: user_m13e00
         password: user_m13e00
         driver-class-name: net.sourceforge.jtds.jdbc.Driver
+      JXDJ:
+        url: jdbc:sqlserver://168.192.1.13:1433;DatabaseName=AISTESTDJ
+        username: sa
+        password: bbk@123456
+        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
   redis:
     JXOPPO:
       host: localhost

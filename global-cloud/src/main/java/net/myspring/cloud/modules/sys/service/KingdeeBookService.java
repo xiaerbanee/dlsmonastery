@@ -76,8 +76,8 @@ public class KingdeeBookService {
         return kingdeeBook;
     }
 
-    public KingdeeBook findByAccountId(String accountId) {
-        return kingdeeBookRepository.findByAccountId(accountId);
+    public KingdeeBook findOne(String id){
+        return kingdeeBookRepository.findOne(id);
     }
 
     public KingdeeBook findByCompanyName(String companyName) {
