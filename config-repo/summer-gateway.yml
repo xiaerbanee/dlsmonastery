@@ -43,7 +43,7 @@ hystrix:
   command:
     default:
       circuitBreaker:
-        enabled:  false
+        forceClosed :  true
       execution:
         timeout:
           enabled: false
