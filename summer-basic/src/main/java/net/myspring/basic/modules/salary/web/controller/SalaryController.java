@@ -44,7 +44,7 @@ public class SalaryController{
 		return page;
 	}
 
-	@RequestMapping(value = "getQury", method = RequestMethod.GET)
+	@RequestMapping(value = "getQuery", method = RequestMethod.GET)
 	public SalaryQuery form(SalaryQuery salaryQuery) {
 		return salaryQuery;
 	}
