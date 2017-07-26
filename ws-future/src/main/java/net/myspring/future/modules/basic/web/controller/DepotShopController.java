@@ -23,6 +23,7 @@ import net.myspring.future.modules.basic.service.PricesystemService;
 import net.myspring.future.modules.basic.web.form.DepotAccountForm;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotShopForm;
+import net.myspring.future.modules.basic.web.form.DepotShopMergeForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.basic.web.query.DepotShopQuery;
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
@@ -138,6 +139,17 @@ public class DepotShopController {
     public RestResponse saveDepotAccount(DepotAccountForm depotAccountForm){
         depotShopService.saveDepotAccount(depotAccountForm);
         return new RestResponse("绑定成功",ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "getMergeForm")
+    public DepotShopMergeForm getMergeForm(DepotShopMergeForm depotShopMergeForm){
+        return depotShopMergeForm;
+    }
+
+    @RequestMapping(value = "merge")
+    public RestResponse merge(DepotShopMergeForm depotShopMergeForm){
+        depotShopService.merge(depotShopMergeForm);
+        return new RestResponse("合并成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "findOne")
