@@ -2,6 +2,7 @@ package net.myspring.util.collection;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import java.util.*;
@@ -10,6 +11,22 @@ import java.util.*;
  * Created by liuj on 2017/5/1.
  */
 public class CollectionUtil extends org.springside.modules.utils.collection.CollectionUtil {
+
+    public static Set extractToSet(final Collection collection, final String propertyName) {
+        if (isEmpty(collection)) {
+            return Sets.newHashSet();
+        }
+        Set set = new LinkedHashSet();
+        try {
+            for (Object obj : collection) {
+                set.add(PropertyUtils.getProperty(obj, propertyName));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return set;
+    }
+
 
     public static <E> List<E> extractToList(final Collection collection, final String propertyName) {
         if (isEmpty(collection)) {

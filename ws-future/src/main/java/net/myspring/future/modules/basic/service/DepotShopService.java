@@ -3,6 +3,7 @@ package net.myspring.future.modules.basic.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.OfficeUtil;
+import net.myspring.common.dto.NameValueDto;
 import net.myspring.future.common.enums.OutTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
@@ -11,10 +12,7 @@ import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.client.TownClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotShop;
-import net.myspring.future.modules.basic.dto.DepotDto;
-import net.myspring.future.modules.basic.dto.DepotReportDetailDto;
-import net.myspring.future.modules.basic.dto.DepotReportDto;
-import net.myspring.future.modules.basic.dto.DepotShopDto;
+import net.myspring.future.modules.basic.dto.*;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotShopRepository;
@@ -81,13 +79,11 @@ public class DepotShopService {
             depotShopQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(depotShopQuery.getOfficeId()));
         }
         Page<DepotShopDto> page = depotShopRepository.findPage(pageable, depotShopQuery);
-        Map<String, ShopDepositDto> scbzjMap = Maps.newHashMap();
-        Map<String, ShopDepositDto> xxbzjMap = Maps.newHashMap();
         if (CollectionUtil.isNotEmpty(page.getContent())) {
             List<ShopDeposit> scbzjList = shopDepositRepository.findByTypeAndShopIdIn(ShopDepositTypeEnum.市场保证金.name(), CollectionUtil.extractToList(page.getContent(), "depotId"));
             List<ShopDeposit> xxbzjList = shopDepositRepository.findByTypeAndShopIdIn(ShopDepositTypeEnum.形象保证金.name(), CollectionUtil.extractToList(page.getContent(), "depotId"));
-            xxbzjMap = CollectionUtil.extractToMap(BeanUtil.map(xxbzjList,ShopDepositDto.class), "shopId");
-            scbzjMap = CollectionUtil.extractToMap(BeanUtil.map(scbzjList,ShopDepositDto.class), "shopId");
+            Map<String, ShopDepositDto> xxbzjMap = CollectionUtil.extractToMap(BeanUtil.map(xxbzjList,ShopDepositDto.class), "shopId");
+            Map<String, ShopDepositDto> scbzjMap = CollectionUtil.extractToMap(BeanUtil.map(scbzjList,ShopDepositDto.class), "shopId");
             for (DepotShopDto depotShopDto : page.getContent()) {
                 depotShopDto.getDepositMap().put("xxbzj", xxbzjMap.get(depotShopDto.getId()) == null ? BigDecimal.ZERO : xxbzjMap.get(depotShopDto.getId()).getAmount());
                 depotShopDto.getDepositMap().put("scbzj", scbzjMap.get(depotShopDto.getId()) == null ? BigDecimal.ZERO : scbzjMap.get(depotShopDto.getId()).getAmount());
@@ -189,6 +185,7 @@ public class DepotShopService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"contator","联系人"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"mobilePhone","手机号码"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"salePointType","门店属性"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"accountNameStr","绑定导购"));
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("门店信息",depotShopDtoList,simpleExcelColumnList);
         ExcelUtils.doWrite(workbook,simpleExcelSheet);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"门店信息"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
@@ -275,6 +272,11 @@ public class DepotShopService {
         return depotReportList;
     }
 
+    public boolean checkName(String name){
+        Depot depotShop=depotRepository.findByName(name);
+        return depotShop!=null;
+    }
+
     private Integer setPercentage(List<DepotReportDto> depotReportList) {
         Integer sum = 0;
         for (DepotReportDto depotReport : depotReportList) {
@@ -285,4 +287,5 @@ public class DepotShopService {
         }
         return sum;
     }
+
 }

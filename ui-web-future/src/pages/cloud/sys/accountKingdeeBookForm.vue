@@ -7,7 +7,7 @@
           <el-input v-model="inputForm.username"></el-input>
         </el-form-item>
         <el-form-item label="金蝶账户密码" prop="password">
-          <el-input v-model="inputForm.password" type="password" ></el-input>
+          <el-input v-model="inputForm.password" type="password" placeholder="若不修改密码，请保持为空">></el-input>
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
@@ -33,7 +33,6 @@
             submitData:{},
             rules: {
               username: [{ required: true, message: "必填信息"}],
-              password: [{ required: true, message: "必填信息"}],
             }
           }
         },

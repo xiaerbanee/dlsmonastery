@@ -97,7 +97,7 @@
       }
     },created () {
         var that=this;
-      that.pageHeight = window.outerHeight -320;
+      that.pageHeight = 0.75*window.innerHeight;
       this.initPromise=axios.get('/api/basic/sys/menuCategory/getQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);

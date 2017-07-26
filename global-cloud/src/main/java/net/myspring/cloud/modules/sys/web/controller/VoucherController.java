@@ -211,7 +211,7 @@ public class VoucherController {
         if (!restResponse.getSuccess()) {
             return restResponse;
         }else {
-            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
             Voucher voucher = voucherService.audit(voucherForm, bdFlexItemGroupList, bdFlexItemPropertyList,accountKingdeeBook);
             restResponse = new RestResponse("凭证审核成功", null, true);
             if (VoucherStatusEnum.已完成.name().equals(voucher.getStatus())) {

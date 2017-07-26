@@ -63,8 +63,6 @@ public class DepotShopController {
     @Autowired
     private PricesystemService pricesystemService;
     @Autowired
-    private OfficeClient officeClient;
-    @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
     private DictEnumClient dictEnumClient;
@@ -146,6 +144,14 @@ public class DepotShopController {
     public DepotShopDto findOne(String id){
         DepotShopDto depotShopDto = depotShopService.findOne(id);
         return depotShopDto;
+    }
+
+    @RequestMapping(value="checkName")
+    public RestResponse checkName(String name){
+        if(depotShopService.checkName(name)){
+            return new RestResponse("门店名称不能重复",ResponseCodeEnum.saved.name());
+        }
+        return null;
     }
 
     @RequestMapping(value = "delete")

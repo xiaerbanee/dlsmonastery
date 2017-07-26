@@ -1,11 +1,16 @@
 package net.myspring.future.modules.basic.dto;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.text.StringUtils;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,6 +55,50 @@ public class DepotShopDto extends DataDto<DepotShop>{
     private String clientName;
     private String parentName;
     private Map<String,Object> depositMap= Maps.newHashMap();
+
+    private String accountIds;
+    private List<String> accountIdList= Lists.newArrayList();
+    @CacheInput(inputKey="accounts",inputInstance = "accountIdList",outputInstance = "loginName")
+    private List<String> accountNameList=Lists.newArrayList();
+    private String accountNameStr;
+
+    public String getAccountIds() {
+        return accountIds;
+    }
+
+    public void setAccountIds(String accountIds) {
+        this.accountIds = accountIds;
+    }
+
+    public List<String> getAccountIdList() {
+        if(CollectionUtil.isEmpty(accountIdList)&&StringUtils.isNotBlank(accountIds)){
+            this.accountIdList=StringUtils.getSplitList(accountIds,CharConstant.COMMA);
+        }
+        return accountIdList;
+    }
+
+    public void setAccountIdList(List<String> accountIdList) {
+        this.accountIdList = accountIdList;
+    }
+
+    public List<String> getAccountNameList() {
+        return accountNameList;
+    }
+
+    public void setAccountNameList(List<String> accountNameList) {
+        this.accountNameList = accountNameList;
+    }
+
+    public String getAccountNameStr() {
+        if(StringUtils.isBlank(accountNameStr)&& CollectionUtil.isNotEmpty(accountNameList)){
+            this.accountNameStr=StringUtils.join(accountNameList, CharConstant.COMMA);
+        }
+        return accountNameStr;
+    }
+
+    public void setAccountNameStr(String accountNameStr) {
+        this.accountNameStr = accountNameStr;
+    }
 
     public String getParentName() {
         return parentName;

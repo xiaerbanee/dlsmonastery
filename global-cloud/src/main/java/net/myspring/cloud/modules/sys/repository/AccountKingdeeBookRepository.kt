@@ -25,17 +25,35 @@ interface  AccountKingdeeBookRepository : BaseRepository<AccountKingdeeBook,Stri
         FROM  #{#entityName} t
         where t.enabled = 1
         and t.accountId = :accountId
+        and t.companyName = :companyName
      """)
-    fun findByAccountId (@Param("accountId")accountId:String): AccountKingdeeBook
+    fun findByAccountIdAndCompanyName (@Param("accountId")accountId:String,@Param("companyName")companyName:String): AccountKingdeeBook
 
 }
 
 interface AccountKingdeeBookRepositoryCustom{
     fun findPage(pageable: Pageable, accountKingdeeBookQuery: AccountKingdeeBookQuery): Page<AccountKingdeeBookDto>?
+
+    fun findFilter(accountKingdeeBookQuery: AccountKingdeeBookQuery): MutableList<AccountKingdeeBook>
 }
 
 class AccountKingdeeBookRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): AccountKingdeeBookRepositoryCustom{
-    override fun findPage(pageable: Pageable, accountKingdeeBookQuery: AccountKingdeeBookQuery): Page<AccountKingdeeBookDto>? {
+    override fun findFilter(accountKingdeeBookQuery: AccountKingdeeBookQuery): MutableList<AccountKingdeeBook> {
+        var sb = StringBuilder("""
+                select t1.*
+                from sys_account_kingdee_book t1
+                where t1.enabled=1
+            """)
+        if(StringUtils.isNoneBlank(accountKingdeeBookQuery.accountId)){
+            sb.append(" and t1.account_id = :accountId ")
+        }
+        if (StringUtils.isNoneBlank(accountKingdeeBookQuery.companyName)){
+            sb.append(" and t1.company_name = :companyName")
+        }
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(accountKingdeeBookQuery), BeanPropertyRowMapper(AccountKingdeeBook::class.java));
+    }
+
+    override fun findPage(pageable: Pageable, accountKingdeeBookQuery: AccountKingdeeBookQuery): Page<AccountKingdeeBookDto> {
         var sb = StringBuilder("""
                 select t1.id,t1.username,t1.account_id,t1.company_name,t1.remarks,t2.name as kingdeeBookName,t2.type as kingdeeBookType
                 from sys_account_kingdee_book t1, sys_kingdee_book t2

@@ -4,7 +4,7 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-row>
-          <el-col :span="8">
+          <el-col :span="10">
             <el-form-item :label="$t('productForm.name')">{{inputForm.name}}
             </el-form-item>
             <el-form-item :label="$t('productForm.code')" prop="code">{{inputForm.code}}
@@ -29,7 +29,7 @@
               <bool-radio-group v-model="inputForm.visible"></bool-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="10">
             <el-form-item :label="$t('productForm.price2')" prop="price2">
               <el-input v-model="inputForm.price2"></el-input>
             </el-form-item>

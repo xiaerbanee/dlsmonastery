@@ -47,7 +47,7 @@ public class DutyLeaveValidator implements Validator {
 
         if (dutyLeaveForm.getDutyDateStart()!=null && dutyLeaveForm.getDutyDateEnd()!=null) {
             String employeeId = RequestUtils.getEmployeeId();
-            if(ChronoUnit.DAYS.between(dutyLeaveForm.getDutyDateStart(), LocalDateTime.now())>10){
+            if(ChronoUnit.DAYS.between(dutyLeaveForm.getDutyDateStart(), LocalDateTime.now())>30){
                 errors.rejectValue("dutyDateStart","error.dutyDateStart","只能申请10天内数据");
             }
             if (dutyLeaveForm.getDutyDateStart().equals(dutyLeaveForm.getDutyDateEnd())) {

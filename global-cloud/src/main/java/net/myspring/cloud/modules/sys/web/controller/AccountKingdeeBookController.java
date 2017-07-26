@@ -61,7 +61,7 @@ public class AccountKingdeeBookController {
 
     @RequestMapping(value = "validateByAccountId")
     public Boolean validateByAccountId(String accountId) {
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(accountId);
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(accountId,RequestUtils.getCompanyName());
         if (accountKingdeeBook != null && accountKingdeeBook.getPassword() != null){
             return true;
         }else {

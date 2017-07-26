@@ -43,24 +43,27 @@ public class SalOutStockController {
 
     @RequestMapping(value = "form")
     public SalStockForm form () {
-        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
+        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
         return salOutStockService.getForm(kingdeeBook);
     }
 
     @RequestMapping(value = "save")
     public RestResponse save(SalStockForm salStockForm) {
-        RestResponse restResponse = new RestResponse("", null, false);
+        RestResponse restResponse;
+        StringBuilder message = new StringBuilder();
         try {
-            KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
+            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
             if (accountKingdeeBook != null) {
                 List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salOutStockService.save(salStockForm, kingdeeBook, accountKingdeeBook);
                 kingdeeSynService.save(BeanUtil.map(kingdeeSynExtendDtoList, KingdeeSyn.class));
                 for (KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList) {
                     if (kingdeeSynExtendDto.getSuccess()) {
-                        restResponse = new RestResponse("入库开单成功：" + kingdeeSynExtendDto.getNextBillNo(), null, true);
+                        message.append(kingdeeSynExtendDto.getBillNo()+",");
                     }
                 }
+                restResponse = new RestResponse("销售入库单成功：" + message, null, true);
             }else {
                 restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
             }
@@ -72,8 +75,8 @@ public class SalOutStockController {
 
     @RequestMapping(value = "saveForXSCKD",method = RequestMethod.POST)
     public List<KingdeeSynReturnDto> saveForXSCKD(@RequestBody List<SalOutStockDto> salOutStockDtoList) {
-        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
+        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList;
         if (accountKingdeeBook != null) {
              kingdeeSynExtendDtoList = salOutStockService.saveForXSCKD(salOutStockDtoList, kingdeeBook, accountKingdeeBook);

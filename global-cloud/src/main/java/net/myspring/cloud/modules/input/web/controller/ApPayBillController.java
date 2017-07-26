@@ -45,18 +45,20 @@ public class ApPayBillController {
 
     @RequestMapping(value = "save")
     public RestResponse save(ApPayBillForm apPayBillForm) {
-        RestResponse restResponse = new RestResponse("开单失败", null);
+        RestResponse restResponse;
+        StringBuilder message = new StringBuilder();
         try {
-            KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
+            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
             if (accountKingdeeBook != null) {
                 List<KingdeeSynDto> kingdeeSynDtoList = apPayBillService.save(apPayBillForm, kingdeeBook, accountKingdeeBook);
                 kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
                 for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
                     if (kingdeeSynDto.getSuccess()) {
-                        restResponse = new RestResponse("付款单成功：" + kingdeeSynDto.getBillNo(), null, true);
+                        message.append(kingdeeSynDto.getBillNo()+",");
                     }
                 }
+                restResponse = new RestResponse("付款单成功：" + message, null, true);
             } else {
                 restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
             }

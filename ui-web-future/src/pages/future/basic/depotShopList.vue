@@ -4,7 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAddDepot" icon="plus" >添加</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search">过滤或导出</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search">过滤或导出</el-button>
         <el-button type="primary" @click="itemBindAccount" icon="plus">账户绑定</el-button>
         <span v-html="searchText"></span>
       </el-row>
@@ -85,7 +85,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="synArea()">同步</el-button>
+          <el-button type="primary" @click="synAreas()">同步</el-button>
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="数据加载中" @sort-change="sortChange" stripe border>
@@ -192,7 +192,7 @@
           window.location.href='/api/ws/future/basic/depotShop/export?'+qs.stringify(util.deleteExtra(this.formData));
           this.pageRequest();
         }).catch(()=>{});
-      },synArea(){
+      },synAreas(){
         this.synArea = false;
         axios.get('/api/ws/future/basic/depot/synArea',{params:this.synData}).then((response) =>{
           this.$message(response.data.message);

@@ -44,7 +44,8 @@ public class CnJournalForBankController {
 
     @RequestMapping(value = "form")
     public CnJournalForBankForm form () {
-        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
+        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
         return cnJournalForBankService.getForm(kingdeeBook);
     }
 
@@ -52,8 +53,8 @@ public class CnJournalForBankController {
     public RestResponse save(CnJournalForBankForm cnJournalForBankForm) {
         try {
             RestResponse restResponse = new RestResponse("开单失败",null);
-            KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
+            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
             if (accountKingdeeBook != null) {
                 KingdeeSynDto kingdeeSynDto = cnJournalForBankService.save(cnJournalForBankForm, kingdeeBook, accountKingdeeBook);
                 kingdeeSynService.save(BeanUtil.map(kingdeeSynDto, KingdeeSyn.class));
@@ -71,8 +72,8 @@ public class CnJournalForBankController {
 
     @RequestMapping(value = "saveForWS", method= RequestMethod.POST)
     public List<KingdeeSynReturnDto> saveForWS(@RequestBody List<CnJournalForBankDto> cnJournalForBankDtoList) {
-        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
+        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
         List<KingdeeSynDto> kingdeeSynDtoList;
         if (accountKingdeeBook != null) {
             kingdeeSynDtoList = cnJournalForBankService.saveForWS (cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);

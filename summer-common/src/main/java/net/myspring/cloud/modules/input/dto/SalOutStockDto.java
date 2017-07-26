@@ -135,18 +135,23 @@ public class SalOutStockDto {
         model.put("FStockOrgId", CollectionUtil.getMap("FNumber", 100));
         model.put("FOwnerIdHead", CollectionUtil.getMap("FNumber", 100));
         model.put("FSettleCurrID", CollectionUtil.getMap("FNumber", "PRE001"));
+        //客户
         model.put("FCustomerID", CollectionUtil.getMap("FNumber", getCustomerNumber()));
         model.put("FNote", getNote());
         List<Object> entity = Lists.newArrayList();
         for (SalOutStockFEntityDto entityDto: getSalOutStockFEntityDtoList()) {
             if (entityDto.getQty() != null && entityDto.getQty() > 0) {
                 Map<String, Object> detail = Maps.newLinkedHashMap();
+                //仓库
                 detail.put("FStockID", CollectionUtil.getMap("FNumber", entityDto.getStockNumber()));
+                //物料编码
                 detail.put("FMaterialId", CollectionUtil.getMap("FNumber", entityDto.getMaterialNumber()));
                 //库存状态--可用
                 detail.put("FStockStatusID", CollectionUtil.getMap("FNumber", "KCZT01_SYS"));
                 //库存单位--Pcs
                 detail.put("FUnitID", CollectionUtil.getMap("FNumber", "Pcs"));
+                //销售部门
+                detail.put("FSaleDeptID", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
                 detail.put("FRealQty", entityDto.getQty());
                 detail.put("FBaseUnitQty", entityDto.getQty());
                 detail.put("FPriceUnitQty", entityDto.getQty());

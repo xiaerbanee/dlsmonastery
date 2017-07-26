@@ -9,6 +9,7 @@ spring:
           search-paths: config-repo
           username: config
           password: configconfig
+          timeout: 300
 server:
   port: 9900
 

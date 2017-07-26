@@ -20,16 +20,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
  */
 interface  KingdeeBookRepository : BaseRepository<KingdeeBook,String>,KingdeeBookRepositoryCustom{
     @Query("""
-        select t1
-        FROM  #{#entityName} t1,AccountKingdeeBook t2
-        where t1.enabled = 1
-        and t2.enabled=1
-        and t1.id = t2.kingdeeBookId
-        and t2.accountId = :accountId
-     """)
-    fun findByAccountId(@Param("accountId")accountId:String): KingdeeBook
-
-    @Query("""
         SELECT t1.name
         FROM  #{#entityName} t1
         where t1.enabled = 1

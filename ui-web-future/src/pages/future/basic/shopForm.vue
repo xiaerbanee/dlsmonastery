@@ -104,6 +104,23 @@
     },
     methods:{
       getData() {
+          var checkShop=(ruel,value,callback)=>{
+              if(value==""){
+                  return callback(new Error(this.$t('dictMapForm.prerequisiteMessage')))
+              }else{
+                  if(value===this.shopName) {
+                    return callback();
+                  }else{
+                    axios.get("/api/ws/future/basic/depotShop/checkName?name="+value).then((response)=>{
+                      if(response.data){
+                        return callback(new Error(response.data.message))
+                      }else{
+                        return callback();
+                      }
+                    })
+                  }
+              }
+          }
       return{
         clientList:{},
         isCreate:this.$route.query.id == null,
@@ -114,7 +131,7 @@
         remoteLoading:false,
         rules: {
           depotShopId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          name: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
+          name: [{ required: true,validator:checkShop}],
           officeId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           contator: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           mobilePhone: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
@@ -157,7 +174,7 @@
           this.inputForm = response.data;
           axios.get('/api/ws/future/basic/depot/findByDepotShopId',{params: {depotShopId:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
-            console.log(response.data)
+            this.shopName=response.data.name;
             if(util.isNotBlank(this.inputForm.clientId)){
               this.clientList =new Array({id:response.data.clientId,name:response.data.clientName})
             }

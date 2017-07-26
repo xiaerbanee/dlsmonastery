@@ -3,8 +3,8 @@
     <head-tab active="reportScoreForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-        <el-row :gutter="20">
-          <el-col :span="8">
+        <el-row :gutter="24">
+          <el-col :span="10">
             <el-form-item :label="$t('reportScoreForm.scoreDate')" prop="scoreDate">
               <date-picker v-model="inputForm.scoreDate" ></date-picker>
             </el-form-item>
@@ -30,7 +30,7 @@
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('reportScoreForm.save')}}</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="10">
             <el-card class="box-card">
               {{$t('reportScoreForm.productNames')}}： {{inputProperty.productTypeNameStr}}
             </el-card>

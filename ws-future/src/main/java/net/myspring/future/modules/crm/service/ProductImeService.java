@@ -143,7 +143,7 @@ public class ProductImeService {
 
     public SimpleExcelBook export(List<ProductImeDto> productImeDtoList) {
 
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(50000);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
 
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "boxIme", "箱号"));
@@ -183,7 +183,7 @@ public class ProductImeService {
     }
 
     public SimpleExcelBook export(ProductImeQuery productImeQuery) {
-        List<ProductImeDto> productImeDtoList = productImeRepository.findPage(new PageRequest(0, 10000), productImeQuery).getContent();
+        List<ProductImeDto> productImeDtoList = productImeRepository.findPage(new PageRequest(0, 50000), productImeQuery).getContent();
         cacheUtils.initCacheInput(productImeDtoList);
         if(hasProvince()){
             fulfillProvinceInfo(productImeDtoList);

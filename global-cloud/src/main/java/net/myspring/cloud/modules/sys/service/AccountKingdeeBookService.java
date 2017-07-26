@@ -40,8 +40,8 @@ public class AccountKingdeeBookService {
         return page;
     }
 
-    public AccountKingdeeBook findByAccountId(String accountId){
-        return accountKingdeeBookRepository.findByAccountId(accountId);
+    public AccountKingdeeBook findByAccountIdAndCompanyName(String accountId,String companyName){
+        return accountKingdeeBookRepository.findByAccountIdAndCompanyName(accountId,companyName);
     }
 
     public AccountKingdeeBookQuery getQuery(){
@@ -59,6 +59,7 @@ public class AccountKingdeeBookService {
         if (StringUtils.isNotBlank(accountKingdeeBookForm.getId())){
             AccountKingdeeBook accountKingdeeBook =  accountKingdeeBookRepository.findOne(accountKingdeeBookForm.getId());
             accountKingdeeBookForm = BeanUtil.map(accountKingdeeBook,AccountKingdeeBookForm.class);
+            accountKingdeeBookForm.setPassword(null);
         }
         return accountKingdeeBookForm;
     }
@@ -66,7 +67,11 @@ public class AccountKingdeeBookService {
     public AccountKingdeeBook getCurrentOne(){
         String accountId = RequestUtils.getAccountId();
         if (StringUtils.isNotBlank(accountId)){
-            AccountKingdeeBook accountKingdeeBook =  accountKingdeeBookRepository.findByAccountId(accountId);
+            AccountKingdeeBookQuery accountKingdeeBookQuery = new AccountKingdeeBookQuery();
+            accountKingdeeBookQuery.setAccountId(accountId);
+            accountKingdeeBookQuery.setCompanyName(RequestUtils.getCompanyName());
+            AccountKingdeeBook accountKingdeeBook =  accountKingdeeBookRepository.findFilter(accountKingdeeBookQuery).get(0);
+            accountKingdeeBook.setPassword(null);
             return accountKingdeeBook;
         }
         return null;
@@ -75,16 +80,22 @@ public class AccountKingdeeBookService {
     @Transactional
     public AccountKingdeeBook save(AccountKingdeeBookForm accountKingdeeBookForm){
         AccountKingdeeBook accountKingdeeBook;
-        if (accountKingdeeBookForm.isCreate()){
+        if (accountKingdeeBookForm.isCreate()){//创建用户
             accountKingdeeBook = BeanUtil.map(accountKingdeeBookForm,AccountKingdeeBook.class);
             KingdeeBook kingdeeBook = kingdeeBookRepository.findByCompanyName(RequestUtils.getCompanyName());
             accountKingdeeBook.setKingdeeBookId(kingdeeBook.getId());
             accountKingdeeBook.setPassword(Base64Utils.encode(accountKingdeeBook.getPassword().getBytes()));
             accountKingdeeBookRepository.save(accountKingdeeBook);
-        }else{
+        }else if(accountKingdeeBookForm.getPassword() != null){//修改密码
             accountKingdeeBook = accountKingdeeBookRepository.findOne(accountKingdeeBookForm.getId());
             ReflectionUtil.copyProperties(accountKingdeeBookForm,accountKingdeeBook);
             accountKingdeeBook.setPassword(Base64Utils.encode(accountKingdeeBook.getPassword().getBytes()));
+            accountKingdeeBookRepository.save(accountKingdeeBook);
+        }else {//修改其他（除密码之外）
+            accountKingdeeBook = accountKingdeeBookRepository.findOne(accountKingdeeBookForm.getId());
+            String password = accountKingdeeBook.getPassword();
+            ReflectionUtil.copyProperties(accountKingdeeBookForm,accountKingdeeBook);
+            accountKingdeeBook.setPassword(password);
             accountKingdeeBookRepository.save(accountKingdeeBook);
         }
         return accountKingdeeBook;

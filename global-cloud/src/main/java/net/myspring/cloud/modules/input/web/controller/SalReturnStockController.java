@@ -42,24 +42,27 @@ public class SalReturnStockController {
 
     @RequestMapping(value = "form")
     public SalStockForm form () {
-        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
+        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
         return salReturnStockService.getForm(kingdeeBook);
     }
 
     @RequestMapping(value = "save")
     public RestResponse save(SalStockForm salStockForm) {
-        RestResponse restResponse = new RestResponse("",null,true);
+        RestResponse restResponse;
+        StringBuilder message = new StringBuilder();
         try {
-            KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
+            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
             if (accountKingdeeBook != null) {
                 List<KingdeeSynReturnDto> kingdeeSynExtendDtoList = salReturnStockService.save(salStockForm, kingdeeBook, accountKingdeeBook);
                 kingdeeSynService.save(BeanUtil.map(kingdeeSynExtendDtoList, KingdeeSyn.class));
                 for (KingdeeSynReturnDto kingdeeSynExtendDto : kingdeeSynExtendDtoList) {
                     if (kingdeeSynExtendDto.getSuccess()) {
-                        restResponse = new RestResponse("开单退货成功：" + kingdeeSynExtendDto.getNextBillNo(), null, true);
+                        message.append(kingdeeSynExtendDto.getBillNo()+",");
                     }
                 }
+                restResponse = new RestResponse("销售退货成功：" + message, null, true);
             }else {
                 restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
             }
@@ -71,8 +74,8 @@ public class SalReturnStockController {
 
     @RequestMapping(value = "saveForXSTHD",method = RequestMethod.POST)
     public List<KingdeeSynReturnDto> saveForXSCKD(@RequestBody List<SalReturnStockDto> salReturnStockDtoList) {
-        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
+        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
         List<KingdeeSynReturnDto> kingdeeSynExtendDtoList;
         if (accountKingdeeBook != null) {
             kingdeeSynExtendDtoList = salReturnStockService.saveForXSTHD(salReturnStockDtoList, kingdeeBook, accountKingdeeBook);
