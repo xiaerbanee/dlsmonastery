@@ -1,6 +1,5 @@
 package net.myspring.tool.modules.vivo.web.controller;
 
-import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.future.service.FutureCustomerService;
@@ -54,8 +53,6 @@ public class vivoPushController {
         //库存串码明细
         List<SPlantCustomerStockDetailDto> sPlantCustomerStockDetailDtoList = futureProductImeService.getCustomerStockDetailData(date);
         vivoPushService.pushCustomerStockDetailData(sPlantCustomerStockDetailDtoList,productColorMap,date);
-
-        //****
         //演示机数据
         List<SProductItemLend> sProductItemLendList = futureDemoPhoneService.getDemoPhonesData(date);
         vivoPushService.pushDemoPhonesData(sProductItemLendList,productColorMap,date);
@@ -64,19 +61,6 @@ public class vivoPushController {
         vivoPushService.pushProductImeSaleData(vivoCustomerSaleImeiDtoList,productColorMap,date);
         //一代仓库上抛
         vivoPushService.pushSStoreData();
-    }
-
-    @RequestMapping(value = "pushToLocal")
-    public void pushToLocal(String companyName,String date){
-        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
-            DbContextHolder.get().setCompanyName(companyName);
-        }
-        if (CompanyNameEnum.IDVIVO.name().equals(DbContextHolder.get().getCompanyName())){
-            //机构数据
-
-        }else {
-
-        }
     }
 
 }

@@ -37,8 +37,7 @@ public class CnJournalForCashController {
 
     @RequestMapping(value = "form")
     public CnJournalForCashForm form () {
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
+        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         return cnJournalForCashService.getForm(kingdeeBook);
     }
 
@@ -46,8 +45,8 @@ public class CnJournalForCashController {
     public RestResponse save(CnJournalForCashForm cnJournalForCashForm) {
         try {
             RestResponse restResponse = new RestResponse("开单失败",null);
-            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
+            KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
             if (accountKingdeeBook != null) {
                 KingdeeSynDto kingdeeSynDto = cnJournalForCashService.save(cnJournalForCashForm, kingdeeBook, accountKingdeeBook);
                 kingdeeSynService.save(BeanUtil.map(kingdeeSynDto, KingdeeSyn.class));

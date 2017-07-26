@@ -14,9 +14,12 @@ import net.myspring.basic.modules.hr.repository.EmployeeRepository;
 import net.myspring.basic.modules.hr.repository.PositionRepository;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
+import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.Permission;
+import net.myspring.basic.modules.sys.dto.AccountCommonDto;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.basic.modules.sys.manager.RoleManager;
+import net.myspring.basic.modules.sys.repository.OfficeRepository;
 import net.myspring.basic.modules.sys.repository.PermissionRepository;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
@@ -30,12 +33,14 @@ import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Cacheable;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -83,10 +88,6 @@ public class AccountService {
         return accountDto;
     }
 
-    public Account findById(String id) {
-        return accountRepository.findOne(id);
-    }
-
     public AccountDto findByLoginName(String loginName) {
         Account account = accountRepository.findByLoginName(loginName);
         AccountDto accountDto = BeanUtil.map(account, AccountDto.class);
@@ -118,14 +119,19 @@ public class AccountService {
                 accountForm.setPassword(accountRepository.findOne(accountForm.getId()).getPassword());
             }
         }
+        if(CollectionUtil.isEmpty(accountForm.getOfficeIdList())){
+            accountForm.setOfficeIdList(Lists.newArrayList(accountForm.getOfficeId()));
+        }
         if (accountForm.isCreate()) {
             Position position=positionRepository.findOne(accountForm.getPositionId());
             accountForm.setRoleIds(position.getRoleId());
             account = BeanUtil.map(accountForm, Account.class);
             accountRepository.save(account);
         } else {
-            accountForm.setOfficeIds(StringUtils.join(accountForm.getOfficeIdList(),CharConstant.COMMA));
             account = accountRepository.findOne(accountForm.getId());
+            if(StringUtils.isBlank(accountForm.getOutPassword())&&StringUtils.isNotBlank(account.getOutPassword())){
+                accountForm.setOutPassword(account.getOutPassword());
+            }
             ReflectionUtil.copyProperties(accountForm,account);
             accountRepository.save(account);
         }

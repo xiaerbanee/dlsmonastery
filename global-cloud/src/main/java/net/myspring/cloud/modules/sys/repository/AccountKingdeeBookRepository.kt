@@ -15,6 +15,7 @@ import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 
 /**
  * Created by haos on 2017/5/24.
@@ -25,9 +26,8 @@ interface  AccountKingdeeBookRepository : BaseRepository<AccountKingdeeBook,Stri
         FROM  #{#entityName} t
         where t.enabled = 1
         and t.accountId = :accountId
-        and t.companyName = :companyName
      """)
-    fun findByAccountIdAndCompanyName (@Param("accountId")accountId:String,@Param("companyName")companyName:String): AccountKingdeeBook
+    fun findByAccountId (@Param("accountId")accountId:String): AccountKingdeeBook
 
 }
 
