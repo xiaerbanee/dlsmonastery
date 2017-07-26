@@ -62,7 +62,7 @@ public class VoucherService {
     private KingdeeBookRepository kingdeeBookRepository;
 
     public Page<VoucherDto> findPage(Pageable pageable, VoucherQuery voucherQuery) {
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountId(RequestUtils.getAccountId());
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
         if(StringUtils.isBlank(voucherQuery.getStatus())){
             if (accountKingdeeBook != null) {
                 voucherQuery.setStatus(VoucherStatusEnum.省公司财务审核.name());
@@ -96,7 +96,7 @@ public class VoucherService {
             voucher = new Voucher();
             voucher.setFDate(date);
             voucher.setCompanyName(RequestUtils.getCompanyName());
-            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountId(RequestUtils.getAccountId());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
             if (accountKingdeeBook != null){
                 voucher.setKingdeeBookId(accountKingdeeBook.getKingdeeBookId());
                 voucher.setCreatedName(accountKingdeeBook.getUsername());
