@@ -49,8 +49,7 @@ class ProcessTypeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemp
             FROM
             sys_process_type t1
                 WHERE
-            t1.enabled=1
-            and t1.audit_file_type=1
+            t1.audit_file_type=1
             and t1.create_position_ids like concat('%,',:positionId,',%')
         """)
         var paramMap= Maps.newHashMap<String,Any>();
@@ -66,8 +65,7 @@ class ProcessTypeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemp
             FROM
             sys_process_type t1
                 WHERE
-            t1.enabled=1
-       and t1.audit_file_type=1
+         t1.audit_file_type=1
             and t1.view_position_ids like concat('%,',:positionId,',%')
         """)
         var paramMap= Maps.newHashMap<String,Any>();

@@ -106,7 +106,7 @@ public class ShopDepositService {
 
         if(!OutBillTypeEnum.不同步到金蝶.name().equals(shopDepositForm.getOutBillType())){
             if (OutBillTypeEnum.其他应收单.name().equals(shopDepositForm.getOutBillType())) {
-                KingdeeSynReturnDto returnDto = arOtherRecAbleManager.synForShopDeposit(shopDeposit,type);
+                KingdeeSynReturnDto returnDto = arOtherRecAbleManager.synForShopDeposit(shopDeposit,shopDepositForm.getDepartMent(),type);
                 shopDeposit.setCloudSynId(returnDto.getId());
                 shopDeposit.setOutCode(returnDto.getBillNo());
                 shopDepositRepository.save(shopDeposit);
