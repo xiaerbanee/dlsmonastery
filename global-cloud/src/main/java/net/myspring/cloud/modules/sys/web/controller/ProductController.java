@@ -50,7 +50,7 @@ public class ProductController {
     @RequestMapping(value = "save")
     public RestResponse save(ProductForm productForm){
         productService.save(productForm);
-        return new RestResponse("保存成功",null);
+        return new RestResponse("保存成功",null,true);
     }
 
     @RequestMapping(value = "findByCode")
@@ -71,8 +71,8 @@ public class ProductController {
             AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
             KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
             productService.syn(bdMaterialList,kingdeeBook);
-            return new RestResponse("同步成功",null);
+            return new RestResponse("同步成功",null,true);
         }
-        return new RestResponse("未同步：金蝶找不到符合条件的货品",null);
+        return new RestResponse("未同步：金蝶找不到符合条件的货品",null,false);
     }
 }
