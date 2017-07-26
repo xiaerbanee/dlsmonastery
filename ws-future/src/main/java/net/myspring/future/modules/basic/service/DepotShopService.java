@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.OfficeUtil;
 import net.myspring.common.dto.NameValueDto;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.OutTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
@@ -12,15 +13,21 @@ import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.client.TownClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotShop;
+import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.dto.*;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotShopRepository;
+import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.web.form.DepotAccountForm;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotShopForm;
+import net.myspring.future.modules.basic.web.form.DepotShopMergeForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.basic.web.query.DepotShopQuery;
+import net.myspring.future.modules.crm.repository.ProductImeRepository;
+import net.myspring.future.modules.crm.repository.ProductImeSaleRepository;
+import net.myspring.future.modules.crm.repository.ProductImeUploadRepository;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
 import net.myspring.future.modules.layout.dto.ShopDepositDto;
@@ -70,6 +77,14 @@ public class DepotShopService {
     private TownClient townClient;
     @Autowired
     private ShopDepositRepository shopDepositRepository;
+    @Autowired
+    private DepotStoreRepository depotStoreRepository;
+    @Autowired
+    private ProductImeRepository productImeRepository;
+    @Autowired
+    private ProductImeSaleRepository productImeSaleRepository;
+    @Autowired
+    private ProductImeUploadRepository productImeUploadRepository;
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -234,6 +249,75 @@ public class DepotShopService {
                 depotShopRepository.saveDepotAccount(depotAccountForm);
             }
         }
+    }
+
+    @Transactional
+    public void merge(DepotShopMergeForm depotShopMergeForm){
+        String fromDepotId = depotShopMergeForm.getFromDepotId();
+        String toDepotId = depotShopMergeForm.getToDepotId();
+        if(StringUtils.isBlank(fromDepotId)||StringUtils.isBlank(toDepotId)){
+            throw new ServiceException("未选择合并前或合并后的门店");
+        }
+        productImeRepository.setDepotIdForMerge(fromDepotId,toDepotId);
+        productImeSaleRepository.setDepotIdForMerge(fromDepotId,toDepotId);
+        productImeUploadRepository.setDepotIdForMerge(fromDepotId,toDepotId);
+
+        Depot fromDepot = depotRepository.findOne(fromDepotId);
+        Depot toDepot = depotRepository.findOne(toDepotId);
+
+        DepotShop fromDepotShop = depotShopRepository.findOne(fromDepot.getDepotShopId());
+        DepotShop toDepotShop = depotShopRepository.findOne(toDepot.getDepotShopId());
+
+        if(toDepotShop.getHasGuide()==null && fromDepotShop.getHasGuide()!=null){
+            toDepotShop.setHasGuide(fromDepotShop.getHasGuide());
+        }
+        if(toDepot.getOfficeId()==null && fromDepot.getOfficeId()!=null){
+            toDepot.setOfficeId(fromDepot.getOfficeId());
+        }
+        if(toDepot.getPricesystemId()==null && fromDepot.getPricesystemId()!=null){
+            toDepot.setPricesystemId(fromDepot.getPricesystemId());
+        }
+        if(toDepot.getRebate()==null){
+            toDepot.setRebate(fromDepot.getRebate());
+        }
+        if(toDepot.getPrintPrice()==null){
+            toDepot.setPrintPrice(fromDepot.getPrintPrice());
+        }
+        if(StringUtils.isBlank(toDepot.getContator())){
+            toDepot.setContator(fromDepot.getContator());
+        }
+        if(StringUtils.isBlank(toDepot.getMobilePhone())){
+            toDepot.setMobilePhone(fromDepot.getMobilePhone());
+        }
+        if(StringUtils.isBlank(toDepot.getAddress())){
+            toDepot.setAddress(fromDepot.getAddress());
+        }
+        if(StringUtils.isBlank(toDepot.getAreaType())){
+            toDepot.setAreaType(fromDepot.getAreaType());
+        }
+        if(StringUtils.isBlank(toDepotShop.getAreaType())){
+            toDepotShop.setAreaType(fromDepotShop.getAreaType());
+        }
+        if(StringUtils.isBlank(toDepot.getRemarks())){
+            toDepot.setRemarks(fromDepot.getRemarks());
+        }
+        if(StringUtils.isBlank(toDepotShop.getRemarks())){
+            toDepotShop.setRemarks(fromDepotShop.getRemarks());
+        }
+        fromDepot.setDelegateDepotId(null);
+        fromDepot.setIsHidden(true);
+        if(StringUtils.isNotBlank(fromDepot.getDepotStoreId())){
+            depotStoreRepository.logicDelete(fromDepot.getDepotStoreId());
+        }
+        fromDepot.setName(fromDepot.getName()+"(废弃时间:"+LocalDate.now()+")");
+        depotRepository.save(fromDepot);
+        depotShopRepository.logicDelete(fromDepotShop.getId());
+        if(toDepot.getDelegateDepotId() != null && toDepot.getDelegateDepotId().equalsIgnoreCase(fromDepotId)){
+            toDepot.setDelegateDepotId(null);
+        }
+        depotRepository.save(toDepot);
+        depotShopRepository.save(toDepotShop);
+
     }
 
     public DepotReportDetailDto getReportDataDetail(ReportQuery reportQuery) {
