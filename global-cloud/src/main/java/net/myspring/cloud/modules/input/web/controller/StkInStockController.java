@@ -45,8 +45,7 @@ public class StkInStockController {
 
     @RequestMapping(value = "form")
     public StkInStockForm form (StkInStockForm stkInStockForm) {
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
+        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         if (!KingdeeNameEnum.JXDJ.name().equals(kingdeeBook.getName())){
             Map<String,ProductDto> productOutIdMap = productService.findAll().stream().collect(Collectors.toMap(ProductDto::getOutId, ProductDto-> ProductDto));
             String returnOutId = productService.findReturnOutId();
@@ -62,8 +61,8 @@ public class StkInStockController {
         RestResponse restResponse;
         StringBuilder message = new StringBuilder();
         try {
-            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
+            KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
             if (accountKingdeeBook != null) {
                 List<KingdeeSynDto> kingdeeSynDtoList = stkInStockService.save(stkInStockForm, kingdeeBook, accountKingdeeBook);
                 kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));

@@ -231,5 +231,4 @@ public class AccountService {
         List<AccountDto> accountDtoList=BeanUtil.map(accountList,AccountDto.class);
         return accountDtoList;
     }
-
 }
