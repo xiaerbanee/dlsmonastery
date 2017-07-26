@@ -134,7 +134,7 @@ public class ArOtherRecAbleDto {
         for (ArOtherRecAbleFEntityDto entityDto : getArOtherRecAbleFEntityDtoList()) {
             Map<String, Object> detail = Maps.newLinkedHashMap();
             //费用承担部门
-            detail.put("FCOSTDEPARTMENTID", CollectionUtil.getMap("FNumber", entityDto.getCostDepartmentNumber()));
+            detail.put("FCOSTDEPARTMENTID", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
             detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", entityDto.getAccountNumber()));
             detail.put("F_PAEC_Assistant", CollectionUtil.getMap("FNumber", entityDto.getOtherTypeNumber()));
             detail.put("F_PAEC_Assistant1", CollectionUtil.getMap("FNumber", entityDto.getExpenseTypeNumber()));

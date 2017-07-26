@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -130,6 +131,9 @@ public class OfficeController {
 
     @RequestMapping(value = "findByIds")
     public List<OfficeDto> findByIds(String idStr){
+        if(StringUtils.isBlank(idStr)){
+            return new ArrayList<>();
+        }
         List<String> ids=StringUtils.getSplitList(idStr,CharConstant.COMMA);
         List<OfficeDto> officeDtoList = officeService.findByIds(ids);
         return officeDtoList;
