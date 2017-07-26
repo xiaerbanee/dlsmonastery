@@ -34,7 +34,7 @@ public class vivoPushController {
     private FutureProductImeSaleService futureProductImeSaleService;
 
 
-    @RequestMapping(value = "pushVivoData")
+    @RequestMapping(value = "pushToLocal")
     public String pushVivoData(String companyName,String date){
         if(StringUtils.isBlank(RequestUtils.getCompanyName())) {
             DbContextHolder.get().setCompanyName(companyName);
