@@ -50,9 +50,8 @@
         }
       },
       formSubmit(){
-        var that=this;
         this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             axios.post('/api/ws/future/basic/depotShop/saveDepotAccount', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
@@ -61,7 +60,7 @@
                   this.$router.push({name: 'depotShopList', query: util.getQuery("depotShopList"), params:{_closeFrom:true}});
               }
             }).catch(() => {
-              that.submitDisabled = false;
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
