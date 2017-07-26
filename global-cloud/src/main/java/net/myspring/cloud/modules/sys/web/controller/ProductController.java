@@ -3,10 +3,9 @@ package net.myspring.cloud.modules.sys.web.controller;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
 import net.myspring.cloud.modules.kingdee.service.BdMaterialService;
-import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.dto.ProductDto;
-import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
+import net.myspring.cloud.modules.sys.repository.KingdeeBookRepository;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.cloud.modules.sys.service.ProductService;
 import net.myspring.cloud.modules.sys.web.form.ProductForm;
@@ -32,8 +31,6 @@ public class ProductController {
     private BdMaterialService bdMaterialService;
     @Autowired
     private KingdeeBookService kingdeeBookService;
-    @Autowired
-    private AccountKingdeeBookService accountKingdeeBookService;
 
     @RequestMapping(value = "form")
     public ProductForm form (ProductForm productForm) {
@@ -50,7 +47,7 @@ public class ProductController {
     @RequestMapping(value = "save")
     public RestResponse save(ProductForm productForm){
         productService.save(productForm);
-        return new RestResponse("保存成功",null,true);
+        return new RestResponse("保存成功",null);
     }
 
     @RequestMapping(value = "findByCode")
@@ -68,11 +65,10 @@ public class ProductController {
             bdMaterialList = bdMaterialService.findAll();
         }
         if (CollectionUtil.isNotEmpty(bdMaterialList)){
-            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
+            KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
             productService.syn(bdMaterialList,kingdeeBook);
-            return new RestResponse("同步成功",null,true);
+            return new RestResponse("同步成功",null);
         }
-        return new RestResponse("未同步：金蝶找不到符合条件的货品",null,false);
+        return new RestResponse("未同步：金蝶找不到符合条件的货品",null);
     }
 }

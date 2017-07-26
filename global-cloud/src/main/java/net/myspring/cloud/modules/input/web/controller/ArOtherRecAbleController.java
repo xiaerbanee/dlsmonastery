@@ -51,8 +51,8 @@ public class ArOtherRecAbleController {
         RestResponse restResponse;
         StringBuilder message = new StringBuilder();
         try {
-            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
+            KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
             if (accountKingdeeBook != null) {
                 List<KingdeeSynDto> kingdeeSynDtoList = arOtherRecAbleService.save(arOtherRecAbleForm,kingdeeBook,accountKingdeeBook);
                 kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
@@ -73,8 +73,8 @@ public class ArOtherRecAbleController {
 
     @RequestMapping(value = "saveForWS",method = RequestMethod.POST)
     public KingdeeSynReturnDto saveForWS(@RequestBody ArOtherRecAbleDto arOtherRecAbleDto) {
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
+        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         if(accountKingdeeBook != null) {
             KingdeeSynDto kingdeeSynDto = arOtherRecAbleService.saveForWS(arOtherRecAbleDto, kingdeeBook, accountKingdeeBook);
             kingdeeSynService.save(BeanUtil.map(kingdeeSynDto, KingdeeSyn.class));

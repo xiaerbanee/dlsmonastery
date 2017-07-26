@@ -14,8 +14,6 @@ public class ArOtherRecAbleFEntityDto {
     private String otherTypeNumber;
     //费用类
     private String expenseTypeNumber;
-    //费用承担部门
-    private String costDepartmentNumber;
     //员工
     private String empInfoNumber;
     //对方关联客户
@@ -53,14 +51,6 @@ public class ArOtherRecAbleFEntityDto {
 
     public void setExpenseTypeNumber(String expenseTypeNumber) {
         this.expenseTypeNumber = expenseTypeNumber;
-    }
-
-    public String getCostDepartmentNumber() {
-        return costDepartmentNumber;
-    }
-
-    public void setCostDepartmentNumber(String costDepartmentNumber) {
-        this.costDepartmentNumber = costDepartmentNumber;
     }
 
     public String getEmpInfoNumber() {

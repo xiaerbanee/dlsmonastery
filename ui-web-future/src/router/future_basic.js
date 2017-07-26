@@ -22,6 +22,7 @@ const shopAttributeList  = r => require.ensure([], () => r(require('pages/future
 const shopAttributeForm  = r => require.ensure([], () => r(require('pages/future/basic/shopAttributeForm.vue')));
 
 const depotShopAccountForm  = r => require.ensure([], () => r(require('pages/future/basic/depotShopAccountForm.vue')));
+const depotShopMergeForm  = r => require.ensure([], () => r(require('pages/future/basic/depotShopMergeForm.vue')));
 const depotShopForm  = r => require.ensure([], () => r(require('pages/future/basic/depotShopForm.vue')));
 const depotShopList  = r => require.ensure([], () => r(require('pages/future/basic/depotShopList.vue')));
 const shopForm  = r => require.ensure([], () => r(require('pages/future/basic/shopForm.vue')));
@@ -71,6 +72,7 @@ let routes = [
   {path:'/future/basic/depotShopList',component:depotShopList,name:'depotShopList'},
   {path:'/future/basic/depotShopForm',component:depotShopForm,name:'depotShopForm',meta: {menu:"depotShopList",keepAlive:true}},
   {path:'/future/basic/depotShopAccountForm',component:depotShopAccountForm,name:'depotShopAccountForm',meta: {menu:"depotShopList",keepAlive:true}},
+  {path:'/future/basic/depotShopMergeForm',component:depotShopMergeForm,name:'depotShopMergeForm',meta: {menu:"depotShopList",keepAlive:true}},
   {path:'/future/basic/shopForm',component:shopForm,name:'shopForm',meta: {menu:"depotShopList",keepAlive:true}},
   {path:'/future/basic/depotStoreList',component:depotStoreList,name:'depotStoreList'},
   {path:'/future/basic/depotStoreForm',component:depotStoreForm,name:'depotStoreForm',meta: {menu:"depotStoreList",keepAlive:true}},

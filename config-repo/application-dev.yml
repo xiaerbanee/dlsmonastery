@@ -21,11 +21,6 @@ spring:
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
-      JXDJ:
-        url: jdbc:mysql://168.192.1.243:3306/db_dj_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
-        username: root
-        password: bbk@123456
-        driver-class-name: com.mysql.jdbc.Driver
     summer-basic:
       JXOPPO:
         url: jdbc:mysql://168.192.1.17:3316/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
@@ -34,11 +29,6 @@ spring:
         driver-class-name: com.mysql.jdbc.Driver
       IDVIVO:
         url: jdbc:mysql://168.192.1.243:3306/db_idvivo_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
-        username: root
-        password: bbk@123456
-        driver-class-name: com.mysql.jdbc.Driver
-      JXDJ:
-        url: jdbc:mysql://168.192.1.243:3306/db_dj_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
@@ -58,11 +48,6 @@ spring:
         username: sa
         password: bbk@123456
         driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-      JXDJ:
-        url: jdbc:sqlserver://168.192.1.13:1433;DatabaseName=AISTESTDJ
-        username: sa
-        password: bbk@123456
-        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     factory:
       JXOPPO:
         url: jdbc:jtds:sqlserver://121.10.21.123:1439/plantesaleweb
@@ -74,11 +59,6 @@ spring:
         username: user_m13e00
         password: user_m13e00
         driver-class-name: net.sourceforge.jtds.jdbc.Driver
-      JXDJ:
-        url: jdbc:mysql://168.192.1.243:3306/db_dj_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
-        username: root
-        password: bbk@123456
-        driver-class-name: com.mysql.jdbc.Driver
   redis:
     JXOPPO:
       host: localhost
@@ -94,13 +74,6 @@ spring:
       database: 1
       max-idle: 100
       max-total: 200
-    JXDJ:
-      host: localhost
-      password:
-      port: 6379
-      database: 2
-      max-idle: 100
-      max-total: 200
     oauth2:
       host: localhost
       password:
@@ -108,4 +81,4 @@ spring:
       database: 15
       max-idle: 100
       max-total: 200
-companyNames: JXOPPO,IDVIVO,JXDJ
+companyNames: JXOPPO,IDVIVO
