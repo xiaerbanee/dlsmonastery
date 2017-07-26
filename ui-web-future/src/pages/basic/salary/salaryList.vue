@@ -25,9 +25,9 @@
   </div>
 </template>
 <script>
-  import ElInput from "../../../../node_modules/element-ui/packages/input/src/input";
+
   export default{
-    components: {ElInput},
+
     data() {
       return {
         page:[],
