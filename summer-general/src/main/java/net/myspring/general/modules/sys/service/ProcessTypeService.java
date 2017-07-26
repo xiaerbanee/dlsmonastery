@@ -1,6 +1,7 @@
 package net.myspring.general.modules.sys.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.general.common.utils.CacheUtils;
 import net.myspring.general.modules.sys.domain.ProcessFlow;
 import net.myspring.general.modules.sys.domain.ProcessType;
@@ -68,6 +69,14 @@ public class ProcessTypeService {
     }
 
     public void save(ProcessTypeForm processTypeForm) {
+        for(ProcessFlowDto processFlow:processTypeForm.getProcessFlowList()){
+            if(!processTypeForm.getCreatePositionIds().contains(processFlow.getPositionId())){
+                processTypeForm.setCreatePositionIds(processTypeForm.getCreatePositionIds()+ processFlow.getPositionId()+CharConstant.COMMA);
+            }
+            if(!processTypeForm.getViewPositionIds().contains(processFlow.getPositionId())){
+                processTypeForm.setViewPositionIds(processTypeForm.getViewPositionIds()+ processFlow.getPositionId()+CharConstant.COMMA);
+            }
+        }
         if (processTypeForm.isCreate()) {
             for (int i = processTypeForm.getProcessFlowList().size() - 1; i >= 0; i--) {
                 ProcessFlowDto processFlowDto = processTypeForm.getProcessFlowList().get(i);

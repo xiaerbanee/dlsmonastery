@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import sun.misc.Request;
 
 import java.util.List;
 
@@ -59,7 +58,7 @@ public class ProcessTypeController {
     @RequestMapping(value = "save")
     public RestResponse save(ProcessTypeForm processTypeForm) {
         processTypeForm.setCreatePositionIds(CharConstant.COMMA+StringUtils.join(processTypeForm.getCreatePositionIdList(), CharConstant.COMMA)+CharConstant.COMMA);
-        processTypeForm.setViewPositionIds(StringUtils.join(CharConstant.COMMA+processTypeForm.getViewPositionIdList(), CharConstant.COMMA)+CharConstant.COMMA);
+        processTypeForm.setViewPositionIds(CharConstant.COMMA+StringUtils.join(processTypeForm.getViewPositionIdList(), CharConstant.COMMA)+CharConstant.COMMA);
         processTypeService.save(processTypeForm);
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
