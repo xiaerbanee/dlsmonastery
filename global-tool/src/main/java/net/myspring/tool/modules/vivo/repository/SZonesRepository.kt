@@ -12,13 +12,13 @@ class SZonesRepository @Autowired constructor(val namedParameterJdbcTemplate: Na
 
     fun deleteAll():Int{
         val map = Maps.newHashMap<String,Any>()
-        return namedParameterJdbcTemplate.update("DELETE FROM S_ZONEs_M13E00 WHERE 1=1",map)
+        return namedParameterJdbcTemplate.update("DELETE FROM vivo_push_zones WHERE 1=1",map)
     }
 
     fun batchSave(sZonesM13e00List: MutableList<SZones>): IntArray {
         val sb = StringBuilder()
-        sb.append("insert into S_ZONEs_M13E00 (zoneID,zoneName,shortCut,zoneDepth,zonePath,fatherID,subCount,zoneTypes)")
-        sb.append("values (:zoneId,:zoneName,:shortcut,:zoneDepth,:zonePath,:fatherId,:subCount,:zoneTypes)")
+        sb.append("insert into vivo_push_zones (zoneID,zoneName,shortCut,zoneDepth,zonePath,fatherID,subCount,zoneTypes,agentCode)")
+        sb.append("values (:zoneId,:zoneName,:shortcut,:zoneDepth,:zonePath,:fatherId,:subCount,:zoneTypes,:agentCode)")
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sZonesM13e00List.toTypedArray()))
     }
 
@@ -26,8 +26,8 @@ class SZonesRepository @Autowired constructor(val namedParameterJdbcTemplate: Na
         val sb = StringBuilder()
         sb.append(" insert into ")
         sb.append(" S_zones_"+agentCode)
-        sb.append(" (zoneID,zoneName,shortCut,zoneDepth,zonePath,fatherID,subCount,zoneTypes) ")
-        sb.append(" values (:zoneId,:zoneName,:shortcut,:zoneDepth,:zonePath,:fatherId,:subCount,:zoneTypes) ")
+        sb.append(" (zoneID,zoneName,shortCut,zoneDepth,zonePath,fatherID,subCount,zoneTypes,agentCode) ")
+        sb.append(" values (:zoneId,:zoneName,:shortcut,:zoneDepth,:zonePath,:fatherId,:subCount,:zoneTypes,:agentCode) ")
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sZonesM13e00List.toTypedArray()))
     }
 

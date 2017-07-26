@@ -12,14 +12,14 @@ import org.springframework.stereotype.Component
 class SStoresRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
     fun deleteAll():Int{
         val map = Maps.newHashMap<String,Any>()
-        return namedParameterJdbcTemplate.update("DELETE FROM S_Stores_M13E00",map)
+        return namedParameterJdbcTemplate.update("DELETE FROM vivo_push_stores",map)
     }
 
     fun batchSave(sStoresM13e00List: MutableList<SStores>):IntArray{
         val sb = StringBuilder()
         sb.append("""
-            INSERT INTO S_Stores_M13E00(StoreID,StoreName,Remark,ShortCut)
-                VALUES (:storeID,:storeName,:remark,:shortCut)
+            INSERT INTO vivo_push_stores(StoreID,StoreName,Remark,ShortCut,AgentCode)
+                VALUES (:storeID,:storeName,:remark,:shortCut,:AgentCode)
         """)
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sStoresM13e00List.toTypedArray()))
     }

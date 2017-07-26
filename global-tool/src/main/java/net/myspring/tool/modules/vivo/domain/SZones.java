@@ -2,6 +2,7 @@ package net.myspring.tool.modules.vivo.domain;
 
 public class SZones {
 
+    private String id;
     private String zoneId;
     private String zoneName;
     private String shortcut;
@@ -10,6 +11,15 @@ public class SZones {
     private String fatherId;
     private Integer subCount;
     private String zoneTypes;
+    private String agentCode;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getZoneId() {
         return zoneId;
@@ -75,4 +85,11 @@ public class SZones {
         this.zoneTypes = zoneTypes;
     }
 
+    public String getAgentCode() {
+        return agentCode;
+    }
+
+    public void setAgentCode(String agentCode) {
+        this.agentCode = agentCode;
+    }
 }

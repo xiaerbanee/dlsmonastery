@@ -15,7 +15,7 @@ class SPlantStockStoresRepository @Autowired constructor(val namedParameterJdbcT
         map.put("dateStart",dateStart)
         map.put("dateEnd",dateEnd)
         val sb = StringBuilder("""
-            delete from s_PlantStockStores_m13e00
+            delete from vivo_push_plantstockstores
             where AccountDate >= :dateStart
                 and AccountDate < :dateEnd
         """)
@@ -37,8 +37,8 @@ class SPlantStockStoresRepository @Autowired constructor(val namedParameterJdbcT
     fun batchSave(sPlantStockStoreM13e00List: MutableList<SPlantStockStores>):IntArray?{
         val sb = StringBuilder()
         sb.append("""
-            insert into s_PlantStockStores_m13e00(CompanyID,StoreID,ProductID,CreatedTime,sumstock,useablestock,bad,AccountDate)
-            values(:companyId,:storeId,:productId,:createdTime,:sumStock,:useAbleStock,:bad,:accountDate)
+            insert into vivo_push_plantstockstores(CompanyID,StoreID,ProductID,CreatedTime,sumstock,useablestock,bad,AccountDate,AgentCode)
+            values(:companyId,:storeId,:productId,:createdTime,:sumStock,:useAbleStock,:bad,:accountDate,:agentCode)
         """)
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sPlantStockStoreM13e00List.toTypedArray()))
     }

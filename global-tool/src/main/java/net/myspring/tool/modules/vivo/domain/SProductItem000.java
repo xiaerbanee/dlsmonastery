@@ -3,6 +3,7 @@ package net.myspring.tool.modules.vivo.domain;
 import java.time.LocalDate;
 
 public class SProductItem000 {
+    private String id;
     private String companyId;
     private String productId;
     private String productNo;
@@ -16,6 +17,14 @@ public class SProductItem000 {
     private String remark;
     private String updateTime;
     private String agentCode;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCompanyId() {
         return companyId;

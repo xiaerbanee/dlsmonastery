@@ -5,6 +5,7 @@ package net.myspring.tool.modules.vivo.domain;
 //代理商库存表
 public class SPlantStockSupply {
 
+    private String id;
     private String companyId;
     private String supplyId;
     private String productId;
@@ -14,6 +15,14 @@ public class SPlantStockSupply {
     private Integer bad;
     private String accountDate;
     private String agentCode;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCompanyId() {
         return companyId;

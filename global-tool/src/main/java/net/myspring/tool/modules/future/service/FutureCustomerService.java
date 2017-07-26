@@ -5,6 +5,7 @@ import net.myspring.tool.common.dataSource.annotation.FutureDataSource;
 import net.myspring.tool.common.utils.CacheUtils;
 import net.myspring.tool.modules.future.dto.CustomerDto;
 import net.myspring.tool.modules.future.repository.FutureCustomerRepository;
+import net.myspring.tool.modules.vivo.domain.SStores;
 import net.myspring.tool.modules.vivo.dto.SCustomerDto;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -31,6 +32,12 @@ public class FutureCustomerService {
         return sCustomerDtoList;
     }
 
+    public List<SCustomerDto> getIDVivoCustomersData(String date){
+        List<SCustomerDto> sCustomerDtoList = futureCustomerRepository.findIDVivoCustomers(LocalDateUtils.parse(date));
+        cacheUtils.initCacheInput(sCustomerDtoList);
+        return sCustomerDtoList;
+    }
+
     public List<CustomerDto> getOppoCustomers(){
         List<CustomerDto> customerDtoList = futureCustomerRepository.findOppoCustomers();
         return customerDtoList;
@@ -47,6 +54,12 @@ public class FutureCustomerService {
         }
 
         return areaDepotMap;
+    }
+
+    public List<SStores> findIDvivoStore(){
+        List<SStores> sStoresList = futureCustomerRepository.findIDvivoStore();
+        cacheUtils.initCacheInput(sStoresList);
+        return sStoresList;
     }
 
     public Map<String,String> getAreaDepotMap(){
@@ -76,4 +89,5 @@ public class FutureCustomerService {
             return false;
         }
     }
+
 }
