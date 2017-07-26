@@ -13,7 +13,6 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
@@ -73,7 +72,7 @@ public class ArOtherRecAbleManager {
         return null;
     }
 
-    public KingdeeSynReturnDto synForShopDeposit(ShopDeposit shopDeposit,ShopDepositTypeEnum type){
+    public KingdeeSynReturnDto synForShopDeposit(ShopDeposit shopDeposit,String departmentNumber,ShopDepositTypeEnum type){
         if (shopDeposit.getId()!=null && type !=null){
             Depot depot = depotRepository.findOne(shopDeposit.getId());
             Client client = clientRepository.findByDepotId(shopDeposit.getShopId());
@@ -87,6 +86,11 @@ public class ArOtherRecAbleManager {
             otherRecAbleDto.setExtendType(ExtendTypeEnum.押金列表.name());
             otherRecAbleDto.setExtendId(shopDeposit.getId());
             otherRecAbleDto.setAmount(shopDeposit.getAmount());
+            if (departmentNumber != null){
+                otherRecAbleDto.setDepartmentNumber(departmentNumber);
+            }else{
+                throw new ServiceException("部门不能为空");
+            }
             List<ArOtherRecAbleFEntityDto> entityDtoList = Lists.newArrayList();
 
             ArOtherRecAbleFEntityDto entityDto = new ArOtherRecAbleFEntityDto();
