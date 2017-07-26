@@ -23,7 +23,6 @@ public class DutyPublicFreeController {
     private DutyPublicFreeService dutyPublicFreeService;
 
     @RequestMapping(method = RequestMethod.GET)
-    @PreAuthorize("hasPermission(null,'hr:dutyPublicFree:view')")
     public Page<DutyPublicFreeDto> list(Pageable pageable, DutyPublicFreeQuery dutyPublicFreeQuery) {
         dutyPublicFreeQuery.setCreatedBy(RequestUtils.getAccountId());
         Page<DutyPublicFreeDto> page = dutyPublicFreeService.findPage(pageable,dutyPublicFreeQuery);
@@ -37,7 +36,6 @@ public class DutyPublicFreeController {
     }
 
     @RequestMapping(value = "save")
-    @PreAuthorize("hasPermission(null,'hr:dutyPublicFree:edit')")
     public RestResponse save(DutyPublicFreeForm dutyPublicFreeForm, BindingResult bindingResult) {
         RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
         dutyPublicFreeService.save(dutyPublicFreeForm);
@@ -45,7 +43,6 @@ public class DutyPublicFreeController {
     }
 
     @RequestMapping(value = "delete")
-    @PreAuthorize("hasPermission(null,'hr:dutyPublicFree:delete')")
     public RestResponse delete(String id) {
         dutyPublicFreeService.logicDelete(id);
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());

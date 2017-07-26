@@ -108,13 +108,17 @@
               if(value==""){
                   return callback(new Error(this.$t('dictMapForm.prerequisiteMessage')))
               }else{
-                  axios.get("/api/ws/future/basic/depotShop/checkName?name="+value).then((response)=>{
+                  if(value===this.shopName) {
+                    return callback();
+                  }else{
+                    axios.get("/api/ws/future/basic/depotShop/checkName?name="+value).then((response)=>{
                       if(response.data){
-                          return callback(new Error(response.data.message))
+                        return callback(new Error(response.data.message))
                       }else{
-                          return callback();
+                        return callback();
                       }
-                  })
+                    })
+                  }
               }
           }
       return{
@@ -170,7 +174,7 @@
           this.inputForm = response.data;
           axios.get('/api/ws/future/basic/depot/findByDepotShopId',{params: {depotShopId:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
-            console.log(response.data)
+            this.shopName=response.data.name;
             if(util.isNotBlank(this.inputForm.clientId)){
               this.clientList =new Array({id:response.data.clientId,name:response.data.clientName})
             }
