@@ -3,8 +3,9 @@
     <head-tab active="employeePhoneList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:employeePhoneDeposit:view'">{{$t('employeePhoneList.employeePhoneDepositList')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:employeePhone:view'">{{$t('employeePhoneList.filter')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:employeePhoneDeposit:edit'">{{$t('employeePhoneList.employeePhoneDepositList')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'hr:employeePhone:view'">{{$t('employeePhoneList.filter')}}</el-button>
+        <el-button type="primary" @click="exportData" icon="upload" v-permit="'hr:employeePhone:view'">{{$t('employeePhoneList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('employeePhoneList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -13,6 +14,9 @@
             <el-col :span="24">
               <el-form-item :label="$t('employeePhoneList.depotName')" >
                 <el-input v-model="formData.depotName" auto-complete="off" :placeholder="$t('employeePhoneList.likeSearch')"></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('employeePhoneList.employeeName')">
+                <employee-select v-model="formData.employeeId"  @afterInit="setSearchText"></employee-select>
               </el-form-item>
               <el-form-item :label="$t('employeePhoneList.status')">
                 <el-select v-model="formData.status" filterable clearable :placeholder="$t('employeePhoneList.selectStatus')">
@@ -23,7 +27,6 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="exportData()">{{$t('accountList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('employeePhoneList.sure')}}</el-button>
         </div>
       </search-dialog>
@@ -52,7 +55,9 @@
   </div>
 </template>
 <script>
+  import employeeSelect from 'components/basic/employee-select'
   export default {
+    components:{employeeSelect},
     data() {
       return {
         page:{},
@@ -75,8 +80,8 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
-        util.setQuery("bankList",submitData);
+        let submitData = util.deleteExtra(this.formData);
+        util.setQuery("employeePhoneList",submitData);
         axios.get('/api/ws/future/basic/employeePhone?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -99,10 +104,8 @@
           this.$router.push({ name: 'employeePhoneForm', query: { id: id }})
         }
       },exportData(){
-        this.formVisible = false;
-        var submitData = util.deleteExtra(this.formData);
         util.confirmBeforeExportData(this).then(() => {
-          window.location.href="/api/ws/future/basic/employeePhone/export?"+qs.stringify(submitData);
+          window.location.href="/api/ws/future/basic/employeePhone/export?"+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
       }
     },created () {

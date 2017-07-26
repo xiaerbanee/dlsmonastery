@@ -33,15 +33,18 @@ class EmployeePhoneRepositoryImpl @Autowired constructor(val namedParameterJdbcT
              SELECT
                 t1.*,t2.name as 'depotName',t2.area_id as 'areaId',t3.name as productName,t4.name as 'productTypeName'
             FROM
-                 crm_employee_phone t1,crm_depot t2,crm_product t3,crm_product_type t4
+                 crm_employee_phone t1
+                 LEFT JOIN crm_depot t2 ON t1.depot_id=t2.id
+                 LEFT JOIN crm_product t3 ON t1.product_id=t3.id
+                 LEFT JOIN crm_product_type t4 ON t3.product_type_id=t4.id
             WHERE
                 t1.enabled=1
-                and t1.depot_id=t2.id
-               and t1.product_id=t3.id
-                and t3.product_type_id=t4.id
         """)
         if (StringUtils.isNotEmpty(employeePhoneQuery.status)) {
             sb.append("""  and t1.status=:status """)
+        }
+        if (StringUtils.isNotEmpty(employeePhoneQuery.employeeId)) {
+            sb.append("""  and t1.employee_id=:employeeId """)
         }
         if (CollectionUtil.isNotEmpty(employeePhoneQuery.depotIdList)) {
             sb.append("""  and t1.depot_id in (:depotIdList) """)
@@ -67,6 +70,9 @@ class EmployeePhoneRepositoryImpl @Autowired constructor(val namedParameterJdbcT
         """)
         if (StringUtils.isNotEmpty(employeePhoneQuery.status)) {
             sb.append("""  and t1.status=:status """)
+        }
+        if (StringUtils.isNotEmpty(employeePhoneQuery.employeeId)) {
+            sb.append("""  and t1.employee_id=:employeeId """)
         }
         if (CollectionUtil.isNotEmpty(employeePhoneQuery.depotIdList)) {
             sb.append("""  and t1.depot_id in (:depotIdList) """)
