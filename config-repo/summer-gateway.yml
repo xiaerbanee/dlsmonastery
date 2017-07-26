@@ -30,7 +30,7 @@ zuul:
   host:
     socket-timeout-millis: 18000
     connect-timeout-millis: 18000
-    max-total-connections: 200
+    max-total-connections: 400
   add-proxy-headers: true
   semaphore:
     max-semaphores: 2000
