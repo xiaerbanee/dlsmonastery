@@ -67,8 +67,25 @@ interface EmployeeRepositoryCustom{
     fun findPage(pageable: Pageable, employeeQuery: EmployeeQuery): Page<EmployeeDto>
 
     fun findDtoByIdList(idList:MutableList<String>):MutableList<EmployeeDto>
+
+    fun findAllWorking(dateEnd: LocalDate): MutableList<EmployeeDto>
 }
 class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): EmployeeRepositoryCustom{
+    override fun findAllWorking(dateEnd: LocalDate): MutableList<EmployeeDto> {
+        var sb = StringBuilder("""
+            SELECT employee.*,account.login_name as accountName,office.name as officeName,position.name as positionName,leader.login_name as leaderName,area.name as areaName
+            FROM hr_employee employee left join hr_account account on  employee.account_id=account.id
+            left join sys_office office on  account.office_id=office.id
+            left join sys_office area on  office.area_id=area.id
+            left join hr_position position on  account.position_id=position.id
+            left join hr_account leader on  account.leader_id=leader.id
+           where employee.leave_date is null or employee.leave_date < :dateEnd and t.enabled=1
+        """);
+        var paramMap = Maps.newHashMap<String, Any>();
+        paramMap.put("dateEnd",dateEnd)
+        return namedParameterJdbcTemplate.query(sb.toString(),paramMap,BeanPropertyRowMapper(EmployeeDto::class.java))
+    }
+
     override fun findDtoByIdList(idList: MutableList<String>): MutableList<EmployeeDto> {
         var sb = StringBuilder("""
             SELECT employee.*,account.login_name as accountName,office.name as officeName,position.name as positionName,leader.login_name as leaderName,area.name as areaName
