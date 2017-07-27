@@ -3,6 +3,7 @@ package net.myspring.tool.modules.vivo.domain;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 public class SStores {
+    private String id;
     private String storeID;
     private String storeName;
     private String remark;
@@ -11,6 +12,14 @@ public class SStores {
     private String agentCode;
     @CacheInput(inputKey = "offices",inputInstance = "storeID" ,outputInstance = "jointLevel")
     private String jointLevel;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getStoreID() {
         return storeID;

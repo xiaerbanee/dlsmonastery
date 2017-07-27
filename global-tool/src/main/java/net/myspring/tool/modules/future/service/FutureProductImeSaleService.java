@@ -1,6 +1,7 @@
 package net.myspring.tool.modules.future.service;
 
 import net.myspring.tool.common.dataSource.annotation.FutureDataSource;
+import net.myspring.tool.common.utils.CacheUtils;
 import net.myspring.tool.modules.future.repository.FutureProductImeSaleRepository;
 import net.myspring.tool.modules.oppo.domain.OppoCustomerSale;
 import net.myspring.tool.modules.oppo.domain.OppoCustomerSaleCount;
@@ -21,6 +22,8 @@ import java.util.List;
 public class FutureProductImeSaleService {
     @Autowired
     private FutureProductImeSaleRepository futureProductImeSaleRepository;
+    @Autowired
+    private CacheUtils cacheUtils;
 
     public List<VivoCustomerSaleImeiDto> getProductImeSaleData(String date){
         if (StringUtils.isBlank(date)){
@@ -28,7 +31,9 @@ public class FutureProductImeSaleService {
         }
         String dateStart = date;
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        return futureProductImeSaleRepository.findProductSaleImei(dateStart,dateEnd);
+        List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList = futureProductImeSaleRepository.findProductSaleImei(dateStart,dateEnd);
+        cacheUtils.initCacheInput(vivoCustomerSaleImeiDtoList);
+        return vivoCustomerSaleImeiDtoList;
     }
 
     public List<OppoCustomerSale> getFutureOppoCustomerSale(String date){

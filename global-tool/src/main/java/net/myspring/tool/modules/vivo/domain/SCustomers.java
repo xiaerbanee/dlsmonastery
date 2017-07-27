@@ -3,6 +3,7 @@ package net.myspring.tool.modules.vivo.domain;
 //代理商表
 public class SCustomers {
 
+    private String id;
     private String customerId;
     private String customerName;
     private String shortcut;
@@ -33,6 +34,15 @@ public class SCustomers {
     private String customerStr9;
     private String customerStr10;
     private String latentCustomers;
+    private String agentCode;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCustomerId() {
         return customerId;
@@ -272,5 +282,13 @@ public class SCustomers {
 
     public void setLatentCustomers(String latentCustomers) {
         this.latentCustomers = latentCustomers;
+    }
+
+    public String getAgentCode() {
+        return agentCode;
+    }
+
+    public void setAgentCode(String agentCode) {
+        this.agentCode = agentCode;
     }
 }
