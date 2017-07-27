@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS `crm_simple_process`;
+
 CREATE TABLE `crm_simple_process` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `type` varchar(20) NOT NULL,
@@ -14,7 +14,6 @@ CREATE TABLE `crm_simple_process` (
   PRIMARY KEY (`id`)
 );
 
-DROP TABLE IF EXISTS `crm_simple_process_detail`;
 CREATE TABLE `crm_simple_process_detail` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `simple_process_id` bigint(20) NOT NULL,
