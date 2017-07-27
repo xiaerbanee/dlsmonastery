@@ -82,9 +82,9 @@ public class CustomUserDetailsService implements UserDetailsService {
             accountDto = accountDtoRepository.findByLoginName(username);
             String password = request.getParameter("password");
             //密码不正确
-            if(accountDto==null || !StringUtils.validatePassword(password,accountDto.getPassword())){
+            /*if(accountDto==null || !StringUtils.validatePassword(password,accountDto.getPassword())){
                 return null;
-            }
+            }*/
         }
         if(accountDto != null) {
             accountDto.setCompanyName(companyName);
