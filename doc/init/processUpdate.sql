@@ -62,10 +62,10 @@ INSERT INTO crm_simple_process_detail (
     t1.name_,
     "",
     '',
-    case WHEN t1.ASSIGNEE_ IS NULL THEN 1 ELSE t1.ASSIGNEE_ END,
-    case WHEN t1.END_TIME_ IS NULL THEN now() ELSE t1.END_TIME_ END,
-    case WHEN t1.ASSIGNEE_ IS NULL THEN 1 ELSE t1.ASSIGNEE_ END,
-    case WHEN t1.END_TIME_ IS NULL THEN now() ELSE t1.END_TIME_ END,
+    t1.ASSIGNEE_ ,
+    t1.END_TIME_ ,
+    t1.ASSIGNEE_,
+    t1.END_TIME_,
     0,
     0,
     1
@@ -73,7 +73,7 @@ INSERT INTO crm_simple_process_detail (
     act_hi_taskinst t1
       LEFT JOIN crm_simple_process t3 ON t1.PROC_INST_ID_ = t3.id
   WHERE
-    t3.id is not null
+    t3.id is not null and t1.ASSIGNEE_ is not null
 );
 
 INSERT INTO crm_tmp_20170727 (
