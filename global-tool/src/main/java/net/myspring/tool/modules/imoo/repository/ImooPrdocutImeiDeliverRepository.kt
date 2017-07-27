@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
@@ -20,8 +21,8 @@ class ImooPrdocutImeiDeliverRepository @Autowired constructor(val namedParameter
         paramMap.put("imeis", imeis);
         return namedParameterJdbcTemplate.query("""
            select t.imei
-            from #{#entityName} t
-            where t.imei in :imeis
+            from imoo_prdocut_imei_deliver t
+            where t.imei in (:imeis)
             """, paramMap, BeanPropertyRowMapper(String::class.java));
     }
 
@@ -44,6 +45,14 @@ class ImooPrdocutImeiDeliverRepository @Autowired constructor(val namedParameter
             and de.company_id=:agentCodes
             """, paramMap, BeanPropertyRowMapper(ImooPrdocutImeiDeliver::class.java));
 
+    }
+
+    fun batchSave(imooProductImeiDeliverList:MutableList<ImooPrdocutImeiDeliver> ):IntArray{
+        val sb = """ INSERT INTO imoo_prdocut_imei_deliver
+            (company_id,mainagentid,agentid,ms_des,ms_id,msi_item,msi_item_des,msib_barcode,creation_date,box,imei)
+            valus (:companyId,:mainagentid,:agentid,:msDes,:msId,:msiItem,:msiItemDes,:msibBarcode,:creationDate,:box,:imei)
+        """
+        return namedParameterJdbcTemplate.batchUpdate(sb,SqlParameterSourceUtils.createBatch(imooProductImeiDeliverList.toTypedArray()))
     }
 
 }
