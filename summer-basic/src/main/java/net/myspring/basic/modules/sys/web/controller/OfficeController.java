@@ -224,4 +224,9 @@ public class OfficeController {
         return new RestResponse("数据不能为空",null,false);
     }
 
+    @RequestMapping(value = "findDistinctAgentCode")
+    public List<String> findDistinctAgentCode(){
+        return officeService.findDistinctAgentCode();
+    }
+
 }

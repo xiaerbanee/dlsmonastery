@@ -428,4 +428,8 @@ public class OfficeService {
             throw new ServiceException("任务点位总和与修改之前总和不一样");
         }
     }
+
+    public List<String> findDistinctAgentCode(){
+        return officeRepository.findDistinctAgentCode();
+    }
 }
