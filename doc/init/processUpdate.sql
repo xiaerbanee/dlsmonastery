@@ -70,7 +70,7 @@ INSERT INTO crm_simple_process_detail (
     t3.id is not null
 );
 
-update crm_simple_process_detail t1 set remarks = (select t2.message_ from act_hi_comment t2 where t1.ID_ = t2.TASK_ID_ and t1.simple_process_id = t2.PROC_INST_ID_);
+update crm_simple_process_detail t1 set remarks = (select t2.message_ from act_hi_comment t2 where t1.ID = t2.TASK_ID_ and t1.simple_process_id = t2.PROC_INST_ID_);
 
 
 
