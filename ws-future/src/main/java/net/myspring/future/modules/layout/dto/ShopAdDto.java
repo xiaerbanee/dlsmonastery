@@ -7,6 +7,7 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.layout.domain.ShopAd;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.IdUtils;
+import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
 
@@ -264,6 +265,14 @@ public class ShopAdDto extends DataDto<ShopAd>{
             }
         }else{
             return "";
+        }
+    }
+
+    public String getAttachmentToExport(){
+        if(StringUtils.isNotBlank(this.attachment)){
+            return "是";
+        }else{
+            return "否";
         }
     }
 }
