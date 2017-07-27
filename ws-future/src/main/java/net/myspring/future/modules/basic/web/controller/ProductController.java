@@ -63,6 +63,15 @@ public class ProductController {
         return productList;
     }
 
+    @RequestMapping(value = "searchByName")
+    public List<ProductDto> searchByName(String name){
+        List<ProductDto> productList = Lists.newArrayList();
+        if(StringUtils.isNotBlank(name)){
+            productList = productService.findByNameLike(name);
+        }
+        return productList;
+    }
+
     @RequestMapping(value = "search")
     public List<ProductDto> search(String name,String code){
         List<ProductDto> productList = Lists.newArrayList();
