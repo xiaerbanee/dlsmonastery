@@ -123,6 +123,13 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
         and t.enabled =1
      """)
     fun findByIdIn(idList: List<String>): MutableList<Office>
+
+    @Query("""
+         SELECT DISTINCT
+        t.agentCode
+        FROM  #{#entityName} t
+     """)
+    fun findDistinctAgentCode():MutableList<String>
 }
 
 interface OfficeRepositoryCustom {
@@ -143,6 +150,7 @@ interface OfficeRepositoryCustom {
     fun findAllChildCount(): MutableList<OfficeChildDto>
 
     fun findDtoByParentIdsLike(parentId: String): MutableList<OfficeDto>
+
 }
 
 class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): OfficeRepositoryCustom {
@@ -311,5 +319,6 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
             order by of.id asc
         """,BeanPropertyRowMapper(OfficeChildDto::class.java));
     }
+
 
 }

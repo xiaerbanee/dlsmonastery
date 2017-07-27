@@ -56,7 +56,7 @@ public class CustomerReceiveService {
             //实收金额
             List<CustomerReceiveDto> actualGet = customerReceiveRepository.findActualGet(customerReceiveQuery);
             Map<String, CustomerReceiveDto> custIdToActualGetMap = actualGet.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto->CustomerReceiveDto));
-            List<BdCustomer> customerList = bdCustomerRepository.findByIdList(customerIdList);
+            List<BdCustomer> customerList = bdCustomerRepository.findIncludeForbidByIdList(customerIdList);
             List<CustomerReceiveDto> customerReceiveDtoList = Lists.newArrayList();
             for (BdCustomer bdCustomer : customerList) {
                 CustomerReceiveDto customerReceiveDto = new CustomerReceiveDto();
@@ -158,7 +158,7 @@ public class CustomerReceiveService {
             }
         }
         //所有客户
-        List<BdCustomer> bdCustomerList = bdCustomerRepository.findByIdList(customerReceiveDetailQuery.getCustomerIdList());
+        List<BdCustomer> bdCustomerList = bdCustomerRepository.findIncludeForbidByIdList(customerReceiveDetailQuery.getCustomerIdList());
         Map<String,BdCustomer> bdCustomerMap = bdCustomerList.stream().collect(Collectors.toMap(BdCustomer::getFCustId,bdCustomer -> bdCustomer));
         Map<String,List<CustomerReceiveDetailDto>> result = Maps.newHashMap();
         if (mainMap.size()>0) {
@@ -255,7 +255,7 @@ public class CustomerReceiveService {
     }
 
     public SimpleExcelBook export(BdCustomerQuery bdCustomerQuery){
-        List<BdCustomer> bdCustomerList = bdCustomerRepository.findAll(bdCustomerQuery);
+        List<BdCustomer> bdCustomerList = bdCustomerRepository.findAllIncludeForbid(bdCustomerQuery);
         List<String> customerIdList  = Lists.newArrayList();
         for (BdCustomer bdCustomer : bdCustomerList){
            customerIdList.add(bdCustomer.getFCustId());

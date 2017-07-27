@@ -15,4 +15,7 @@ public interface OfficeClient {
 
     @RequestMapping(method = RequestMethod.GET,value = "/sys/office/findAllChildCount")
     List<OfficeDto> findAll();
+
+    @RequestMapping(method = RequestMethod.GET,value = "/sys/office/findDistinctAgentCode")
+    List<String> findDistinctAgentCode();
 }
