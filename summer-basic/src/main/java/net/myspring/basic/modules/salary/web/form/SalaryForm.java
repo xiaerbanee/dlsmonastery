@@ -9,6 +9,24 @@ public class SalaryForm extends BaseForm<Salary>{
     private String projectName;
     private String projectValue;
     private String employeeName;
+    private String folderFileId;
+    private String salaryTemplateId;
+
+    public String getSalaryTemplateId() {
+        return salaryTemplateId;
+    }
+
+    public void setSalaryTemplateId(String salaryTemplateId) {
+        this.salaryTemplateId = salaryTemplateId;
+    }
+
+    public String getFolderFileId() {
+        return folderFileId;
+    }
+
+    public void setFolderFileId(String folderFileId) {
+        this.folderFileId = folderFileId;
+    }
 
     public String getEmployeeId() {
         return employeeId;

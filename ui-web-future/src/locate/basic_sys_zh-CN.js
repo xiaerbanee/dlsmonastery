@@ -110,6 +110,27 @@ export default {
     delete: "删除",
     audit: "审核",
   },
+  officeChangeList:{
+    add: "添加",
+    filter: "过滤",
+    id: "编号",
+    type:"调整项",
+    officeName:"部门",
+    oldLabel:"修改前",
+    newLabel:"修改后",
+    processStatus:"状态",
+    operation:"操作",
+    sure: "确定",
+    selectGroup: "请选择",
+    createdDate: "创建时间",
+  },
+  officeChangeForm:{
+    search:"搜索",
+    save:"保存",
+    stockNumber:'机构名称',
+    oldTaskPoint:"原任务点位",
+    newTaskPoint:"修改后任务点位"
+  },
   dictEnumList: {
     dictEnumList: "枚举字典",
     id: "编号",

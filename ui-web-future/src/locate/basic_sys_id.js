@@ -94,6 +94,27 @@ export default {
     delete: "hapus",
     audit: "ubah"
   },
+  officeChangeList:{
+    add: "tambah",
+    filter: "saring",
+    id: "ID",
+    type:"TIPE",
+    officeName:"部门",
+    oldLabel:"sebelum modifikasi",
+    newLabel:"sesudah modifikasi",
+    processStatus:"status proses",
+    operation:"operasi / pengerjaan",
+    sure: "yakin",
+    selectGroup: "pilih grup",
+    createdDate: "tanggal pembuatan",
+  },
+  officeChangeForm:{
+    search:"搜索",
+    save:"simpan",
+    stockNumber:'机构名称',
+    oldTaskPoint:"原任务点位",
+    newTaskPoint:"修改后任务点位"
+  },
   dictEnumForm: {
     dictEnumForm: "Enum Kamus Editor",
     category: "klasifikasi / kategori",

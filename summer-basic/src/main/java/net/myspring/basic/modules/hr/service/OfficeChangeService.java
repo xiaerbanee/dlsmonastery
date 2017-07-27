@@ -4,19 +4,26 @@ import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.OfficeChnageTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.domain.OfficeChange;
+import net.myspring.basic.modules.hr.dto.AccountChangeDto;
+import net.myspring.basic.modules.hr.dto.OfficeChangeDto;
 import net.myspring.basic.modules.hr.dto.OfficeChangeFormDto;
 import net.myspring.basic.modules.hr.repository.OfficeChangeRepository;
 import net.myspring.basic.modules.hr.web.form.OfficeChangeForm;
+import net.myspring.basic.modules.hr.web.query.AccountChangeQuery;
+import net.myspring.basic.modules.hr.web.query.OfficeChangeQuery;
 import net.myspring.basic.modules.sys.client.ActivitiClient;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.basic.modules.sys.repository.OfficeRepository;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.utils.HandsontableUtils;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
@@ -41,6 +48,12 @@ public class OfficeChangeService {
     @Autowired
     private ActivitiClient activitiClient;
 
+
+    public Page<OfficeChangeDto> findPage(Pageable pageable, OfficeChangeQuery officeChangeQuery){
+        Page<OfficeChangeDto> page=officeChangeRepository.findPage(pageable,officeChangeQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
+    }
 
     public OfficeChange findOne(String id){
         OfficeChange officeChange=officeChangeRepository.findOne(id);
