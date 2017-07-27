@@ -53,8 +53,8 @@ public class ArReceiveBillController {
         RestResponse restResponse;
         StringBuilder message = new StringBuilder();
         try {
-            KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
+            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
             List<KingdeeSynDto> kingdeeSynDtoList = arReceiveBillService.save(arReceiveBillForm, kingdeeBook, accountKingdeeBook);
             kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
             if (accountKingdeeBook != null) {
@@ -69,14 +69,14 @@ public class ArReceiveBillController {
             }
             return restResponse;
         }catch (Exception e){
-           return new RestResponse(e.getMessage(), ResponseCodeEnum.invalid.name(), false);
+            return new RestResponse(e.getMessage(), ResponseCodeEnum.invalid.name(), false);
         }
     }
 
     @RequestMapping(value = "saveForWS",method = RequestMethod.POST)
     public List<KingdeeSynReturnDto> saveForShopDeposit(@RequestBody List<ArReceiveBillDto> arReceiveBillDtoList) {
-        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
+        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
         List<KingdeeSynDto> kingdeeSynDtoList;
         if(accountKingdeeBook != null) {
             kingdeeSynDtoList = arReceiveBillService.saveForWS(arReceiveBillDtoList, kingdeeBook, accountKingdeeBook);

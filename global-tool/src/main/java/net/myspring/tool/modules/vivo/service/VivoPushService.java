@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.tool.common.client.OfficeClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
@@ -12,11 +13,9 @@ import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.modules.future.dto.OfficeDto;
 import net.myspring.tool.common.utils.CacheUtils;
 import net.myspring.tool.modules.vivo.domain.*;
-import net.myspring.tool.modules.vivo.dto.SCustomerDto;
-import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDetailDto;
-import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDto;
-import net.myspring.tool.modules.vivo.dto.VivoCustomerSaleImeiDto;
+import net.myspring.tool.modules.vivo.dto.*;
 import net.myspring.tool.modules.vivo.repository.*;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -33,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@FactoryDataSource
+@LocalDataSource
 public class VivoPushService {
 
     @Autowired
@@ -68,6 +67,28 @@ public class VivoPushService {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Transactional
+    public void pushToLocal(VivoPushDto vivoPushDto){
+        //同步机构数据
+        pushVivoZonesData();
+        //客户数据
+        pushVivoPushSCustomersData(vivoPushDto.getsCustomerDtoList(),vivoPushDto.getDate());
+        //库存汇总数据
+        pushCustomerStockData(vivoPushDto.getsPlantCustomerStockDtoList(),vivoPushDto.getProductColorMap(),vivoPushDto.getDate());
+        //库存串码明细
+        pushCustomerStockDetailData(vivoPushDto.getsPlantCustomerStockDetailDtoList(),vivoPushDto.getProductColorMap(),vivoPushDto.getDate());
+        if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
+            //演示机数据
+            pushDemoPhonesData(vivoPushDto.getsProductItemLendList(),vivoPushDto.getProductColorMap(),vivoPushDto.getDate());
+        }
+        //核销记录数据
+        pushProductImeSaleData(vivoPushDto.getVivoCustomerSaleImeiDtoList(),vivoPushDto.getProductColorMap(),vivoPushDto.getDate());
+        //一代仓库上抛
+        pushSStoreData(vivoPushDto.getsStoresList());
+    }
+
+
+
+    @Transactional
     public  List<SZones> pushVivoZonesData(){
         logger.info(DbContextHolder.get().getCompanyName()+DbContextHolder.get().getDataSourceType());
         String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
@@ -75,20 +96,21 @@ public class VivoPushService {
         List<SZones> sZonesList = Lists.newArrayList();
         for(OfficeDto officeDto:officeDtoList){
             SZones sZones = new SZones();
-            sZones.setZoneId(getZoneId(mainCode,officeDto.getId()));
+            sZones.setZoneId(getZoneId(officeDto.getAgentCode(),officeDto.getId()));
             sZones.setZoneName(officeDto.getName());
-            sZones.setShortcut(mainCode);
+            sZones.setShortcut(officeDto.getAgentCode());
             String[] parentIds = officeDto.getParentIds().split(CharConstant.COMMA);
             sZones.setZoneDepth(parentIds.length);
             StringBuilder zonePath = new StringBuilder(CharConstant.VERTICAL_LINE);
             for(String parentId:parentIds){
-                zonePath.append(getZoneId(mainCode,parentId)).append(CharConstant.VERTICAL_LINE);
+                zonePath.append(getZoneId(officeDto.getAgentCode(),parentId)).append(CharConstant.VERTICAL_LINE);
             }
-            zonePath.append(getZoneId(mainCode,officeDto.getId())).append(CharConstant.VERTICAL_LINE);
+            zonePath.append(getZoneId(officeDto.getAgentCode(),officeDto.getId())).append(CharConstant.VERTICAL_LINE);
             sZones.setZonePath(zonePath.toString());
-            sZones.setFatherId(getZoneId(mainCode,officeDto.getParentId()));
+            sZones.setFatherId(getZoneId(officeDto.getAgentCode(),officeDto.getParentId()));
             sZones.setSubCount(officeDto.getChildCount());
             sZones.setZoneTypes(CharConstant.EMPTY);
+            sZones.setAgentCode(officeDto.getAgentCode());
             sZonesList.add(sZones);
         }
         logger.info("开始上抛机构数据"+ LocalDateTime.now());
@@ -106,20 +128,28 @@ public class VivoPushService {
         for(SCustomerDto futureCustomerDto :futureCustomerDtoList){
             SCustomers sCustomers = new SCustomers();
             String customerId = futureCustomerDto.getCustomerId();
+            String agentCode = futureCustomerDto.getAgentCode();
             sCustomers.setCustomerLevel(futureCustomerDto.getCustomerLevel());
             if(futureCustomerDto.getCustomerLevel() == 1){
-                sCustomers.setCustomerId(StringUtils.getFormatId(customerId,mainCode+"D","00000"));
+                sCustomers.setCustomerId(StringUtils.getFormatId(customerId,agentCode+"D","00000"));
                 sCustomers.setCustomerName(futureCustomerDto.getAreaName());
             }else {
-                sCustomers.setCustomerId(StringUtils.getFormatId(customerId,mainCode+"C","00000"));
+                sCustomers.setCustomerId(StringUtils.getFormatId(customerId,agentCode+"C","00000"));
                 sCustomers.setCustomerName(futureCustomerDto.getCustomerName());
-                sCustomers.setCustomerStr4(StringUtils.getFormatId(futureCustomerDto.getCustomerStr4(),mainCode+"D","00000"));
+                sCustomers.setCustomerStr4(StringUtils.getFormatId(futureCustomerDto.getCustomerStr4(),futureCustomerDto.getAgentCode()+"D","00000"));
             }
-            sCustomers.setZoneId(getZoneId(mainCode,futureCustomerDto.getZoneId()));
-            sCustomers.setCompanyId(mainCode);
+            if("R250082".equals(agentCode)){
+                sCustomers.setCustomerStr4(agentCode + "K0000");
+            }
+            sCustomers.setZoneId(getZoneId(agentCode,futureCustomerDto.getZoneId()));
+            if (StringUtils.isBlank(agentCode)){
+                System.err.println(futureCustomerDto.getCustomerId());
+            }
+            sCustomers.setCompanyId(agentCode);
             sCustomers.setRecordDate(futureCustomerDto.getRecordDate());
             sCustomers.setCustomerStr1(futureCustomerDto.getCustomerStr1());
-            sCustomers.setCustomerStr10(mainCode);
+            sCustomers.setCustomerStr10(agentCode);
+            sCustomers.setAgentCode(agentCode);
             sCustomersList.add(sCustomers);
         }
         logger.info("开始上抛客户数据"+LocalDateTime.now());
@@ -141,27 +171,29 @@ public class VivoPushService {
         List<SPlantStockDealer> sPlantStockDealerList = Lists.newArrayList();
 
         for (SPlantCustomerStockDto sPlantCustomerStockDto : sPlantCustomerStockDtoList) {
-            int customerLevel = sPlantCustomerStockDto.getCustomerLevel();
             String colorId = productColorMap.get(sPlantCustomerStockDto.getProductId());
             if (StringUtils.isBlank(colorId)){
                 continue;
             }
+            int customerLevel = sPlantCustomerStockDto.getCustomerLevel();
+            String agentCode=sPlantCustomerStockDto.getAgentCode();
             if (customerLevel == 1) {
                 SPlantStockStores sPlantStockStores = new SPlantStockStores();
-                sPlantStockStores.setCompanyId(mainCode);
-                sPlantStockStores.setStoreId(mainCode+"K0000");
+                sPlantStockStores.setCompanyId(agentCode);
+                sPlantStockStores.setStoreId(agentCode+"K0000");
                 sPlantStockStores.setProductId(colorId);
                 sPlantStockStores.setSumStock(0);
                 sPlantStockStores.setUseAbleStock(sPlantCustomerStockDto.getUseAbleStock());
                 sPlantStockStores.setBad(0);
                 sPlantStockStores.setCreatedTime(LocalDateTimeUtils.format(LocalDateTime.now()));
                 sPlantStockStores.setAccountDate(dateStart);
+                sPlantStockStores.setAgentCode(agentCode);
                 sPlantStockStoresList.add(sPlantStockStores);
             }
             if (customerLevel == 2) {
                 String supplyId = StringUtils.getFormatId(sPlantCustomerStockDto.getCustomerId(),"D","00000");
                 SPlantStockSupply sPlantStockSupply = new SPlantStockSupply();
-                sPlantStockSupply.setCompanyId(mainCode);
+                sPlantStockSupply.setCompanyId(agentCode);
                 sPlantStockSupply.setSupplyId(supplyId);
                 sPlantStockSupply.setProductId(colorId);
                 sPlantStockSupply.setCreatedTime(LocalDateTimeUtils.format(LocalDateTime.now()));
@@ -169,12 +201,13 @@ public class VivoPushService {
                 sPlantStockSupply.setUseAbleStock(sPlantCustomerStockDto.getUseAbleStock());
                 sPlantStockSupply.setBad(0);
                 sPlantStockSupply.setAccountDate(dateStart);
+                sPlantStockSupply.setAgentCode(agentCode);
                 sPlantStockSupplyList.add(sPlantStockSupply);
             }
             if (customerLevel == 3) {
                 String dealerId = StringUtils.getFormatId(sPlantCustomerStockDto.getCustomerId(),"C","00000");
                 SPlantStockDealer sPlantStockDealer = new SPlantStockDealer();
-                sPlantStockDealer.setCompanyId(mainCode);
+                sPlantStockDealer.setCompanyId(agentCode);
                 sPlantStockDealer.setDealerId(dealerId);
                 sPlantStockDealer.setProductId(colorId);
                 sPlantStockDealer.setSumStock(0);
@@ -182,6 +215,7 @@ public class VivoPushService {
                 sPlantStockDealer.setBad(0);
                 sPlantStockDealer.setCreatedTime(LocalDateTimeUtils.format(LocalDateTime.now()));
                 sPlantStockDealer.setAccountDate(dateStart);
+                sPlantStockDealer.setAgentCode(agentCode);
                 sPlantStockDealerList.add(sPlantStockDealer);
             }
         }
@@ -218,27 +252,40 @@ public class VivoPushService {
             if(StringUtils.isBlank(colorId)){
                 continue;
             }
+            String agentCode = sPlantCustomerStockDetailDto.getAgentCode();
             String productNo = sPlantCustomerStockDetailDto.getIme();
             if (customerLevel == 1){
                 SProductItemStocks sProductItemStocks = new SProductItemStocks();
-                sProductItemStocks.setCompanyId(mainCode);
+                sProductItemStocks.setCompanyId(agentCode);
                 sProductItemStocks.setProductId(colorId);
                 sProductItemStocks.setProductNo(productNo);
-                sProductItemStocks.setStoreId(mainCode+"K0000");
+                sProductItemStocks.setStoreId(agentCode+"K0000");
                 sProductItemStocks.setStatus("在渠道中");
-                sProductItemStocks.setStatusInfo(mainCode+"K0000");
+                sProductItemStocks.setStatusInfo(agentCode+"K0000");
+                sProductItemStocks.setAgentCode(agentCode);
                 sProductItemStocks.setUpdateTime(date);
                 sProductItemStocksList.add(sProductItemStocks);
             } else {
                 SProductItem000 sProductItem000 = new SProductItem000();
-                sProductItem000.setCompanyId(mainCode);
+                sProductItem000.setCompanyId(agentCode);
                 sProductItem000.setProductId(colorId);
                 sProductItem000.setProductNo(productNo);
-                sProductItem000.setStoreId(StringUtils.getFormatId(sPlantCustomerStockDetailDto.getStoreId(),mainCode+"D","00000"));
+                sProductItem000.setAgentCode(agentCode);
                 if(customerLevel == 2){
+                    if("R250082".equals(agentCode)) {
+                        sProductItem000.setStoreId(agentCode + "K0000");
+                    }else{
+                        sProductItem000.setStoreId(StringUtils.getFormatId(sPlantCustomerStockDetailDto.getStoreId(), agentCode + "D", "00000"));
+                    }
                     sProductItem000.setStatusInfo(sProductItem000.getStoreId());
-                } else {
-                    sProductItem000.setStatusInfo(StringUtils.getFormatId(sPlantCustomerStockDetailDto.getCustomerId(),mainCode+"C","00000"));
+                }
+                if(customerLevel==3){
+                    if("R250082".equals(agentCode)) {
+                        sProductItem000.setStoreId(agentCode + "K0000");
+                    }else{
+                        sProductItem000.setStoreId(StringUtils.getFormatId(sPlantCustomerStockDetailDto.getStoreId(), agentCode + "D", "00000"));
+                    }
+                    sProductItem000.setStatusInfo(StringUtils.getFormatId(sPlantCustomerStockDetailDto.getCustomerId(), agentCode + "C", "00000"));
                 }
                 sProductItem000.setStatus("在渠道中");
                 sProductItem000.setUpdateTime(date);
@@ -296,15 +343,17 @@ public class VivoPushService {
             if (StringUtils.isBlank(productColorMap.get(vivoCustomerSaleImeiDto.getProductId()))){
                 continue;
             }
+            String agentCode=vivoCustomerSaleImeiDto.getAgentCode();
             SPlantEndProductSale sPlantEndProductSale = new SPlantEndProductSale();
-            sPlantEndProductSale.setCompanyID(mainCode);
+            sPlantEndProductSale.setCompanyID(agentCode);
             sPlantEndProductSale.setEndBillID(String.valueOf(System.currentTimeMillis()));
             sPlantEndProductSale.setProductID(productColorMap.get(vivoCustomerSaleImeiDto.getProductId()));
             sPlantEndProductSale.setSaleCount(1);
             sPlantEndProductSale.setImei(vivoCustomerSaleImeiDto.getImei());
             sPlantEndProductSale.setBillDate(vivoCustomerSaleImeiDto.getSaleTime());
-            sPlantEndProductSale.setDealerID(StringUtils.getFormatId(vivoCustomerSaleImeiDto.getShopId(),mainCode+"C","00000"));
+            sPlantEndProductSale.setDealerID(StringUtils.getFormatId(vivoCustomerSaleImeiDto.getShopId(),agentCode+"C","00000"));
             sPlantEndProductSale.setCreatedTime(LocalDateTimeUtils.format(LocalDateTime.now()));
+            sPlantEndProductSale.setAgentCode(agentCode);
             sPlantEndProductSaleList.add(sPlantEndProductSale);
         }
         logger.info("开始上抛核销记录数据:"+LocalDateTime.now());
@@ -314,18 +363,22 @@ public class VivoPushService {
     }
 
     @Transactional
-    public void pushSStoreData(){
+    public void pushSStoreData(List<SStores> sStoresList){
         String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
-        List<SStores> sStoresList = Lists.newArrayList();
-        SStores sStores = new SStores();
-        sStores.setStoreID(mainCode + "K0000");
-        sStores.setStoreName(mainCode + "大库");
-        sStoresList.add(sStores);
-        logger.info("开始上抛一代仓库数据:"+LocalDateTime.now());
+        if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
+            SStores sStores = new SStores();
+            sStores.setStoreID(mainCode + "K0000");
+            sStores.setStoreName(mainCode + "大库");
+            sStores.setAgentCode(mainCode);
+            sStoresList.clear();
+            sStoresList.add(sStores);
+        }
+        logger.info("上抛一代仓库数据开始:"+LocalDateTime.now());
         sStoresRepository.deleteAll();
         sStoresRepository.batchSave(sStoresList);
         logger.info("上抛一代仓库数据结束:"+LocalDateTime.now());
     }
+
 
     @LocalDataSource
     public Map<String,String> getProductColorMap(){
@@ -343,7 +396,6 @@ public class VivoPushService {
                 productColorMap.put(lxProductId,colorId);
             }
         }
-
         return productColorMap;
     }
 

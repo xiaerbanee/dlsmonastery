@@ -15,7 +15,7 @@ class SPlantEndProductSaleRepository @Autowired constructor(val namedParameterJd
         map.put("dateEnd",dateEnd)
         val sb = StringBuilder()
         sb.append("""
-            DELETE FROM S_PLANTENDPRODUCTSALE_M13E00 WHERE BillDate > :dateStart
+            DELETE FROM vivo_push_plantendproductsale WHERE BillDate > :dateStart
                 AND BillDate < :dateEnd
         """)
         return namedParameterJdbcTemplate.update(sb.toString(),map)
@@ -34,8 +34,8 @@ class SPlantEndProductSaleRepository @Autowired constructor(val namedParameterJd
     fun batchSave(sPlantEndProduuctSaleImeiList: MutableList<SPlantEndProductSale>):IntArray{
         val sb = StringBuilder()
         sb.append("""
-            INSERT INTO S_PLANTENDPRODUCTSALE_M13E00(CompanyID,EndBillID,ProductID,SaleCount,Imei,BillDate,DealerID,SalePrice,CreatedTime)
-            VALUES (:companyID,:endBillID,:productID,:saleCount,:imei,:billDate,:dealerID,:salePrice,:createdTime)
+            INSERT INTO vivo_push_plantendproductsale(CompanyID,EndBillID,ProductID,SaleCount,Imei,BillDate,DealerID,SalePrice,CreatedTime,AgentCode)
+            VALUES (:companyID,:endBillID,:productID,:saleCount,:imei,:billDate,:dealerID,:salePrice,:createdTime,:agentCode)
         """)
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sPlantEndProduuctSaleImeiList.toTypedArray()))
     }

@@ -123,7 +123,7 @@ class FutureProductImeSaleRepository @Autowired constructor(val namedParameterJd
                     and sa.enabled = 1
              order by sa.shop_id asc
         """)
-
         return namedParameterJdbcTemplate.query(sb.toString(),map,BeanPropertyRowMapper(VivoCustomerSaleImeiDto::class.java))
     }
+
 }

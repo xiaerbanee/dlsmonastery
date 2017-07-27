@@ -1,10 +1,8 @@
 package net.myspring.cloud.modules.sys.service;
 
-import com.google.common.collect.Lists;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
-import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
@@ -13,7 +11,6 @@ import net.myspring.cloud.modules.sys.repository.AccountKingdeeBookRepository;
 import net.myspring.cloud.modules.sys.repository.KingdeeBookRepository;
 import net.myspring.cloud.modules.sys.repository.KingdeeSynRepository;
 import net.myspring.cloud.modules.sys.web.query.KingdeeSynQuery;
-import net.myspring.common.exception.ServiceException;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 金蝶同步
@@ -65,7 +61,7 @@ public class KingdeeSynService {
     @Transactional
     public void save(KingdeeSyn kingdeeSyn) {
         if(kingdeeSyn != null) {
-           kingdeeSynRepository.save(kingdeeSyn);
+            kingdeeSynRepository.save(kingdeeSyn);
         }
     }
 
@@ -82,8 +78,8 @@ public class KingdeeSynService {
         KingdeeSyn kingdeeSyn = kingdeeSynRepository.findOne(id);
         kingdeeSynDto = BeanUtil.map(kingdeeSyn,KingdeeSynDto.class);
         if (kingdeeSynDto != null) {
-            KingdeeBook kingdeeBook = kingdeeBookRepository.findByCompanyName(RequestUtils.getCompanyName());
-            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountId(RequestUtils.getAccountId());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
+            KingdeeBook kingdeeBook = kingdeeBookRepository.findOne(accountKingdeeBook.getKingdeeBookId());
             Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
             if(isLogin) {
                 kingdeeSynDto.setKingdeeBook(kingdeeBook);

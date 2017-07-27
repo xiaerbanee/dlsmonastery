@@ -42,7 +42,11 @@
             </template>
             <template>
               <el-table :data="productImeList" style="width: 100%" border>
-                <el-table-column prop="ime" :label="$t('imeAllotForm.imeStr')"></el-table-column>
+                <el-table-column prop="ime" :label="$t('imeAllotForm.imeStr')">
+                  <template scope="scope">
+                    <a href="javascript:void(0);" style="color:blue;text-decoration:underline;" @click="showDetail(scope.row.id)">{{ scope.row.ime}}</a>
+                  </template>
+                </el-table-column>
                 <el-table-column prop="depotName" :label="$t('imeAllotForm.depotName')"></el-table-column>
                 <el-table-column prop="productName" :label="$t('imeAllotForm.productName')"></el-table-column>
                 <el-table-column prop="retailDate" :label="$t('imeAllotForm.retailDate')"></el-table-column>
@@ -137,6 +141,8 @@
         this.productImeList=[];
         this.productQtyList = [];
         this.$refs["inputForm"].resetFields();
+      }, showDetail(id){
+        this.$router.push({ name: 'productImeDetail', query: { id: id }});
       },initPage(){
         axios.get('/api/ws/future/crm/imeAllot/getForm').then((response)=>{
             this.inputForm = response.data;

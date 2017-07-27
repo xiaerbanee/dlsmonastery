@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class SPlantEndProductSale {
+    private String id;
     private String companyID;
     private String endBillID;
     private String productID;
@@ -14,6 +15,14 @@ public class SPlantEndProductSale {
     private BigDecimal salePrice;
     private String createdTime;
     private String agentCode;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCompanyID() {
         return companyID;

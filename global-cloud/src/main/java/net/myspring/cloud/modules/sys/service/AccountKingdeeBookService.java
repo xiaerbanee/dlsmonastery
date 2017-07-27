@@ -40,8 +40,8 @@ public class AccountKingdeeBookService {
         return page;
     }
 
-    public AccountKingdeeBook findByAccountId(String accountId){
-        return accountKingdeeBookRepository.findByAccountId(accountId);
+    public AccountKingdeeBook findByAccountIdAndCompanyName(String accountId,String companyName){
+        return accountKingdeeBookRepository.findByAccountIdAndCompanyName(accountId,companyName);
     }
 
     public AccountKingdeeBookQuery getQuery(){

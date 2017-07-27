@@ -5,6 +5,7 @@ import net.myspring.future.common.query.BaseQuery;
 public class EmployeePhoneQuery extends BaseQuery {
     private String depotName;
     private String status;
+    private String employeeId;
 
     public String getDepotName() {
         return depotName;
@@ -20,5 +21,13 @@ public class EmployeePhoneQuery extends BaseQuery {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
     }
 }

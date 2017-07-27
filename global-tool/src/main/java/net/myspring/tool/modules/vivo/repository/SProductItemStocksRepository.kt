@@ -15,7 +15,7 @@ class SProductItemStocksRepository @Autowired constructor(val namedParameterJdbc
         map.put("dateEnd",dateEnd)
         val sb = StringBuilder()
         sb.append("""
-            DELETE FROM S_ProductItemStocks_M13E00
+            DELETE FROM vivo_push_productitemstocks
             WHERE UpdateTime >=  :dateStart and UpdateTime < :dateEnd
         """)
         return namedParameterJdbcTemplate.update(sb.toString(),map)
@@ -36,8 +36,8 @@ class SProductItemStocksRepository @Autowired constructor(val namedParameterJdbc
     fun batchSave(sProductItemStocksM13e00List:MutableList<SProductItemStocks>):IntArray{
         val sb = StringBuilder()
         sb.append("""
-            INSERT INTO S_ProductItemStocks_M13E00(CompanyID,ProductID,ProductNo,StoreID,CustomerID,SubCustomerID,Status,StatusInfo,IsReturnProfit,IsLock,Remark,UpdateTime)
-            VALUES (:companyId,:productId,:productNo,:storeId,:customerId,:subCustomerId,:status,:statusInfo,:isReturnProfit,:isLock,:remark,:updateTime)
+            INSERT INTO vivo_push_productitemstocks(CompanyID,ProductID,ProductNo,StoreID,CustomerID,SubCustomerID,Status,StatusInfo,IsReturnProfit,IsLock,Remark,UpdateTime,AgentCode)
+            VALUES (:companyId,:productId,:productNo,:storeId,:customerId,:subCustomerId,:status,:statusInfo,:isReturnProfit,:isLock,:remark,:updateTime,:agentCode)
         """)
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sProductItemStocksM13e00List.toTypedArray()))
     }

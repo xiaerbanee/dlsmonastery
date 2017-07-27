@@ -3,11 +3,9 @@
     <head-tab active="salaryForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-        <el-form-item :label="$t('salaryForm.exportTemplate')" prop="category">
-          <el-radio-group v-model="inputForm.salaryTemplateId">
-            <el-radio :label="3">备选项</el-radio><a>下载</a>
-            <el-radio :label="6">备选项</el-radio>
-            <el-radio :label="9">备选项</el-radio>
+        <el-form-item :label="$t('salaryForm.exportTemplate')" prop="id">
+          <el-radio-group v-model="inputForm.id">
+            <el-radio v-for="item in inputForm.extra.salaryTemplates" :key="item.id" :label="item.id" class="inline-radio">{{item.name}}<a  class="download" @click="onLoad">下载</a></el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item :label="$t('salaryForm.exportData')" prop="sort">
@@ -42,7 +40,6 @@
           fileList:[],
           month:null,
           inputForm:{
-            salaryTemplateId:null,
             extra:{}
           },
           rules: {
@@ -51,11 +48,11 @@
         }
       },
       formSubmit(){
-        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
+            this.inputForm.month=this.month;
             axios.post('/api/basic/salary/salary/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
@@ -65,14 +62,18 @@
                 this.$router.push({name:'salaryList',query:util.getQuery("salaryList"), params:{_closeFrom:true}})
               }
             }).catch(function () {
-              that.submitDisabled = false;
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
           }
         })
       },initPage(){
-
+        axios.get('/api/basic/hr/salary/getForm').then((response)=>{
+          console.log(response.data)
+          this.inputForm = response.data;
+        });
+      },onLoad(){
       },handlePreview(file) {
         window.open(file.url);
       },handleChange(file, fileList) {
@@ -85,3 +86,18 @@
     }
   }
 </script>
+<style>
+  .download{
+    color:blue;
+    margin-left: 6px
+  }
+  .inline-radio{
+    display: block;
+  }
+  .el-radio.inline-radio{
+    margin-bottom: 10px;
+  }
+  .el-radio+.el-radio{
+    margin-left: 0 !important;
+  }
+</style>
