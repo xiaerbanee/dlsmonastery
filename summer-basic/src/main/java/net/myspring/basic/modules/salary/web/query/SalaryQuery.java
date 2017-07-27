@@ -1,6 +1,10 @@
 package net.myspring.basic.modules.salary.web.query;
 
-public class SalaryQuery {
+import net.myspring.basic.common.query.BaseQuery;
+import net.myspring.basic.common.utils.RequestUtils;
+import net.myspring.util.text.StringUtils;
+
+public class SalaryQuery extends BaseQuery{
     private String employeeId;
     private String month;
     private String projectName;
@@ -17,6 +21,9 @@ public class SalaryQuery {
     }
 
     public String getEmployeeId() {
+        if(StringUtils.isBlank(employeeId)){
+            this.employeeId=RequestUtils.getEmployeeId();
+        }
         return employeeId;
     }
 

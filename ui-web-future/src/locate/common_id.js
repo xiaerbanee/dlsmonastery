@@ -38,6 +38,16 @@ export default {
     auditDate:"审批时间",
     comment:"审批备注",
   },
+  simple_process_details:{
+    loading:"拼命加载中",
+    simpleProcessId:"流程编号",
+    processStatus:"节点名称",
+    opinion:"审批意见",
+    remarks:"审批备注",
+    createdByName:"审批人",
+    createdDate:"审批时间",
+
+  },
   bankSelect:{
     cashIn:'现金收款',
   },

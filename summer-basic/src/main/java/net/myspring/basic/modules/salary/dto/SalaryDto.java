@@ -6,6 +6,15 @@ public class SalaryDto {
     private String projectName;
     private String projectValue;
     private String employeeName;
+    private String officeName;
+
+    public String getOfficeName() {
+        return officeName;
+    }
+
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
+    }
 
     public String getEmployeeId() {
         return employeeId;
