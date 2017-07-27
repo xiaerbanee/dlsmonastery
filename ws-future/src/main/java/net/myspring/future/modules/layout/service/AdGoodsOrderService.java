@@ -15,9 +15,7 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
-import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.*;
-import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.manager.SalOutStockManager;
 import net.myspring.future.modules.basic.repository.*;
@@ -61,6 +59,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -266,16 +265,17 @@ public class AdGoodsOrderService {
         if(StringUtils.isNotBlank(outShopId)){
             Depot depot = depotRepository.findOne(outShopId);
             if(depot != null && RequestUtils.getCompanyName().equalsIgnoreCase(CompanyNameEnum.JXDJ.name())){
-                if(depot.getCode().startsWith("IM0")){
-                    for(AdGoodsOrderDetailSimpleDto adGoodsOrderDetailSimpleDto : result){
+                Iterator<AdGoodsOrderDetailSimpleDto> iterator = result.iterator();
+                while (iterator.hasNext()){
+                    AdGoodsOrderDetailSimpleDto adGoodsOrderDetailSimpleDto = iterator.next();
+                    if(depot.getCode().startsWith("IM0")){
                         if(!adGoodsOrderDetailSimpleDto.getProductCode().startsWith("I")){
-                            result.remove(adGoodsOrderDetailSimpleDto);
+                            iterator.remove();
                         }
-                    }
-                }else if(depot.getCode().startsWith("DJ")){
-                    for(AdGoodsOrderDetailSimpleDto adGoodsOrderDetailSimpleDto : result){
+
+                    }else if(depot.getCode().startsWith("DJ")){
                         if(!adGoodsOrderDetailSimpleDto.getProductCode().startsWith("D")){
-                            result.remove(adGoodsOrderDetailSimpleDto);
+                            iterator.remove();
                         }
                     }
                 }
