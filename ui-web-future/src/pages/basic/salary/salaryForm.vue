@@ -74,7 +74,7 @@
           this.inputForm = response.data;
         });
       },onLoad(id){
-        window.location.href="/api/basic/hr/salaryTemplate/export?"+qs.stringify(submitData);
+        window.location.href="/api/basic/hr/salaryTemplate/export?id="+id;
       },handlePreview(file) {
         window.open(file.url);
       },handleChange(file, fileList) {

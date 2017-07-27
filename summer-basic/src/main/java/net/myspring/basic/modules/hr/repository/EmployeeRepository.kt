@@ -79,7 +79,7 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
             left join sys_office area on  office.area_id=area.id
             left join hr_position position on  account.position_id=position.id
             left join hr_account leader on  account.leader_id=leader.id
-           where employee.leave_date is null or employee.leave_date < :dateEnd and t.enabled=1
+           where employee.leave_date is null or employee.leave_date < :dateEnd and employee.enabled=1
         """);
         var paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("dateEnd",dateEnd)
