@@ -75,9 +75,9 @@ spring:
         password: bbk@123456
         driver-class-name: net.sourceforge.jtds.jdbc.Driver
       JXDJ:
-        url: jdbc:mysql://168.192.1.243:3306/db_dj_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
-        username: root
-        password: bbk@123456
+        url: jdbc:sqlserver://esaledb.eebbk.com:1439/fxncbbk?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: nceebbk
+        password: 159#ncbbk@583
         driver-class-name: com.mysql.jdbc.Driver
   redis:
     JXOPPO:
