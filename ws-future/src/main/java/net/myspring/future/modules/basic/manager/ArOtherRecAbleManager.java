@@ -32,14 +32,11 @@ public class ArOtherRecAbleManager {
     @Autowired
     private CloudClient cloudClient;
     @Autowired
-    private DepotRepository depotRepository;
-    @Autowired
     private ClientRepository clientRepository;
 
 
     public KingdeeSynReturnDto synForShopGoodsDeposit(ShopGoodsDeposit shopGoodsDeposit){
         if (!CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName())) {
-            Depot depot = depotRepository.findOne(shopGoodsDeposit.getId());
             Client client = clientRepository.findByDepotId(shopGoodsDeposit.getShopId());
             ArOtherRecAbleDto otherRecAbleDto = new ArOtherRecAbleDto();
             otherRecAbleDto.setExtendType(ExtendTypeEnum.定金收款.name());
@@ -64,7 +61,7 @@ public class ArOtherRecAbleManager {
             entityDto.setOtherTypeNumber("2241.00028");//其他应付款-订货会订金
             entityDto.setAmount(shopGoodsDeposit.getAmount());
             entityDto.setExpenseTypeNumber("6602.000");//无
-            entityDto.setComment(depot.getName() + "-" + shopGoodsDeposit.getRemarks());
+            entityDto.setComment(client.getName() + "-" + shopGoodsDeposit.getRemarks());
             entityDtoList.add(entityDto);
             otherRecAbleDto.setArOtherRecAbleFEntityDtoList(entityDtoList);
             return cloudClient.synOtherRecAble(otherRecAbleDto);
@@ -74,7 +71,6 @@ public class ArOtherRecAbleManager {
 
     public KingdeeSynReturnDto synForShopDeposit(ShopDeposit shopDeposit,String departmentNumber,ShopDepositTypeEnum type){
         if (shopDeposit.getId()!=null && type !=null){
-            Depot depot = depotRepository.findOne(shopDeposit.getId());
             Client client = clientRepository.findByDepotId(shopDeposit.getShopId());
             ArOtherRecAbleDto otherRecAbleDto = new ArOtherRecAbleDto();
             otherRecAbleDto.setDate(shopDeposit.getBillDate());
@@ -102,20 +98,20 @@ public class ArOtherRecAbleManager {
             if (CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName())){
                 if (ShopDepositTypeEnum.市场保证金.equals(type)) {
                     entityDto.setOtherTypeNumber("2241.002B");//其他应付款-客户押金（批发）-市场保证金
-                    entityDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                    entityDto.setComment(client.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
                 } else if (ShopDepositTypeEnum.形象保证金.equals(type)) {
                     entityDto.setOtherTypeNumber("2241.002A");//其他应付款-客户押金（批发）-形象押金
-                    entityDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                    entityDto.setComment(client.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
                 } else if (ShopDepositTypeEnum.演示机押金.equals(type)) {
                     entityDto.setOtherTypeNumber("2241.002C");//其他应付款-客户押金（批发）-演示机押金
                 }
             }else {
                 if (ShopDepositTypeEnum.市场保证金.equals(type)) {
                     entityDto.setOtherTypeNumber("2241.00002B");//其他应付款-客户押金（批发）-市场保证金
-                    entityDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                    entityDto.setComment(client.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
                 } else if (ShopDepositTypeEnum.形象保证金.equals(type)) {
                     entityDto.setOtherTypeNumber("2241.00002A");//其他应付款-客户押金（批发）-形象押金
-                    entityDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                    entityDto.setComment(client.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
                 } else if (ShopDepositTypeEnum.演示机押金.equals(type)) {
                     throw new ServiceException("财务暂时未开--其他应付款-客户押金（批发）-演示机押金");//其他应付款-客户押金（批发）-演示机押金
                 }
