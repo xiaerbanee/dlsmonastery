@@ -6,9 +6,10 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
-import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.imoo.domain.ImooPlantBasicProduct;
 import net.myspring.tool.modules.imoo.domain.ImooPrdocutImeiDeliver;
+import net.myspring.tool.modules.imoo.repository.ImooPlantBasicProductRepository;
+import net.myspring.tool.modules.imoo.repository.ImooPrdocutImeiDeliverRepository;
 import net.myspring.tool.modules.imoo.repository.ImooRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -27,13 +28,13 @@ import java.util.List;
 @Service
 @Transactional
 @LocalDataSource
-public class ImooService {
+public class ImooPullService {
     @Autowired
     private ImooRepository imooRepository;
-//    @Autowired
-//    private ImooPlantBasicProductRepository imooPlantBasicProductRepository;
-//    @Autowired
-//    private ImooPrdocutImeiDeliverRepository imooPrdocutImeiDeliverRepository;
+    @Autowired
+    private ImooPlantBasicProductRepository imooPlantBasicProductRepository;
+    @Autowired
+    private ImooPrdocutImeiDeliverRepository imooPrdocutImeiDeliverRepository;
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -47,6 +48,9 @@ public class ImooService {
         String agentCodes = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         LocalDate dateStart = date.minusDays(2);
         LocalDate dateEnd = date.plusDays(1);
+        if (StringUtils.isBlank(agentCodes)){
+            return null;
+        }
         return imooRepository.plantPrdocutImeiDeliverByDate(dateStart, dateEnd, StringUtils.getSplitList(agentCodes, CharConstant.COMMA));
     }
 
@@ -55,15 +59,15 @@ public class ImooService {
         if (CollectionUtil.isNotEmpty(imooPlantBasicProducts)) {
             List<ImooPlantBasicProduct> list = Lists.newArrayList();
             List<String> segment1s = CollectionUtil.extractToList(imooPlantBasicProducts, "segment1");
-//            List<String> localSegment1s = imooPlantBasicProductRepository.findSegment1s(segment1s);
-//            for (ImooPlantBasicProduct item : imooPlantBasicProducts) {
-//                if (!localSegment1s.contains(item.getSegment1())) {
-//                    list.add(item);
-//                }
-//            }
-//            if (CollectionUtil.isNotEmpty(list)) {
-//                imooPlantBasicProductRepository.save(list);
-//            }
+            List<String> localSegment1s = imooPlantBasicProductRepository.findSegment1s(segment1s);
+            for (ImooPlantBasicProduct imooPlantBasicProduct : imooPlantBasicProducts) {
+                if (!localSegment1s.contains(imooPlantBasicProduct.getSegment1())) {
+                    list.add(imooPlantBasicProduct);
+                }
+            }
+            if (CollectionUtil.isNotEmpty(list)){
+                imooPlantBasicProductRepository.batchSave(list);
+            }
         }
     }
 
@@ -78,19 +82,19 @@ public class ImooService {
             if (CollectionUtil.isNotEmpty(imooPrdocutImeiDelivers)) {
                 List<String> imeis = CollectionUtil.extractToList(imooPrdocutImeiDelivers, "imei");
                 if (CollectionUtil.isNotEmpty(imeis)) {
-//                    List<String> localImeis = imooPrdocutImeiDeliverRepository.findImeis(imeis);
-//                    for (ImooPrdocutImeiDeliver item : imooPrdocutImeiDelivers) {
-//                        if (!localImeis.contains(item.getImei())) {
-//                            item.setCompanyId(agentCode);
-//                            list.add(item);
-//                        }
-//                    }
+                    List<String> localImeis = imooPrdocutImeiDeliverRepository.findImeis(imeis);
+                    for (ImooPrdocutImeiDeliver item : imooPrdocutImeiDelivers) {
+                        if (!localImeis.contains(item.getImei())) {
+                            item.setCompanyId(agentCode);
+                            list.add(item);
+                        }
+                    }
                 }
             }
         }
-//        if (CollectionUtil.isNotEmpty(list)) {
-//            imooPrdocutImeiDeliverRepository.save(list);
-//        }
+        if (CollectionUtil.isNotEmpty(list)) {
+            imooPrdocutImeiDeliverRepository.batchSave(list);
+        }
         return "发货串码同步成功，共同步" + list.size() + "条数据";
     }
 

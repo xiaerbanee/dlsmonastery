@@ -24,6 +24,7 @@ public class AdGoodsOrder extends DataEntity<AdGoodsOrder> {
     private Integer largeQty;
     private Integer version = 0;
     private String processInstanceId;
+    private String simpleProcessId;
     private String processStatus;
     private String businessId;
     private Boolean splitBill;
@@ -65,6 +66,13 @@ public class AdGoodsOrder extends DataEntity<AdGoodsOrder> {
         this.processPositionId = processPositionId;
     }
 
+    public String getSimpleProcessId() {
+        return simpleProcessId;
+    }
+
+    public void setSimpleProcessId(String simpleProcessId) {
+        this.simpleProcessId = simpleProcessId;
+    }
 
     public String getStoreId() {
         return storeId;
