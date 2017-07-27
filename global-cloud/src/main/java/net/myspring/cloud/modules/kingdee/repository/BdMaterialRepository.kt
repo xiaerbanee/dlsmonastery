@@ -233,4 +233,32 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
                 and t1.FMASTERID in (:MasterIdList)
         """,Collections.singletonMap("MasterIdList",MasterIdList),BeanPropertyRowMapper(BdMaterial::class.java))
     }
+
+    fun findIncludeForbidByMasterIdList(MasterIdList: List<String>): MutableList<BdMaterial>? {
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+                t1.FMASTERID,
+                t1.FNUMBER,
+                t2.FNAME,
+                t1.FMATERIALGROUP,
+                t4.FNAME AS FMaterialGroupName,
+                t3.FNUMBER as FMaterialGroupNumber,
+                t5.FERPCLSID,
+                t1.FMODIFYDATE,
+                t1.FFORBIDSTATUS,
+                t1.FDOCUMENTSTATUS
+            FROM
+                T_BD_MATERIAL t1,
+                T_BD_MATERIAL_L t2,
+                T_BD_MATERIALGROUP t3,
+                T_BD_MATERIALGROUP_L t4,
+	            T_BD_MATERIALBASE t5
+            WHERE
+                t1.FMATERIALID = t2.FMATERIALID
+                AND t1.FMATERIALGROUP = t3.FID
+                AND t3.FID = t4.FID
+                AND t1.FMATERIALID = t5.FMATERIALID
+                and t1.FMASTERID in (:MasterIdList)
+        """,Collections.singletonMap("MasterIdList",MasterIdList),BeanPropertyRowMapper(BdMaterial::class.java))
+    }
 }

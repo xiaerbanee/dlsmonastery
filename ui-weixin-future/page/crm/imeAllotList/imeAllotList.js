@@ -4,12 +4,14 @@ Page({
   data: {
     page: {},
     formData: {},
-    formProperty:{},
-    response:{},
+    formProperty: {},
+    response: {},
     searchHidden: true,
     activeItem: null
   },
-  onLoad: function (options) {},
+  onLoad: function (options) { 
+    this.setData({ height: $util.getWindowHeight() })
+  },
   onShow: function () {
     var that = this;
     wx.showToast({
@@ -23,7 +25,7 @@ Page({
       }
     })
   },
-  initPage:function() {
+  initPage: function () {
     var that = this;
     var that = this;
     wx.request({
@@ -34,7 +36,7 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
-        that.setData({ formData: res.data,formProperty:res.data.extra });
+        that.setData({ formData: res.data, formProperty: res.data.extra });
         that.pageRequest();
       }
     })
@@ -48,11 +50,12 @@ Page({
       success: function () {
         wx.request({
           url: $util.getUrl("ws/future/crm/imeAllot"),
-          header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId},
-          data:$util.deleteExtra(that.data.formData),
+          header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
+          data: $util.deleteExtra(that.data.formData),
           success: function (res) {
             that.setData({ page: res.data });
             wx.hideToast();
+            that.setData({ scrollTop: $util.toUpper() });
           }
         })
       }
@@ -70,13 +73,14 @@ Page({
     })
   },
   changeCrossArea: function (e) {
-    var that=this;
+    var that = this;
     that.setData({
       'formData.crossArea.name': that.data.formProperty.crossAreaList[e.detail.value].name,
-       'formData.crossArea.value': that.data.formProperty.crossAreaList[e.detail.value].value })
+      'formData.crossArea.value': that.data.formProperty.crossAreaList[e.detail.value].value
+    })
   },
   changeStatus: function (e) {
-    var that=this;
+    var that = this;
     that.setData({ 'formData.status': that.data.formProperty.statusList[e.detail.value] })
   },
   itemActive: function (e) {
@@ -121,7 +125,14 @@ Page({
   formSubmit: function (e) {
     var that = this;
     that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
-    that.pageRequest();
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        that.pageRequest();
+      }
+    })
   },
   toFirstPage: function () {
     var that = this;
