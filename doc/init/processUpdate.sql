@@ -48,7 +48,7 @@ CREATE TABLE `crm_tmp_20170727` (
     last_modified_date,
     version,
     locked,
-    enabled
+    1
   FROM
     sys_process_task
   WHERE
