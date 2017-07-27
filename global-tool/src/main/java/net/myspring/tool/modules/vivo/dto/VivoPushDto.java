@@ -1,59 +1,67 @@
 package net.myspring.tool.modules.vivo.dto;
 
-import net.myspring.tool.modules.vivo.domain.SProductItemLend;
-import net.myspring.tool.modules.vivo.domain.SStores;
+import net.myspring.tool.modules.vivo.domain.*;
 
 import java.util.List;
-import java.util.Map;
 
 public class VivoPushDto {
-    private String date;
-    private List<SCustomerDto> sCustomerDtoList;
-    private Map<String,String> productColorMap;
-    private List<SPlantCustomerStockDto> sPlantCustomerStockDtoList;
-    private List<SPlantCustomerStockDetailDto> sPlantCustomerStockDetailDtoList;
+    private List<SCustomers> sCustomersList;
+    private List<SPlantEndProductSale> sPlantEndProductSaleList;
+    private List<SPlantStockDealer> sPlantStockDealerList;
+    private List<SPlantStockStores> sPlantStockStoresList;
+    private List<SPlantStockSupply> sPlantStockSupplyList;
+    private List<SProductItem000> sProductItem000List;
     private List<SProductItemLend> sProductItemLendList;
-    private List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList;
+    private List<SProductItemStocks> sProductItemStocksList;
     private List<SStores> sStoresList;
+    private List<SZones> sZonesList;
 
-    public String getDate() {
-        return date;
+    public List<SCustomers> getsCustomersList() {
+        return sCustomersList;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setsCustomersList(List<SCustomers> sCustomersList) {
+        this.sCustomersList = sCustomersList;
     }
 
-    public List<SCustomerDto> getsCustomerDtoList() {
-        return sCustomerDtoList;
+    public List<SPlantEndProductSale> getsPlantEndProductSaleList() {
+        return sPlantEndProductSaleList;
     }
 
-    public void setsCustomerDtoList(List<SCustomerDto> sCustomerDtoList) {
-        this.sCustomerDtoList = sCustomerDtoList;
+    public void setsPlantEndProductSaleList(List<SPlantEndProductSale> sPlantEndProductSaleList) {
+        this.sPlantEndProductSaleList = sPlantEndProductSaleList;
     }
 
-    public Map<String, String> getProductColorMap() {
-        return productColorMap;
+    public List<SPlantStockDealer> getsPlantStockDealerList() {
+        return sPlantStockDealerList;
     }
 
-    public void setProductColorMap(Map<String, String> productColorMap) {
-        this.productColorMap = productColorMap;
+    public void setsPlantStockDealerList(List<SPlantStockDealer> sPlantStockDealerList) {
+        this.sPlantStockDealerList = sPlantStockDealerList;
     }
 
-    public List<SPlantCustomerStockDto> getsPlantCustomerStockDtoList() {
-        return sPlantCustomerStockDtoList;
+    public List<SPlantStockStores> getsPlantStockStoresList() {
+        return sPlantStockStoresList;
     }
 
-    public void setsPlantCustomerStockDtoList(List<SPlantCustomerStockDto> sPlantCustomerStockDtoList) {
-        this.sPlantCustomerStockDtoList = sPlantCustomerStockDtoList;
+    public void setsPlantStockStoresList(List<SPlantStockStores> sPlantStockStoresList) {
+        this.sPlantStockStoresList = sPlantStockStoresList;
     }
 
-    public List<SPlantCustomerStockDetailDto> getsPlantCustomerStockDetailDtoList() {
-        return sPlantCustomerStockDetailDtoList;
+    public List<SPlantStockSupply> getsPlantStockSupplyList() {
+        return sPlantStockSupplyList;
     }
 
-    public void setsPlantCustomerStockDetailDtoList(List<SPlantCustomerStockDetailDto> sPlantCustomerStockDetailDtoList) {
-        this.sPlantCustomerStockDetailDtoList = sPlantCustomerStockDetailDtoList;
+    public void setsPlantStockSupplyList(List<SPlantStockSupply> sPlantStockSupplyList) {
+        this.sPlantStockSupplyList = sPlantStockSupplyList;
+    }
+
+    public List<SProductItem000> getsProductItem000List() {
+        return sProductItem000List;
+    }
+
+    public void setsProductItem000List(List<SProductItem000> sProductItem000List) {
+        this.sProductItem000List = sProductItem000List;
     }
 
     public List<SProductItemLend> getsProductItemLendList() {
@@ -64,12 +72,12 @@ public class VivoPushDto {
         this.sProductItemLendList = sProductItemLendList;
     }
 
-    public List<VivoCustomerSaleImeiDto> getVivoCustomerSaleImeiDtoList() {
-        return vivoCustomerSaleImeiDtoList;
+    public List<SProductItemStocks> getsProductItemStocksList() {
+        return sProductItemStocksList;
     }
 
-    public void setVivoCustomerSaleImeiDtoList(List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList) {
-        this.vivoCustomerSaleImeiDtoList = vivoCustomerSaleImeiDtoList;
+    public void setsProductItemStocksList(List<SProductItemStocks> sProductItemStocksList) {
+        this.sProductItemStocksList = sProductItemStocksList;
     }
 
     public List<SStores> getsStoresList() {
@@ -78,5 +86,13 @@ public class VivoPushDto {
 
     public void setsStoresList(List<SStores> sStoresList) {
         this.sStoresList = sStoresList;
+    }
+
+    public List<SZones> getsZonesList() {
+        return sZonesList;
+    }
+
+    public void setsZonesList(List<SZones> sZonesList) {
+        this.sZonesList = sZonesList;
     }
 }
