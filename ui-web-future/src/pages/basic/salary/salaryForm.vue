@@ -5,7 +5,7 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('salaryForm.exportTemplate')" prop="id">
           <el-radio-group v-model="inputForm.id">
-            <el-radio v-for="item in inputForm.extra.salaryTemplates" :key="item.id" :label="item.id" class="inline-radio">{{item.name}}<a  class="download" @click="onLoad">下载</a></el-radio>
+            <el-radio v-for="item in inputForm.extra.salaryTemplates" :key="item.id" :label="item.id" class="inline-radio">{{item.name}}<a  class="download" @click="onLoad(item.id)">下载</a></el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item :label="$t('salaryForm.exportData')" prop="sort">
@@ -73,7 +73,8 @@
           console.log(response.data)
           this.inputForm = response.data;
         });
-      },onLoad(){
+      },onLoad(id){
+        window.location.href="/api/basic/hr/salaryTemplate/export?"+qs.stringify(submitData);
       },handlePreview(file) {
         window.open(file.url);
       },handleChange(file, fileList) {
