@@ -31,7 +31,7 @@ public class BankInDto extends DataDto<BankIn> {
     private String outCode;
     private String processStatus;
     private Boolean locked;
-    private String processInstanceId;
+    private String simpleProcessId;
 
     public String getTransferType() {
         return transferType;
@@ -49,12 +49,12 @@ public class BankInDto extends DataDto<BankIn> {
         this.type = type;
     }
 
-    public String getProcessInstanceId() {
-        return processInstanceId;
+    public String getSimpleProcessId() {
+        return simpleProcessId;
     }
 
-    public void setProcessInstanceId(String processInstanceId) {
-        this.processInstanceId = processInstanceId;
+    public void setSimpleProcessId(String simpleProcessId) {
+        this.simpleProcessId = simpleProcessId;
     }
 
     public String getFormatId() {

@@ -63,9 +63,9 @@
             </el-col>
           </el-row>
         </div>
-        <el-row v-if="bankIn.processInstanceId"   :gutter="4">
+        <el-row v-if="bankIn.simpleProcessId"   :gutter="4">
           <el-col :span="24">
-            <process-details v-model="bankIn.processInstanceId"></process-details>
+            <simple-process-details v-model="bankIn.simpleProcessId"></simple-process-details>
           </el-col>
         </el-row>
       </el-form>
@@ -73,14 +73,13 @@
   </div>
 </template>
 <script>
-  import processDetails from 'components/general/process-details'
+  import simpleProcessDetails from 'components/future/simple-process-details'
   import boolRadioGroup from 'components/common/bool-radio-group'
 
   export default{
     components:{
-      processDetails,
+      simpleProcessDetails,
       boolRadioGroup,
-
     },
       data(){
           return{
