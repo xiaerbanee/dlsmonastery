@@ -95,7 +95,7 @@
     display: block;
   }
   .el-radio.inline-radio{
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
   .el-radio+.el-radio{
     margin-left: 0 !important;

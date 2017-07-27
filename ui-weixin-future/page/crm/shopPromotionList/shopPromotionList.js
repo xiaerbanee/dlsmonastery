@@ -5,7 +5,7 @@ Page({
   data: {
     page: {},
     formData: {},
-    formProperty:{},
+    formProperty: {},
     activeItem: null,
     searchHidden: true,
     scrollTop: null,
@@ -27,19 +27,19 @@ Page({
       }
     })
   },
-  initPage:function() {
-     let that  = this;
-     wx.request({
-       url: $util.getUrl("ws/future/layout/shopPromotion/getQuery"),
+  initPage: function () {
+    let that = this;
+    wx.request({
+      url: $util.getUrl("ws/future/layout/shopPromotion/getQuery"),
       data: {},
       method: 'GET',
-      header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
+      header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
         that.setData({ formData: res.data });
         that.setData({ 'formProperty.activityTypeList': res.data.extra.activityTypeList });
         that.pageRequest();
       }
-     })
+    })
   },
   pageRequest: function () {
     let that = this;
@@ -75,7 +75,7 @@ Page({
   },
   search: function () {
     var that = this;
-    that.setData({searchHidden: !that.data.searchHidden})
+    that.setData({ searchHidden: !that.data.searchHidden })
   },
   bindActivityType: function (e) {
     var that = this;
@@ -127,7 +127,7 @@ Page({
             wx.request({
               url: $util.getUrl("crm/shopPromotion/delete"),
               data: { id: id },
-              header: {Cookie: "JSESSIONID=" + app.globalData.sessionId},
+              header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
               success: function (res) {
                 that.pageRequest();
               }
@@ -140,7 +140,14 @@ Page({
   formSubmit: function (e) {
     var that = this;
     that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
-    that.pageRequest();
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        that.pageRequest();
+      }
+    })
   },
   toFirstPage: function () {
     var that = this;

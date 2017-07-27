@@ -44,7 +44,6 @@ Page({
   },
   pageRequest: function () {
     var that = this
-
     wx.request({
       url: $util.getUrl("basic/hr/dutyOvertime"),
       header: {
@@ -129,7 +128,14 @@ Page({
   formSubmit: function (e) {
     var that = this;
     that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
-    that.pageRequest();
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        that.pageRequest();
+      }
+    })
   },
   toFirstPage: function () {
     var that = this;

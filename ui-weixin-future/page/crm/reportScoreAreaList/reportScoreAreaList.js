@@ -53,7 +53,7 @@ Page({
       },
       success: function (res) {
         that.setData({ 'fromProperty.areaList': res.data.extra.areaList, formData: res.data });
-        that.setData({ "formData.scoreDateStart": $util.formatLocalDate($util.addDay(new Date(), -1)),"formData.scoreDateEnd": $util.formatLocalDate($util.addDay(new Date(), -1)) });
+        that.setData({ "formData.scoreDateStart": $util.formatLocalDate($util.addDay(new Date(), -1)), "formData.scoreDateEnd": $util.formatLocalDate($util.addDay(new Date(), -1)) });
         that.pageRequest();
       }
     })
@@ -124,14 +124,21 @@ Page({
     var officeId = e.currentTarget.dataset.officeId;
     var officeName = e.currentTarget.dataset.officeName
     wx.redirectTo({
-      url: '/page/crm/reportScoreOfficeList/reportScoreOfficeList?areaId=' + officeId + '&areaName=' + officeName + '&scoreDateStart=' + that.data.formData.scoreDateStart+'&scoreDateEnd='+that.data.formData.scoreDateEnd
+      url: '/page/crm/reportScoreOfficeList/reportScoreOfficeList?areaId=' + officeId + '&areaName=' + officeName + '&scoreDateStart=' + that.data.formData.scoreDateStart + '&scoreDateEnd=' + that.data.formData.scoreDateEnd
     })
   },
 
   formSubmit: function (e) {
     var that = this;
     that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
-    that.pageRequest();
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        that.pageRequest();
+      }
+    })
   },
 
   toFirstPage: function () {
