@@ -1,5 +1,7 @@
 package net.myspring.basic.modules.hr.dto;
 
+import net.myspring.basic.modules.hr.domain.OfficeChange;
+import net.myspring.common.dto.DataDto;
 import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
@@ -7,7 +9,7 @@ import java.math.BigDecimal;
 /**
  * Created by wangzm on 2017/7/20.
  */
-public class OfficeChangeFormDto {
+public class OfficeChangeFormDto extends DataDto<OfficeChange>{
     private String id;
     private String parentName;
     private String name;

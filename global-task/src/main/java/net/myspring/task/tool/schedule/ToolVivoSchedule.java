@@ -29,26 +29,33 @@ public class ToolVivoSchedule {
     public void pullIdvivoData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.IDVIVO.name())) {
-            logger.info("同步工厂数据开始");
+            logger.info("下拉工厂数据开始");
             String date=LocalDateUtils.format(LocalDate.now());
             toolVivoClient.pullFactoryData(CompanyNameEnum.IDVIVO.name(),date);
-            logger.info("同步工厂数据结束");
+            logger.info("下拉工厂数据结束");
         }
     }
 
-
-
-    @Scheduled(cron = "0 0 21,22,23 * * ?")
+    @Scheduled(cron = "0 20 21,22,23 * * ?")
     public void pushIdvivoToLocal(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.IDVIVO.name())) {
-            logger.info("工厂上抛数据开始");
+            logger.info("同步业务数据至中转库开始");
             String date= LocalDateUtils.format(LocalDate.now());
             toolVivoClient.pushToLocal(CompanyNameEnum.IDVIVO.name(),date);
-            logger.info("工厂上抛数据结束");
+            logger.info("同步业务数据至中转库结束");
         }
     }
 
-
+    @Scheduled(cron = "0 40 21,22,23 * * ?")
+    public void pushIdvivoData(){
+        List<String> companyNameList = Arrays.asList(companyNames);
+        if(companyNameList.contains(CompanyNameEnum.IDVIVO.name())) {
+            logger.info("上抛中转库数据至工厂数据库开始");
+            String date=LocalDateUtils.format(LocalDate.now());
+            toolVivoClient.pushFactoryData(CompanyNameEnum.IDVIVO.name(),date);
+            logger.info("上抛中转库数据至工厂数据库结束");
+        }
+    }
 
 }

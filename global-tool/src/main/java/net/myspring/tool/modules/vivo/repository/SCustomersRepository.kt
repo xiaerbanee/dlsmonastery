@@ -5,6 +5,7 @@ import net.myspring.tool.modules.vivo.domain.SCustomers
 import net.myspring.tool.modules.vivo.dto.SCustomerDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils
 import org.springframework.stereotype.Component
@@ -16,6 +17,12 @@ class SCustomersRepository @Autowired constructor(val namedParameterJdbcTemplate
     fun deleteAll():Int{
         val map = Maps.newHashMap<String,Any>()
         return namedParameterJdbcTemplate.update("DELETE FROM vivo_push_customers WHERE 1=1",map)
+    }
+
+    fun deleteByAgentCode(agentCode: String):Int{
+        val map = Maps.newHashMap<String,Any>()
+        val sb = "delete from S_Customers_"+agentCode
+        return namedParameterJdbcTemplate.update(sb,map)
     }
 
 
@@ -50,7 +57,7 @@ class SCustomersRepository @Autowired constructor(val namedParameterJdbcTemplate
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(), SqlParameterSourceUtils.createBatch(sCustomersM13e00List.toTypedArray()))
     }
 
-    fun batchIDvivoSave(sCustomersM13e00List: MutableList<SCustomers>, agentCode:String): IntArray? {
+    fun batchSaveToFactory(agentCode:String,sCustomersM13e00List: MutableList<SCustomers>): IntArray? {
         val sb = StringBuffer()
         sb.append("insert into ")
         sb.append(" S_Customers_"+agentCode)
@@ -79,4 +86,12 @@ class SCustomersRepository @Autowired constructor(val namedParameterJdbcTemplate
             )""")
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(), SqlParameterSourceUtils.createBatch(sCustomersM13e00List.toTypedArray()))
     }
+
+    fun findByAgentCodeIn(agentCodeList: MutableList<String>):MutableList<SCustomers>{
+        var paramMap = Maps.newHashMap<String, Any>()
+        paramMap.put("agentCodeList",agentCodeList)
+        val sb = "select * from vivo_push_customers where AgentCode in (:agentCodeList) "
+        return namedParameterJdbcTemplate.query(sb,paramMap,BeanPropertyRowMapper(SCustomers::class.java))
+    }
+
 }

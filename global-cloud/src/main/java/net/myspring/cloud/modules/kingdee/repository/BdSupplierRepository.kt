@@ -77,6 +77,23 @@ class BdSupplierRepository @Autowired constructor(val namedParameterJdbcTemplate
         """, BeanPropertyRowMapper(BdSupplier::class.java))
     }
 
+    fun findAllIncludeForbid(): MutableList<BdSupplier>? {
+        var sb = StringBuilder("""
+             SELECT
+                t1.FSUPPLIERID,
+                t1.FNUMBER,
+                t2.FNAME,
+                t1.FDOCUMENTSTATUS,
+                t1.FFORBIDSTATUS
+            FROM
+                T_BD_SUPPLIER t1,
+                T_BD_SUPPLIER_L t2
+            WHERE
+                t1.FSUPPLIERID = t2.FSUPPLIERID
+        """);
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertyRowMapper(BdSupplier::class.java));
+    }
+
     fun findPageIncludeForbid(pageable: Pageable, bdSupplierQuery: BdSupplierQuery): Page<BdSupplier>? {
         var sb = StringBuilder("""
              SELECT
@@ -101,7 +118,7 @@ class BdSupplierRepository @Autowired constructor(val namedParameterJdbcTemplate
         return PageImpl(list,pageable,count);
     }
 
-    fun findBySupplierIdList(supplierIdList: List<String>): MutableList<BdSupplier>? {
+    fun findIncludeForbidBySupplierIdList(supplierIdList: List<String>): MutableList<BdSupplier>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FSUPPLIERID,
@@ -114,8 +131,6 @@ class BdSupplierRepository @Autowired constructor(val namedParameterJdbcTemplate
                 T_BD_SUPPLIER_L t2
             WHERE
                 t1.FSUPPLIERID = t2.FSUPPLIERID
-                AND t1.FDOCUMENTSTATUS = 'C'
-                AND t1.FFORBIDSTATUS = 'A'
                 and t1.FSUPPLIERID in (:supplierIdList)
         """,Collections.singletonMap("supplierIdList",supplierIdList), BeanPropertyRowMapper(BdSupplier::class.java))
     }

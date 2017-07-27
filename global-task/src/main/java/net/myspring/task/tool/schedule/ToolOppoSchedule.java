@@ -38,7 +38,7 @@ public class ToolOppoSchedule {
 
 
 
-    @Scheduled(cron = "0 0 21,22,23 * * ?")
+    @Scheduled(cron = "0 30 21,22,23 * * ?")
     public void pushJxoppoToLocal(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXOPPO.name())) {
