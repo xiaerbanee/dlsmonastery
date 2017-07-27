@@ -47,7 +47,7 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
         """, BeanPropertyRowMapper(BdCustomer::class.java))
     }
 
-    fun findAll(bdCustomerQuery: BdCustomerQuery): MutableList<BdCustomer>? {
+    fun findAllIncludeForbid(bdCustomerQuery: BdCustomerQuery): MutableList<BdCustomer>? {
         var paramMap = HashMap<String, Any>()
         paramMap.put("customerGroup", bdCustomerQuery.customerGroup)
         paramMap.put("customerIdList", bdCustomerQuery.customerIdList)
@@ -168,7 +168,7 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
         }
     }
 
-    fun findByIdList(idList: MutableList<String>): MutableList<BdCustomer>? {
+    fun findIncludeForbidByIdList(idList: MutableList<String>): MutableList<BdCustomer>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FCUSTID,
@@ -189,8 +189,6 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
                 t1.FCUSTID = t2.FCUSTID
                 AND t1.FPRIMARYGROUP = t3.FID
                 AND t3.FID = t4.FID
-                and t1.FFORBIDSTATUS = 'A'
-                and t1.FDOCUMENTSTATUS = 'C'
                 and t1.FCUSTID in (:idList)
         """, Collections.singletonMap("idList",idList),  BeanPropertyRowMapper(BdCustomer::class.java))
     }

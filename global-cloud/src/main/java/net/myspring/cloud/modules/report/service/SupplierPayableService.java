@@ -12,6 +12,7 @@ import net.myspring.cloud.modules.report.dto.SupplierPayableDetailDto;
 import net.myspring.cloud.modules.report.dto.SupplierPayableDto;
 import net.myspring.cloud.modules.report.repository.SupplierPayableRepository;
 import net.myspring.cloud.modules.report.web.query.SupplierPayableQuery;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.*;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -98,9 +99,9 @@ public class SupplierPayableService {
                 }
                 Map<String, BdSupplier> bdSupplierIdMap;
                 if (supplierIdList.size() > 0) {
-                    bdSupplierIdMap = bdSupplierRepository.findBySupplierIdList(supplierIdList).stream().collect(Collectors.toMap(BdSupplier::getFSupplierId, BdSupplier -> BdSupplier));
+                    bdSupplierIdMap = bdSupplierRepository.findIncludeForbidBySupplierIdList(supplierIdList).stream().collect(Collectors.toMap(BdSupplier::getFSupplierId, BdSupplier -> BdSupplier));
                 } else {
-                    bdSupplierIdMap = bdSupplierRepository.findAll().stream().collect(Collectors.toMap(BdSupplier::getFSupplierId, BdSupplier -> BdSupplier));
+                    bdSupplierIdMap = bdSupplierRepository.findAllIncludeForbid().stream().collect(Collectors.toMap(BdSupplier::getFSupplierId, BdSupplier -> BdSupplier));
                 }
                 for (SupplierPayableDto supplierPayable : supplierPayableDtoList) {
                     String key = supplierPayable.getSupplierId();
@@ -176,9 +177,9 @@ public class SupplierPayableService {
         }
         Map<String,BdSupplier> bdSupplierIdMap;
         if (CollectionUtil.isNotEmpty(supplierIdList)){
-            bdSupplierIdMap = bdSupplierRepository.findBySupplierIdList(supplierIdList).stream().collect(Collectors.toMap(BdSupplier::getFSupplierId,BdSupplier->BdSupplier));
+            bdSupplierIdMap = bdSupplierRepository.findIncludeForbidBySupplierIdList(supplierIdList).stream().collect(Collectors.toMap(BdSupplier::getFSupplierId,BdSupplier->BdSupplier));
         }else {
-            bdSupplierIdMap = bdSupplierRepository.findAll().stream().collect(Collectors.toMap(BdSupplier::getFSupplierId,BdSupplier->BdSupplier));
+            bdSupplierIdMap = bdSupplierRepository.findAllIncludeForbid().stream().collect(Collectors.toMap(BdSupplier::getFSupplierId,BdSupplier->BdSupplier));
         }
         Map<String,BdMaterial> materialIdMap = Maps.newHashMap();
         if (materialIdList.size()>0){

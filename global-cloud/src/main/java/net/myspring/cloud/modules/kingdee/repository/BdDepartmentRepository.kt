@@ -62,6 +62,23 @@ class  BdDepartmentRepository @Autowired constructor(val namedParameterJdbcTempl
         """, Collections.singletonMap("idList", idList), BeanPropertyRowMapper(BdDepartment::class.java))
     }
 
+    fun findIncludeForbidByIdList(idList: MutableList<String>): MutableList<BdDepartment>? {
+        return namedParameterJdbcTemplate.query("""
+            select
+                t1.FDEPTID,
+                t1.FNUMBER,
+                t2.FFULLNAME,
+                t1.FFORBIDSTATUS,
+                t1.FDOCUMENTSTATUS
+            from
+                T_BD_DEPARTMENT t1,
+                T_BD_DEPARTMENT_L t2
+            where
+                t1.FDEPTID = t2.FDEPTID
+                and t1.FDEPTID in (:idList)
+        """, Collections.singletonMap("idList", idList), BeanPropertyRowMapper(BdDepartment::class.java))
+    }
+
     fun findAll(): MutableList<BdDepartment>? {
         return namedParameterJdbcTemplate.query("""
             select
