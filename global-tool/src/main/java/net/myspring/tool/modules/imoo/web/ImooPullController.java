@@ -25,7 +25,7 @@ public class ImooPullController {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value="syn")
+    @RequestMapping(value="pullFactoryData")
     public String syn(String date){
         logger.info(LocalDateTime.now()+"imoo开始同步物料编码:");
         List<ImooPlantBasicProduct> imooPlantBasicProducts = imooPullService.imooPlantBasicProducts();
