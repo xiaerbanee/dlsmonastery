@@ -19,7 +19,7 @@ CREATE TABLE `crm_simple_process_detail` (
   `simple_process_id` bigint(20) NOT NULL,
   `process_status` varchar(50) NOT NULL,
   `opinion` varchar(50) NOT NULL,
-  `remarks` varchar(255) NOT NULL,
+  `remarks` varchar(255),
   `created_by` bigint(20) NOT NULL,
   `created_date` datetime NOT NULL,
   `last_modified_by` bigint(20) NOT NULL,
