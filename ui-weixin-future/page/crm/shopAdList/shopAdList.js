@@ -67,11 +67,11 @@ Page({
         for (var item in content) {
           var actionList = new Array();
           actionList.push("详细");
-          if (content[item].isAuditable  && content[item].processStatus !== "已通过" && content[item].processStatus !== "未通过") {
+          if (content[item].isAuditable && content[item].processStatus !== "已通过" && content[item].processStatus !== "未通过") {
             actionList.push("审核");
           }
           if (content[item].isEditable && !content[item].locked) {
-            actionList.push("修改","删除");
+            actionList.push("修改", "删除");
           }
           res.data.content[item].actionList = actionList;
         }
@@ -93,7 +93,14 @@ Page({
   formSubmit: function (e) {
     var that = this;
     that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
-    that.pageRequest();
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        that.pageRequest();
+      }
+    })
   },
   bindAdType: function (e) {
     var that = this;

@@ -5,10 +5,10 @@ Page({
   data: {
     page: {},
     formData: {},
-    formProperty:{},
+    formProperty: {},
     searchHidden: true,
     activeItem: null,
-    scrollTop:null,
+    scrollTop: null,
   },
   onLoad: function (option) {
     let that = this;
@@ -46,22 +46,22 @@ Page({
   },
   pageRequest: function () {
     var that = this
-        wx.request({
-          url: $util.getUrl("ws/future/crm/goodsOrder"),
-          header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
-          data: $util.deleteExtra(that.data.formData),
-          success: function (res) {
-            console.log(res.data)  
-            for(var item in res.data.content){
-              let actionList = new Array();
-              actionList.push("详细");
-              res.data.content[item].actionList=actionList
-            }
-            that.setData({ page: res.data});
-            wx.hideToast();
-            that.setData({ scrollTop: $util.toUpper() });
-          }
-        })
+    wx.request({
+      url: $util.getUrl("ws/future/crm/goodsOrder"),
+      header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
+      data: $util.deleteExtra(that.data.formData),
+      success: function (res) {
+        console.log(res.data)
+        for (var item in res.data.content) {
+          let actionList = new Array();
+          actionList.push("详细");
+          res.data.content[item].actionList = actionList
+        }
+        that.setData({ page: res.data });
+        wx.hideToast();
+        that.setData({ scrollTop: $util.toUpper() });
+      }
+    })
   },
   add: function () {
     wx.navigateTo({
@@ -135,7 +135,14 @@ Page({
   formSubmit: function (e) {
     var that = this;
     that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
-    that.pageRequest();
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        that.pageRequest();
+      }
+    })
   },
   toFirstPage: function () {
     var that = this;
