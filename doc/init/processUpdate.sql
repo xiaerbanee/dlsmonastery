@@ -51,11 +51,11 @@ CREATE TABLE `crm_simple_process_detail` (
 
 INSERT INTO crm_simple_process_detail (
   SELECT
-    NULL,
+    t1.ID_,
     t1.PROC_INST_ID_,
     t1.name_,
     "",
-    case WHEN t2.MESSAGE_ IS NULL THEN '' ELSE t2.MESSAGE_ END,
+    '',
     case WHEN t1.ASSIGNEE_ IS NULL THEN 1 ELSE t1.ASSIGNEE_ END,
     case WHEN t1.END_TIME_ IS NULL THEN now() ELSE t1.END_TIME_ END,
     case WHEN t1.ASSIGNEE_ IS NULL THEN 1 ELSE t1.ASSIGNEE_ END,
@@ -64,10 +64,15 @@ INSERT INTO crm_simple_process_detail (
     0,
     1
   FROM
-    act_hi_taskinst t1 LEFT JOIN act_hi_comment t2 ON t1.ID_ = t2.TASK_ID_ and t1.PROC_INST_ID_ = t2.PROC_INST_ID_
+    act_hi_taskinst t1
+      LEFT JOIN crm_simple_process t3 ON t1.PROC_INST_ID_ = t3.id
   WHERE
-    t1.PROC_INST_ID_ in  (select id from crm_simple_process )
+    t3.id is not null
 );
+
+update crm_simple_process_detail t1 set remarks = (select t2.message_ from act_hi_comment t2 where t1.ID_ = t2.TASK_ID_ and t1.simple_process_id = t2.PROC_INST_ID_);
+
+
 
 ALTER TABLE crm_ad_goods_order
   ADD COLUMN simple_process_id bigint(20) NULL AFTER process_instance_id;
