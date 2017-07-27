@@ -36,7 +36,7 @@ public class ToolVivoSchedule {
         }
     }
 
-    @Scheduled(cron = "0 0 21,22,23 * * ?")
+    @Scheduled(cron = "0 20 21,22,23 * * ?")
     public void pushIdvivoToLocal(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.IDVIVO.name())) {
@@ -47,7 +47,7 @@ public class ToolVivoSchedule {
         }
     }
 
-    @Scheduled(cron = "0 0 0/1 * * ?")
+    @Scheduled(cron = "0 40 21,22,23 * * ?")
     public void pushIdvivoData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.IDVIVO.name())) {
