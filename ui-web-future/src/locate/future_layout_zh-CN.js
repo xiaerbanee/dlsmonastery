@@ -218,6 +218,8 @@ export default {
     export:"导出",
     itemDetailList:"详细",
     hasDeposit:"有无押金",
+    productAudit:"产品经理审核",
+    companyAudit:"终端主管审核",
   },
   adGoodsOrderDetailList: {
     adGoodsOrderDetailList: "订货详细",

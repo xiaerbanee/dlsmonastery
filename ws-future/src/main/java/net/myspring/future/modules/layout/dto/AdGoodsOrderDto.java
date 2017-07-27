@@ -56,6 +56,7 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
 
     private String processPositionId;
     private String processInstanceId;
+    private String simpleProcessId;
     private String investInCause;
     private String billAddress;
     private Boolean splitBill;
@@ -70,6 +71,14 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     @CacheInput(inputKey = "employees", inputInstance = "employeeId", outputInstance = "mobilePhone")
     private String employeeMobilePhone;
     private Boolean locked;
+
+    public String getSimpleProcessId() {
+        return simpleProcessId;
+    }
+
+    public void setSimpleProcessId(String simpleProcessId) {
+        this.simpleProcessId = simpleProcessId;
+    }
 
     public Boolean getLocked() {
         return locked;

@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum SimpleProcessTypeEnum {
-    销售收款(BankInProcessStepEnum.values());
+    销售收款(BankInProcessStepEnum.values()),
+    柜台订货(AdGoodsOrderProcessEnum.values());
 
     private Enum[] processStepEnums;
     private List<String> allProcessStatuses;
