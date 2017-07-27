@@ -30,6 +30,12 @@ CREATE TABLE `crm_simple_process_detail` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `crm_tmp_20170727` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `remarks` varchar(255),
+  PRIMARY KEY (`id`)
+);
+
   INSERT INTO crm_simple_process (
   SELECT
     process_instance_id,
@@ -70,9 +76,11 @@ INSERT INTO crm_simple_process_detail (
     t3.id is not null
 );
 
-update crm_simple_process_detail t1 set remarks = (select t2.message_ from act_hi_comment t2 where t1.ID = t2.TASK_ID_ and t1.simple_process_id = t2.PROC_INST_ID_);
+INSERT INTO crm_tmp_20170727 (
+  select t1.id id, t2.message_ remarks from crm_simple_process_detail t1 , act_hi_comment t2 where t1.ID = t2.TASK_ID_ and t1.simple_process_id = t2.PROC_INST_ID_
+);
 
-
+update crm_simple_process_detail t1 set remarks = (select t2.remarks from crm_tmp_20170727 t2 where t1.ID = t2.id );
 
 ALTER TABLE crm_ad_goods_order
   ADD COLUMN simple_process_id bigint(20) NULL AFTER process_instance_id;
@@ -82,3 +90,6 @@ ALTER TABLE crm_bank_in
 
 update crm_ad_goods_order set simple_process_id = process_instance_id;
 update crm_bank_in set simple_process_id = process_instance_id;
+
+
+DROP TABLE IF EXISTS `crm_tmp_20170727`;
