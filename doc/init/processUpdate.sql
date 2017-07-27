@@ -66,7 +66,7 @@ INSERT INTO crm_simple_process_detail (
   FROM
     act_hi_taskinst t1 LEFT JOIN act_hi_comment t2 ON t1.ID_ = t2.TASK_ID_ and t1.PROC_INST_ID_ = t2.PROC_INST_ID_
   WHERE
-    t1.PROC_INST_ID_ in  (select process_instance_id from crm_bank_in where process_instance_id is not null) or t1.PROC_INST_ID_ in  (select process_instance_id from crm_ad_goods_order where process_instance_id is not null)
+    t1.PROC_INST_ID_ in  (select id from crm_simple_process )
 );
 
 ALTER TABLE crm_ad_goods_order
