@@ -137,6 +137,7 @@ public class SalOutStockManager {
                     +CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+adGoodsOrder.getBillAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
             List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
             List<AdGoodsOrderDetail> adGoodsOrderDetailLists = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
+            String storeId  = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.AD_CHARGE_DEPOTS.name()).getCode();
             for(AdGoodsOrderDetail adGoodsOrderDetail:adGoodsOrderDetailLists){
                 Product product = productMap.get(adGoodsOrderDetail.getProductId());
                 SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
@@ -152,7 +153,7 @@ public class SalOutStockManager {
                 }
                 entityDto.setQty(adGoodsOrderDetail.getBillQty());
                 // 是否赠品 赠品，电教，imoo 广告办事处的以原价出库
-                if(BillTypeEnum.配件赠品.name().equals(adGoodsOrder.getBillType())){//或者是电教公司,而且的depot必须是金蝶里有的
+                if(BillTypeEnum.配件赠品.name().equals(adGoodsOrder.getBillType()) || (CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())&&depotStore.getOutId().equals(storeId))){
                     entityDto.setPrice(product.getPrice2());
                 }else{
                     entityDto.setPrice(BigDecimal.ZERO);
@@ -202,7 +203,7 @@ public class SalOutStockManager {
             }
             entityDto.setQty(adGoodsOrderDetail.getBillQty());
             // 是否赠品-- 赠品(电教，imoo 的广告办事处的以原价出库)
-            if(BillTypeEnum.配件赠品.name().equals(adGoodsOrder.getBillType()) || CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())&&depotStore.getOutId().equals(storeId)){
+            if(BillTypeEnum.配件赠品.name().equals(adGoodsOrder.getBillType()) || (CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())&&depotStore.getOutId().equals(storeId))){
                 entityDto.setPrice(productMap.get(adGoodsOrderDetail.getProductId()).getPrice2());
             }else{
                 entityDto.setPrice(BigDecimal.ZERO);
