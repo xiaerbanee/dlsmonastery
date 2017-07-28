@@ -20,16 +20,16 @@ class ImooRepository @Autowired constructor(val namedParameterJdbcTemplate:Named
         return namedParameterJdbcTemplate.query("select * from PlantBasicProduct ",BeanPropertyRowMapper(ImooPlantBasicProduct::class.java))
     }
 
-        fun plantPrdocutImeiDeliverByDate(dateStart: LocalDate,  dateEnd: LocalDate, agentCodes: MutableList<String>): MutableList<ImooPrdocutImeiDeliver>{
-            val paramMap = Maps.newHashMap<String, Any>()
-            paramMap.put("dateStart",dateStart)
-            paramMap.put("dateEnd",dateEnd)
-            paramMap.put("agentCodes",agentCodes)
-            return namedParameterJdbcTemplate.query("""
-                select * from prdocutimeideliver t
-                where t.creation_date >= :dateStart
-                and t.creation_date < :dateEnd
-                and mainagentid in (:agentCodes)
-            """,paramMap,BeanPropertyRowMapper(ImooPrdocutImeiDeliver::class.java))
-        }
+    fun plantPrdocutImeiDeliverByDate(dateStart: LocalDate,  dateEnd: LocalDate, agentCodes: MutableList<String>): MutableList<ImooPrdocutImeiDeliver>{
+        val paramMap = Maps.newHashMap<String, Any>()
+        paramMap.put("dateStart",dateStart)
+        paramMap.put("dateEnd",dateEnd)
+        paramMap.put("agentCodes",agentCodes)
+        return namedParameterJdbcTemplate.query("""
+            select * from prdocutimeideliver t
+            where t.creation_date >= :dateStart
+            and t.creation_date < :dateEnd
+            and mainagentid in (:agentCodes)
+        """,paramMap,BeanPropertyRowMapper(ImooPrdocutImeiDeliver::class.java))
+    }
 }

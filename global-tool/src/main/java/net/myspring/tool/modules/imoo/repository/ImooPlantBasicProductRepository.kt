@@ -24,7 +24,6 @@ class ImooPlantBasicProductRepository @Autowired constructor(val namedParameterJ
     fun batchSave(imooPlantBasicProductList:MutableList<ImooPlantBasicProduct>):IntArray{
         val sb = """ INSERT INTO imoo_plant_basic_product(segment1,description,product_id,title,plid,plname,created_time)
                 values(:segment1,:description,:productId,:title,:plid,:plname,:createdTime)"""
-        return namedParameterJdbcTemplate.batchUpdate(sb,SqlParameterSourceUtils.createBatch(imooPlantBasicProductList.toTypedArray()));
-
+        return namedParameterJdbcTemplate.batchUpdate(sb,SqlParameterSourceUtils.createBatch(imooPlantBasicProductList.toTypedArray()))
     }
 }
