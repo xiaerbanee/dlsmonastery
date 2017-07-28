@@ -93,8 +93,8 @@ public class OfficeChangeService {
         List<OfficeChangeFormDto> officeChangeFormDtos = findByOfficeId(id);
         BigDecimal beforeTaskPoint = BigDecimal.ZERO;
         for (OfficeChangeFormDto officeChangeFormDto : officeChangeFormDtos){
-            if (officeChangeFormDto.getPoint() != null){
-                beforeTaskPoint = beforeTaskPoint.add(officeChangeFormDto.getPoint());
+            if (officeChangeFormDto.getTaskPoint() != null){
+                beforeTaskPoint = beforeTaskPoint.add(officeChangeFormDto.getTaskPoint());
             }
         }
         if (afterTaskPoint.compareTo(beforeTaskPoint) == 0) {
@@ -112,7 +112,7 @@ public class OfficeChangeService {
                     OfficeChange officeChange=new OfficeChange();
                     officeChange.setType(OfficeChnageTypeEnum.上级.name());
                     officeChange.setNewLabel(parentName);
-                    officeChange.setNewLabel(parent.getId());
+                    officeChange.setNewValue(parent.getId());
                     officeChange.setOldLabel(HandsontableUtils.getValue(row, 1));
                     officeChange.setOldValue(office.getParentId());
                     officeChange.setOfficeId(officeId);
@@ -122,7 +122,7 @@ public class OfficeChangeService {
                     OfficeChange officeChange=new OfficeChange();
                     officeChange.setType(OfficeChnageTypeEnum.任务点位.name());
                     officeChange.setNewLabel(taskPoint);
-                    officeChange.setNewLabel(taskPoint);
+                    officeChange.setNewValue(taskPoint);
                     officeChange.setOldLabel(office.getTaskPoint().toString());
                     officeChange.setOldValue(office.getTaskPoint().toString());
                     officeChange.setOfficeId(officeId);
@@ -132,7 +132,7 @@ public class OfficeChangeService {
                     OfficeChange officeChange=new OfficeChange();
                     officeChange.setType(OfficeChnageTypeEnum.名称.name());
                     officeChange.setNewLabel(name);
-                    officeChange.setNewLabel(name);
+                    officeChange.setNewValue(name);
                     officeChange.setOldLabel(office.getName());
                     officeChange.setOldValue(office.getName());
                     officeChange.setOfficeId(officeId);
