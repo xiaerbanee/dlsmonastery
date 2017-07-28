@@ -3,6 +3,7 @@ package net.myspring.future.modules.crm.dto;
 import com.google.common.collect.Lists;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.common.constant.FormatterConstant;
+import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.IdUtils;
@@ -433,6 +434,10 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     }
 
     public BigDecimal getShopShouldGetAfterBill(){
+        if(!GoodsOrderStatusEnum.待开单.name().equals(status)){
+            return null;
+        }
+
         if(amount !=null && shopShouldGet != null){
             return amount.add(shopShouldGet);
         }
