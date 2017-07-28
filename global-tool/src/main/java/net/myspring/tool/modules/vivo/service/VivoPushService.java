@@ -67,23 +67,23 @@ public class VivoPushService {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Transactional
-    public void pushToLocal(VivoPushDto vivoPushDto){
+    public void pushToLocal(PushToLocalDto pushToLocalDto){
         //同步机构数据
         pushVivoZonesData();
         //客户数据
-        pushVivoPushSCustomersData(vivoPushDto.getsCustomerDtoList(),vivoPushDto.getDate());
+        pushVivoPushSCustomersData(pushToLocalDto.getsCustomerDtoList(),pushToLocalDto.getDate());
         //库存汇总数据
-        pushCustomerStockData(vivoPushDto.getsPlantCustomerStockDtoList(),vivoPushDto.getProductColorMap(),vivoPushDto.getDate());
+        pushCustomerStockData(pushToLocalDto.getsPlantCustomerStockDtoList(),pushToLocalDto.getProductColorMap(),pushToLocalDto.getDate());
         //库存串码明细
-        pushCustomerStockDetailData(vivoPushDto.getsPlantCustomerStockDetailDtoList(),vivoPushDto.getProductColorMap(),vivoPushDto.getDate());
+        pushCustomerStockDetailData(pushToLocalDto.getsPlantCustomerStockDetailDtoList(),pushToLocalDto.getProductColorMap(),pushToLocalDto.getDate());
+        //演示机数据
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
-            //演示机数据
-            pushDemoPhonesData(vivoPushDto.getsProductItemLendList(),vivoPushDto.getProductColorMap(),vivoPushDto.getDate());
+            pushDemoPhonesData(pushToLocalDto.getsProductItemLendList(),pushToLocalDto.getProductColorMap(),pushToLocalDto.getDate());
         }
         //核销记录数据
-        pushProductImeSaleData(vivoPushDto.getVivoCustomerSaleImeiDtoList(),vivoPushDto.getProductColorMap(),vivoPushDto.getDate());
+        pushProductImeSaleData(pushToLocalDto.getVivoCustomerSaleImeiDtoList(),pushToLocalDto.getProductColorMap(),pushToLocalDto.getDate());
         //一代仓库上抛
-        pushSStoreData(vivoPushDto.getsStoresList());
+        pushSStoreData(pushToLocalDto.getsStoresList());
     }
 
 
@@ -401,6 +401,144 @@ public class VivoPushService {
 
     private String getZoneId(String mainCode,String id){
         return StringUtils.getFormatId(id,mainCode,"0000");
+    }
+
+    public VivoPushDto getPushFactoryDate(String date) {
+        String dateStart = date;
+        String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
+        VivoPushDto vivoPushDto = new VivoPushDto();
+        List<String> agentCodeList = officeClient.findDistinctAgentCode();
+        vivoPushDto.setsZonesList(sZonesRepository.findByAgentCodeIn(agentCodeList));
+        vivoPushDto.setsCustomersList(sCustomersRepository.findByAgentCodeIn(agentCodeList));
+        vivoPushDto.setsPlantEndProductSaleList(sPlantEndProductSaleRepository.findByDateAndAgentCodeIn(dateStart,dateEnd,agentCodeList));
+        vivoPushDto.setsPlantStockDealerList(sPlantStockDealerRepository.findByDateAndAgentCodeIn(dateStart,dateEnd,agentCodeList));
+        vivoPushDto.setsPlantStockStoresList(sPlantStockStoresRepository.findByDateAndAgentCodeIn(dateStart,dateEnd,agentCodeList));
+        vivoPushDto.setsPlantStockSupplyList(sPlantStockSupplyRepository.findByDateAndAgentCodeIn(dateStart,dateEnd,agentCodeList));
+        vivoPushDto.setsProductItem000List(sProductItem000Repository.findByAgentCodeIn(agentCodeList));
+        vivoPushDto.setsProductItemStocksList(sProductItemStocksRepository.findByAgentCodeIn(agentCodeList));
+        vivoPushDto.setsStoresList(sStoresRepository.findByAgentCodeIn(agentCodeList));
+        if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
+            vivoPushDto.setsProductItemLendList(sProductItemLendRepository.findByDateAndAgentCodeIn(dateStart,dateEnd,agentCodeList));
+        }
+        logger.info("数据获取成功");
+        return vivoPushDto;
+    }
+
+    @FactoryDataSource
+    @Transactional
+    public void pushFactoryData(VivoPushDto vivoPushDto,String date){
+        List<String> agentCodeList = officeClient.findDistinctAgentCode();
+        String dateSart = date;
+        String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
+        for (String agentCode : agentCodeList){
+
+            List<SZones> sZonesList = Lists.newArrayList();
+            List<SPlantEndProductSale> sPlantEndProductSaleList = Lists.newArrayList();
+            List<SPlantStockDealer> sPlantStockDealerList = Lists.newArrayList();
+            List<SPlantStockStores> sPlantStockStoresList = Lists.newArrayList();
+            List<SPlantStockSupply> sPlantStockSupplyList = Lists.newArrayList();
+            List<SProductItem000> sProductItem000List = Lists.newArrayList();
+            List<SProductItemLend> sProductItemLendList = Lists.newArrayList();
+            List<SProductItemStocks> sProductItemStocksList = Lists.newArrayList();
+            List<SStores> sStoresList = Lists.newArrayList();
+            List<SCustomers> sCustomersList = Lists.newArrayList();
+
+            for (SZones sZones : vivoPushDto.getsZonesList()){
+                if (agentCode.equals(sZones.getAgentCode())){
+                    sZonesList.add(sZones);
+                }
+            }
+
+            for (SPlantEndProductSale sPlantEndProductSale : vivoPushDto.getsPlantEndProductSaleList()){
+                if (agentCode.equals(sPlantEndProductSale.getAgentCode())){
+                    sPlantEndProductSaleList.add(sPlantEndProductSale);
+                }
+            }
+
+            for (SPlantStockDealer sPlantStockDealer : vivoPushDto.getsPlantStockDealerList()){
+                if (agentCode.equals(sPlantStockDealer.getAgentCode())){
+                    sPlantStockDealerList.add(sPlantStockDealer);
+                }
+            }
+
+            for (SPlantStockStores sPlantStockStores : vivoPushDto.getsPlantStockStoresList()){
+                if (agentCode.equals(sPlantStockStores.getAgentCode())){
+                    sPlantStockStoresList.add(sPlantStockStores);
+                }
+            }
+
+            for (SPlantStockSupply sPlantStockSupply : vivoPushDto.getsPlantStockSupplyList()){
+                if (agentCode.equals(sPlantStockSupply.getAgentCode())){
+                    sPlantStockSupplyList.add(sPlantStockSupply);
+                }
+            }
+
+            for (SProductItem000 sProductItem000 : vivoPushDto.getsProductItem000List()){
+                if (agentCode.equals(sProductItem000.getAgentCode())){
+                    sProductItem000List.add(sProductItem000);
+                }
+            }
+
+            for (SProductItemStocks sProductItemStocks : vivoPushDto.getsProductItemStocksList()){
+                if (agentCode.equals(sProductItemStocks.getAgentCode())){
+                    sProductItemStocksList.add(sProductItemStocks);
+                }
+            }
+
+            for (SStores sStore : vivoPushDto.getsStoresList()){
+                if (agentCode.equals(sStore.getAgentCode())){
+                    sStoresList.add(sStore);
+                }
+            }
+
+            for (SCustomers sCustomer : vivoPushDto.getsCustomersList()){
+                if (agentCode.equals(sCustomer.getAgentCode())){
+                    sCustomersList.add(sCustomer);
+                }
+            }
+
+            if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
+                for (SProductItemLend sProductItemLend : vivoPushDto.getsProductItemLendList()){
+                    sProductItemLendList.add(sProductItemLend);
+                }
+            }
+
+            logger.info("上抛数据至工厂数据库开始");
+
+            sZonesRepository.deleteByAgentCode(agentCode);
+            sZonesRepository.batchSaveToFactroy(agentCode,sZonesList);
+
+            sCustomersRepository.deleteByAgentCode(agentCode);
+            sCustomersRepository.batchSaveToFactory(agentCode,sCustomersList);
+
+            sPlantEndProductSaleRepository.deleteByBillDateAndAgentCode(dateSart,dateEnd,agentCode);
+            sPlantEndProductSaleRepository.batchSaveToFactory(agentCode,sPlantEndProductSaleList);
+
+            sPlantStockDealerRepository.deleteByAccountDateAndAgentCode(dateSart,dateEnd,agentCode);
+            sPlantStockDealerRepository.batchSaveToFactory(agentCode,sPlantStockDealerList);
+
+            sPlantStockStoresRepository.deleteByAccountDateAndAgentCode(dateSart,dateEnd,agentCode);
+            sPlantStockStoresRepository.batchSaveToFactory(agentCode,sPlantStockStoresList);
+
+            sPlantStockSupplyRepository.deleteByAccountDateAndAgentCode(dateSart,dateEnd,agentCode);
+            sPlantStockSupplyRepository.batchSaveToFactory(agentCode,sPlantStockSupplyList);
+
+            sProductItem000Repository.deleteByAgentCode(dateSart,dateEnd,agentCode);
+            sProductItem000Repository.batchSaveToFactory(agentCode,sProductItem000List);
+
+            sProductItemStocksRepository.deleteByAgentCode(agentCode);
+            sProductItemStocksRepository.batchSaveToFactory(agentCode,sProductItemStocksList);
+
+            sStoresRepository.deleteByAgentCode(agentCode);
+            sStoresRepository.batchSaveToFactory(agentCode,sStoresList);
+
+            if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
+                sProductItemLendRepository.deleteByUpdateTime(dateSart,dateEnd);
+                sProductItemLendRepository.batchSave(sProductItemLendList);
+            }
+
+            logger.info("上抛数据至工厂数据库结束");
+        }
     }
 
 }

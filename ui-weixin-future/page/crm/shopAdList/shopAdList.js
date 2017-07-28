@@ -102,13 +102,6 @@ Page({
       }
     })
   },
-  bindAdType: function (e) {
-    var that = this;
-    that.setData({
-      'formData.shopAdTypeId': that.data.formProperty.shopAdTypeList[e.detail.value].id,
-      'formData.shopAdTypeName': that.data.formProperty.shopAdTypeList[e.detail.value].name
-    })
-  },
   bindStatus: function (e) {
     var that = this;
     that.setData({ 'formData.processStatus': that.data.formProperty.processList[e.detail.value].name })

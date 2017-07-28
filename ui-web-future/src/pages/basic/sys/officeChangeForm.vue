@@ -4,24 +4,22 @@
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules">
         <el-row :gutter="20">
-          <el-col :span="6">
-            <el-form-item label="机构名称"   prop="stockNumber">
-              <el-select v-model="formData.id" filterable clearable remote placeholder="请输入关键词" :remote-method="remoteOffice" :loading="remoteLoading">
-                <el-option v-for="item in officeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
+          <el-col :span="10">
+            <el-form-item :label="$t('officeChangeForm.stockNumber')"   prop="stockNumber">
+              <office-select v-model="formData.id"></office-select>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="8">
             <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="getTableData" icon="view">搜索</el-button>
-              <el-button type="primary" :disabled="submitDisabled = false " @click="formSubmit" icon="check">保存</el-button>
+              <el-button type="primary" :disabled="submitDisabled" @click="getTableData" icon="view">{{$t('officeChangeForm.search')}}</el-button>
+              <el-button type="primary" :disabled="submitDisabled = false " @click="formSubmit" icon="check">{{$t('officeChangeForm.save')}}</el-button>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="原任务点位" >
+        <el-form-item :label="$t('officeChangeForm.oldTaskPoint')" >
           <span id="oldTaskPoint"></span>
         </el-form-item>
-        <el-form-item label="修改后任务点位">
+        <el-form-item :label="$t('officeChangeForm.newTaskPoint')">
           <span  id="newTaskPoint"></span>
         </el-form-item>
         <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
@@ -33,6 +31,7 @@
   @import "~handsontable/dist/handsontable.full.css";
 </style>
 <script>
+  import officeSelect from 'components/basic/office-select';
   import Handsontable from 'handsontable/dist/handsontable.full.js';
   var table = null;
   var newTaskPoint = 0;
@@ -57,6 +56,9 @@
     document.getElementById("oldTaskPoint").innerHTML = oldTaskPoint;
   };
   export default {
+    components:{
+      officeSelect
+    },
     data() {
       return {
         officeList: {},
@@ -124,7 +126,7 @@
               }
             }
             this.formData.json = JSON.stringify(this.formData.json);
-            axios.post('/api/basic/sys/office/saveChange', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
+            axios.post('/api/basic/hr/officeChange/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
               if(response.data.success){
                 this.$message(response.data.message);
               }else{
@@ -141,23 +143,12 @@
       },getTableData(){
           if (this.formData.id !== '') {
             util.setQuery("officeChangeForm", this.formData.id);
-            axios.get('/api/basic/sys/office/change?id=' + this.formData.id).then((response) => {
+            axios.get('/api/basic/hr/officeChange/findByOfficeId?officeId=' + this.formData.id).then((response) => {
               this.settings.data = response.data;
               table.loadData(this.settings.data);
               setOldTaskPoint(table.getData());
             });
           }
-      },
-      remoteOffice(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/sys/office/findByNameLike',{params:{name:query}}).then((response)=>{
-            this.officeList = response.data;
-            this.remoteLoading = false;
-          })
-        } else {
-          this.officeList = {};
-        }
       },
     }
   }

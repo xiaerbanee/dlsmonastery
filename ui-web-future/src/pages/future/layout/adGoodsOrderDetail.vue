@@ -66,8 +66,8 @@
               <el-form-item :label="$t('adGoodsOrderDetail.pass')" prop="pass">
                 <bool-radio-group v-model="inputForm.pass"></bool-radio-group>
               </el-form-item>
-              <el-form-item :label="$t('adGoodsOrderDetail.comment')" prop="remarks">
-                <el-input v-model="inputForm.remarks" type="textarea"></el-input>
+              <el-form-item :label="$t('adGoodsOrderDetail.comment')" prop="auditRemarks">
+                <el-input v-model="inputForm.auditRemarks" type="textarea"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">
@@ -87,16 +87,16 @@
           <el-table-column prop="productPrice2" :label="$t('adGoodsOrderDetail.price')"></el-table-column>
         </el-table>
 
-        <process-details v-model="adGoodsOrder.processInstanceId"></process-details>
+        <simple-process-details v-model="adGoodsOrder.simpleProcessId"></simple-process-details>
       </el-form>
     </div>
   </div>
 </template>
 <script>
-  import processDetails from 'components/general/process-details';
+  import simpleProcessDetails from 'components/future/simple-process-details';
   import boolRadioGroup from 'components/common/bool-radio-group';
   export default{
-    components: {processDetails, boolRadioGroup},
+    components: {simpleProcessDetails, boolRadioGroup},
     data(){
       return {
         isCreate: this.$route.query.id == null,
@@ -109,7 +109,7 @@
         inputForm: {
           id: this.$route.query.id,
           pass: false,
-          remarks: "",
+          auditRemarks: "",
         },
         rules: {
           pass: {required: true, message: this.$t('adGoodsOrderDetail.prerequisiteMessage')},

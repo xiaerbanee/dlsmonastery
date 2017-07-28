@@ -1,5 +1,7 @@
 package net.myspring.basic.modules.hr.dto;
 
+import net.myspring.basic.modules.hr.domain.OfficeChange;
+import net.myspring.common.dto.DataDto;
 import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
@@ -7,15 +9,15 @@ import java.math.BigDecimal;
 /**
  * Created by wangzm on 2017/7/20.
  */
-public class OfficeChangeFormDto {
+public class OfficeChangeFormDto extends DataDto<OfficeChange>{
     private String id;
     private String parentName;
     private String name;
     private String type;
-    private BigDecimal point;
+    private BigDecimal taskPoint;
     private String newParentName;
     private String newName;
-    private BigDecimal newPoint;
+    private BigDecimal newTaskPoint;
 
     public String getId() {
         return id;
@@ -49,12 +51,12 @@ public class OfficeChangeFormDto {
         this.type = type;
     }
 
-    public BigDecimal getPoint() {
-        return point;
+    public BigDecimal getTaskPoint() {
+        return taskPoint;
     }
 
-    public void setPoint(BigDecimal point) {
-        this.point = point;
+    public void setTaskPoint(BigDecimal taskPoint) {
+        this.taskPoint = taskPoint;
     }
 
     public String getNewParentName() {
@@ -79,14 +81,14 @@ public class OfficeChangeFormDto {
         this.newName = newName;
     }
 
-    public BigDecimal getNewPoint() {
-        if(point!=null&&newPoint!=null){
-            this.newPoint=point;
+    public BigDecimal getNewTaskPoint() {
+        if(taskPoint!=null&&newTaskPoint!=null){
+            this.newTaskPoint=newTaskPoint;
         }
-        return newPoint;
+        return newTaskPoint;
     }
 
-    public void setNewPoint(BigDecimal newPoint) {
-        this.newPoint = newPoint;
+    public void setNewTaskPoint(BigDecimal newTaskPoint) {
+        this.newTaskPoint = newTaskPoint;
     }
 }

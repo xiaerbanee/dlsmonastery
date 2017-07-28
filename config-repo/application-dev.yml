@@ -6,13 +6,13 @@ spring:
       password: bbk@123456
       driver-class-name: com.mysql.jdbc.Driver
     global-tool:
-        url: jdbc:mysql://168.192.1.243:3306/db_idvivo_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        url: jdbc:mysql://168.192.1.243:3306/db_dj_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
     ws-future:
       JXOPPO:
-        url: jdbc:mysql://168.192.1.17:3316/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        url: jdbc:mysql://168.192.1.17:3326/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
@@ -28,7 +28,7 @@ spring:
         driver-class-name: com.mysql.jdbc.Driver
     summer-basic:
       JXOPPO:
-        url: jdbc:mysql://168.192.1.17:3316/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        url: jdbc:mysql://168.192.1.17:3326/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
@@ -70,15 +70,15 @@ spring:
         password: gz86!*%
         driver-class-name: net.sourceforge.jtds.jdbc.Driver
       IDVIVO:
-        url: jdbc:jtds:sqlserver://id-transfer.vivo.xyz/PlantESaleWeb
-        username: user_m13e00
-        password: user_m13e00
+        url: jdbc:jtds:sqlserver://168.192.1.13/VIVOTEST
+        username: sa
+        password: bbk@123456
         driver-class-name: net.sourceforge.jtds.jdbc.Driver
       JXDJ:
-        url: jdbc:mysql://168.192.1.243:3306/db_dj_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
-        username: root
-        password: bbk@123456
-        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:jtds:sqlserver://esaledb.eebbk.com:1439/fxncbbk
+        username: nceebbk
+        password: 159#ncbbk@583
+        driver-class-name: net.sourceforge.jtds.jdbc.Driver
   redis:
     JXOPPO:
       host: localhost

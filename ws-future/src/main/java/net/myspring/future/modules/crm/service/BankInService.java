@@ -3,13 +3,16 @@ package net.myspring.future.modules.crm.service;
 import com.google.common.collect.Lists;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.enums.SimpleProcessEndsEnum;
+import net.myspring.future.common.enums.SimpleProcessTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.domain.SimpleProcess;
 import net.myspring.future.modules.basic.manager.ArReceiveBillManager;
 import net.myspring.future.modules.basic.manager.DepotManager;
+import net.myspring.future.modules.basic.manager.SimpleProcessManager;
 import net.myspring.future.modules.basic.repository.BankRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.crm.domain.BankIn;
@@ -18,10 +21,6 @@ import net.myspring.future.modules.crm.repository.BankInRepository;
 import net.myspring.future.modules.crm.web.form.BankInAuditForm;
 import net.myspring.future.modules.crm.web.form.BankInForm;
 import net.myspring.future.modules.crm.web.query.BankInQuery;
-import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
-import net.myspring.general.modules.sys.dto.ActivitiStartDto;
-import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
-import net.myspring.general.modules.sys.form.ActivitiStartForm;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
@@ -53,11 +52,11 @@ public class BankInService {
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private ActivitiClient activitiClient;
-    @Autowired
     private DepotManager depotManager;
     @Autowired
     private BankRepository bankRepository;
+    @Autowired
+    private SimpleProcessManager simpleProcessManager;
 
     public Page<BankInDto> findPage(Pageable pageable, BankInQuery bankInQuery) {
         bankInQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
@@ -81,18 +80,16 @@ public class BankInService {
             }
         }
 
-        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(bankIn.getProcessInstanceId(), bankIn.getProcessTypeId(), bankInAuditForm.getAuditRemarks(), bankInAuditForm.getPass()));
-        if("已通过".equals(activitiCompleteDto.getProcessStatus())){
+        SimpleProcess simpleProcess = simpleProcessManager.go(bankIn.getSimpleProcessId(), bankInAuditForm.getPass(), bankInAuditForm.getAuditRemarks());
+        if(SimpleProcessEndsEnum.已通过.name().equals(simpleProcess.getCurrentProcessStatus())){
             bankIn.setLocked(true);
         }
 
-        bankIn.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
-        bankIn.setProcessStatus(activitiCompleteDto.getProcessStatus());
-        bankIn.setPositionId(activitiCompleteDto.getPositionId());
+        bankIn.setProcessStatus(simpleProcess.getCurrentProcessStatus());
         bankIn.setBillDate(bankInAuditForm.getBillDate() == null ? LocalDate.now() : bankInAuditForm.getBillDate());
         bankInRepository.save(bankIn);
 
-        if(Boolean.TRUE.equals(bankInAuditForm.getSyn()) && "已通过".equals(activitiCompleteDto.getProcessStatus())){
+        if(Boolean.TRUE.equals(bankInAuditForm.getSyn()) && SimpleProcessEndsEnum.已通过.name().equals(simpleProcess.getCurrentProcessStatus())){
             synToCloud(bankIn, bankInAuditForm);
         }
     }
@@ -129,12 +126,9 @@ public class BankInService {
         bankInRepository.save(bankIn);
 
         if(bankInForm.isCreate()) {
-            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("销售收款",  bankIn.getId(),BankIn.class.getSimpleName(),bankIn.getAmount().toString()));
-            bankIn.setProcessFlowId(activitiStartDto.getProcessFlowId());
-            bankIn.setProcessStatus(activitiStartDto.getProcessStatus());
-            bankIn.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
-            bankIn.setPositionId(activitiStartDto.getPositionId());
-            bankIn.setProcessTypeId(activitiStartDto.getProcessTypeId());
+            SimpleProcess simpleProcess = simpleProcessManager.start(SimpleProcessTypeEnum.销售收款);
+            bankIn.setProcessStatus(simpleProcess.getCurrentProcessStatus());
+            bankIn.setSimpleProcessId(simpleProcess.getId());
             bankInRepository.save(bankIn);
         }
         return bankIn;

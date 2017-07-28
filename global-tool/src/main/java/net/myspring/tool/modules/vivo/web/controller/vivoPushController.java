@@ -1,6 +1,7 @@
 package net.myspring.tool.modules.vivo.web.controller;
 
 import net.myspring.common.enums.CompanyNameEnum;
+import net.myspring.tool.common.client.OfficeClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.future.service.FutureCustomerService;
@@ -33,34 +34,43 @@ public class vivoPushController {
     @Autowired
     private FutureProductImeSaleService futureProductImeSaleService;
 
-
     @RequestMapping(value = "pushToLocal")
     public String pushVivoData(String companyName,String date){
         if(StringUtils.isBlank(RequestUtils.getCompanyName())) {
             DbContextHolder.get().setCompanyName(companyName);
         }
-        if (CompanyNameEnum.IDVIVO.name().equals(DbContextHolder.get().getCompanyName())&&CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
-            return "数据同步失败";
-        }
-
-        VivoPushDto vivoPushDto = new VivoPushDto();
-        vivoPushDto.setDate(date);
-        vivoPushDto.setProductColorMap(vivoPushService.getProductColorMap());
+        PushToLocalDto pushToLocalDto = new PushToLocalDto();
+        pushToLocalDto.setDate(date);
+        pushToLocalDto.setProductColorMap(vivoPushService.getProductColorMap());
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
-            vivoPushDto.setsCustomerDtoList(futureCustomerService.getVivoCustomersData(date));
-            vivoPushDto.setsPlantCustomerStockDtoList(futureProductImeService.getVivoCustomerStockData(date));
-            vivoPushDto.setsPlantCustomerStockDetailDtoList(futureProductImeService.getVivoCustomerStockDetailData(date));
-            vivoPushDto.setsProductItemLendList(futureDemoPhoneService.getDemoPhonesData(date));
-            vivoPushDto.setVivoCustomerSaleImeiDtoList(futureProductImeSaleService.getProductImeSaleData(date));
+            pushToLocalDto.setsCustomerDtoList(futureCustomerService.getVivoCustomersData(date));
+            pushToLocalDto.setsPlantCustomerStockDtoList(futureProductImeService.getVivoCustomerStockData(date));
+            pushToLocalDto.setsPlantCustomerStockDetailDtoList(futureProductImeService.getVivoCustomerStockDetailData(date));
+            pushToLocalDto.setsProductItemLendList(futureDemoPhoneService.getDemoPhonesData(date));
+            pushToLocalDto.setVivoCustomerSaleImeiDtoList(futureProductImeSaleService.getProductImeSaleData(date));
         }else {
-            vivoPushDto.setsCustomerDtoList(futureCustomerService.getIDVivoCustomersData(date));
-            vivoPushDto.setsPlantCustomerStockDtoList(futureProductImeService.getIDVivoCustomerStockData(date));
-            vivoPushDto.setsPlantCustomerStockDetailDtoList(futureProductImeService.getIDVivoCustomerStockDetailData(date));
-            vivoPushDto.setVivoCustomerSaleImeiDtoList(futureProductImeSaleService.getProductImeSaleData(date));
-            vivoPushDto.setsStoresList(futureCustomerService.findIDvivoStore());
+            pushToLocalDto.setsCustomerDtoList(futureCustomerService.getIDVivoCustomersData(date));
+            pushToLocalDto.setsPlantCustomerStockDtoList(futureProductImeService.getIDVivoCustomerStockData(date));
+            pushToLocalDto.setsPlantCustomerStockDetailDtoList(futureProductImeService.getIDVivoCustomerStockDetailData(date));
+            pushToLocalDto.setVivoCustomerSaleImeiDtoList(futureProductImeSaleService.getProductImeSaleData(date));
+            pushToLocalDto.setsStoresList(futureCustomerService.findIDvivoStore());
         }
-        vivoPushService.pushToLocal(vivoPushDto);
+        vivoPushService.pushToLocal(pushToLocalDto);
         return "数据同步成功";
     }
+
+    @RequestMapping(value = "pushFactoryData")
+    public String pushFactoryData(String companyName,String date){
+        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
+            DbContextHolder.get().setCompanyName(companyName);
+        }
+        if (!CompanyNameEnum.IDVIVO.name().equals(DbContextHolder.get().getCompanyName())){
+            return "数据上抛失败";
+        }
+        VivoPushDto vivoPushDto = vivoPushService.getPushFactoryDate(date);
+        vivoPushService.pushFactoryData(vivoPushDto,date);
+        return "数据上抛成功";
+    }
+
 
 }

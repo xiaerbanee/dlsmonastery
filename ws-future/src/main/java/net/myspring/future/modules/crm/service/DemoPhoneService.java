@@ -68,7 +68,7 @@ public class DemoPhoneService {
 
     @Transactional
     public void save(DemoPhoneForm demoPhoneForm) {
-        Map<String,DemoPhone> demoPhoneMap = CollectionUtil.extractToMap(demoPhoneRepository.findAll(),"productImeId");
+        Map<String,DemoPhone> demoPhoneMap = CollectionUtil.extractToMap(demoPhoneRepository.findByEnabledIsTrue(),"productImeId");
         if(demoPhoneMap.get(demoPhoneForm.getProductImeId())!=null){
             throw new ServiceException("此串码已在演示用机中存在");
         }

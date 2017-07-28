@@ -17,6 +17,8 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Modifying
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
@@ -30,14 +32,23 @@ import javax.persistence.EntityManager
  */
 interface SalaryRepository : BaseRepository<Salary,String>,SalaryRepositoryCustom{
 
-
+    @Modifying
+    @Query("delete from Salary where salaryTemplateId=?1 and employeeId in (?2) and month=?3")
+    fun deleteBySalaryTemplateId(salaryTemplateId: String, employeeIds: List<String>, month: String)
 }
 interface SalaryRepositoryCustom{
     fun findPage(pageable: Pageable, salaryQuery: SalaryQuery): Page<SalaryDto>
 }
 class SalaryRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): SalaryRepositoryCustom{
     override fun findPage(pageable: Pageable, salaryQuery: SalaryQuery): Page<SalaryDto> {
-        var sb = StringBuilder("select t1.* from hr_salary t1 where t1.enabled=1 ");
+        var sb = StringBuilder("""select t1.* ,employee.name as employeeName,office.name as officeName
+        from hr_salary t1,hr_employee employee,hr_account account ,sys_office office
+        where t1.enabled=1
+        and t1.employee_id=employee.id
+        and employee.account_id=account.id
+        and account.office_id=office.id
+        and ( employee.id=:employeeId or t1.created_by=:accountId)
+""");
         if (StringUtils.isNotBlank(salaryQuery.projectName)) {
             sb.append(" and t1.project_name like concat('%',:projectName,'%')");
         }

@@ -83,7 +83,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <process-details v-model="adGoodsOrder.processInstanceId"></process-details>
+      <simple-process-details v-model="adGoodsOrder.simpleProcessId"></simple-process-details>
 
     </div>
   </div>
@@ -92,10 +92,10 @@
   import expressCompanySelect from 'components/future/express-company-select'
   import boolSelect from 'components/common/bool-select'
   import boolRadioGroup from 'components/common/bool-radio-group'
-  import processDetails from 'components/general/process-details';
+  import simpleProcessDetails from 'components/future/simple-process-details';
 
   export default{
-    components:{expressCompanySelect,boolSelect,boolRadioGroup,processDetails},
+    components:{expressCompanySelect,boolSelect,boolRadioGroup,simpleProcessDetails},
     data(){
       return{
         isCreate:this.$route.query.id==null,

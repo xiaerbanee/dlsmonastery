@@ -111,7 +111,7 @@
                     } else {
                       let types = new Array();
                       if (query.length >= 2) {
-                        axios.get('/api/ws/future/basic/product/search?name=' + query).then((response) => {
+                        axios.get('/api/ws/future/basic/product/searchByName?name=' + query).then((response) => {
                           if (response.data.length > 0) {
                             for (let row of response.data) {
                               let type = row.name;

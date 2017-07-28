@@ -196,7 +196,7 @@ public class ShopAdService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdByName", "申请人"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "申请时间"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "processStatus", "状态"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "attachmentToExport", "附件"));
 
         List<ShopAdDto> shopAdDtoList = findPage(new PageRequest(0,10000),shopAdQuery).getContent();
         cacheUtils.initCacheInput(shopAdDtoList);
