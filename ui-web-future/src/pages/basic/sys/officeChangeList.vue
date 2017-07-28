@@ -5,8 +5,8 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus"  v-permit="'hr:officeChange:edit'">{{$t('officeChangeList.add')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search" >{{$t('officeChangeList.filter')}}</el-button>
-        <el-button type="primary" @click="batchPass" icon="check"    v-permit="'hr:officeChange:audit'">批量通过</el-button>
-        <el-button type="primary" @click="batchNoPass" icon="close"    v-permit="'hr:officeChange:audit'">批量打回</el-button>
+        <el-button type="primary" @click="batchPass" icon="check">批量通过</el-button>
+        <el-button type="primary" @click="batchNoPass" icon="close">批量打回</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('officeChangeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -30,10 +30,10 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('officeChangeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
         <el-table-column fixed prop="id" :label="$t('officeChangeList.id')" sortable></el-table-column>
-        <el-table-column  prop="areaName" :label="$t('officeChangeList.type')" sortable></el-table-column>
-        <el-table-column  prop="accountName" :label="$t('officeChangeList.officeName')" sortable></el-table-column>
-        <el-table-column  prop="createdDate" :label="$t('officeChangeList.oldLabel')" sortable></el-table-column>
-        <el-table-column  prop="type" :label="$t('officeChangeList.newLabel')" sortable></el-table-column>
+        <el-table-column  prop="type" :label="$t('officeChangeList.type')" sortable></el-table-column>
+        <el-table-column  prop="officeName" :label="$t('officeChangeList.officeName')" sortable></el-table-column>
+        <el-table-column  prop="oldLabel" :label="$t('officeChangeList.oldLabel')" sortable></el-table-column>
+        <el-table-column  prop="newLabel" :label="$t('officeChangeList.newLabel')" sortable></el-table-column>
         <el-table-column  prop="processStatus" :label="$t('officeChangeList.processStatus')" sortable ></el-table-column>
         <el-table-column :label="$t('officeChangeList.operation')" width="140">
           <template scope="scope">
@@ -80,6 +80,7 @@
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("officeChangeList",submitData);
         axios.get('/api/basic/hr/officeChange?'+qs.stringify(submitData)).then((response) => {
+          console.log(response.data)
           this.page = response.data;
           this.pageLoading = false;
         })

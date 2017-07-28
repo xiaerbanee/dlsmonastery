@@ -14,10 +14,10 @@ public class OfficeChangeFormDto extends DataDto<OfficeChange>{
     private String parentName;
     private String name;
     private String type;
-    private BigDecimal point;
+    private BigDecimal taskPoint;
     private String newParentName;
     private String newName;
-    private BigDecimal newPoint;
+    private BigDecimal newTaskPoint;
 
     public String getId() {
         return id;
@@ -51,12 +51,12 @@ public class OfficeChangeFormDto extends DataDto<OfficeChange>{
         this.type = type;
     }
 
-    public BigDecimal getPoint() {
-        return point;
+    public BigDecimal getTaskPoint() {
+        return taskPoint;
     }
 
-    public void setPoint(BigDecimal point) {
-        this.point = point;
+    public void setTaskPoint(BigDecimal taskPoint) {
+        this.taskPoint = taskPoint;
     }
 
     public String getNewParentName() {
@@ -81,14 +81,14 @@ public class OfficeChangeFormDto extends DataDto<OfficeChange>{
         this.newName = newName;
     }
 
-    public BigDecimal getNewPoint() {
-        if(point!=null&&newPoint!=null){
-            this.newPoint=point;
+    public BigDecimal getNewTaskPoint() {
+        if(taskPoint!=null&&newTaskPoint!=null){
+            this.newTaskPoint=newTaskPoint;
         }
-        return newPoint;
+        return newTaskPoint;
     }
 
-    public void setNewPoint(BigDecimal newPoint) {
-        this.newPoint = newPoint;
+    public void setNewTaskPoint(BigDecimal newTaskPoint) {
+        this.newTaskPoint = newTaskPoint;
     }
 }
