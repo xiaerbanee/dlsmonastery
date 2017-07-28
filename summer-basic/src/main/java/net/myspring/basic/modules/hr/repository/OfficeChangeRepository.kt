@@ -4,6 +4,7 @@ import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.OfficeChange
 import net.myspring.basic.modules.hr.dto.DutyLeaveDto
 import net.myspring.basic.modules.hr.dto.OfficeChangeDto
+import net.myspring.basic.modules.hr.dto.OfficeChangeFormDto
 import net.myspring.basic.modules.hr.web.query.DutyLeaveQuery
 import net.myspring.basic.modules.hr.web.query.OfficeChangeQuery
 import net.myspring.util.repository.MySQLDialect
@@ -31,11 +32,12 @@ class OfficeChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
         var sb = StringBuilder()
         sb.append("""
             SELECT
-            t1.*
+            t1.*,office.name
             FROM
-            hr_office_change t1
+            hr_office_change t1,sys_office office
             WHERE
-            t1.enabled=1
+            t1.office_id=office.id
+            AND t1.enabled=1
         """)
         if (officeChangeQuery.type != null) {
             sb.append(" AND t1.type=:type ")
