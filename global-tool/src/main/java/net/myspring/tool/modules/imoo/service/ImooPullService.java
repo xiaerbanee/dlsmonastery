@@ -16,6 +16,7 @@ import net.myspring.tool.modules.imoo.repository.ImooProductMapRepository;
 import net.myspring.tool.modules.imoo.repository.ImooRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -51,8 +52,8 @@ public class ImooPullService {
     @FactoryDataSource
     public List<ImooPrdocutImeiDeliver> plantPrdocutImeiDeliverByDate(LocalDate date) {
         String agentCodes = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
-        LocalDate dateStart = date.minusDays(2);
-        LocalDate dateEnd = date.plusDays(1);
+        String dateStart = LocalDateUtils.format(date.minusDays(2));
+        String dateEnd = LocalDateUtils.format(date.plusDays(1));
         if (StringUtils.isBlank(agentCodes)){
             return null;
         }
@@ -112,8 +113,9 @@ public class ImooPullService {
         return map;
     }
 
-    public List<ImooPrdocutImeiDeliver> getSendImeList(LocalDate dateStart,LocalDate dateEnd,List<String> agentCodes){
-        return imooPrdocutImeiDeliverRepository.findSendImeList(dateStart,dateEnd,agentCodes);
+    public List<ImooPrdocutImeiDeliver> getSendImeList(String dateStart,String dateEnd,String agentCodes){
+        List<String> agentCodeList = StringUtils.getSplitList(agentCodes,CharConstant.COMMA);
+        return imooPrdocutImeiDeliverRepository.findSendImeList(dateStart,dateEnd,agentCodeList);
     }
 
 }

@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.repository
 
+import com.google.common.collect.Maps
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Product
 import net.myspring.future.modules.basic.domain.ProductType
@@ -193,6 +194,8 @@ interface ProductRepositoryCustom{
     fun findFilterForAdpricesystemChange(adPricesystemChangeQuery: AdPricesystemChangeQuery):MutableList<ProductDto>
 
     fun findPage(pageable: Pageable, productQuery: ProductQuery): Page<ProductDto>
+
+    fun updateHasImeById(idList: MutableList<String>):Int
 }
 
 class ProductRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ProductRepositoryCustom{
@@ -344,5 +347,11 @@ class ProductRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(productQuery), BeanPropertyRowMapper(ProductDto::class.java))
         val count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(productQuery),Long::class.java)
         return PageImpl(list,pageable,count)
+    }
+
+    override fun updateHasImeById(idList: MutableList<String>): Int {
+        val map = Maps.newHashMap<String,Any>()
+        map.put("idList",idList)
+        return namedParameterJdbcTemplate.update(" update crm_product set has_ime = 1 where id in (:idList) ",map)
     }
 }
