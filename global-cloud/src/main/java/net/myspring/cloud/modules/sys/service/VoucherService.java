@@ -289,7 +289,6 @@ public class VoucherService {
             }else {
                 throw new ServiceException("你的岗位没有权限审核");
             }
-            voucher = voucherRepository.save(voucher);
         }else {
             voucher = save(voucherForm,bdFlexItemGroupList,bdFlexItemPropertyList);
             voucher.setFDate(voucherForm.getFdate());
@@ -298,7 +297,6 @@ public class VoucherService {
             } else {
                 voucher.setStatus(VoucherStatusEnum.已完成.name());
             }
-            voucher = voucherRepository.save(voucher);
         }
         if (VoucherStatusEnum.已完成.name().equals(voucher.getStatus())) {
             KingdeeSynDto kingdeeSynDto = glVoucherService.save(voucherForm, bdFlexItemGroupList, bdFlexItemPropertyList, kingdeeBook, accountKingdeeBook);
@@ -306,11 +304,11 @@ public class VoucherService {
                 String outCode = "凭证编号：" + kingdeeSynDto.getBillNo() + "  凭证号：" + glVoucherService.findByBillNo(kingdeeSynDto.getBillNo()).getFVoucherGroupNo();
                 voucher.setOutCode(outCode);
                 voucher.setCreatedName(accountKingdeeBook.getUsername());
-                voucher = voucherRepository.save(voucher);
             }else {
                 throw new ServiceException(kingdeeSynDto.getResult());
             }
         }
+        voucherRepository.save(voucher);
         return voucher;
     }
 
