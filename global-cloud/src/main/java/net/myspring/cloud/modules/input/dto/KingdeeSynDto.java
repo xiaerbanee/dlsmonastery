@@ -1,13 +1,13 @@
 package net.myspring.cloud.modules.input.dto;
 
+import net.myspring.cloud.common.domain.DataEntity;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
-import net.myspring.common.dto.DataDto;
 
 /**
  * Created by liuj on 2016-06-20.
  */
-public class KingdeeSynDto extends DataDto<KingdeeSyn> {
+public class KingdeeSynDto extends DataEntity<KingdeeSyn> {
     //业务系统单据Id
     private String extendId;
     //业务系统单据类型
