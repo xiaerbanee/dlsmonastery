@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.enums.VoucherStatusEnum;
+import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.kingdee.domain.BdAccount;
@@ -60,6 +61,8 @@ public class VoucherService {
     private AccountKingdeeBookRepository accountKingdeeBookRepository;
     @Autowired
     private KingdeeBookRepository kingdeeBookRepository;
+    @Autowired
+    private CacheUtils cacheUtils;
 
     public Page<VoucherDto> findPage(Pageable pageable, VoucherQuery voucherQuery) {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
@@ -77,12 +80,15 @@ public class VoucherService {
             }
         }
         Page<VoucherDto> page = voucherRepository.findPage(pageable, voucherQuery);
+        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
     public VoucherDto findOne(String id) {
         Voucher voucher = voucherRepository.findOne(id);
-        return BeanUtil.map(voucher,VoucherDto.class);
+        VoucherDto voucherDto = BeanUtil.map(voucher,VoucherDto.class);
+        cacheUtils.initCacheInput(voucherDto);
+        return voucherDto;
     }
 
     @Transactional

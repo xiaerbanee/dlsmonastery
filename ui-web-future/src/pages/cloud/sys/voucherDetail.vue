@@ -20,13 +20,13 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="创建人">
-              {{formData.createdBy}}
+              {{formData.createdByName}}
             </el-form-item>
             <el-form-item label="创建时间">
               {{formData.createdDate}}
             </el-form-item>
             <el-form-item label="更新人">
-              {{formData.lastModifiedBy}}
+              {{formData.lastModifiedByName}}
             </el-form-item>
             <el-form-item label="更新时间">
               {{formData.lastModifiedDate}}

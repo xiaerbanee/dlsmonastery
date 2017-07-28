@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.web.controller;
 
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.enums.OfficeRuleEnum;
+import net.myspring.future.common.enums.SimpleProcessTypeEnum;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
 import net.myspring.future.modules.layout.service.AdGoodsOrderDetailService;
@@ -34,6 +35,7 @@ public class AdGoodsOrderDetailController {
     public AdGoodsOrderDetailQuery getQuery(AdGoodsOrderDetailQuery adGoodsOrderDetailQuery) {
         adGoodsOrderDetailQuery.getExtra().put("adGoodsOrderBillTypeList", BillTypeEnum.getList());
         adGoodsOrderDetailQuery.getExtra().put("adGoodsOrderShopAreaList", officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
+        adGoodsOrderDetailQuery.getExtra().put("statusList", SimpleProcessTypeEnum.柜台订货.getAllProcessStatuses());
         return adGoodsOrderDetailQuery;
     }
 
