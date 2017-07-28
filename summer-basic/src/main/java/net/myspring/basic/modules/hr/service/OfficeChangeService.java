@@ -4,17 +4,16 @@ import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.OfficeChnageTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.domain.OfficeChange;
-import net.myspring.basic.modules.hr.dto.AccountChangeDto;
 import net.myspring.basic.modules.hr.dto.OfficeChangeDto;
 import net.myspring.basic.modules.hr.dto.OfficeChangeFormDto;
 import net.myspring.basic.modules.hr.repository.OfficeChangeRepository;
 import net.myspring.basic.modules.hr.web.form.OfficeChangeForm;
-import net.myspring.basic.modules.hr.web.query.AccountChangeQuery;
 import net.myspring.basic.modules.hr.web.query.OfficeChangeQuery;
 import net.myspring.basic.modules.sys.client.ActivitiClient;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.basic.modules.sys.repository.OfficeRepository;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.utils.HandsontableUtils;
 import net.myspring.util.collection.CollectionUtil;
@@ -93,8 +92,8 @@ public class OfficeChangeService {
         List<OfficeChangeFormDto> officeChangeFormDtos = findByOfficeId(id);
         BigDecimal beforeTaskPoint = BigDecimal.ZERO;
         for (OfficeChangeFormDto officeChangeFormDto : officeChangeFormDtos){
-            if (officeChangeFormDto.getPoint() != null){
-                beforeTaskPoint = beforeTaskPoint.add(officeChangeFormDto.getPoint());
+            if (officeChangeFormDto.getTaskPoint() != null){
+                beforeTaskPoint = beforeTaskPoint.add(officeChangeFormDto.getTaskPoint());
             }
         }
         if (afterTaskPoint.compareTo(beforeTaskPoint) == 0) {
@@ -112,7 +111,7 @@ public class OfficeChangeService {
                     OfficeChange officeChange=new OfficeChange();
                     officeChange.setType(OfficeChnageTypeEnum.上级.name());
                     officeChange.setNewLabel(parentName);
-                    officeChange.setNewLabel(parent.getId());
+                    officeChange.setNewValue(parent.getId());
                     officeChange.setOldLabel(HandsontableUtils.getValue(row, 1));
                     officeChange.setOldValue(office.getParentId());
                     officeChange.setOfficeId(officeId);
@@ -122,7 +121,7 @@ public class OfficeChangeService {
                     OfficeChange officeChange=new OfficeChange();
                     officeChange.setType(OfficeChnageTypeEnum.任务点位.name());
                     officeChange.setNewLabel(taskPoint);
-                    officeChange.setNewLabel(taskPoint);
+                    officeChange.setNewValue(taskPoint);
                     officeChange.setOldLabel(office.getTaskPoint().toString());
                     officeChange.setOldValue(office.getTaskPoint().toString());
                     officeChange.setOfficeId(officeId);
@@ -132,7 +131,7 @@ public class OfficeChangeService {
                     OfficeChange officeChange=new OfficeChange();
                     officeChange.setType(OfficeChnageTypeEnum.名称.name());
                     officeChange.setNewLabel(name);
-                    officeChange.setNewLabel(name);
+                    officeChange.setNewValue(name);
                     officeChange.setOldLabel(office.getName());
                     officeChange.setOldValue(office.getName());
                     officeChange.setOfficeId(officeId);
@@ -158,7 +157,18 @@ public class OfficeChangeService {
                     office.setEnabled(false);
                 }
             } else if (officeChange.getType().equals(OfficeChnageTypeEnum.上级.toString())) {
+                String oldParentIds = office.getParentIds();
+                Office parent=officeRepository.findOne(officeChange.getNewValue());
+                String newParentIds = parent.getParentIds() + parent.getId() + CharConstant.COMMA;
                 office.setParentId(officeChange.getNewValue());
+                office.setParentIds(newParentIds);
+                List<Office> list = officeRepository.findByParentIdsLike(office.getId());
+                if (CollectionUtil.isNotEmpty(list)) {
+                    for (Office e : list) {
+                        e.setParentIds(e.getParentIds().replace(oldParentIds, office.getParentIds()));
+                    }
+                }
+                officeRepository.save(list);
             } else if (officeChange.getType().equals(OfficeChnageTypeEnum.任务点位.toString())) {
                 office.setTaskPoint(new BigDecimal(officeChange.getNewValue()));
             }

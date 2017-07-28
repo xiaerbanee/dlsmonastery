@@ -11,6 +11,18 @@ public class SalaryQuery extends BaseQuery{
     private String projectValue;
     private String employeeName;
     private String password;
+    private String accountId;
+
+    public String getAccountId() {
+        if(StringUtils.isBlank(accountId)){
+            this.accountId=RequestUtils.getAccountId();
+        }
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
 
     public String getPassword() {
         return password;
