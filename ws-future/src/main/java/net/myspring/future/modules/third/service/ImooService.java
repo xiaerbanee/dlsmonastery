@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.ProductIme;
+import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.third.client.ImooClient;
 import net.myspring.future.modules.third.dto.ImooPrdocutImeiDeliver;
 import net.myspring.future.modules.third.dto.ImooProductDto;
@@ -27,23 +29,26 @@ public class ImooService {
     private RedisTemplate redisTemplate;
     @Autowired
     private ImooClient imooClient;
+    @Autowired
+    private ProductImeRepository productImeRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
 
     public String pullFactoryData(String date){
-        LocalDate dateStart = LocalDateUtils.parse(date).minusDays(7);
-        LocalDate dateEnd = LocalDateUtils.parse(date).plusDays(1);
+        String dateStart = LocalDateUtils.format(LocalDateUtils.parse(date).minusDays(7));
+        String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         String agentCodes = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
-        List<String> agentCodeList = StringUtils.getSplitList(agentCodes, CharConstant.COMMA);
         Map<String,ImooProductDto> map = imooClient.getImooProductDtoMap();
-        List<ImooPrdocutImeiDeliver> imooPrdocutImeiDeliverList = imooClient.getSendImeList(dateStart,dateEnd,agentCodeList);
+        List<ImooPrdocutImeiDeliver> imooPrdocutImeiDeliverList = imooClient.getSendImeList(dateStart,dateEnd,agentCodes);
         String defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue();
         List<ProductIme> productImeList = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(imooPrdocutImeiDeliverList)){
             List<String> updateIdList = Lists.newArrayList();
             for (ImooPrdocutImeiDeliver imooPrdocutImeiDeliver :imooPrdocutImeiDeliverList){
-                if (map.containsKey(imooPrdocutImeiDeliver.getMsiItem().trim())){
+                if (map.containsKey(imooPrdocutImeiDeliver.getMsiItem())){
                     ImooProductDto imooProductDto = map.get(imooPrdocutImeiDeliver.getMsiItem());
-                    ProductIme productIme = null;
+                    ProductIme productIme = productImeRepository.findByEnabledIsTrueAndIme(imooPrdocutImeiDeliver.getImei());
                     if (productIme==null){
                         productIme = new ProductIme();
                         productIme.setDepotId(defaultStoreId);
@@ -65,10 +70,10 @@ public class ImooService {
                 }
             }
             if (CollectionUtil.isNotEmpty(productImeList)){
-
+                productImeRepository.batchSave(productImeList);
             }
             if (CollectionUtil.isNotEmpty(updateIdList)){
-
+                productRepository.updateHasImeById(updateIdList);
             }
         }
         return "同步成功";
