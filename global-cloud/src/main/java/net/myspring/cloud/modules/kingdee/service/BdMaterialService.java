@@ -31,8 +31,9 @@ public class BdMaterialService {
         return null;
     }
 
-    public BdMaterial findByNumber(String number){
-        if (StringUtils.isNotBlank(number)){
+    public BdMaterial findByNumber(String numberHtml){
+        if (StringUtils.isNotBlank(numberHtml)){
+            String number = HtmlUtils.htmlUnescape(numberHtml);
             return bdMaterialRepository.findByNumber(number);
         }
         return null;
