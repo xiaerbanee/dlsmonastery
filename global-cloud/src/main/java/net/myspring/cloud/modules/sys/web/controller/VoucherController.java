@@ -19,6 +19,7 @@ import net.myspring.cloud.modules.sys.service.VoucherService;
 import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
@@ -211,23 +212,14 @@ public class VoucherController {
         if (!restResponse.getSuccess()) {
             return restResponse;
         }else {
-            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-            Voucher voucher = voucherService.audit(voucherForm, bdFlexItemGroupList, bdFlexItemPropertyList,accountKingdeeBook);
-            restResponse = new RestResponse("凭证审核成功", null, true);
-            if (VoucherStatusEnum.已完成.name().equals(voucher.getStatus())) {
+            try{
                 KingdeeBook kingdeeBook = kingdeeBookService.findByCompanyName(RequestUtils.getCompanyName());
-                KingdeeSynDto kingdeeSynDto = glVoucherService.save(voucherForm, bdFlexItemGroupList, bdFlexItemPropertyList, kingdeeBook, accountKingdeeBook);
-                if (kingdeeSynDto.getSuccess()) {
-                    String outCode = "凭证编号：" + kingdeeSynDto.getBillNo() + "  凭证号：" + glVoucherService.findByBillNo(kingdeeSynDto.getBillNo()).getFVoucherGroupNo();
-                    voucher.setOutCode(outCode);
-                    voucher.setCreatedName(accountKingdeeBook.getUsername());
-                    voucherService.save(voucher);
-                    return new RestResponse("凭证同步成功", null, true);
-                } else {
-                    return new RestResponse("凭证同步失败" + kingdeeSynDto.getResult(), null, false);
-                }
+                AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
+                voucherService.audit(voucherForm, bdFlexItemGroupList, bdFlexItemPropertyList,accountKingdeeBook,kingdeeBook);
+                return new RestResponse("凭证审核成功", null, true);
+            }catch (Exception e){
+                return new RestResponse(e.getMessage(), ResponseCodeEnum.invalid.name(), false);
             }
-            return restResponse;
         }
     }
 }

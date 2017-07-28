@@ -5,15 +5,14 @@ import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.enums.VoucherStatusEnum;
 import net.myspring.cloud.common.utils.CacheUtils;
+import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
+import net.myspring.cloud.modules.input.service.GlVoucherService;
+import net.myspring.cloud.modules.sys.domain.*;
 import net.myspring.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.kingdee.domain.BdAccount;
 import net.myspring.cloud.modules.kingdee.domain.BdFlexItemGroup;
 import net.myspring.cloud.modules.kingdee.domain.BdFlexItemProperty;
-import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
-import net.myspring.cloud.modules.sys.domain.Voucher;
-import net.myspring.cloud.modules.sys.domain.VoucherEntry;
-import net.myspring.cloud.modules.sys.domain.VoucherEntryFlow;
 import net.myspring.cloud.modules.sys.dto.VoucherDto;
 import net.myspring.cloud.modules.sys.repository.*;
 import net.myspring.cloud.modules.sys.web.form.VoucherForm;
@@ -63,6 +62,8 @@ public class VoucherService {
     private KingdeeBookRepository kingdeeBookRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private GlVoucherService glVoucherService;
 
     public Page<VoucherDto> findPage(Pageable pageable, VoucherQuery voucherQuery) {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
@@ -276,9 +277,10 @@ public class VoucherService {
     }
 
     @Transactional
-    public Voucher audit(VoucherForm voucherForm,List<BdFlexItemGroup> bdFlexItemGroupList,List<BdFlexItemProperty> bdFlexItemPropertyList,AccountKingdeeBook accountKingdeeBook){
+    public Voucher audit(VoucherForm voucherForm,List<BdFlexItemGroup> bdFlexItemGroupList,List<BdFlexItemProperty> bdFlexItemPropertyList,AccountKingdeeBook accountKingdeeBook, KingdeeBook kingdeeBook){
+        Voucher voucher;
         if (StringUtils.isNotBlank(voucherForm.getId())){
-            Voucher voucher = voucherRepository.findOne(voucherForm.getId());
+            voucher = voucherRepository.findOne(voucherForm.getId());
             voucher.setFDate(voucherForm.getFdate());
             if (VoucherStatusEnum.地区财务审核.name().equals(voucher.getStatus())) {
                 voucher.setStatus(VoucherStatusEnum.省公司财务审核.name());
@@ -287,9 +289,9 @@ public class VoucherService {
             }else {
                 throw new ServiceException("你的岗位没有权限审核");
             }
-            return voucherRepository.save(voucher);
+            voucher = voucherRepository.save(voucher);
         }else {
-            Voucher voucher = save(voucherForm,bdFlexItemGroupList,bdFlexItemPropertyList);
+            voucher = save(voucherForm,bdFlexItemGroupList,bdFlexItemPropertyList);
             voucher.setFDate(voucherForm.getFdate());
             if (VoucherStatusEnum.地区财务审核.name().equals(voucher.getStatus())) {
                 voucher.setStatus(VoucherStatusEnum.省公司财务审核.name());
@@ -297,8 +299,19 @@ public class VoucherService {
                 voucher.setStatus(VoucherStatusEnum.已完成.name());
             }
             voucher = voucherRepository.save(voucher);
-            return voucher;
         }
+        if (VoucherStatusEnum.已完成.name().equals(voucher.getStatus())) {
+            KingdeeSynDto kingdeeSynDto = glVoucherService.save(voucherForm, bdFlexItemGroupList, bdFlexItemPropertyList, kingdeeBook, accountKingdeeBook);
+            if (kingdeeSynDto.getSuccess()) {
+                String outCode = "凭证编号：" + kingdeeSynDto.getBillNo() + "  凭证号：" + glVoucherService.findByBillNo(kingdeeSynDto.getBillNo()).getFVoucherGroupNo();
+                voucher.setOutCode(outCode);
+                voucher.setCreatedName(accountKingdeeBook.getUsername());
+                voucher = voucherRepository.save(voucher);
+            }else {
+                throw new ServiceException(kingdeeSynDto.getResult());
+            }
+        }
+        return voucher;
     }
 
     //获取所有科目名称及其对应的核算维度
