@@ -60,7 +60,7 @@ INSERT INTO crm_simple_process_detail (
     t1.ID_,
     t1.PROC_INST_ID_,
     t1.name_,
-    "",
+    '',
     '',
     t1.ASSIGNEE_ ,
     t1.END_TIME_ ,
