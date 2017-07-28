@@ -47,7 +47,7 @@ class SalaryRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate
         and t1.employee_id=employee.id
         and employee.account_id=account.id
         and account.office_id=office.id
-        and employee.id=:employeeId
+        and ( employee.id=:employeeId or t1.created_by=:accountId)
 """);
         if (StringUtils.isNotBlank(salaryQuery.projectName)) {
             sb.append(" and t1.project_name like concat('%',:projectName,'%')");

@@ -1,6 +1,10 @@
 package net.myspring.basic.modules.salary.dto;
 
-public class SalaryDto {
+import net.myspring.basic.common.query.BaseQuery;
+import net.myspring.basic.modules.salary.domain.Salary;
+import net.myspring.common.dto.DataDto;
+
+public class SalaryDto extends DataDto<Salary>{
     private String employeeId;
     private String month;
     private String projectName;
