@@ -39,9 +39,6 @@ public class vivoPushController {
         if(StringUtils.isBlank(RequestUtils.getCompanyName())) {
             DbContextHolder.get().setCompanyName(companyName);
         }
-        if (CompanyNameEnum.IDVIVO.name().equals(DbContextHolder.get().getCompanyName())&&CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
-            return "数据同步失败";
-        }
         PushToLocalDto pushToLocalDto = new PushToLocalDto();
         pushToLocalDto.setDate(date);
         pushToLocalDto.setProductColorMap(vivoPushService.getProductColorMap());
