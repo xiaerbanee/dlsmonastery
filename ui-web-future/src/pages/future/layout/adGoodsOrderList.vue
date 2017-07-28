@@ -53,7 +53,9 @@
                 <date-range-picker v-model="formData.billDateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderList.processStatus')">
-                <process-status-select v-model="formData.processStatus" type="AdGoodsOrder" multiple="multiple" @afterInit="setSearchText"></process-status-select>
+                <el-select v-model="formData.processStatus" multiple clearable filterable>
+                  <el-option v-for="item in formData.extra.statusList" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderList.orderCode')" >
                 <el-input type="textarea" v-model="formData.idStr" :placeholder="$t('adGoodsOrderList.blankOrComma')"></el-input>
@@ -101,12 +103,10 @@
 </template>
 <script>
   import accountSelect from 'components/basic/account-select';
-  import processStatusSelect from 'components/general/process-status-select'
   import boolSelect from 'components/common/bool-select'
   export default {
     components:{
       accountSelect,
-      processStatusSelect,
       boolSelect
     },
     data() {
