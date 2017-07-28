@@ -34,6 +34,9 @@ public class BdStockService {
     }
 
     public List<BdStock> findByMaxModifyDate(LocalDateTime modifyDate){
-        return bdStockRepository.findByMaxModifyDate(modifyDate);
+        if (modifyDate != null) {
+            return bdStockRepository.findByMaxModifyDate(modifyDate);
+        }
+        return null;
     }
 }

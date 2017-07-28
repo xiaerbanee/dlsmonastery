@@ -26,6 +26,9 @@ public class CnBankAcntService {
     }
 
     public List<CnBankAcnt> findByMaxModifyDate(LocalDateTime modifyDate){
-        return cnBankAcntRepository.findByMaxModifyDate(modifyDate);
+        if (modifyDate != null) {
+            return cnBankAcntRepository.findByMaxModifyDate(modifyDate);
+        }
+        return null;
     }
 }
