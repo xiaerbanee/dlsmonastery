@@ -18,6 +18,6 @@ public interface ImooClient {
     Map<String,ImooProductDto> getImooProductDtoMap();
 
     @RequestMapping(method = RequestMethod.GET,value = "/factory/imoo/getSendImeList")
-    List<ImooPrdocutImeiDeliver> getSendImeList(@RequestParam(value = "dateStart")LocalDate dateStart, @RequestParam(value = "dateStart")LocalDate dateEnd, @RequestParam(value = "agentCodeList")List<String> agentCodeList);
+    List<ImooPrdocutImeiDeliver> getSendImeList(@RequestParam(value = "dateStart")String dateStart, @RequestParam(value = "dateEnd")String dateEnd, @RequestParam(value = "agentCodes")String agentCodes);
 
 }

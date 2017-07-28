@@ -5,3 +5,30 @@ server:
     key-store-password: 37t97327ka
   http:
     port : 1200
+
+zuul:
+  host:
+    socket-timeout-millis: 18000
+    connect-timeout-millis: 18000
+    max-total-connections: 400
+  add-proxy-headers: true
+  semaphore:
+    max-semaphores: 2000
+
+ribbon:
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
+
+hystrix:
+  command:
+    default:
+      circuitBreaker:
+        enabled:  false
+      execution:
+        timeout:
+          enabled: false
+        isolation:
+          semaphore:
+            maxConcurrentRequests: 2000
+          thread:
+            timeoutInMilliseconds: 10000

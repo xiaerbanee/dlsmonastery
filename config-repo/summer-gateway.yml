@@ -27,31 +27,6 @@ zuul:
     ws-future: /api/ws/future/**
     global-tool: /api/global/tool/**
     global-cloud: /api/global/cloud/**
-  host:
-    socket-timeout-millis: 18000
-    connect-timeout-millis: 18000
-    max-total-connections: 400
-  add-proxy-headers: true
-  semaphore:
-    max-semaphores: 2000
-
-ribbon:
-  ReadTimeout: 10000
-  ConnectTimeout: 10000
-
-hystrix:
-  command:
-    default:
-      circuitBreaker:
-        enabled:  false
-      execution:
-        timeout:
-          enabled: false
-        isolation:
-          semaphore:
-            maxConcurrentRequests: 2000
-          thread:
-            timeoutInMilliseconds: 10000
 
 security:
   oauth2:

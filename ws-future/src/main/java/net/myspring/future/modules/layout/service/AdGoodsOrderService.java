@@ -512,7 +512,7 @@ public class AdGoodsOrderService {
 
     @Transactional
     public void synWhenBill(AdGoodsOrder adGoodsOrder, ExpressOrder expressOrder) {
-        KingdeeSynReturnDto kingdeeSynReturnDto = salOutStockManager.synForAdGoodsOrder(adGoodsOrder);
+        KingdeeSynReturnDto kingdeeSynReturnDto = salOutStockManager.synForAdGoodsOrder(adGoodsOrder,expressOrder);
 
         adGoodsOrder.setCloudSynId(kingdeeSynReturnDto.getId());
         adGoodsOrder.setOutCode(kingdeeSynReturnDto.getBillNo());

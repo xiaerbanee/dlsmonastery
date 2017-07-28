@@ -1,12 +1,10 @@
 package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
-import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 public class ProductImeDto extends DataDto<ProductIme> {
@@ -37,6 +35,8 @@ public class ProductImeDto extends DataDto<ProductIme> {
     @CacheInput(inputKey = "offices",inputInstance = "depotOfficeId",outputInstance = "name")
     private String depotOfficeName;
 
+    private String depotAreaId;
+    @CacheInput(inputKey = "offices",inputInstance = "depotAreaId",outputInstance = "name")
     private String depotAreaName;
     private String depotAreaType;
 
@@ -75,6 +75,14 @@ public class ProductImeDto extends DataDto<ProductIme> {
     private String productImeUploadEmployeeName;
     private LocalDateTime productImeUploadCreatedDate;
     private String productImeUploadId;
+
+    public String getDepotAreaId() {
+        return depotAreaId;
+    }
+
+    public void setDepotAreaId(String depotAreaId) {
+        this.depotAreaId = depotAreaId;
+    }
 
     public String getDepotProvinceName() {
         return depotProvinceName;
