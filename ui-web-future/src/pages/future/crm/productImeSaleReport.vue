@@ -3,7 +3,6 @@
     <head-tab active="productImeSaleReport"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-if="!nextIsShop&&'区域'==formData.sumType || '型号'==formData.sumType">过滤</el-button>
         <el-dropdown  @command="exportData">
           <el-button type="primary">导出<i class="el-icon-caret-bottom el-icon--right"></i></el-button>
           <el-dropdown-menu slot="dropdown">
@@ -12,43 +11,45 @@
             <el-dropdown-item command="按串码">按串码导出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <el-button type="primary" @click="preLevel()" v-show="officeId !=formData.officeId&&officeIds.length">返回</el-button>
+        <el-button type="primary" @click="preLevel()" v-show="officeId !=formData.officeId&&officeIds.length">上一层</el-button>
+        <el-button type="primary" @click="firstLevel()" v-show="officeIds.length">首层</el-button>
         <el-button type="primary" @click="detail()"v-show="nextIsShop&&'区域'==formData.sumType">明细</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-if="!nextIsShop&&'区域'==formData.sumType || '型号'==formData.sumType">过滤</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
-            <el-col :span="24">
-              <el-form-item label="汇总" :label-width="formLabelWidth">
+            <el-col :span="12">
+              <el-form-item label="汇总">
                 <el-select v-model="formData.sumType" clearable filterable placeholder="请选择">
                   <el-option v-for="item in formData.extra.sumTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="查看" :label-width="formLabelWidth">
+              <el-form-item label="查看">
                 <el-select v-model="formData.outType" clearable filterable placeholder="请选择">
                   <el-option v-for="item in formData.extra.outTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="区域" :label-width="formLabelWidth">
+              <el-form-item label="区域">
                 <el-select v-model="formData.areaType" clearable filterable placeholder="请选择">
                   <el-option v-for="item in formData.extra.areaTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="乡镇" :label-width="formLabelWidth">
+              <el-form-item label="乡镇">
                 <el-select v-model="formData.townType" clearable filterable placeholder="请选择">
                   <el-option v-for="item in formData.extra.townTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="日期" :label-width="formLabelWidth">
+              <el-form-item label="日期">
                 <date-range-picker v-model="formData.dateRange"></date-range-picker>
               </el-form-item>
-              <el-form-item label="打分型号" :label-width="formLabelWidth">
+              <el-form-item label="打分型号">
                 <el-select v-model="formData.scoreType" clearable filterable placeholder="请选择">
                   <el-option v-for="(key,value) in formData.extra.boolMap" :key="key" :label="value | bool2str " :value="key"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="货品" :label-width="formLabelWidth">
+              <el-form-item label="货品">
                 <product-type-select v-model="formData.productTypeIdList"  @afterInit="setSearchText" multiple></product-type-select>
               </el-form-item>
             </el-col>
@@ -191,7 +192,13 @@
         this.officeIds.pop();
         this.formData.officeId=this.officeIds[this.officeIds.length-1];
         this.pageRequest();
-      }, exportData(command) {
+      }, firstLevel(){
+        this.nextIsShop=false;
+        this.formData.isDetail=false;
+        this.officeIds=[];
+        this.formData.officeId=null;
+        this.pageRequest();
+      },exportData(command) {
         this.formData.exportType=command;
         window.location.href="/api/ws/future/crm/productIme/exportReport?"+qs.stringify(util.deleteExtra(this.formData));
         this.formData.exportType=null;
@@ -213,7 +220,6 @@
           this.depotReportList=response.data.depotReportList;
           this.pageLoading = false;
         })
-
       }
     },created () {
          this.pageHeight = 0.75*window.innerHeight;

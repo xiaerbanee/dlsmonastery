@@ -112,6 +112,7 @@ public class ProductImeController {
         reportQuery.getExtra().put("sumTypeList",SumTypeEnum.getList());
         reportQuery.getExtra().put("areaTypeList",AreaTypeEnum.getList());
         reportQuery.getExtra().put("townTypeList",TownTypeEnum.getList());
+        reportQuery.getExtra().put("areaList",officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         reportQuery.getExtra().put("outTypeList",ProductImeStockReportOutTypeEnum.getList());
         reportQuery.getExtra().put("boolMap",BoolEnum.getMap());
         reportQuery.setSumType(ProductImeStockReportSumTypeEnum.区域.name());
