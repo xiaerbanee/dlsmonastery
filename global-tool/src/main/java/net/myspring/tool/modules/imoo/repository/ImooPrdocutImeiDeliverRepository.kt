@@ -26,27 +26,6 @@ class ImooPrdocutImeiDeliverRepository @Autowired constructor(val namedParameter
             """, paramMap, BeanPropertyRowMapper(String::class.java));
     }
 
-
-    fun findSynList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("agentCodes") agentCodes: MutableList<String>): MutableList<ImooPrdocutImeiDeliver>{
-        val paramMap = Maps.newHashMap<String, Any>();
-        paramMap.put("dateStart", dateStart);
-        paramMap.put("dateEnd", dateEnd);
-        paramMap.put("agentCodes", agentCodes);
-        return namedParameterJdbcTemplate.query("""
-         select
-            de.*,map.product_id as productId
-        from
-            imoo_prdocut_imei_deliver de
-        left join imoo_plant_basic_product bas on de.msi_item = bas.segment1
-        left join imoo_product_map map on bas.id = map.imoo_plant_basic_product_id
-        where
-            de.creation_date >=:dateStart
-            and de.creation_date <=:dateEnd
-            and de.company_id=:agentCodes
-            """, paramMap, BeanPropertyRowMapper(ImooPrdocutImeiDeliver::class.java));
-
-    }
-
     fun batchSave(imooProductImeiDeliverList:MutableList<ImooPrdocutImeiDeliver> ):IntArray{
         val sb = """ INSERT INTO imoo_prdocut_imei_deliver
             (company_id,mainagentid,agentid,ms_des,ms_id,msi_item,msi_item_des,msib_barcode,creation_date,box,imei)
@@ -54,5 +33,24 @@ class ImooPrdocutImeiDeliverRepository @Autowired constructor(val namedParameter
         """
         return namedParameterJdbcTemplate.batchUpdate(sb,SqlParameterSourceUtils.createBatch(imooProductImeiDeliverList.toTypedArray()))
     }
+
+    fun findSendImeList(dateStart:LocalDate,dateEnd:LocalDate,agnetCodeList: MutableList<String>):MutableList<ImooPrdocutImeiDeliver>{
+        val map = Maps.newHashMap<String,Any>()
+        map.put("dateStart",dateStart)
+        map.put("dateEnd",dateEnd)
+        map.put("agnetCodeList",agnetCodeList)
+        val sb = """
+            SELECT
+                *
+            FROM
+                imoo_prdocut_imei_deliver
+            WHERE
+                creation_date >= : dateStart
+            AND created_date < :dateEnd
+            AND company_id IN (:agentCoedList)
+        """
+        return namedParameterJdbcTemplate.query(sb,map,BeanPropertyRowMapper(ImooPrdocutImeiDeliver::class.java))
+    }
+
 
 }

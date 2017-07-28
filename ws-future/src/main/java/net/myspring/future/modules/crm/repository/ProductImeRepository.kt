@@ -114,7 +114,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         FROM
         (
             SELECT
-            product.product_type_id, depot.office_id depotOfficeId, t1.*
+            product.product_type_id, depot.office_id depotOfficeId, depot.area_id depotAreaId, t1.*
             FROM
             crm_product_ime t1,
             crm_depot depot,
@@ -487,7 +487,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         FROM
         (
             SELECT
-            product.product_type_id, depot.office_id depotOfficeId, t1.*
+            product.product_type_id, depot.office_id depotOfficeId, depot.area_id depotAreaId, t1.*
             FROM
             crm_product_ime t1,
             crm_depot depot,
@@ -585,6 +585,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 			upload.employee_id productImeUploadEmployeeId,
 			product.product_type_id,
 			depot.office_id depotOfficeId,
+			depot.area_id depotAreaId,
 			t1.*
 		FROM
 			crm_product_ime t1

@@ -7,6 +7,7 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.HtmlUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,15 +22,18 @@ public class BdMaterialService {
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
 
-    public BdMaterial findByName(String name){
-        if (StringUtils.isNotBlank(name)){
-            return bdMaterialRepository.findByName(name);
+    public BdMaterial findByName(String nameHtml){
+        if (StringUtils.isNotBlank(nameHtml)){
+            String name = HtmlUtils.htmlUnescape(nameHtml);
+            BdMaterial bdMaterial = bdMaterialRepository.findByName(name);
+            return bdMaterial;
         }
         return null;
     }
 
-    public BdMaterial findByNumber(String number){
-        if (StringUtils.isNotBlank(number)){
+    public BdMaterial findByNumber(String numberHtml){
+        if (StringUtils.isNotBlank(numberHtml)){
+            String number = HtmlUtils.htmlUnescape(numberHtml);
             return bdMaterialRepository.findByNumber(number);
         }
         return null;
