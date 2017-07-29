@@ -8,6 +8,7 @@ import net.myspring.future.common.query.BaseQuery;
 public class DemoPhoneTypeOfficeQuery extends BaseQuery{
 
     private String areaId;
+    private String demoPhoneTypeId;
 
     public String getAreaId() {
         return areaId;
@@ -15,5 +16,13 @@ public class DemoPhoneTypeOfficeQuery extends BaseQuery{
 
     public void setAreaId(String areaId) {
         this.areaId = areaId;
+    }
+
+    public String getDemoPhoneTypeId() {
+        return demoPhoneTypeId;
+    }
+
+    public void setDemoPhoneTypeId(String demoPhoneTypeId) {
+        this.demoPhoneTypeId = demoPhoneTypeId;
     }
 }
