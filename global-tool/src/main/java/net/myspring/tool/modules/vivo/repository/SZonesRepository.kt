@@ -29,7 +29,7 @@ class SZonesRepository @Autowired constructor(val namedParameterJdbcTemplate: Na
         val sb = StringBuilder()
         sb.append(" insert into ")
         sb.append(" S_zones_"+agentCode)
-        sb.append(" (zoneID,zoneName,shortCut,zoneDepth,zonePath,fatherID,subCount,zoneTypes) ")
+        sb.append(" (ZoneID,ZoneName,ShortCut,ZoneDepth,ZonePath,FatherID,SubCount,ZoneTypes) ")
         sb.append(" values (:zoneId,:zoneName,:shortcut,:zoneDepth,:zonePath,:fatherId,:subCount,:zoneTypes) ")
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sZonesList.toTypedArray()))
     }
