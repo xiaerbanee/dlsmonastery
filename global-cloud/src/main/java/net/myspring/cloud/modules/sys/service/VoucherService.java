@@ -174,22 +174,26 @@ public class VoucherService {
             List<Object> row = data.get(i);
             //科目
             String accountNumberName = HandsontableUtils.getValue(row,1);
-            if (map.containsKey(accountNumberName)) {
-                //科目对应核算维度
-                List<String> FlexGroupNames = map.get(accountNumberName);
-                for (int j = 2; j < row.size() - 2; j++) {
-                    String FlexGroupNameToElement = HandsontableUtils.getValue(row,j);
-                    String FlexGroupName = header.get(j);
-                    if (StringUtils.isBlank(FlexGroupNameToElement)) {
-                        if (FlexGroupNames.contains(FlexGroupName)) {
-                            sb.append("第" + index + "行，" + FlexGroupName + "为必填<br/>");
-                        }
-                    } else {
-                        if (!FlexGroupNames.contains(FlexGroupName)) {
-                            sb.append("第" + index + "行，" + FlexGroupName + "必须为空<br/>");
+            if(StringUtils.isNotBlank(accountNumberName)) {
+                if (map.containsKey(accountNumberName)) {
+                    //科目对应核算维度
+                    List<String> FlexGroupNames = map.get(accountNumberName);
+                    for (int j = 2; j < row.size() - 2; j++) {
+                        String FlexGroupNameToElement = HandsontableUtils.getValue(row, j);
+                        String FlexGroupName = header.get(j);
+                        if (StringUtils.isBlank(FlexGroupNameToElement)) {
+                            if (FlexGroupNames.contains(FlexGroupName)) {
+                                sb.append("第" + index + "行，" + FlexGroupName + "为必填");
+                            }
+                        } else {
+                            if (!FlexGroupNames.contains(FlexGroupName)) {
+                                sb.append("第" + index + "行，" + FlexGroupName + "必须为空");
+                            }
                         }
                     }
                 }
+            } else {
+                sb.append("第" + index + "行，"  + "科目必填");
             }
             //借方金额
             String debitStr = HandsontableUtils.getValue(row,header.size() - 2);
@@ -202,7 +206,7 @@ public class VoucherService {
                 creditAmount = creditAmount.add(new BigDecimal(creditStr));
             }
             if ((StringUtils.isBlank(debitStr) && StringUtils.isBlank(creditStr)) || (StringUtils.isNotBlank(debitStr) && StringUtils.isNotBlank(creditStr))) {
-                sb.append("第" + index + "行，借方和贷方请填写一项！<br/>");
+                sb.append("第" + index + "行，借方和贷方请填写一项！");
             }
         }
         if (debitAmount.compareTo(creditAmount) != 0) {
