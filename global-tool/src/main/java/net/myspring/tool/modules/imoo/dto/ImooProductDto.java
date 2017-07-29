@@ -7,9 +7,9 @@ public class ImooProductDto {
     private String imooPlantBasicProductId;
     private String productId;
     private String createdBy;
-    private LocalDateTime createdTime;
+    private String createdDate;
     private String lastModifiedBy;
-    private String lastModifiedTime;
+    private String lastModifiedDate;
     private String remarks;
     private String version;
     private String locked;
@@ -49,12 +49,12 @@ public class ImooProductDto {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
+    public String getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
 
     public String getLastModifiedBy() {
@@ -65,12 +65,12 @@ public class ImooProductDto {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public String getLastModifiedTime() {
-        return lastModifiedTime;
+    public String getLastModifiedDate() {
+        return lastModifiedDate;
     }
 
-    public void setLastModifiedTime(String lastModifiedTime) {
-        this.lastModifiedTime = lastModifiedTime;
+    public void setLastModifiedDate(String lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public String getRemarks() {
