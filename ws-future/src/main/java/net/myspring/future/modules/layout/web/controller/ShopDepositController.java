@@ -92,7 +92,7 @@ public class ShopDepositController {
         }
 
         List<BdDepartment> bdDepartmentList = cloudClient.findAllDepartment();
-        Map<String, BdDepartment> departmentMap = CollectionUtil.extractToMap(bdDepartmentList, "ffullName");
+        Map<String, BdDepartment> departmentMap = CollectionUtil.extractToMap(bdDepartmentList, "FFullName");
 
         Map<String, String> depotNameMap = depotService.findDepotNameMap(CollectionUtil.extractToList(shopDepositBatchForm.getShopDepositBatchDetailFormList(), "shopName"));
         Map<String, String> bankNameMap = bankService.findBankNameMap(CollectionUtil.extractToList(shopDepositBatchForm.getShopDepositBatchDetailFormList(), "bankName"));
