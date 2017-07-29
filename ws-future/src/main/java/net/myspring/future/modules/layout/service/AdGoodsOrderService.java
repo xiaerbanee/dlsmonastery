@@ -145,6 +145,7 @@ public class AdGoodsOrderService {
             SimpleProcess simpleProcess = simpleProcessManager.start(AdGoodsOrder.class.getSimpleName());
             adGoodsOrder.setSimpleProcessId(simpleProcess.getId());
             adGoodsOrder.setProcessStatus(simpleProcess.getCurrentProcessStatus());
+            adGoodsOrder.setProcessPositionId(simpleProcess.getCurrentPositionId());
             adGoodsOrderRepository.save(adGoodsOrder);
             //startAndSaveProcessFlowInfo(adGoodsOrder);
         }
@@ -295,6 +296,7 @@ public class AdGoodsOrderService {
         SimpleProcess simpleProcess = simpleProcessManager.go(adGoodsOrder.getSimpleProcessId(),adGoodsOrderAuditForm.getPass(),adGoodsOrderAuditForm.getAuditRemarks());
         adGoodsOrder.setLocked(true);
         adGoodsOrder.setProcessStatus(simpleProcess.getCurrentProcessStatus());
+        adGoodsOrder.setProcessPositionId(simpleProcess.getCurrentPositionId());
         adGoodsOrderRepository.save(adGoodsOrder);
 
 
@@ -619,6 +621,7 @@ public class AdGoodsOrderService {
         SimpleProcess simpleProcess = simpleProcessManager.go(adGoodsOrder.getSimpleProcessId(),pass,comment);
         adGoodsOrder.setLocked(true);
         adGoodsOrder.setProcessStatus(simpleProcess.getCurrentProcessStatus());
+        adGoodsOrder.setProcessPositionId(simpleProcess.getCurrentPositionId());
         adGoodsOrderRepository.save(adGoodsOrder);
 
         /*ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
