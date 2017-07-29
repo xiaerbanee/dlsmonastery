@@ -8,10 +8,12 @@ import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.common.exception.ServiceException;
-import net.myspring.future.common.enums.*;
+import net.myspring.future.common.enums.AdGoodsOrderStatusEnum;
+import net.myspring.future.common.enums.BillTypeEnum;
+import net.myspring.future.common.enums.ExpressOrderTypeEnum;
+import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.domain.*;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.manager.SalOutStockManager;
@@ -30,10 +32,6 @@ import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailRepositor
 import net.myspring.future.modules.layout.repository.AdGoodsOrderRepository;
 import net.myspring.future.modules.layout.web.form.*;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
-import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
-import net.myspring.general.modules.sys.dto.ActivitiStartDto;
-import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
-import net.myspring.general.modules.sys.form.ActivitiStartForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -84,8 +82,6 @@ public class AdGoodsOrderService {
     private ExpressOrderManager expressOrderManager;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private ActivitiClient activitiClient;
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
@@ -146,7 +142,7 @@ public class AdGoodsOrderService {
         saveExpressOrderInfo(adGoodsOrder, adGoodsOrderForm);
 
         if (adGoodsOrderForm.isCreate()) {
-            SimpleProcess simpleProcess = simpleProcessManager.start(SimpleProcessTypeEnum.柜台订货);
+            SimpleProcess simpleProcess = simpleProcessManager.start(AdGoodsOrder.class.getSimpleName());
             adGoodsOrder.setSimpleProcessId(simpleProcess.getId());
             adGoodsOrder.setProcessStatus(simpleProcess.getCurrentProcessStatus());
             adGoodsOrderRepository.save(adGoodsOrder);

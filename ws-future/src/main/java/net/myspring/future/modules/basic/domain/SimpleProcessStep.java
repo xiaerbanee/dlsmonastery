@@ -7,21 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="crm_simple_process")
-public class SimpleProcess extends DataEntity<SimpleProcess> {
+@Table(name="crm_simple_process_step")
+public class SimpleProcessStep extends DataEntity<SimpleProcessStep> {
 
     private Integer version = 0;
     private String simpleProcessTypeId;
-    private String currentProcessStatus;
-    private String currentPositionId;
-
-    public String getCurrentPositionId() {
-        return currentPositionId;
-    }
-
-    public void setCurrentPositionId(String currentPositionId) {
-        this.currentPositionId = currentPositionId;
-    }
+    private String step;
+    private Integer sort;
+    private String positionId;
 
     public Integer getVersion() {
         return version;
@@ -39,11 +32,27 @@ public class SimpleProcess extends DataEntity<SimpleProcess> {
         this.simpleProcessTypeId = simpleProcessTypeId;
     }
 
-    public String getCurrentProcessStatus() {
-        return currentProcessStatus;
+    public String getStep() {
+        return step;
     }
 
-    public void setCurrentProcessStatus(String currentProcessStatus) {
-        this.currentProcessStatus = currentProcessStatus;
+    public void setStep(String step) {
+        this.step = step;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
     }
 }

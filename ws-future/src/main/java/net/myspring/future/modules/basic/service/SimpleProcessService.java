@@ -20,4 +20,8 @@ public class SimpleProcessService {
         return simpleProcessManager.findDetailDtoList(simpleProcessId);
     }
 
+    public List<String> getAllProcessStatuses(String simpleProcessTypeName) {
+        return simpleProcessManager.getAllProcessStatuses(simpleProcessTypeName);
+    }
+
 }

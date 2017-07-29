@@ -1,8 +1,39 @@
+CREATE TABLE `crm_simple_process_step` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `simple_process_type_id` varchar(20) NOT NULL,
+  `step` varchar(50) NOT NULL,
+  `sort` int(11) NOT NULL,
+  `position_id` bigint(20) NOT NULL,
+  `remarks` varchar(255) NOT NULL,
+  `created_by` bigint(20) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `last_modified_by` bigint(20) NOT NULL,
+  `last_modified_date` datetime NOT NULL,
+  `version` int(11) NOT NULL DEFAULT '0',
+  `locked` tinyint(1) NOT NULL,
+  `enabled` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `crm_simple_process_type` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  `remarks` varchar(255) NOT NULL,
+  `created_by` bigint(20) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `last_modified_by` bigint(20) NOT NULL,
+  `last_modified_date` datetime NOT NULL,
+  `version` int(11) NOT NULL DEFAULT '0',
+  `locked` tinyint(1) NOT NULL,
+  `enabled` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+);
 
 CREATE TABLE `crm_simple_process` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `type` varchar(20) NOT NULL,
+  `simple_process_type_id` bigint(20) NOT NULL,
   `current_process_status` varchar(50) NOT NULL,
+  `current_position_id` bigint(20),
   `remarks` varchar(255) NOT NULL,
   `created_by` bigint(20) NOT NULL,
   `created_date` datetime NOT NULL,
@@ -36,11 +67,53 @@ CREATE TABLE `crm_tmp_20170727` (
   PRIMARY KEY (`id`)
 );
 
+
+INSERT INTO crm_simple_process_type (
+  SELECT
+    t1.id,
+    t1.name,
+    t1.remarks,
+    1,
+    now(),
+    1,
+    now(),
+    0,
+    0,
+    1
+  FROM
+    sys_process_type t1
+  WHERE
+    t1.name in ('AdGoodsOrder','BankIn') and t1.enabled = 1
+);
+
+INSERT INTO crm_simple_process_step (
+  SELECT
+    t1.id,
+    t2.id,
+    t1.name,
+    t1.sort,
+    t1.position_id,
+    '',
+    1,
+    now(),
+    1,
+    now(),
+    0,
+    0,
+    1
+  FROM
+    sys_process_flow t1
+    LEFT JOIN sys_process_type t2 ON t1.process_type_id = t2.id
+  WHERE
+    t2.name in ('AdGoodsOrder','BankIn') and t2.enabled = 1 order by t1.sort
+);
+
   INSERT INTO crm_simple_process (
   SELECT
     process_instance_id,
-    name,
+    case  name when '销售收款' then (select id from sys_process_type where name = 'BankIn' ) when '柜台订货' then  (select id from sys_process_type where name = 'AdGoodsOrder' ) else null end,
     status,
+    position_id,
     remarks,
     created_by,
     created_date,
@@ -90,6 +163,6 @@ ALTER TABLE crm_bank_in
 
 update crm_ad_goods_order set simple_process_id = process_instance_id;
 update crm_bank_in set simple_process_id = process_instance_id;
-
+update crm_simple_process set current_position_id = NULL where current_process_status in ('已通过','未通过');
 
 DROP TABLE IF EXISTS `crm_tmp_20170727`;

@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.SimpleProcessEndsEnum;
-import net.myspring.future.common.enums.SimpleProcessTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Bank;
@@ -86,6 +85,7 @@ public class BankInService {
         }
 
         bankIn.setProcessStatus(simpleProcess.getCurrentProcessStatus());
+        bankIn.setPositionId(simpleProcess.getCurrentPositionId());
         bankIn.setBillDate(bankInAuditForm.getBillDate() == null ? LocalDate.now() : bankInAuditForm.getBillDate());
         bankInRepository.save(bankIn);
 
@@ -126,8 +126,9 @@ public class BankInService {
         bankInRepository.save(bankIn);
 
         if(bankInForm.isCreate()) {
-            SimpleProcess simpleProcess = simpleProcessManager.start(SimpleProcessTypeEnum.销售收款);
+            SimpleProcess simpleProcess = simpleProcessManager.start(BankIn.class.getSimpleName());
             bankIn.setProcessStatus(simpleProcess.getCurrentProcessStatus());
+            bankIn.setPositionId(simpleProcess.getCurrentPositionId());
             bankIn.setSimpleProcessId(simpleProcess.getId());
             bankInRepository.save(bankIn);
         }
