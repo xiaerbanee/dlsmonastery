@@ -52,7 +52,7 @@ public class ImooPullController {
     }
 
     @RequestMapping(value = "getSendImeList")
-    public List<ImooPrdocutImeiDeliver> getSendImeList(LocalDate dateStart, LocalDate dateEnd, List<String> agentCodes){
+    public List<ImooPrdocutImeiDeliver> getSendImeList(String dateStart, String dateEnd, String agentCodes){
         return imooPullService.getSendImeList(dateStart,dateEnd,agentCodes);
     }
 

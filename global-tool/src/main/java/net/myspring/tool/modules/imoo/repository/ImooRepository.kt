@@ -20,7 +20,7 @@ class ImooRepository @Autowired constructor(val namedParameterJdbcTemplate:Named
         return namedParameterJdbcTemplate.query("select * from PlantBasicProduct ",BeanPropertyRowMapper(ImooPlantBasicProduct::class.java))
     }
 
-    fun plantPrdocutImeiDeliverByDate(dateStart: LocalDate,  dateEnd: LocalDate, agentCodes: MutableList<String>): MutableList<ImooPrdocutImeiDeliver>{
+    fun plantPrdocutImeiDeliverByDate(dateStart: String,  dateEnd: String, agentCodes: MutableList<String>): MutableList<ImooPrdocutImeiDeliver>{
         val paramMap = Maps.newHashMap<String, Any>()
         paramMap.put("dateStart",dateStart)
         paramMap.put("dateEnd",dateEnd)

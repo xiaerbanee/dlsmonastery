@@ -29,25 +29,25 @@ class ImooPrdocutImeiDeliverRepository @Autowired constructor(val namedParameter
     fun batchSave(imooProductImeiDeliverList:MutableList<ImooPrdocutImeiDeliver> ):IntArray{
         val sb = """ INSERT INTO imoo_prdocut_imei_deliver
             (company_id,mainagentid,agentid,ms_des,ms_id,msi_item,msi_item_des,msib_barcode,creation_date,box,imei)
-            valus (:companyId,:mainagentid,:agentid,:msDes,:msId,:msiItem,:msiItemDes,:msibBarcode,:creationDate,:box,:imei)
+            values (:companyId,:mainagentid,:agentid,:msDes,:msId,:msiItem,:msiItemDes,:msibBarcode,:creationDate,:box,:imei)
         """
         return namedParameterJdbcTemplate.batchUpdate(sb,SqlParameterSourceUtils.createBatch(imooProductImeiDeliverList.toTypedArray()))
     }
 
-    fun findSendImeList(dateStart:LocalDate,dateEnd:LocalDate,agnetCodeList: MutableList<String>):MutableList<ImooPrdocutImeiDeliver>{
+    fun findSendImeList(dateStart:String,dateEnd:String,agentCodeList: MutableList<String>):MutableList<ImooPrdocutImeiDeliver>{
         val map = Maps.newHashMap<String,Any>()
         map.put("dateStart",dateStart)
         map.put("dateEnd",dateEnd)
-        map.put("agnetCodeList",agnetCodeList)
+        map.put("agentCodeList",agentCodeList)
         val sb = """
             SELECT
-                *
+                t.*
             FROM
-                imoo_prdocut_imei_deliver
+                imoo_prdocut_imei_deliver t
             WHERE
-                creation_date >= : dateStart
-            AND created_date < :dateEnd
-            AND company_id IN (:agentCoedList)
+                t.creation_date >= :dateStart
+            AND t.creation_date < :dateEnd
+            AND t.company_id IN (:agentCodeList)
         """
         return namedParameterJdbcTemplate.query(sb,map,BeanPropertyRowMapper(ImooPrdocutImeiDeliver::class.java))
     }
