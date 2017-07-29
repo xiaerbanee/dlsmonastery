@@ -21,7 +21,7 @@
                 <date-range-picker v-model="formData.adGoodsOrderBillDateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderDetailList.processStatus')">
-                <el-select v-model="formData.processStatus" clearable filterable>
+                <el-select v-model="formData.adGoodsOrderProcessStatus" clearable filterable>
                   <el-option v-for="item in formData.extra.statusList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>

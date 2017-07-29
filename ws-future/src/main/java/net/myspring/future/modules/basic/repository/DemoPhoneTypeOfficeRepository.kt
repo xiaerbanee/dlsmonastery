@@ -43,6 +43,9 @@ class DemoPhoneTypeOfficeRepositoryImpl @Autowired constructor(val namedParamete
         if (StringUtils.isNotEmpty(demoPhoneTypeOfficeQuery.areaId)) {
             sb.append("""  and t1.office_id = :areaId """)
         }
+        if (StringUtils.isNotEmpty(demoPhoneTypeOfficeQuery.demoPhoneTypeId)) {
+            sb.append("""  and t1.demo_phone_type_id = :demoPhoneTypeId """)
+        }
         sb.append(""" GROUP BY t1.id """)
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)

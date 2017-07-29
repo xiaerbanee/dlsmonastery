@@ -8,11 +8,10 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.enums.OfficeRuleEnum;
-import net.myspring.future.common.enums.SimpleProcessTypeEnum;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
+import net.myspring.future.modules.basic.service.SimpleProcessService;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailSimpleDto;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
@@ -25,7 +24,6 @@ import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
-import org.elasticsearch.xpack.notification.email.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,7 +36,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,6 +53,8 @@ public class  AdGoodsOrderController {
     private OfficeClient officeClient;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private SimpleProcessService simpleProcessService;
 
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:view')")
@@ -69,7 +68,7 @@ public class  AdGoodsOrderController {
         adGoodsOrderQuery.getExtra().put("billTypeList",BillTypeEnum.getList());
         adGoodsOrderQuery.getExtra().put("areaList", officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         adGoodsOrderQuery.getExtra().put("adStoreList",depotService.findAdStoreDtoList());
-        adGoodsOrderQuery.getExtra().put("statusList", SimpleProcessTypeEnum.柜台订货.getAllProcessStatuses());
+        adGoodsOrderQuery.getExtra().put("statusList", simpleProcessService.getAllProcessStatuses(AdGoodsOrder.class.getSimpleName()));
         return adGoodsOrderQuery;
     }
 

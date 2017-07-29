@@ -2,12 +2,12 @@ package net.myspring.future.modules.layout.web.controller;
 
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.enums.OfficeRuleEnum;
-import net.myspring.future.common.enums.SimpleProcessTypeEnum;
 import net.myspring.future.modules.basic.client.OfficeClient;
+import net.myspring.future.modules.basic.service.SimpleProcessService;
+import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
 import net.myspring.future.modules.layout.service.AdGoodsOrderDetailService;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderDetailQuery;
-import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
 import net.myspring.util.excel.ExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +25,8 @@ public class AdGoodsOrderDetailController {
     private OfficeClient officeClient;
     @Autowired
     private AdGoodsOrderDetailService adGoodsOrderDetailService;
+    @Autowired
+    private SimpleProcessService simpleProcessService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<AdGoodsOrderDetailDto> list(Pageable pageable, AdGoodsOrderDetailQuery adGoodsOrderDetailQuery) {
@@ -35,16 +37,13 @@ public class AdGoodsOrderDetailController {
     public AdGoodsOrderDetailQuery getQuery(AdGoodsOrderDetailQuery adGoodsOrderDetailQuery) {
         adGoodsOrderDetailQuery.getExtra().put("adGoodsOrderBillTypeList", BillTypeEnum.getList());
         adGoodsOrderDetailQuery.getExtra().put("adGoodsOrderShopAreaList", officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
-        adGoodsOrderDetailQuery.getExtra().put("statusList", SimpleProcessTypeEnum.柜台订货.getAllProcessStatuses());
+        adGoodsOrderDetailQuery.getExtra().put("statusList", simpleProcessService.getAllProcessStatuses(AdGoodsOrder.class.getSimpleName()));
         return adGoodsOrderDetailQuery;
     }
-
 
     @RequestMapping(value="export")
     public ModelAndView export(AdGoodsOrderDetailQuery adGoodsOrderDetailQuery) {
         return new ModelAndView(new ExcelView(),"simpleExcelBook",adGoodsOrderDetailService.export(adGoodsOrderDetailQuery));
     }
-
-
 
 }
