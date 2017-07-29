@@ -41,6 +41,9 @@ class VoucherRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         if(StringUtils.isNotBlank(voucherQuery.createdBy)){
             sb.append(" and created_by = :createdBy ")
         }
+        if(StringUtils.isNotBlank(voucherQuery.companyName)){
+            sb.append(" and company_name = :companyName ")
+        }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
         var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(voucherQuery), BeanPropertyRowMapper(VoucherDto::class.java));
