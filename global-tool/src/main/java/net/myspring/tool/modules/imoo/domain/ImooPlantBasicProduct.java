@@ -1,12 +1,10 @@
 package net.myspring.tool.modules.imoo.domain;
 
 
-import com.google.common.collect.Lists;
 import net.myspring.tool.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.List;
 
 @Entity
 @Table(name="imoo_plant_basic_product")

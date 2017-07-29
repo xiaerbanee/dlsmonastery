@@ -76,7 +76,7 @@ public class ImooService {
                 productRepository.updateHasImeById(updateIdList);
             }
         }
-        return "同步成功";
+        return "串码同步成功，同步"+productImeList.size()+"条串码";
     }
 
 }
