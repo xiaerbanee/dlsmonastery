@@ -50,10 +50,10 @@ spring:
         password: bbk@123456
         driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
      JXDJ:
-          url: jdbc:sqlserver://168.192.1.13:1433;DatabaseName=AIS20161229135440
-          username: sa
-          password: bbk@123456
-          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+        url: jdbc:sqlserver://168.192.1.13:1433;DatabaseName=AIS20161229135440
+        username: sa
+        password: bbk@123456
+        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     factory:
       JXOPPO:
         url: jdbc:jtds:sqlserver://121.10.21.123:1439/plantesaleweb
