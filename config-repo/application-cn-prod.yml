@@ -16,20 +16,41 @@ spring:
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
+      JXDJ:
+        url: jdbc:mysql://168.192.1.17:3316/summer_future?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
     summer-basic:
       JXOPPO:
         url: jdbc:mysql://168.192.1.17:3326/summer_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
+      JXDJ:
+        url: jdbc:mysql://168.192.1.17:3316/summer_future?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
     summer-general:
-      url: jdbc:mysql://168.192.1.17:3326/summer_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
-      username: root
-      password: bbk@123456
-      driver-class-name: com.mysql.jdbc.Driver
+      JXOPPO:
+        url: jdbc:mysql://168.192.1.17:3326/summer_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
+      JXDJ:
+        url: jdbc:mysql://168.192.1.17:3316/summer_future?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
     kingdee:
       JXOPPO:
         url: jdbc:sqlserver://168.192.1.13:1433;DatabaseName=AIS2017040100OPPO
+        username: sa
+        password: bbk@123456
+        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+     JXDJ:
+        url: jdbc:sqlserver://168.192.1.13:1433;DatabaseName=AIS20161229135440
         username: sa
         password: bbk@123456
         driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
@@ -39,12 +60,24 @@ spring:
         username: Agent
         password: gz86!*%
         driver-class-name: net.sourceforge.jtds.jdbc.Driver
+       JXDJ:
+         url: jdbc:jtds:sqlserver://esaledb.eebbk.com:1439/fxncbbk
+         username: nceebbk
+         password: 159#ncbbk@583
+         driver-class-name: net.sourceforge.jtds.jdbc.Driver
   redis:
     JXOPPO:
       host: localhost
       password:
       port: 6379
       database: 0
+      max-idle: 100
+      max-total: 200
+    JXDJ:
+      host: localhost
+      password:
+      port: 6379
+      database: 1
       max-idle: 100
       max-total: 200
     oauth2:
@@ -54,4 +87,4 @@ spring:
       database: 15
       max-idle: 100
       max-total: 200
-companyNames: JXOPPO
+companyNames: JXOPPO,JXDJ
