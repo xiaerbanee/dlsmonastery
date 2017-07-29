@@ -79,7 +79,7 @@ public class CnJournalBankManager {
             } else if (ShopDepositTypeEnum.演示机押金.equals(type)) {
                 entityForBankDto.setOtherTypeNumber("2241.002C");//其他应付款-客户押金（批发）-演示机押金
             }
-        }else {
+        }else if(CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyName())){
             if (ShopDepositTypeEnum.市场保证金.equals(type)){
                 entityForBankDto.setOtherTypeNumber("2241.00002B");//其他应付款-客户押金（批发）-市场保证金
                 entityForBankDto.setComment(depot.getName()+ CharConstant.COMMA+ShopDepositTypeEnum.市场保证金.name()+CharConstant.COMMA+shopDeposit.getRemarks());
@@ -89,6 +89,16 @@ public class CnJournalBankManager {
             }else if (ShopDepositTypeEnum.演示机押金.equals(type)){
                 throw new ServiceException("财务暂时未开--其他应付款-客户押金（批发）-演示机押金");//其他应付款-客户押金（批发）-演示机押金
             }
+        }else if (CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())){
+            if (ShopDepositTypeEnum.市场保证金.equals(type)) {
+                entityForBankDto.setOtherTypeNumber("2241.102");//其他应付款-客户押金（批发）-市场保证金
+                entityForBankDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+            } else if (ShopDepositTypeEnum.形象保证金.equals(type)) {
+                entityForBankDto.setOtherTypeNumber("2241.101");//其他应付款-客户押金（批发）-形象押金
+                entityForBankDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+            } else if (ShopDepositTypeEnum.演示机押金.equals(type)) {
+                throw new ServiceException("财务暂时未开--其他应付款-客户押金（批发）-演示机押金");//其他应付款-客户押金（批发）-演示机押金
+            }
         }
         entityForBankDto.setExpenseTypeNumber("6602.000");//无
         entityForBankDto.setCustomerNumber(null);
@@ -96,13 +106,12 @@ public class CnJournalBankManager {
         cnJournalEntityForBankDtoList.add(entityForBankDto);
         cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
         cnJournalForBankDtoList.add(cnJournalForBankDto);
-
         return cloudClient.synJournalBank(cnJournalForBankDtoList).get(0);
 
     }
 
     public List<KingdeeSynReturnDto> synEmployeePhoneDeposit(List<EmployeePhoneDeposit> employeePhoneDepositList){
-        if (!CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName())) {
+        if (!CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName()) && !CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())) {
             List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
             for (EmployeePhoneDeposit employeePhoneDeposit : employeePhoneDepositList) {
                 Bank bank = bankRepository.findOne(employeePhoneDeposit.getBankId());
@@ -145,7 +154,7 @@ public class CnJournalBankManager {
     }
 
     public KingdeeSynReturnDto synForShopGoodsDeposit(ShopGoodsDeposit shopGoodsDeposit, String departmentNumber){
-        if (!CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName())) {
+        if (!CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName()) && !CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())) {
             List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
             Bank bank = bankRepository.findOne(shopGoodsDeposit.getBankId());
             Depot depot = depotRepository.findOne(shopGoodsDeposit.getShopId());
