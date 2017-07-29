@@ -20,7 +20,7 @@ class SZonesRepository @Autowired constructor(val namedParameterJdbcTemplate: Na
 
     fun batchSave(sZonesM13e00List: MutableList<SZones>): IntArray {
         val sb = StringBuilder()
-        sb.append("insert into vivo_push_zones (zoneID,zoneName,shortCut,zoneDepth,zonePath,fatherID,subCount,zoneTypes,agentCode)")
+        sb.append("insert into vivo_push_zones (ZoneID,ZoneName,ShortCut,ZoneDepth,ZonePath,FatherID,SubCount,ZoneTypes,AgentCode)")
         sb.append("values (:zoneId,:zoneName,:shortcut,:zoneDepth,:zonePath,:fatherId,:subCount,:zoneTypes,:agentCode)")
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sZonesM13e00List.toTypedArray()))
     }
