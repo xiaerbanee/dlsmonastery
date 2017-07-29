@@ -42,7 +42,7 @@
           <el-button type="primary" @click="search()">{{$t('adApplyList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-dialog :title = "$t('adApplyList.editLeftQty')" v-model="leftQtyVisible" size="small" class="search-form"  z-index="1500">
+      <el-dialog :title = "$t('adApplyList.editLeftQty')" v-model="leftQtyVisible" size="tiny" class="search-form"  z-index="1500">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
           <el-row :gutter="4">
             <el-col :span="24">
