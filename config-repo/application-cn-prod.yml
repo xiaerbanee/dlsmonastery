@@ -49,7 +49,7 @@ spring:
         username: sa
         password: bbk@123456
         driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-     JXDJ:
+      JXDJ:
         url: jdbc:sqlserver://168.192.1.13:1433;DatabaseName=AIS20161229135440
         username: sa
         password: bbk@123456
@@ -60,11 +60,11 @@ spring:
         username: Agent
         password: gz86!*%
         driver-class-name: net.sourceforge.jtds.jdbc.Driver
-       JXDJ:
-         url: jdbc:jtds:sqlserver://esaledb.eebbk.com:1439/fxncbbk
-         username: nceebbk
-         password: 159#ncbbk@583
-         driver-class-name: net.sourceforge.jtds.jdbc.Driver
+      JXDJ:
+        url: jdbc:jtds:sqlserver://esaledb.eebbk.com:1439/fxncbbk
+        username: nceebbk
+        password: 159#ncbbk@583
+        driver-class-name: net.sourceforge.jtds.jdbc.Driver
   redis:
     JXOPPO:
       host: localhost
