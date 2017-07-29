@@ -5,6 +5,7 @@ import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.dto.DemoPhoneTypeOfficeDto;
 import net.myspring.future.modules.basic.service.DemoPhoneTypeOfficeService;
 import net.myspring.future.modules.basic.web.query.DemoPhoneTypeOfficeQuery;
+import net.myspring.util.excel.ExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping(value = "basic/demoPhoneTypeOffice")
@@ -33,6 +37,11 @@ public class DemoPhoneTypeOfficeController {
     public DemoPhoneTypeOfficeQuery getQuery(DemoPhoneTypeOfficeQuery demoPhoneTypeOfficeQuery){
         demoPhoneTypeOfficeQuery.getExtra().put("areaList",officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         return demoPhoneTypeOfficeQuery;
+    }
+
+    @RequestMapping(value = "/export")
+    public ModelAndView export(DemoPhoneTypeOfficeQuery demoPhoneTypeOfficeQuery) throws IOException{
+        return new ModelAndView(new ExcelView(),"simpleExcelBook",demoPhoneTypeOfficeService.export(demoPhoneTypeOfficeQuery));
     }
 
 }

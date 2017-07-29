@@ -389,7 +389,8 @@ export default {
     realQty:"实际数量",
     add:"添加",
     filter:"过滤",
-    sure:"确定"
+    sure:"确定",
+    export:"导出",
   },
   depotChangeForm: {
     depotChangeForm: "仓库调整编辑",
