@@ -11,6 +11,8 @@ import java.util.*
 
 interface ProductMonthPriceDetailRepository : BaseRepository<ProductMonthPriceDetail, String>, ProductMonthPriceDetailRepositoryCustom {
 
+    fun findByProductMonthPriceId(productMonthPriceId: String): List<ProductMonthPriceDetail>
+
 }
 
 
