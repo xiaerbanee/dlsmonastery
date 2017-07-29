@@ -67,18 +67,8 @@ public class VoucherService {
 
     public Page<VoucherDto> findPage(Pageable pageable, VoucherQuery voucherQuery) {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-        if(StringUtils.isBlank(voucherQuery.getStatus())){
-            if (accountKingdeeBook != null) {
-                voucherQuery.setStatus(VoucherStatusEnum.省公司财务审核.name());
-            }else if (accountKingdeeBook == null){
-                voucherQuery.setCreatedBy(RequestUtils.getAccountId());
-            }
-        }else {
-            if (accountKingdeeBook == null && VoucherStatusEnum.省公司财务审核.name().equals(voucherQuery.getStatus())){
-                return null;
-            }else if (accountKingdeeBook == null ){
-                voucherQuery.setCreatedBy(RequestUtils.getAccountId());
-            }
+        if(accountKingdeeBook == null){
+            voucherQuery.setCreatedBy(RequestUtils.getAccountId());
         }
         Page<VoucherDto> page = voucherRepository.findPage(pageable, voucherQuery);
         cacheUtils.initCacheInput(page.getContent());
