@@ -5,6 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:demoPhone:edit'">{{$t('demoPhoneTypeOfficeList.add')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneTypeOfficeList.filter')}}</el-button>
+        <el-button type="primary" @click="exportData" icon="upload" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneTypeOfficeList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('demoPhoneTypeOfficeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -15,6 +16,9 @@
                 <el-select v-model="formData.areaId" filterable clearable >
                   <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
+              </el-form-item>
+              <el-form-item :label="$t('demoPhoneTypeOfficeList.demoPhoneType')" :label-width="formLabelWidth">
+                <demo-phone-type v-model="formData.demoPhoneTypeId"></demo-phone-type>
               </el-form-item>
             </el-col>
           </el-row>
@@ -34,7 +38,9 @@
   </div>
 </template>
 <script>
+  import demoPhoneType from 'components/future/demo-phone-type-select';
   export default {
+    components:{demoPhoneType},
     data() {
       return {
         pageLoading: false,
@@ -74,6 +80,10 @@
       },search() {
         this.formVisible = false;
         this.pageRequest();
+      },exportData(){
+        util.confirmBeforeExportData(this).then(() => {
+          window.location.href='/api/ws/future/basic/demoPhoneTypeOffice/export?'+qs.stringify(util.deleteExtra(this.formData));
+        }).catch(()=>{});
       },itemAdd(){
         this.$router.push({ name: 'demoPhoneForm'})
       }
