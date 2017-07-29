@@ -155,6 +155,7 @@
             let list = table.getData();
             for (let item in list) {
               if (!table.isEmptyRow(item)) {
+                let row = list[item];
                 let shopDepositBatchDetailForm = {};
                 shopDepositBatchDetailForm.shopName = row[0];
                 shopDepositBatchDetailForm.outBillType = row[1];
