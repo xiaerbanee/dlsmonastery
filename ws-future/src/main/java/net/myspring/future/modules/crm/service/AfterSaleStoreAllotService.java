@@ -54,7 +54,7 @@ public class AfterSaleStoreAllotService {
         cacheUtils.initCacheInput(afterSaleStoreAllotDtos);
         List<SimpleExcelColumn> simpleExcelColumnList= Lists.newArrayList();
 
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"businessId","售后单号号"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"businessId","售后单号"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"productName","货品"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"fromStoreName","调出仓库"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"toStoreName","调后仓库"));
