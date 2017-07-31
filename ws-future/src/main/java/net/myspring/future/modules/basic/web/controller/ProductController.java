@@ -98,8 +98,12 @@ public class ProductController {
 
     @RequestMapping(value = "syn")
     public RestResponse syn() {
-        productService.syn();
-        return new RestResponse("同步成功",ResponseCodeEnum.updated.name());
+        String newProductName = productService.syn();
+        if(StringUtils.isNotBlank(newProductName)){
+            return new RestResponse("同步成功,请设置新同步的货品:"+newProductName+"的二级价格",ResponseCodeEnum.updated.name());
+        }else{
+            return new RestResponse("同步成功",ResponseCodeEnum.updated.name());
+        }
     }
 
     @RequestMapping(value = "findOne")

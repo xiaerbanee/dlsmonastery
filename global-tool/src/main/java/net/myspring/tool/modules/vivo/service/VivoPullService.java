@@ -10,11 +10,13 @@ import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
 import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
+import net.myspring.tool.modules.vivo.domain.VivoProducts;
 import net.myspring.tool.modules.vivo.dto.FactoryOrderDto;
 import net.myspring.tool.modules.vivo.dto.VivoPlantSendimeiDto;
 import net.myspring.tool.modules.vivo.repository.VivoPlantElectronicsnRepository;
 import net.myspring.tool.modules.vivo.repository.VivoPlantProductsRepository;
 import net.myspring.tool.modules.vivo.repository.VivoPlantSendimeiRepository;
+import net.myspring.tool.modules.vivo.repository.VivoProductsRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -42,8 +44,18 @@ public class VivoPullService {
     private VivoPlantSendimeiRepository vivoPlantSendimeiRepository;
     @Autowired
     private VivoPlantElectronicsnRepository vivoPlantElectronicsnRepository;
+    @Autowired
+    private VivoProductsRepository vivoProductsRepository;
 
-    //货品
+    //颜色编码
+    @FactoryDataSource
+    public List<VivoProducts> getProducts(){
+        List<VivoProducts> vivoProductsList = vivoProductsRepository.findProducts();
+        return vivoProductsList;
+    }
+
+
+    //物料编码
     @FactoryDataSource
     public List<VivoPlantProducts> getPlantProducts(String companyName) {
         return vivoPlantProductsRepository.findPlantProducts(companyName);
@@ -143,6 +155,24 @@ public class VivoPullService {
             }
             if(CollectionUtil.isNotEmpty(list)) {
                 vivoPlantElectronicsnRepository.save(list);
+            }
+        }
+    }
+
+    @LocalDataSource
+    @Transactional
+    public void pullProducts(List<VivoProducts> vivoProductsList){
+        if(CollectionUtil.isNotEmpty(vivoProductsList)){
+            List<String> colorIdList = CollectionUtil.extractToList(vivoProductsList,"colorId");
+            List<String> localColorIdList = vivoProductsRepository.findColorIds(colorIdList);
+            List<VivoProducts> list = Lists.newArrayList();
+            for (VivoProducts item:vivoProductsList){
+                if (!localColorIdList.contains(item.getColorId())){
+                    list.add(item);
+                }
+            }
+            if (CollectionUtil.isNotEmpty(list)){
+                vivoProductsRepository.save(list);
             }
         }
     }

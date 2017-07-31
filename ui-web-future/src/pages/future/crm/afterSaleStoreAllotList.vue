@@ -4,7 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary"@click="formVisible = true" icon="search">过滤或导出</el-button>
-        <span v-html="searchText"></span>
+        <span v-html="searchText"></span><!--modify-->
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('afterSaleStoreAllotList.filter')" v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
         <el-form :model="formData" :label-width="formLabelWidth">
@@ -54,7 +54,8 @@
   export default {
     data() {
       return {
-        searchText:"",
+
+        searchText:"",/*modify*/
         page:{},
         formData:{
           extra:{}
@@ -99,13 +100,13 @@
         this.formVisible = false;
         this.pageRequest();
       }
-    },created () {
+    },created () {/*实例被创建完成后调用*/
        this.pageHeight = 0.75*window.innerHeight;
       this.initPromise = axios.get('/api/ws/future/crm/afterSale/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);
       });
-    },activated(){
+    },activated(){/*keep-alive 组件激活时调用*/
       this.initPromise.then(()=>{
         this.pageRequest();
       });
