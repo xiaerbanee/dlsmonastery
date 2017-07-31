@@ -19,7 +19,7 @@ public class DemoPhoneTypeOfficeDto extends DataDto<DemoPhoneTypeOffice> {
     private String officeId;
     @CacheInput(inputKey = "offices", inputInstance = "officeId",outputInstance = "name")
     private String officeName;
-    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "taskPoint")
+    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "point")
     private BigDecimal officeTaskPoint;
 
     public Integer getRealQty() {
