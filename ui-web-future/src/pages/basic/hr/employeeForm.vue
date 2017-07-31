@@ -148,6 +148,7 @@
             loginName: [{ required: true,validator: checkLoginName}],
             officeId: [{required: true, message: this.$t('employeeForm.prerequisiteMessage')}],
             positionId: [{required: true, message: this.$t('employeeForm.prerequisiteMessage')}],
+            officeIdList:[{required:true,message:this.$t('employeeForm.prerequisiteMessage')}]
           },
           loading: false
         };
