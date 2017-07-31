@@ -3,7 +3,7 @@
     <head-tab active="afterSaleProductAllotList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary"@click="formVisible = true" icon="search">{{$t('afterSaleProductAllotList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search">{{$t('afterSaleProductAllotList.filterOrExport')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('afterSaleProductAllotList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
@@ -37,6 +37,7 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
+          <el-button @click="exportData()">{{$t('afterSaleProductAllotList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('afterSaleProductAllotList.sure')}}</el-button>
         </div>
       </search-dialog>
@@ -89,6 +90,12 @@
         this.formData.pageNumber = pageNumber;
         this.formData.pageSize = pageSize;
         this.pageRequest();
+      },exportData(){
+        this.formVisible = false;
+        util.confirmBeforeExportData(this).then(() => {
+          window.location.href='/api/ws/future/crm/afterSaleProductAllot/export?'+qs.stringify(util.deleteExtra(this.formData));
+          this.pageRequest();
+        }).catch(()=>{});
       },sortChange(column) {
         this.formData.order=util.getSort(column);
         this.formData.pageNumber=0;
