@@ -67,7 +67,7 @@
                 if(column === 1) {
                   let materialName = changes[i][3];
                   if (util.isNotBlank(materialName)){
-                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name=' + materialName).then((response) => {
+                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByName',{params:{name:materialName}}).then((response) => {
                       let material = response.data;
                       table.setDataAtCell(row, 0, material.fnumber);
                     });
@@ -78,7 +78,7 @@
                 if(column === 0){
                   let materialNumber = changes[i][3];
                   if (util.isNotBlank(materialNumber)){
-                    axios.get('/api/global/cloud/sys/product/findByCode?code=' + materialNumber).then((response) => {
+                    axios.get('/api/global/cloud/sys/product/findByCode',{params:{code:materialNumber}}).then((response) => {
                       let product = response.data;
                       if (product){
                         table.setDataAtCell(row, 2, product.price1);

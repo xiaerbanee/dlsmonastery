@@ -52,7 +52,7 @@
                 if(column === 0){
                   let productNumber = changes[i][3];
                   if(util.isNotBlank(productNumber)){
-                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByNumber?number=' + productNumber).then((response) => {
+                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByNumber',{params:{number:productNumber}}).then((response) => {
                       let material = response.data;
                       table.setDataAtCell(row, 1, material.fname);
                     });
