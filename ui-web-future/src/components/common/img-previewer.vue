@@ -64,7 +64,6 @@
     },
     methods:{
       hide(e){
-        console.log(e);
         if(e.target.nodeName === "DIV"){
           this.$emit('close')
           this.$refs.img.style='';

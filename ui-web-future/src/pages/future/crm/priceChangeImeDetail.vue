@@ -44,7 +44,7 @@
           </el-col>
         </el-row>
       </el-form>
-      <img-previewer :show="dialogVisible" :src="dialogImageUrl" @rotateR="rotate" @close="dialogVisible = false">
+      <img-previewer :show="dialogVisible" :src="dialogImageUrl"  @close="dialogVisible = false">
       </img-previewer>
     </div>
   </div>
