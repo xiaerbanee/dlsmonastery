@@ -1,10 +1,12 @@
 package net.myspring.tool.modules.vivo.web.controller;
 
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
 import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
+import net.myspring.tool.modules.vivo.domain.VivoProducts;
 import net.myspring.tool.modules.vivo.dto.FactoryOrderDto;
 import net.myspring.tool.modules.vivo.dto.VivoPlantSendimeiDto;
 import net.myspring.tool.modules.vivo.service.VivoPullService;
@@ -29,6 +31,11 @@ public class VivoPullController {
     public String pullFactoryData(String companyName,String date){
         if(StringUtils.isBlank(RequestUtils.getCompanyName())) {
             DbContextHolder.get().setCompanyName(companyName);
+        }
+        //同步颜色编码
+        if (CompanyNameEnum.JXVIVO.name().equals(companyName)){
+            List<VivoProducts> vivoProductsList = vivoPullService.getProducts();
+            vivoPullService.pullProducts(vivoProductsList);
         }
         //同步物料编码
          List<VivoPlantProducts> vivoPlantProducts=vivoPullService.getPlantProducts(companyName);
