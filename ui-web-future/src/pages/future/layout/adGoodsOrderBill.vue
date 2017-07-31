@@ -66,7 +66,7 @@
           </el-col>
         </el-row>
       </el-form>
-      <process-details v-model="adGoodsOrder.processInstanceId"></process-details>
+      <simple-process-details v-model="adGoodsOrder.simpleProcessId"></simple-process-details>
 
       <el-input v-model="productName" @change="searchDetail" :placeholder="$t('adGoodsOrderBill.inputTwoKey')" style="width:200px;"></el-input>
       <el-table :data="filterAdGoodsOrderDetailList" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderBill.loading')"  stripe border >
@@ -89,10 +89,10 @@
   import expressCompanySelect from 'components/future/express-company-select'
   import boolSelect from 'components/common/bool-select'
   import boolRadioGroup from 'components/common/bool-radio-group'
-  import processDetails from 'components/general/process-details';
+  import simpleProcessDetails from 'components/future/simple-process-details';
 
   export default{
-    components:{expressCompanySelect,boolSelect,boolRadioGroup,processDetails},
+    components:{expressCompanySelect,boolSelect,boolRadioGroup,simpleProcessDetails},
     data(){
       return{
         submitDisabled:false,

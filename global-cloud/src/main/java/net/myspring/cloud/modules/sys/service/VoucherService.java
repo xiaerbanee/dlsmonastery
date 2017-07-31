@@ -4,15 +4,15 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.enums.VoucherStatusEnum;
+import net.myspring.cloud.common.utils.CacheUtils;
+import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
+import net.myspring.cloud.modules.input.service.GlVoucherService;
+import net.myspring.cloud.modules.sys.domain.*;
 import net.myspring.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.kingdee.domain.BdAccount;
 import net.myspring.cloud.modules.kingdee.domain.BdFlexItemGroup;
 import net.myspring.cloud.modules.kingdee.domain.BdFlexItemProperty;
-import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
-import net.myspring.cloud.modules.sys.domain.Voucher;
-import net.myspring.cloud.modules.sys.domain.VoucherEntry;
-import net.myspring.cloud.modules.sys.domain.VoucherEntryFlow;
 import net.myspring.cloud.modules.sys.dto.VoucherDto;
 import net.myspring.cloud.modules.sys.repository.*;
 import net.myspring.cloud.modules.sys.web.form.VoucherForm;
@@ -60,29 +60,26 @@ public class VoucherService {
     private AccountKingdeeBookRepository accountKingdeeBookRepository;
     @Autowired
     private KingdeeBookRepository kingdeeBookRepository;
+    @Autowired
+    private CacheUtils cacheUtils;
+    @Autowired
+    private GlVoucherService glVoucherService;
 
     public Page<VoucherDto> findPage(Pageable pageable, VoucherQuery voucherQuery) {
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountId(RequestUtils.getAccountId());
-        if(StringUtils.isBlank(voucherQuery.getStatus())){
-            if (accountKingdeeBook != null) {
-                voucherQuery.setStatus(VoucherStatusEnum.省公司财务审核.name());
-            }else if (accountKingdeeBook == null){
-                voucherQuery.setCreatedBy(RequestUtils.getAccountId());
-            }
-        }else {
-            if (accountKingdeeBook == null && VoucherStatusEnum.省公司财务审核.name().equals(voucherQuery.getStatus())){
-                return null;
-            }else if (accountKingdeeBook == null ){
-                voucherQuery.setCreatedBy(RequestUtils.getAccountId());
-            }
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
+        if(accountKingdeeBook == null){
+            voucherQuery.setCreatedBy(RequestUtils.getAccountId());
         }
         Page<VoucherDto> page = voucherRepository.findPage(pageable, voucherQuery);
+        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
     public VoucherDto findOne(String id) {
         Voucher voucher = voucherRepository.findOne(id);
-        return BeanUtil.map(voucher,VoucherDto.class);
+        VoucherDto voucherDto = BeanUtil.map(voucher,VoucherDto.class);
+        cacheUtils.initCacheInput(voucherDto);
+        return voucherDto;
     }
 
     @Transactional
@@ -96,7 +93,7 @@ public class VoucherService {
             voucher = new Voucher();
             voucher.setFDate(date);
             voucher.setCompanyName(RequestUtils.getCompanyName());
-            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountId(RequestUtils.getAccountId());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
             if (accountKingdeeBook != null){
                 voucher.setKingdeeBookId(accountKingdeeBook.getKingdeeBookId());
                 voucher.setCreatedName(accountKingdeeBook.getUsername());
@@ -177,22 +174,26 @@ public class VoucherService {
             List<Object> row = data.get(i);
             //科目
             String accountNumberName = HandsontableUtils.getValue(row,1);
-            if (map.containsKey(accountNumberName)) {
-                //科目对应核算维度
-                List<String> FlexGroupNames = map.get(accountNumberName);
-                for (int j = 2; j < row.size() - 2; j++) {
-                    String FlexGroupNameToElement = HandsontableUtils.getValue(row,j);
-                    String FlexGroupName = header.get(j);
-                    if (StringUtils.isBlank(FlexGroupNameToElement)) {
-                        if (FlexGroupNames.contains(FlexGroupName)) {
-                            sb.append("第" + index + "行，" + FlexGroupName + "为必填<br/>");
-                        }
-                    } else {
-                        if (!FlexGroupNames.contains(FlexGroupName)) {
-                            sb.append("第" + index + "行，" + FlexGroupName + "必须为空<br/>");
+            if(StringUtils.isNotBlank(accountNumberName)) {
+                if (map.containsKey(accountNumberName)) {
+                    //科目对应核算维度
+                    List<String> FlexGroupNames = map.get(accountNumberName);
+                    for (int j = 2; j < row.size() - 2; j++) {
+                        String FlexGroupNameToElement = HandsontableUtils.getValue(row, j);
+                        String FlexGroupName = header.get(j);
+                        if (StringUtils.isBlank(FlexGroupNameToElement)) {
+                            if (FlexGroupNames.contains(FlexGroupName)) {
+                                sb.append("第" + index + "行，" + FlexGroupName + "为必填");
+                            }
+                        } else {
+                            if (!FlexGroupNames.contains(FlexGroupName)) {
+                                sb.append("第" + index + "行，" + FlexGroupName + "必须为空");
+                            }
                         }
                     }
                 }
+            } else {
+                sb.append("第" + index + "行，"  + "科目必填");
             }
             //借方金额
             String debitStr = HandsontableUtils.getValue(row,header.size() - 2);
@@ -205,14 +206,14 @@ public class VoucherService {
                 creditAmount = creditAmount.add(new BigDecimal(creditStr));
             }
             if ((StringUtils.isBlank(debitStr) && StringUtils.isBlank(creditStr)) || (StringUtils.isNotBlank(debitStr) && StringUtils.isNotBlank(creditStr))) {
-                sb.append("第" + index + "行，借方和贷方请填写一项！<br/>");
+                sb.append("第" + index + "行，借方和贷方请填写一项！");
             }
         }
         if (debitAmount.compareTo(creditAmount) != 0) {
             sb.append("借贷方金额必须相等");
         }
         if (StringUtils.isNotBlank(sb)){
-           return new RestResponse(sb.toString(),null,false);
+            return new RestResponse(sb.toString(),null,false);
         }else {
             return new RestResponse("检测合符条件",null,true);
         }
@@ -270,9 +271,10 @@ public class VoucherService {
     }
 
     @Transactional
-    public Voucher audit(VoucherForm voucherForm,List<BdFlexItemGroup> bdFlexItemGroupList,List<BdFlexItemProperty> bdFlexItemPropertyList,AccountKingdeeBook accountKingdeeBook){
+    public Voucher audit(VoucherForm voucherForm,List<BdFlexItemGroup> bdFlexItemGroupList,List<BdFlexItemProperty> bdFlexItemPropertyList,AccountKingdeeBook accountKingdeeBook, KingdeeBook kingdeeBook){
+        Voucher voucher;
         if (StringUtils.isNotBlank(voucherForm.getId())){
-            Voucher voucher = voucherRepository.findOne(voucherForm.getId());
+            voucher = voucherRepository.findOne(voucherForm.getId());
             voucher.setFDate(voucherForm.getFdate());
             if (VoucherStatusEnum.地区财务审核.name().equals(voucher.getStatus())) {
                 voucher.setStatus(VoucherStatusEnum.省公司财务审核.name());
@@ -281,18 +283,27 @@ public class VoucherService {
             }else {
                 throw new ServiceException("你的岗位没有权限审核");
             }
-            return voucherRepository.save(voucher);
         }else {
-            Voucher voucher = save(voucherForm,bdFlexItemGroupList,bdFlexItemPropertyList);
+            voucher = save(voucherForm,bdFlexItemGroupList,bdFlexItemPropertyList);
             voucher.setFDate(voucherForm.getFdate());
             if (VoucherStatusEnum.地区财务审核.name().equals(voucher.getStatus())) {
                 voucher.setStatus(VoucherStatusEnum.省公司财务审核.name());
             } else {
                 voucher.setStatus(VoucherStatusEnum.已完成.name());
             }
-            voucher = voucherRepository.save(voucher);
-            return voucher;
         }
+        if (VoucherStatusEnum.已完成.name().equals(voucher.getStatus())) {
+            KingdeeSynDto kingdeeSynDto = glVoucherService.save(voucherForm, bdFlexItemGroupList, bdFlexItemPropertyList, kingdeeBook, accountKingdeeBook);
+            if (kingdeeSynDto.getSuccess()) {
+                String outCode = "凭证编号：" + kingdeeSynDto.getBillNo() + "  凭证号：" + glVoucherService.findByBillNo(kingdeeSynDto.getBillNo()).getFVoucherGroupNo();
+                voucher.setOutCode(outCode);
+                voucher.setCreatedName(accountKingdeeBook.getUsername());
+            }else {
+                throw new ServiceException(kingdeeSynDto.getResult());
+            }
+        }
+        voucherRepository.save(voucher);
+        return voucher;
     }
 
     //获取所有科目名称及其对应的核算维度
@@ -306,7 +317,7 @@ public class VoucherService {
         }
         return result;
     }
-    
+
     public List<String> getHeaders(List<BdFlexItemGroup> bdFlexItemGroupList) {
         List<String> list = Lists.newLinkedList();
         list.add("摘要");

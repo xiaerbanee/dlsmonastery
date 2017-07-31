@@ -4,7 +4,8 @@ package net.myspring.basic.modules.salary.domain;
 
 import net.myspring.basic.common.domain.DataEntity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name="hr_salary")
@@ -13,6 +14,15 @@ public class Salary  extends DataEntity<Salary> {
 	private String month;
 	private String projectName;
 	private String projectValue;
+	private String salaryTemplateId;
+
+	public String getSalaryTemplateId() {
+		return salaryTemplateId;
+	}
+
+	public void setSalaryTemplateId(String salaryTemplateId) {
+		this.salaryTemplateId = salaryTemplateId;
+	}
 
 	public String getEmployeeId() {
 		return employeeId;

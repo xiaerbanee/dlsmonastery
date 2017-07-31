@@ -14,12 +14,10 @@ import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.client.ActivitiClient;
-import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.*;
-import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.manager.SalOutStockManager;
+import net.myspring.future.modules.basic.manager.SimpleProcessManager;
 import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.manager.ExpressOrderManager;
@@ -34,10 +32,6 @@ import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailRepositor
 import net.myspring.future.modules.layout.repository.AdGoodsOrderRepository;
 import net.myspring.future.modules.layout.web.form.*;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
-import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
-import net.myspring.general.modules.sys.dto.ActivitiStartDto;
-import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
-import net.myspring.general.modules.sys.form.ActivitiStartForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -61,6 +55,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -88,8 +83,6 @@ public class AdGoodsOrderService {
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private ActivitiClient activitiClient;
-    @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
     private DepotManager depotManager;
@@ -97,6 +90,8 @@ public class AdGoodsOrderService {
     private SalOutStockManager salOutStockManager;
     @Autowired
     private RedisIdManager redisIdManager;
+    @Autowired
+    private SimpleProcessManager simpleProcessManager;
 
     public Page<AdGoodsOrderDto> findPage(Pageable pageable, AdGoodsOrderQuery adGoodsOrderQuery) {
         adGoodsOrderQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
@@ -147,11 +142,16 @@ public class AdGoodsOrderService {
         saveExpressOrderInfo(adGoodsOrder, adGoodsOrderForm);
 
         if (adGoodsOrderForm.isCreate()) {
-            startAndSaveProcessFlowInfo(adGoodsOrder);
+            SimpleProcess simpleProcess = simpleProcessManager.start(AdGoodsOrder.class.getSimpleName());
+            adGoodsOrder.setSimpleProcessId(simpleProcess.getId());
+            adGoodsOrder.setProcessStatus(simpleProcess.getCurrentProcessStatus());
+            adGoodsOrder.setProcessPositionId(simpleProcess.getCurrentPositionId());
+            adGoodsOrderRepository.save(adGoodsOrder);
+            //startAndSaveProcessFlowInfo(adGoodsOrder);
         }
     }
 
-    @Transactional
+    /*@Transactional
     public void startAndSaveProcessFlowInfo(AdGoodsOrder adGoodsOrder) {
 
         ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("柜台订货", adGoodsOrder.getId(), AdGoodsOrder.class.getSimpleName(), adGoodsOrder.getOutShopId()));
@@ -164,7 +164,7 @@ public class AdGoodsOrderService {
 
         adGoodsOrderRepository.save(adGoodsOrder);
 
-    }
+    }*/
 
     @Transactional
     public void saveExpressOrderInfo(AdGoodsOrder adGoodsOrder, AdGoodsOrderForm adGoodsOrderForm) {
@@ -266,16 +266,17 @@ public class AdGoodsOrderService {
         if(StringUtils.isNotBlank(outShopId)){
             Depot depot = depotRepository.findOne(outShopId);
             if(depot != null && RequestUtils.getCompanyName().equalsIgnoreCase(CompanyNameEnum.JXDJ.name())){
-                if(depot.getCode().startsWith("IM0")){
-                    for(AdGoodsOrderDetailSimpleDto adGoodsOrderDetailSimpleDto : result){
+                Iterator<AdGoodsOrderDetailSimpleDto> iterator = result.iterator();
+                while (iterator.hasNext()){
+                    AdGoodsOrderDetailSimpleDto adGoodsOrderDetailSimpleDto = iterator.next();
+                    if(depot.getCode().startsWith("IM0")){
                         if(!adGoodsOrderDetailSimpleDto.getProductCode().startsWith("I")){
-                            result.remove(adGoodsOrderDetailSimpleDto);
+                            iterator.remove();
                         }
-                    }
-                }else if(depot.getCode().startsWith("DJ")){
-                    for(AdGoodsOrderDetailSimpleDto adGoodsOrderDetailSimpleDto : result){
+
+                    }else if(depot.getCode().startsWith("DJ")){
                         if(!adGoodsOrderDetailSimpleDto.getProductCode().startsWith("D")){
-                            result.remove(adGoodsOrderDetailSimpleDto);
+                            iterator.remove();
                         }
                     }
                 }
@@ -287,8 +288,19 @@ public class AdGoodsOrderService {
 
     @Transactional
     public void audit(AdGoodsOrderAuditForm adGoodsOrderAuditForm) {
+        if(StringUtils.isBlank(adGoodsOrderAuditForm.getId())||adGoodsOrderAuditForm.getPass() == null){
+            throw new ServiceException("未选择通过或未通过");
+        }
+        AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderAuditForm.getId());
 
-        ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
+        SimpleProcess simpleProcess = simpleProcessManager.go(adGoodsOrder.getSimpleProcessId(),adGoodsOrderAuditForm.getPass(),adGoodsOrderAuditForm.getAuditRemarks());
+        adGoodsOrder.setLocked(true);
+        adGoodsOrder.setProcessStatus(simpleProcess.getCurrentProcessStatus());
+        adGoodsOrder.setProcessPositionId(simpleProcess.getCurrentPositionId());
+        adGoodsOrderRepository.save(adGoodsOrder);
+
+
+        /*ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
         activitiCompleteForm.setPass(adGoodsOrderAuditForm.getPass());
         activitiCompleteForm.setComment(adGoodsOrderAuditForm.getRemarks());
         AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderAuditForm.getId());
@@ -300,7 +312,7 @@ public class AdGoodsOrderService {
         adGoodsOrder.setProcessStatus(activitiCompleteDto.getProcessStatus());
         adGoodsOrder.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
         adGoodsOrder.setLocked(true);
-        adGoodsOrderRepository.save(adGoodsOrder);
+        adGoodsOrderRepository.save(adGoodsOrder);*/
 
     }
 
@@ -367,7 +379,7 @@ public class AdGoodsOrderService {
             splitAdGoodsOrder(adGoodsOrder, adGoodsOrderBillForm, detailList);
         }
 
-        if (StringUtils.isNotBlank(adGoodsOrder.getProcessInstanceId())) {
+        if (StringUtils.isNotBlank(adGoodsOrder.getSimpleProcessId())) {
             doAndSaveProcessInfo(adGoodsOrder, true, "");
         } else {
             adGoodsOrder.setProcessStatus(AdGoodsOrderStatusEnum.待发货.name());
@@ -498,7 +510,7 @@ public class AdGoodsOrderService {
 
     @Transactional
     public void synWhenBill(AdGoodsOrder adGoodsOrder, ExpressOrder expressOrder) {
-        KingdeeSynReturnDto kingdeeSynReturnDto = salOutStockManager.synForAdGoodsOrder(adGoodsOrder);
+        KingdeeSynReturnDto kingdeeSynReturnDto = salOutStockManager.synForAdGoodsOrder(adGoodsOrder,expressOrder);
 
         adGoodsOrder.setCloudSynId(kingdeeSynReturnDto.getId());
         adGoodsOrder.setOutCode(kingdeeSynReturnDto.getBillNo());
@@ -558,7 +570,7 @@ public class AdGoodsOrderService {
 
         if (isAllShipped) {
             //如果有工作流，审批通过
-            if (StringUtils.isNotBlank(adGoodsOrder.getProcessInstanceId())) {
+            if (StringUtils.isNotBlank(adGoodsOrder.getSimpleProcessId())) {
                 doAndSaveProcessInfo(adGoodsOrder, true, "");
             } else {
                 adGoodsOrder.setProcessStatus(AdGoodsOrderStatusEnum.待签收.name());
@@ -605,7 +617,14 @@ public class AdGoodsOrderService {
 
     @Transactional
     public void doAndSaveProcessInfo(AdGoodsOrder adGoodsOrder, boolean pass, String comment) {
-        ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
+
+        SimpleProcess simpleProcess = simpleProcessManager.go(adGoodsOrder.getSimpleProcessId(),pass,comment);
+        adGoodsOrder.setLocked(true);
+        adGoodsOrder.setProcessStatus(simpleProcess.getCurrentProcessStatus());
+        adGoodsOrder.setProcessPositionId(simpleProcess.getCurrentPositionId());
+        adGoodsOrderRepository.save(adGoodsOrder);
+
+        /*ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
         activitiCompleteForm.setPass(pass);
         activitiCompleteForm.setComment(comment);
         activitiCompleteForm.setProcessTypeId(adGoodsOrder.getProcessTypeId());
@@ -616,14 +635,14 @@ public class AdGoodsOrderService {
         adGoodsOrder.setProcessStatus(activitiCompleteDto.getProcessStatus());
         adGoodsOrder.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
         adGoodsOrder.setLocked(true);
-        adGoodsOrderRepository.save(adGoodsOrder);
+        adGoodsOrderRepository.save(adGoodsOrder);*/
     }
 
     @Transactional
     public void sign(String id) {
         AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(id);
 
-        if (StringUtils.isNotBlank(adGoodsOrder.getProcessInstanceId())) {
+        if (StringUtils.isNotBlank(adGoodsOrder.getSimpleProcessId())) {
             doAndSaveProcessInfo(adGoodsOrder, true, "");
         } else {
             adGoodsOrder.setProcessStatus(AdGoodsOrderStatusEnum.已完成.name());

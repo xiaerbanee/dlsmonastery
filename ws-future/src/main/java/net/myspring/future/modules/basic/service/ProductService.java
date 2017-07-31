@@ -38,6 +38,7 @@ import org.springframework.web.util.HtmlUtils;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -142,17 +143,19 @@ public class ProductService {
             Depot depot = depotRepository.findOne(depotId);
             if(depot != null&&BillTypeEnum.POP.name().equalsIgnoreCase(billType)&&
                     RequestUtils.getCompanyName().equalsIgnoreCase(CompanyNameEnum.JXDJ.name())){
-                if(depot.getCode().startsWith("IM0")){
-                    for(Product product : products){
+                Iterator<Product> iterator = products.iterator();
+                while (iterator.hasNext()){
+                    Product product = iterator.next();
+                    if(depot.getCode().startsWith("IM0")){
                         if(!product.getOutGroupName().startsWith("immo")){
-                            products.remove(product);
+                            iterator.remove();
                         }
-                    }
-                }else if(depot.getCode().startsWith("DJ")){
-                    for(Product product : products){
+
+                    }else if(depot.getCode().startsWith("DJ")){
                         if(!product.getOutGroupName().startsWith("电玩")){
-                            products.remove(product);
+                            iterator.remove();
                         }
+
                     }
                 }
             }
@@ -234,7 +237,8 @@ public class ProductService {
     }
 
     @Transactional
-    public void syn() {
+    public String syn() {
+        String newProductName = "";
         List<BdMaterial> bdMaterials = cloudClient.getAllProduct();
         List<Product> products = productRepository.findAllEnabled();
         Map<String,Product> productMapByOutId = CollectionUtil.extractToMap(products,"outId");
@@ -259,6 +263,7 @@ public class ProductService {
                         }else{
                             product.setHasIme(false);
                         }
+                        newProductName += bdMaterial.getFName()+CharConstant.SPACE;
                     }else{
                         product.setOldName(product.getName());
                         product.setOldOutId(product.getOutId());
@@ -276,6 +281,7 @@ public class ProductService {
             }
             productRepository.save(synProduct);
         }
+        return newProductName;
     }
 
     @Transactional

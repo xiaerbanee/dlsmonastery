@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -107,7 +108,6 @@ public class OfficeController {
         officeForm.getExtra().put("jointTypeList",JointTypeEnum.getList());
         officeForm.getExtra().put("officeTypeList",OfficeTypeEnum.getList());
         officeForm.getExtra().put("jointLevelList",JointLevelEnum.getList());
-        officeForm.getExtra().put("officeNameList",officeService.findAll().stream().map(Office::getName).collect(Collectors.toList()));
         return officeForm;
     }
 
@@ -130,6 +130,9 @@ public class OfficeController {
 
     @RequestMapping(value = "findByIds")
     public List<OfficeDto> findByIds(String idStr){
+        if(StringUtils.isBlank(idStr)){
+            return new ArrayList<>();
+        }
         List<String> ids=StringUtils.getSplitList(idStr,CharConstant.COMMA);
         List<OfficeDto> officeDtoList = officeService.findByIds(ids);
         return officeDtoList;
@@ -198,19 +201,6 @@ public class OfficeController {
         return officeList;
     }
 
-    @RequestMapping(value = "change")
-    public List<OfficeDto> change(String id){
-        if (StringUtils.isNotBlank(id)) {
-            return officeService.change(id);
-        }
-        return null;
-    }
-
-    @RequestMapping(value = "findByNameLike")
-    public List<Office> findByNameLike(String name){
-        return officeService.findByNameLike(name);
-    }
-
     @RequestMapping(value = "saveChange",method = RequestMethod.POST)
     public RestResponse saveChange(String id,String json){
         if (StringUtils.isNotBlank(json)) {
@@ -218,6 +208,11 @@ public class OfficeController {
              return new RestResponse("保存成功",null,true);
         }
         return new RestResponse("数据不能为空",null,false);
+    }
+
+    @RequestMapping(value = "findDistinctAgentCode")
+    public List<String> findDistinctAgentCode(){
+        return officeService.findDistinctAgentCode();
     }
 
 }

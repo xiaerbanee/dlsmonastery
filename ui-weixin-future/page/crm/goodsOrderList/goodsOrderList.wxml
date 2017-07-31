@@ -25,7 +25,7 @@
           </picker>
         </view>
       </view>
-      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="type">
+      <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
           <view class="weui-label">办事处</view>
         </view>

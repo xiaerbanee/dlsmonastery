@@ -44,6 +44,8 @@
           </el-col>
         </el-row>
       </el-form>
+      <img-previewer :show="dialogVisible" :src="dialogImageUrl"  @close="dialogVisible = false">
+      </img-previewer>
     </div>
   </div>
 </template>
@@ -53,6 +55,9 @@
       components:{boolRadioGroup},
       data(){
           return{
+            deg:0,
+            dialogVisible:false,
+            dialogImageUrl:'',
             isCreate:this.$route.query.id==null,
             action:this.$route.query.action,
             submitDisabled:false,
@@ -106,7 +111,9 @@
           })
         },
         handlePreview(file) {
-          window.open(file.viewUrl);
+          this.dialogVisible = true;
+          this.dialogImageUrl = file.viewUrl;
+
         },handleChange(file, fileList) {
           this.fileList = fileList;
         },handleRemove(file, fileList) {
@@ -129,3 +136,25 @@
       }
     }
 </script>
+<style>
+  .img-dialog{
+    text-align: center;
+  }
+  .img-dialog .el-dialog__body{
+  }
+  /*.imgWrapper{*/
+    /*width: 100%;*/
+    /*height: 100%;*/
+    /*padding: 10px;*/
+  /*}*/
+  .imgWrapper:before {
+    content: "";display: inline-block;height: 100%;vertical-align: middle;width: 0;
+  }
+  .img-dialog img{
+    max-height: 100%;
+    vertical-align: middle
+  }
+  .btn-rotate{
+    margin: 10px auto -10px auto;
+  }
+</style>

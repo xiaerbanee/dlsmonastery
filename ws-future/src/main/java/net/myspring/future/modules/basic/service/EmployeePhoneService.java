@@ -22,6 +22,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,7 +85,7 @@ public class EmployeePhoneService {
     public SimpleExcelBook findSimpleExcelSheet(EmployeePhoneQuery employeePhoneQuery)  {
         Workbook workbook = new SXSSFWorkbook(10000);
         employeePhoneQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
-        List<EmployeePhoneDto> employeePhoneDtoList = employeePhoneRepository.findFilter(employeePhoneQuery);
+        List<EmployeePhoneDto> employeePhoneDtoList = findPage(new PageRequest(0,10000),employeePhoneQuery).getContent();
         cacheUtils.initCacheInput(employeePhoneDtoList);
         List<SimpleExcelColumn> simpleExcelColumnList= Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"uploadTime","申请日期"));

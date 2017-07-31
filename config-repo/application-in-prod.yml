@@ -23,6 +23,7 @@ spring:
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
     summer-general:
+      IDVIVO:
         url: jdbc:mysql://localhost:3306/summer_vivo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         password: bbk@123456
@@ -46,12 +47,12 @@ spring:
       port: 6379
       database: 0
       max-idle: 100
-      max-total: 200
+      max-total: 500
     oauth2:
       host: localhost
       password:
       port: 6379
       database: 15
       max-idle: 100
-      max-total: 200
+      max-total: 500
 companyNames: IDVIVO

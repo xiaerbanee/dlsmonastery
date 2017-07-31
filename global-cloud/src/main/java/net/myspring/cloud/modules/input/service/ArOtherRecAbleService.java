@@ -151,7 +151,6 @@ public class ArOtherRecAbleService {
             if(StringUtils.isNotBlank(customerForName)){
                 entityDto.setCustomerForNumber(customerNameMap.get(customerForName));
             }
-            entityDto.setCostDepartmentNumber(departmentNameMap.get(departmentName));
             entityDto.setAmount(amount);
             entityDto.setAccountNumber(accountNameMap.get(accountName));
             entityDto.setComment(remarks);
@@ -181,13 +180,11 @@ public class ArOtherRecAbleService {
     public KingdeeSynDto saveForWS(ArOtherRecAbleDto arOtherRecAbleDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         arOtherRecAbleDto.setCreator(accountKingdeeBook.getUsername());
         arOtherRecAbleDto.setKingdeeName(kingdeeBook.getName());
-        String customerNumber = arOtherRecAbleDto.getCustomerNumber();
-        BdCustomer bdCustomer = bdCustomerRepository.findByNumber(customerNumber);
-        BdDepartment bdDepartment = bdDepartmentRepository.findByCustId(bdCustomer.getFCustId());
-        arOtherRecAbleDto.setDepartmentNumber(bdDepartment.getFNumber());
-        List<ArOtherRecAbleFEntityDto> entityDtoList = arOtherRecAbleDto.getArOtherRecAbleFEntityDtoList();
-        for (ArOtherRecAbleFEntityDto entityDto : entityDtoList){
-            entityDto.setCostDepartmentNumber(bdDepartment.getFNumber());
+        if (arOtherRecAbleDto.getDepartmentNumber() == null) {
+            String customerNumber = arOtherRecAbleDto.getCustomerNumber();
+            BdCustomer bdCustomer = bdCustomerRepository.findByNumber(customerNumber);
+            BdDepartment bdDepartment = bdDepartmentRepository.findByCustId(bdCustomer.getFCustId());
+            arOtherRecAbleDto.setDepartmentNumber(bdDepartment.getFNumber());
         }
         return save(arOtherRecAbleDto,kingdeeBook,accountKingdeeBook);
     }

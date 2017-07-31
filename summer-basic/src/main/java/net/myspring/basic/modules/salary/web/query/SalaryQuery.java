@@ -1,12 +1,28 @@
 package net.myspring.basic.modules.salary.web.query;
 
-public class SalaryQuery {
+import net.myspring.basic.common.query.BaseQuery;
+import net.myspring.basic.common.utils.RequestUtils;
+import net.myspring.util.text.StringUtils;
+
+public class SalaryQuery extends BaseQuery{
     private String employeeId;
     private String month;
     private String projectName;
     private String projectValue;
     private String employeeName;
     private String password;
+    private String accountId;
+
+    public String getAccountId() {
+        if(StringUtils.isBlank(accountId)){
+            this.accountId=RequestUtils.getAccountId();
+        }
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
 
     public String getPassword() {
         return password;
@@ -17,6 +33,9 @@ public class SalaryQuery {
     }
 
     public String getEmployeeId() {
+        if(StringUtils.isBlank(employeeId)){
+            this.employeeId=RequestUtils.getEmployeeId();
+        }
         return employeeId;
     }
 

@@ -63,6 +63,15 @@ public class ProductController {
         return productList;
     }
 
+    @RequestMapping(value = "searchByName")
+    public List<ProductDto> searchByName(String name){
+        List<ProductDto> productList = Lists.newArrayList();
+        if(StringUtils.isNotBlank(name)){
+            productList = productService.findByNameLike(name);
+        }
+        return productList;
+    }
+
     @RequestMapping(value = "search")
     public List<ProductDto> search(String name,String code){
         List<ProductDto> productList = Lists.newArrayList();
@@ -89,8 +98,12 @@ public class ProductController {
 
     @RequestMapping(value = "syn")
     public RestResponse syn() {
-        productService.syn();
-        return new RestResponse("同步成功",ResponseCodeEnum.updated.name());
+        String newProductName = productService.syn();
+        if(StringUtils.isNotBlank(newProductName)){
+            return new RestResponse("同步成功,请设置新同步的货品:"+newProductName+"的二级价格",ResponseCodeEnum.updated.name());
+        }else{
+            return new RestResponse("同步成功",ResponseCodeEnum.updated.name());
+        }
     }
 
     @RequestMapping(value = "findOne")

@@ -6,7 +6,7 @@
         <el-button type="primary" @click="itemAddDepot" icon="plus" v-permit="'crm:depotShop:basicEdit'">添加</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:depotShop:view'">过滤或导出</el-button>
         <el-button type="primary" @click="itemBindAccount" icon="share" v-permit="'crm:depotShop:basicEdit'">账户绑定</el-button>
-        <el-button type="primary" @click="itemMerge" icon="share" v-permit="'crm:depotShop:businessEdit'">门店合并</el-button>
+        <el-button type="primary" @click="itemMerge" icon="setting" v-permit="'crm:depotShop:businessEdit'">门店合并</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('dutyTripList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
@@ -102,11 +102,11 @@
         <el-table-column prop="depositMap.xxbzj" label="形象押金"  />
         <el-table-column prop="contator" label="联系人"  />
         <el-table-column prop="mobilePhone" label="手机"  />
-        <el-table-column prop="salePointType" label="门店类型"  />
-        <el-table-column prop="createdByName" label="创建人"  />
-        <el-table-column prop="createdDate" label="创建时间"  />
-        <el-table-column prop="lastModifiedByName" label="最后修改人"  />
-        <el-table-column prop="lastModifiedDate" label="最后修改时间"  />
+        <el-table-column prop="salePointType" label="门店类型"/>
+        <el-table-column column-key="createdBy" prop="createdByName" label="创建人" sortable/>
+        <el-table-column prop="createdDate" label="创建时间" sortable/>
+        <el-table-column column-key="lastModifiedBy" prop="lastModifiedByName" label="最后修改人" sortable/>
+        <el-table-column prop="lastModifiedDate" label="最后修改时间"  sortable/>
         <el-table-column prop="remarks" label="备注"></el-table-column>
         <el-table-column  label="操作" width="140">
           <template scope="scope">

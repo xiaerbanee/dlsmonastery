@@ -34,11 +34,11 @@ Page({
       data: {},
       method: 'GET',
       header: {
-        Cookie: "JSESSIONID=" + app.globalData.sessionId
+        Cookie: "JSESSIONID=" + app.globalData.sessionId      
       },
       success: function (res) {
         console.log(res.data)
-        that.setData({ 'formProperty.areaList': res.data.extra.areaList,formData:res.data });
+        that.setData({ 'formProperty': res.data.extra, formData: res.data });
         that.pageRequest();
       }
     })
@@ -138,7 +138,14 @@ Page({
   formSubmit: function (e) {
     var that = this;
     that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
-    that.pageRequest();
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        that.pageRequest();
+      }
+    })
   },
   toFirstPage: function () {
     var that = this;

@@ -75,7 +75,7 @@ public class AfterSaleController {
     public Map<String, Object> formData(String imeStr) {
         List<ProductImeDto> list = Lists.newArrayList();
         StringBuilder stringBuilder=new StringBuilder();
-        if(StringUtils.isNotBlank(imeStr)) {
+        if(StringUtils.isNotBlank(imeStr)) {//判断imeStr是否为空
             List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
             List<ProductImeDto> productImeList=productImeService.findByImeList(imeList);
             Map<String,ProductImeDto> productImeMap=CollectionUtil.extractToMap(productImeList,"ime");

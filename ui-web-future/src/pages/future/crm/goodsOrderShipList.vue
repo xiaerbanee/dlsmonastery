@@ -89,7 +89,7 @@
         <el-table-column prop="netType" :label="$t('goodsOrderShipList.netType')" ></el-table-column>
         <el-table-column prop="expressOrderExpressCodes" :label="$t('goodsOrderShipList.expressCodes')" ></el-table-column>
         <el-table-column prop="pullStatus" :label="$t('goodsOrderShipList.pullStatus')" ></el-table-column>
-        <el-table-column fixed="right" :label="$t('goodsOrderShipList.operate')" width="160">
+        <el-table-column :label="$t('goodsOrderShipList.operate')" width="160">
           <template scope="scope">
             <div class="action"><el-button size="small" v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('goodsOrderShipList.detail')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待发货'" v-permit="'crm:goodsOrderShip:ship'" ><el-button size="small" @click.native="itemShip(scope.row.businessId)">{{$t('goodsOrderShipList.ship')}}</el-button></div>

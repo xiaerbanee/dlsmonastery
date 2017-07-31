@@ -115,7 +115,7 @@
         <el-table-column prop="shopName" :label="$t('goodsOrderList.shop')"></el-table-column>
         <el-table-column prop="shipType" :label="$t('goodsOrderList.shipType')"></el-table-column>
         <el-table-column prop="amount" sortable :label="$t('goodsOrderList.amount')" ></el-table-column>
-        <el-table-column prop="shopShouldGetAfterBill" sortable :label="$t('goodsOrderList.shopShouldGet')"></el-table-column>
+        <el-table-column prop="shopShouldGetAfterBill" :label="$t('goodsOrderList.shopShouldGet')"></el-table-column>
         <el-table-column prop="storeName" :label="$t('goodsOrderList.store')" ></el-table-column>
         <el-table-column prop="remarks" :label="$t('goodsOrderList.remarks')" ></el-table-column>
         <el-table-column prop="expressOrderExpressCodes" :label="$t('goodsOrderList.expressCodes')" ></el-table-column>
@@ -181,7 +181,7 @@
        return row.enabled && (row.status==='待开单' || (row.status==='待发货' && util.isPermit('crm:goodsOrder:bill')));
     },
     tableRowClassName(row, index) {
-      if (row.shopShouldGetAfterBill<= 0 && row.status==='待开单' && _.trim(row.shopCode) !== '') {
+      if ( row.status==='待开单' && row.shopShouldGetAfterBill<= 0 && _.trim(row.shopCode) !== '') {
         return "danger-row";
       }else{
         return "";

@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.sys.web.controller;
 
+import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.dto.AccountKingdeeBookDto;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
@@ -60,7 +61,7 @@ public class AccountKingdeeBookController {
 
     @RequestMapping(value = "validateByAccountId")
     public Boolean validateByAccountId(String accountId) {
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(accountId);
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(accountId,RequestUtils.getCompanyName());
         if (accountKingdeeBook != null && accountKingdeeBook.getPassword() != null){
             return true;
         }else {

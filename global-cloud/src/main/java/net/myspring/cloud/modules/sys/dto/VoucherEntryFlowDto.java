@@ -1,7 +1,7 @@
 package net.myspring.cloud.modules.sys.dto;
 
-import net.myspring.cloud.common.dto.DataDto;
 import net.myspring.cloud.modules.sys.domain.VoucherEntryFlow;
+import net.myspring.common.dto.DataDto;
 
 
 /**

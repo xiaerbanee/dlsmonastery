@@ -13,7 +13,6 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
@@ -33,14 +32,11 @@ public class ArOtherRecAbleManager {
     @Autowired
     private CloudClient cloudClient;
     @Autowired
-    private DepotRepository depotRepository;
-    @Autowired
     private ClientRepository clientRepository;
 
 
     public KingdeeSynReturnDto synForShopGoodsDeposit(ShopGoodsDeposit shopGoodsDeposit){
-        if (!CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName())) {
-            Depot depot = depotRepository.findOne(shopGoodsDeposit.getId());
+        if (!CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName()) && !CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())) {
             Client client = clientRepository.findByDepotId(shopGoodsDeposit.getShopId());
             ArOtherRecAbleDto otherRecAbleDto = new ArOtherRecAbleDto();
             otherRecAbleDto.setExtendType(ExtendTypeEnum.定金收款.name());
@@ -62,10 +58,14 @@ public class ArOtherRecAbleManager {
             entityDto.setAccountNumber("2241");//其他应付款
             entityDto.setCustomerForNumber(null);
             entityDto.setEmpInfoNumber("0001");//员工
-            entityDto.setOtherTypeNumber("2241.00028");//其他应付款-订货会订金
+            if(CompanyNameEnum.JXVIVO.name().equals(RequestUtils.getCompanyName())){
+                entityDto.setOtherTypeNumber("2241.00018");//其他应付款-订货会订金
+            }else if (CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyName())){
+                entityDto.setOtherTypeNumber("2241.00028");//其他应付款-订货会订金
+            }
             entityDto.setAmount(shopGoodsDeposit.getAmount());
             entityDto.setExpenseTypeNumber("6602.000");//无
-            entityDto.setComment(depot.getName() + "-" + shopGoodsDeposit.getRemarks());
+            entityDto.setComment(client.getName() + "-" + shopGoodsDeposit.getRemarks());
             entityDtoList.add(entityDto);
             otherRecAbleDto.setArOtherRecAbleFEntityDtoList(entityDtoList);
             return cloudClient.synOtherRecAble(otherRecAbleDto);
@@ -73,9 +73,8 @@ public class ArOtherRecAbleManager {
         return null;
     }
 
-    public KingdeeSynReturnDto synForShopDeposit(ShopDeposit shopDeposit,ShopDepositTypeEnum type){
+    public KingdeeSynReturnDto synForShopDeposit(ShopDeposit shopDeposit,String departmentNumber,ShopDepositTypeEnum type){
         if (shopDeposit.getId()!=null && type !=null){
-            Depot depot = depotRepository.findOne(shopDeposit.getId());
             Client client = clientRepository.findByDepotId(shopDeposit.getShopId());
             ArOtherRecAbleDto otherRecAbleDto = new ArOtherRecAbleDto();
             otherRecAbleDto.setDate(shopDeposit.getBillDate());
@@ -87,6 +86,11 @@ public class ArOtherRecAbleManager {
             otherRecAbleDto.setExtendType(ExtendTypeEnum.押金列表.name());
             otherRecAbleDto.setExtendId(shopDeposit.getId());
             otherRecAbleDto.setAmount(shopDeposit.getAmount());
+            if (departmentNumber != null){
+                otherRecAbleDto.setDepartmentNumber(departmentNumber);
+            }else{
+                throw new ServiceException("部门不能为空");
+            }
             List<ArOtherRecAbleFEntityDto> entityDtoList = Lists.newArrayList();
 
             ArOtherRecAbleFEntityDto entityDto = new ArOtherRecAbleFEntityDto();
@@ -98,20 +102,40 @@ public class ArOtherRecAbleManager {
             if (CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName())){
                 if (ShopDepositTypeEnum.市场保证金.equals(type)) {
                     entityDto.setOtherTypeNumber("2241.002B");//其他应付款-客户押金（批发）-市场保证金
-                    entityDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                    entityDto.setComment(client.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
                 } else if (ShopDepositTypeEnum.形象保证金.equals(type)) {
                     entityDto.setOtherTypeNumber("2241.002A");//其他应付款-客户押金（批发）-形象押金
-                    entityDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                    entityDto.setComment(client.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
                 } else if (ShopDepositTypeEnum.演示机押金.equals(type)) {
                     entityDto.setOtherTypeNumber("2241.002C");//其他应付款-客户押金（批发）-演示机押金
                 }
-            }else {
+            }else if(CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyName())){
                 if (ShopDepositTypeEnum.市场保证金.equals(type)) {
                     entityDto.setOtherTypeNumber("2241.00002B");//其他应付款-客户押金（批发）-市场保证金
-                    entityDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                    entityDto.setComment(client.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
                 } else if (ShopDepositTypeEnum.形象保证金.equals(type)) {
                     entityDto.setOtherTypeNumber("2241.00002A");//其他应付款-客户押金（批发）-形象押金
-                    entityDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                    entityDto.setComment(client.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                } else if (ShopDepositTypeEnum.演示机押金.equals(type)) {
+                    throw new ServiceException("财务暂时未开--其他应付款-客户押金（批发）-演示机押金");//其他应付款-客户押金（批发）-演示机押金
+                }
+            }else if (CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())){
+                if (ShopDepositTypeEnum.市场保证金.equals(type)) {
+                    entityDto.setOtherTypeNumber("2241.102");//其他应付款-客户押金（批发）-市场保证金
+                    entityDto.setComment(client.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                } else if (ShopDepositTypeEnum.形象保证金.equals(type)) {
+                    entityDto.setOtherTypeNumber("2241.101");//其他应付款-客户押金（批发）-形象押金
+                    entityDto.setComment(client.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                } else if (ShopDepositTypeEnum.演示机押金.equals(type)) {
+                    throw new ServiceException("财务暂时未开--其他应付款-客户押金（批发）-演示机押金");//其他应付款-客户押金（批发）-演示机押金
+                }
+            }else if (CompanyNameEnum.JXVIVO.name().equals(RequestUtils.getCompanyName())){
+                if (ShopDepositTypeEnum.市场保证金.equals(type)) {
+                    entityDto.setOtherTypeNumber("2241.00002B");//其他应付款-客户押金（批发）-市场保证金
+                    entityDto.setComment(client.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                } else if (ShopDepositTypeEnum.形象保证金.equals(type)) {
+                    entityDto.setOtherTypeNumber("2241.00002A");//其他应付款-客户押金（批发）-形象押金
+                    entityDto.setComment(client.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
                 } else if (ShopDepositTypeEnum.演示机押金.equals(type)) {
                     throw new ServiceException("财务暂时未开--其他应付款-客户押金（批发）-演示机押金");//其他应付款-客户押金（批发）-演示机押金
                 }

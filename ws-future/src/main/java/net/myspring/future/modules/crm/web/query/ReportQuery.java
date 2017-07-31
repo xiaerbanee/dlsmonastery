@@ -36,6 +36,8 @@ public class ReportQuery extends BaseQuery{
     //货品
     private String officeId;
     private String depotId;
+    private String areaId;
+    private String shopName;
     private Boolean isDetail=false;
     //需要导出的office的下级
     private List<String> officeIds=Lists.newArrayList();
@@ -195,5 +197,19 @@ public class ReportQuery extends BaseQuery{
         this.date = date;
     }
 
+    public String getAreaId() {
+        return areaId;
+    }
 
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
 }

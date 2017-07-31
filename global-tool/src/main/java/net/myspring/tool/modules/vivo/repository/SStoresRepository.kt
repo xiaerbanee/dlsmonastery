@@ -4,6 +4,7 @@ import com.google.common.collect.Maps
 import net.myspring.tool.modules.vivo.domain.SStores
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils
 import org.springframework.stereotype.Component
@@ -12,19 +13,19 @@ import org.springframework.stereotype.Component
 class SStoresRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
     fun deleteAll():Int{
         val map = Maps.newHashMap<String,Any>()
-        return namedParameterJdbcTemplate.update("DELETE FROM S_Stores_M13E00",map)
+        return namedParameterJdbcTemplate.update("DELETE FROM vivo_push_stores",map)
     }
 
     fun batchSave(sStoresM13e00List: MutableList<SStores>):IntArray{
         val sb = StringBuilder()
         sb.append("""
-            INSERT INTO S_Stores_M13E00(StoreID,StoreName,Remark,ShortCut)
-                VALUES (:storeID,:storeName,:remark,:shortCut)
+            INSERT INTO vivo_push_stores(StoreID,StoreName,Remark,ShortCut,AgentCode)
+                VALUES (:storeID,:storeName,:remark,:shortCut,:AgentCode)
         """)
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sStoresM13e00List.toTypedArray()))
     }
 
-    fun deleteIDvivoStores(agentCode:String):Int{
+    fun deleteByAgentCode(agentCode:String):Int{
         val map = Maps.newHashMap<String,Any>()
         map.put("agentCode",agentCode)
         val sb = StringBuilder()
@@ -50,7 +51,7 @@ class SStoresRepository @Autowired constructor(val namedParameterJdbcTemplate: N
         return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertyRowMapper(SStores::class.java))
     }
 
-    fun batchIDvivoSave(sStoresM13e00List: MutableList<SStores>, agentCode: String):IntArray{
+    fun batchSaveToFactory(agentCode: String,sStoresM13e00List: MutableList<SStores>):IntArray{
         val sb = StringBuilder()
         sb.append("INSERT INTO S_Stores_"+agentCode)
         sb.append(" (StoreID,StoreName,Remark,ShortCut) ")
@@ -58,5 +59,11 @@ class SStoresRepository @Autowired constructor(val namedParameterJdbcTemplate: N
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sStoresM13e00List.toTypedArray()))
     }
 
+    fun findByAgentCodeIn(agentCodeList: MutableList<String>):MutableList<SStores>{
+        val map = Maps.newHashMap<String,Any>()
+        map.put("agentCodeList",agentCodeList)
+        val sb = "select * from vivo_push_stores where AgentCode in (:agentCodeList) "
+        return namedParameterJdbcTemplate.query(sb, map, BeanPropertyRowMapper(SStores::class.java))
+    }
 
 }

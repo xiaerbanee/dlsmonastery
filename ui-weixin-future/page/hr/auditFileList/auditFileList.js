@@ -65,6 +65,7 @@ Page({
             }
             that.setData({ page: res.data });
             wx.hideToast();
+            that.setData({ scrollTop: $util.toUpper() });
           }
         })
       }
@@ -152,8 +153,14 @@ Page({
   formSubmit: function (e) {
     var that = this;
     that.setData({ searchHidden: !that.data.searchHidden, formData: that.data.formData, "formData.page": 0 });
-    that.pageRequest();
-  },
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        that.pageRequest();
+      }
+    })  },
   loadPage(){
     var that=this;
     wx.showToast({

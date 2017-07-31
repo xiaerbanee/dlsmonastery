@@ -3,6 +3,8 @@ package net.myspring.tool.modules.vivo.repository
 import com.google.common.collect.Maps
 import net.myspring.tool.modules.vivo.domain.SPlantStockSupply
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils
 import org.springframework.stereotype.Component
@@ -15,13 +17,22 @@ class SPlantStockSupplyRepository @Autowired constructor(val namedParameterJdbcT
         map.put("dateStart",dateStart)
         map.put("dateEnd",dateEnd)
         val sb = StringBuilder("""
-            delete from s_PlantStockSupply_m13e00
+            delete from vivo_push_plantstocksupply
             where AccountDate >= :dateStart
                 and AccountDate < :dateEnd
         """);
         return namedParameterJdbcTemplate.update(sb.toString(),map)
     }
 
+    fun deleteByAccountDateAndAgentCode(dateStart: String, dateEnd: String,agentCode: String):Int {
+        val map = Maps.newHashMap<String,Any>()
+        map.put("dateStart",dateStart)
+        map.put("dateEnd",dateEnd)
+        val sb = StringBuilder()
+        sb.append("delete from S_PlantStockSupply_"+agentCode)
+        sb.append(" where AccountDate >= :dateStart and AccountDate < :dateEnd")
+        return namedParameterJdbcTemplate.update(sb.toString(),map)
+    }
 
     fun deleteIDvivoByAccountDate(dateStart: String, dateEnd: String,agentCode:String):Int {
         val map = Maps.newHashMap<String,Any>()
@@ -39,19 +50,29 @@ class SPlantStockSupplyRepository @Autowired constructor(val namedParameterJdbcT
     fun batchSave(sPlantStockSupplyM13e00List: MutableList<SPlantStockSupply>):IntArray?{
         val sb = StringBuilder()
         sb.append("""
-            insert into s_PlantStockSupply_m13e00(CompanyID,SupplyID,ProductID,CreatedTime,sumstock,useablestock,bad,AccountDate)
-            values(:companyId,:supplyId,:productId,:createdTime,:sumStock,:useAbleStock,:bad,:accountDate)
+            insert into vivo_push_plantstocksupply(CompanyID,SupplyID,ProductID,CreatedTime,sumstock,useablestock,bad,AccountDate,AgentCode)
+            values(:companyId,:supplyId,:productId,:createdTime,:sumStock,:useAbleStock,:bad,:accountDate,:agentCode)
         """)
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(), SqlParameterSourceUtils.createBatch(sPlantStockSupplyM13e00List.toTypedArray()))
     }
 
-    fun batchIDvivoSave(sPlantStockSupplyM13e00List: MutableList<SPlantStockSupply>, agentCode: String):IntArray?{
+    fun batchSaveToFactory(agentCode: String,sPlantStockSupplyM13e00List: MutableList<SPlantStockSupply>):IntArray?{
         val sb = StringBuilder()
         sb.append(" insert into s_PlantStockSupply_")
         sb.append(agentCode+" ")
         sb.append(" (CompanyID,SupplyID,ProductID,CreatedTime,sumstock,useablestock,bad,AccountDate) ")
         sb.append(" values(:companyId,:supplyId,:productId,:createdTime,:sumStock,:useAbleStock,:bad,:accountDate) ")
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(), SqlParameterSourceUtils.createBatch(sPlantStockSupplyM13e00List.toTypedArray()))
+    }
+
+
+    fun findByDateAndAgentCodeIn(dateStart: String,dateEnd: String,agentCodeList: MutableList<String>):MutableList<SPlantStockSupply>{
+        val map = Maps.newHashMap<String,Any>()
+        map.put("dateStart",dateStart)
+        map.put("dateEnd",dateEnd)
+        map.put("agentCodeList",agentCodeList)
+        val sb = "select * from vivo_push_plantstocksupply where AccountDate >= :dateStart and AccountDate < :dateEnd and AgentCode in (:agentCodeList) "
+        return namedParameterJdbcTemplate.query(sb, map, BeanPropertyRowMapper(SPlantStockSupply::class.java))
     }
 
 }

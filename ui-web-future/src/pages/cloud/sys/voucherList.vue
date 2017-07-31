@@ -28,7 +28,7 @@
           </el-row>
           <el-row :gutter="4">
             <el-form-item label="创建人" >
-              <el-input v-model="formData.createdBy" placeholder="模糊匹配查询"></el-input>
+              <el-input v-model="formData.createdByName" placeholder="模糊匹配查询"></el-input>
             </el-form-item>
           </el-row>
         </el-form>
@@ -41,7 +41,7 @@
         <el-table-column prop="fdate" label="凭证日期"></el-table-column>
         <el-table-column prop="status" label="状态"></el-table-column>
         <el-table-column prop="outCode" label="外部编码"></el-table-column>
-        <el-table-column prop="createdBy" label="创建人"></el-table-column>
+        <el-table-column prop="createdByName" label="创建人"></el-table-column>
         <el-table-column prop="createdDate" label="创建时间"></el-table-column>
         <el-table-column fixed="right" label="操作" width="250">
           <template scope="scope">

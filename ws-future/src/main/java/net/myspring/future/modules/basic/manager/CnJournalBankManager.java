@@ -40,69 +40,79 @@ public class CnJournalBankManager {
     private CloudClient cloudClient;
 
     public KingdeeSynReturnDto synForShopDeposit(ShopDeposit shopDeposit,String departmentNumber,ShopDepositTypeEnum type){
-        List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
-        Bank bank = bankRepository.findOne(shopDeposit.getBankId());
-        Depot depot = depotRepository.findOne(shopDeposit.getShopId());
-        CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
-        cnJournalForBankDto.setExtendId(shopDeposit.getId());
-        cnJournalForBankDto.setExtendType(ExtendTypeEnum.押金列表.name());
-        cnJournalForBankDto.setDate(shopDeposit.getBillDate());
-        cnJournalForBankDto.setAccountNumberForBank("1002");//银行存款
-        List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
-
-        CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
-        if (shopDeposit.getAmount().compareTo(BigDecimal.ZERO) == 1) {
-            entityForBankDto.setDebitAmount(shopDeposit.getAmount());
-        }else{
-            entityForBankDto.setCreditAmount(shopDeposit.getAmount().multiply(new BigDecimal(-1)));
-        }
-        if (departmentNumber != null){
-            entityForBankDto.setDepartmentNumber(departmentNumber);
-        }else{
-            throw new ServiceException("该部门没有编码，不能开单");
-        }
-        if (bank.getCode() != null){
-            entityForBankDto.setBankAccountNumber(bank.getCode());
-        }else{
-            throw new ServiceException(bank.getName()+",该银行没有编码，不能开单");
-        }
-        entityForBankDto.setAccountNumber("2241");//其他应付款
-        entityForBankDto.setSettleTypeNumber(SettleTypeEnum.电汇.getFNumber());//电汇
-        entityForBankDto.setEmpInfoNumber("0001");//员工
-        if (CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName())){
-            if (ShopDepositTypeEnum.市场保证金.equals(type)) {
-                entityForBankDto.setOtherTypeNumber("2241.002B");//其他应付款-客户押金（批发）-市场保证金
-                entityForBankDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
-            } else if (ShopDepositTypeEnum.形象保证金.equals(type)) {
-                entityForBankDto.setOtherTypeNumber("2241.002A");//其他应付款-客户押金（批发）-形象押金
-                entityForBankDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
-            } else if (ShopDepositTypeEnum.演示机押金.equals(type)) {
-                entityForBankDto.setOtherTypeNumber("2241.002C");//其他应付款-客户押金（批发）-演示机押金
+        if(!CompanyNameEnum.JXVIVO.name().equals(RequestUtils.getCompanyName())) {
+            List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
+            Bank bank = bankRepository.findOne(shopDeposit.getBankId());
+            Depot depot = depotRepository.findOne(shopDeposit.getShopId());
+            CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
+            cnJournalForBankDto.setExtendId(shopDeposit.getId());
+            cnJournalForBankDto.setExtendType(ExtendTypeEnum.押金列表.name());
+            cnJournalForBankDto.setDate(shopDeposit.getBillDate());
+            cnJournalForBankDto.setAccountNumberForBank("1002");//银行存款(vivo没有这个科目)
+            List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
+            CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
+            if (shopDeposit.getAmount().compareTo(BigDecimal.ZERO) == 1) {
+                entityForBankDto.setDebitAmount(shopDeposit.getAmount());
+            } else {
+                entityForBankDto.setCreditAmount(shopDeposit.getAmount().multiply(new BigDecimal(-1)));
             }
-        }else {
-            if (ShopDepositTypeEnum.市场保证金.equals(type)){
-                entityForBankDto.setOtherTypeNumber("2241.00002B");//其他应付款-客户押金（批发）-市场保证金
-                entityForBankDto.setComment(depot.getName()+ CharConstant.COMMA+ShopDepositTypeEnum.市场保证金.name()+CharConstant.COMMA+shopDeposit.getRemarks());
-            }else if (ShopDepositTypeEnum.形象保证金.equals(type)){
-                entityForBankDto.setOtherTypeNumber("2241.00002A");//其他应付款-客户押金（批发）-形象押金
-                entityForBankDto.setComment(depot.getName()+CharConstant.COMMA+ShopDepositTypeEnum.形象保证金.name()+CharConstant.COMMA+shopDeposit.getRemarks());
-            }else if (ShopDepositTypeEnum.演示机押金.equals(type)){
-                throw new ServiceException("财务暂时未开--其他应付款-客户押金（批发）-演示机押金");//其他应付款-客户押金（批发）-演示机押金
+            if (departmentNumber != null) {
+                entityForBankDto.setDepartmentNumber(departmentNumber);
+            } else {
+                throw new ServiceException("部门不能为空");
             }
+            if (bank.getCode() != null) {
+                entityForBankDto.setBankAccountNumber(bank.getCode());
+            } else {
+                throw new ServiceException(bank.getName() + ",该银行没有编码，不能开单");
+            }
+            entityForBankDto.setAccountNumber("2241");//其他应付款
+            entityForBankDto.setSettleTypeNumber(SettleTypeEnum.电汇.getFNumber());//电汇
+            entityForBankDto.setEmpInfoNumber("0001");//员工
+            if (CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName())) {
+                if (ShopDepositTypeEnum.市场保证金.equals(type)) {
+                    entityForBankDto.setOtherTypeNumber("2241.002B");//其他应付款-客户押金（批发）-市场保证金
+                    entityForBankDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                } else if (ShopDepositTypeEnum.形象保证金.equals(type)) {
+                    entityForBankDto.setOtherTypeNumber("2241.002A");//其他应付款-客户押金（批发）-形象押金
+                    entityForBankDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                } else if (ShopDepositTypeEnum.演示机押金.equals(type)) {
+                    entityForBankDto.setOtherTypeNumber("2241.002C");//其他应付款-客户押金（批发）-演示机押金
+                }
+            } else if (CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyName())) {
+                if (ShopDepositTypeEnum.市场保证金.equals(type)) {
+                    entityForBankDto.setOtherTypeNumber("2241.00002B");//其他应付款-客户押金（批发）-市场保证金
+                    entityForBankDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                } else if (ShopDepositTypeEnum.形象保证金.equals(type)) {
+                    entityForBankDto.setOtherTypeNumber("2241.00002A");//其他应付款-客户押金（批发）-形象押金
+                    entityForBankDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                } else if (ShopDepositTypeEnum.演示机押金.equals(type)) {
+                    throw new ServiceException("财务暂时未开--其他应付款-客户押金（批发）-演示机押金");//其他应付款-客户押金（批发）-演示机押金
+                }
+            } else if (CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())) {
+                if (ShopDepositTypeEnum.市场保证金.equals(type)) {
+                    entityForBankDto.setOtherTypeNumber("2241.102");//其他应付款-客户押金（批发）-市场保证金
+                    entityForBankDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                } else if (ShopDepositTypeEnum.形象保证金.equals(type)) {
+                    entityForBankDto.setOtherTypeNumber("2241.101");//其他应付款-客户押金（批发）-形象押金
+                    entityForBankDto.setComment(depot.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                } else if (ShopDepositTypeEnum.演示机押金.equals(type)) {
+                    throw new ServiceException("财务暂时未开--其他应付款-客户押金（批发）-演示机押金");//其他应付款-客户押金（批发）-演示机押金
+                }
+            }
+            entityForBankDto.setExpenseTypeNumber("6602.000");//无
+            entityForBankDto.setCustomerNumber(null);
+            entityForBankDto.setComment(depot.getName() + shopDeposit.getRemarks());
+            cnJournalEntityForBankDtoList.add(entityForBankDto);
+            cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
+            cnJournalForBankDtoList.add(cnJournalForBankDto);
+            return cloudClient.synJournalBank(cnJournalForBankDtoList).get(0);
         }
-        entityForBankDto.setExpenseTypeNumber("6602.000");//无
-        entityForBankDto.setCustomerNumber(null);
-        entityForBankDto.setComment(depot.getName()+shopDeposit.getRemarks());
-        cnJournalEntityForBankDtoList.add(entityForBankDto);
-        cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
-        cnJournalForBankDtoList.add(cnJournalForBankDto);
-
-        return cloudClient.synJournalBank(cnJournalForBankDtoList).get(0);
-
+        return null;
     }
 
     public List<KingdeeSynReturnDto> synEmployeePhoneDeposit(List<EmployeePhoneDeposit> employeePhoneDepositList){
-        if (!CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName())) {
+        if (!CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName()) && !CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())) {
             List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
             for (EmployeePhoneDeposit employeePhoneDeposit : employeePhoneDepositList) {
                 Bank bank = bankRepository.findOne(employeePhoneDeposit.getBankId());
@@ -121,7 +131,7 @@ public class CnJournalBankManager {
                 if (employeePhoneDeposit.getDepartment() != null) {
                     entityForBankDto.setDepartmentNumber(employeePhoneDeposit.getDepartment());
                 } else {
-                    throw new ServiceException("该部门没有编码，不能开单");
+                    throw new ServiceException("部门不能为空");
                 }
                 if (bank.getCode() != null) {
                     entityForBankDto.setBankAccountNumber(bank.getCode());
@@ -131,7 +141,11 @@ public class CnJournalBankManager {
                 entityForBankDto.setAccountNumber("2241");//其他应付款
                 entityForBankDto.setSettleTypeNumber(SettleTypeEnum.电汇.getFNumber());//电汇
                 entityForBankDto.setEmpInfoNumber("0001");//员工
-                entityForBankDto.setOtherTypeNumber("2241.00029");//其他应付款-导购业务机押金
+                if (CompanyNameEnum.JXVIVO.name().equals(RequestUtils.getCompanyName())){
+                    entityForBankDto.setOtherTypeNumber("2241.00019");//其他应付款-导购业务机押金
+                }else if (CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyName())) {
+                    entityForBankDto.setOtherTypeNumber("2241.00029");//其他应付款-导购业务机押金
+                }
                 entityForBankDto.setExpenseTypeNumber("6602.000");//无
                 entityForBankDto.setCustomerNumber(null);
                 entityForBankDto.setComment(depot.getName() + employeePhoneDeposit.getRemarks());
@@ -145,7 +159,7 @@ public class CnJournalBankManager {
     }
 
     public KingdeeSynReturnDto synForShopGoodsDeposit(ShopGoodsDeposit shopGoodsDeposit, String departmentNumber){
-        if (!CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName())) {
+        if (!CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName()) && !CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())) {
             List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
             Bank bank = bankRepository.findOne(shopGoodsDeposit.getBankId());
             Depot depot = depotRepository.findOne(shopGoodsDeposit.getShopId());
@@ -165,7 +179,7 @@ public class CnJournalBankManager {
             if (departmentNumber != null) {
                 entityForBankDto.setDepartmentNumber(departmentNumber);
             } else {
-                throw new ServiceException("该部门没有编码，不能开单");
+                throw new ServiceException("部门不能为空");
             }
             if (bank.getCode() != null) {
                 entityForBankDto.setBankAccountNumber(bank.getCode());
@@ -175,7 +189,11 @@ public class CnJournalBankManager {
             entityForBankDto.setAccountNumber("2241");//其他应付款
             entityForBankDto.setSettleTypeNumber(SettleTypeEnum.电汇.getFNumber());//电汇
             entityForBankDto.setEmpInfoNumber("0001");//员工
-            entityForBankDto.setOtherTypeNumber("2241.00028");//其他应付款-订货会订金
+            if (CompanyNameEnum.JXVIVO.name().equals(RequestUtils.getCompanyName())){
+                entityForBankDto.setOtherTypeNumber("2241.00018");//其他应付款-订货会订金
+            }else if (CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyName())) {
+                entityForBankDto.setOtherTypeNumber("2241.00028");//其他应付款-订货会订金
+            }
             entityForBankDto.setExpenseTypeNumber("6602.000");//无
             entityForBankDto.setCustomerNumber(null);
             entityForBankDto.setComment(depot.getName() + shopGoodsDeposit.getRemarks());

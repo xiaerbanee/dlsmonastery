@@ -5,7 +5,7 @@ Page({
   data: {
     page: {},
     formData: {},
-    formProperty:{},
+    formProperty: {},
     searchHidden: true
   },
   onLoad: function (options) {
@@ -29,7 +29,7 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
-        that.setData({ formData: res.data,formProperty:res.data.extra});
+        that.setData({ formData: res.data, formProperty: res.data.extra });
         that.pageRequest();
       }
     });
@@ -53,9 +53,9 @@ Page({
             for (let item in content) {
               var actionList = new Array();
               actionList.push("详细");
-              if (edit&&content[item].status==='申请中'){ actionList.push("上传"); }
-              if (audit && content[item].status === '申请中' && content[item].image!=null) { actionList.push("审核") }
-              if (edit&&content[item].status === '申请中') { actionList.push("删除") }
+              if (edit && content[item].status === '申请中') { actionList.push("上传"); }
+              if (audit && content[item].status === '申请中' && content[item].image != null) { actionList.push("审核") }
+              if (edit && content[item].status === '申请中') { actionList.push("删除") }
               res.data.content[item].actionList = actionList;
             }
             that.setData({ page: res.data });
@@ -71,7 +71,7 @@ Page({
       searchHidden: !that.data.searchHidden
     })
   },
-  bindStatus:function(e){
+  bindStatus: function (e) {
     var that = this;
     that.setData({ 'formData.status': that.data.formProperty.statusList[e.detail.value] });
   },
@@ -102,15 +102,15 @@ Page({
             wx.navigateTo({
               url: '/page/crm/priceChangeImeForm/priceChangeImeForm?action=upload&id=' + id
             })
-          }else if(itemList[res.tapIndex]=="审核") {
+          } else if (itemList[res.tapIndex] == "审核") {
             wx.navigateTo({
               url: '/page/crm/priceChangeImeForm/priceChangeImeForm?action=audit&id=' + id
             })
-          }else if(itemList[res.tapIndex]=="详细") {
+          } else if (itemList[res.tapIndex] == "详细") {
             wx.navigateTo({
               url: '/page/crm/priceChangeImeForm/priceChangeImeForm?action=detail&id=' + id
             })
-          }else if (itemList[res.tapIndex] == "删除") {
+          } else if (itemList[res.tapIndex] == "删除") {
             wx.request({
               url: $util.getUrl("ws/future/crm/priceChangeIme/delete"),
               data: { id: id },
@@ -129,7 +129,14 @@ Page({
   formSubmit: function (e) {
     var that = this;
     that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
-    that.pageRequest();
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        that.pageRequest();
+      }
+    })
   },
   toFirstPage: function () {
     var that = this;

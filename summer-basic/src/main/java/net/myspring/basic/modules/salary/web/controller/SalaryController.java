@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.salary.web.controller;
 
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.service.AccountService;
@@ -16,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,7 +35,7 @@ public class SalaryController{
 	public Page<SalaryDto> data(Pageable pageable, SalaryQuery salaryQuery) {
 		Page<SalaryDto> page=null;
 		if(StringUtils.isNotBlank(salaryQuery.getPassword())){
-			EmployeeDto employee=employeeService.findOne(salaryQuery.getEmployeeId());
+			EmployeeDto employee=employeeService.findOne(RequestUtils.getEmployeeId());
 			Account account=accountService.findById(employee.getAccountId());
 			if(account!=null&&StringUtils.validatePassword(salaryQuery.getPassword(),account.getPassword())){
 				page=salaryService.findPage(pageable,salaryQuery);
@@ -44,7 +44,7 @@ public class SalaryController{
 		return page;
 	}
 
-	@RequestMapping(value = "getQury", method = RequestMethod.GET)
+	@RequestMapping(value = "getQuery", method = RequestMethod.GET)
 	public SalaryQuery form(SalaryQuery salaryQuery) {
 		return salaryQuery;
 	}
@@ -56,8 +56,8 @@ public class SalaryController{
 	}
 
 	@RequestMapping(value = "save", method = RequestMethod.POST)
-	public RestResponse save(@RequestParam(value ="folderFileId", required = true) String folderFileId, String month, String salaryTemplateId,String remarks) {
-		RestResponse restResponse=salaryService.save(folderFileId,month,salaryTemplateId,remarks);
+	public RestResponse save(SalaryForm salaryForm) {
+		RestResponse restResponse=salaryService.save(salaryForm);
 		return restResponse;
 	}
 }

@@ -114,7 +114,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         FROM
         (
             SELECT
-            product.product_type_id, depot.office_id depotOfficeId, t1.*
+            product.product_type_id, depot.office_id depotOfficeId, depot.area_id depotAreaId, t1.*
             FROM
             crm_product_ime t1,
             crm_depot depot,
@@ -292,6 +292,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             crm_depot_shop t6
             WHERE
              t1.enabled = 1
+            and t1.is_back=0
             and t2.depot_shop_id=t6.id
     """)
         if (productImeSaleReportQuery.dateStart != null) {
@@ -487,7 +488,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         FROM
         (
             SELECT
-            product.product_type_id, depot.office_id depotOfficeId, t1.*
+            product.product_type_id, depot.office_id depotOfficeId, depot.area_id depotAreaId, t1.*
             FROM
             crm_product_ime t1,
             crm_depot depot,
@@ -585,6 +586,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 			upload.employee_id productImeUploadEmployeeId,
 			product.product_type_id,
 			depot.office_id depotOfficeId,
+			depot.area_id depotAreaId,
 			t1.*
 		FROM
 			crm_product_ime t1

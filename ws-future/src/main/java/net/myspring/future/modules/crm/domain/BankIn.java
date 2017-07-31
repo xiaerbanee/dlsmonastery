@@ -20,6 +20,7 @@ public class BankIn extends DataEntity<BankIn> {
     private LocalDate billDate;
     private Integer version = 0;
     private String processInstanceId;
+    private String simpleProcessId;
     private String processStatus;
     private String outCode;
     private String checkId;
@@ -29,6 +30,14 @@ public class BankIn extends DataEntity<BankIn> {
     private String cloudSynId;
     private String positionId;
     private String transferType;
+
+    public String getSimpleProcessId() {
+        return simpleProcessId;
+    }
+
+    public void setSimpleProcessId(String simpleProcessId) {
+        this.simpleProcessId = simpleProcessId;
+    }
 
     public String getTransferType() {
         return transferType;

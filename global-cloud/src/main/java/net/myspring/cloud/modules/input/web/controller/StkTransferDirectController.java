@@ -37,8 +37,8 @@ public class StkTransferDirectController {
 
     @RequestMapping(value = "saveForWS",method= RequestMethod.POST)
     public KingdeeSynReturnDto saveForWS(@RequestBody StkTransferDirectDto stkTransferDirectDto) {
-        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
+        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
         if (accountKingdeeBook != null){
             KingdeeSynDto kingdeeSynDto = stkTransferDirectService.saveForWS(stkTransferDirectDto,kingdeeBook,accountKingdeeBook);
             kingdeeSynService.save(BeanUtil.map(kingdeeSynDto, KingdeeSyn.class));

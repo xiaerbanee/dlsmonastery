@@ -43,7 +43,10 @@ public class BdCustomerService {
     }
 
     public List<BdCustomer> findByMaxModifyDate(LocalDateTime modifyDate){
-        return bdCustomerRepository.findByMaxModifyDate(modifyDate);
+        if (modifyDate != null) {
+            return bdCustomerRepository.findByMaxModifyDate(modifyDate);
+        }
+        return null;
     }
 
     //应收报表

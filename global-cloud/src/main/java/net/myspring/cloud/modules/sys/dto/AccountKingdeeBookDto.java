@@ -1,7 +1,7 @@
 package net.myspring.cloud.modules.sys.dto;
 
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
-import net.myspring.cloud.common.dto.DataDto;
+import net.myspring.common.dto.DataDto;
 
 /**
  * Created by lihx on 2017/5/9.

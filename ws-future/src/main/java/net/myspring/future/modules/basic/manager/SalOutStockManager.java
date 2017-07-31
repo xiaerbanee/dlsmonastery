@@ -21,6 +21,7 @@ import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
+import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
@@ -137,22 +138,23 @@ public class SalOutStockManager {
                     +CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+adGoodsOrder.getBillAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
             List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
             List<AdGoodsOrderDetail> adGoodsOrderDetailLists = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
+            String storeId  = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.AD_CHARGE_DEPOTS.name()).getCode();
             for(AdGoodsOrderDetail adGoodsOrderDetail:adGoodsOrderDetailLists){
                 Product product = productMap.get(adGoodsOrderDetail.getProductId());
                 SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
                 if(depotStore == null || depotStore.getOutCode() == null){
-                    throw new ServiceException(client.getName() + " 没有关联财务仓库，不能申请");
+                    throw new ServiceException(client.getName() + " 没有关联财务仓库,不能申请");
                 }else{
                     entityDto.setStockNumber(depotStore.getOutCode());
                 }
                 if (product.getCode() != null){
                     entityDto.setMaterialNumber(product.getCode());
                 }else{
-                    throw new ServiceException(product.getName()+" 该货品没有编码，不能开单");
+                    throw new ServiceException(product.getName()+" 该货品没有编码,不能开单");
                 }
                 entityDto.setQty(adGoodsOrderDetail.getBillQty());
                 // 是否赠品 赠品，电教，imoo 广告办事处的以原价出库
-                if(BillTypeEnum.配件赠品.name().equals(adGoodsOrder.getBillType())){//或者是电教公司,而且的depot必须是金蝶里有的
+                if(BillTypeEnum.配件赠品.name().equals(adGoodsOrder.getBillType()) || (CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())&&depotStore.getOutId().equals(storeId))){
                     entityDto.setPrice(product.getPrice2());
                 }else{
                     entityDto.setPrice(BigDecimal.ZERO);
@@ -167,7 +169,7 @@ public class SalOutStockManager {
         return cloudClient.synSalOutStock(salOutStockDtoList);
     }
 
-    public KingdeeSynReturnDto synForAdGoodsOrder(AdGoodsOrder adGoodsOrder){
+    public KingdeeSynReturnDto synForAdGoodsOrder(AdGoodsOrder adGoodsOrder, ExpressOrder expressOrder){
         Depot depot = depotRepository.findOne(adGoodsOrder.getOutShopId());
         Depot shop = depotRepository.findOne(adGoodsOrder.getShopId());
         Client client = clientRepository.findOne(depot.getClientId());
@@ -179,11 +181,11 @@ public class SalOutStockManager {
         salOutStockDto.setExtendType(ExtendTypeEnum.柜台订货.name());
         salOutStockDto.setDate(adGoodsOrder.getBillDate());
         if(client == null || StringUtils.isBlank(client.getOutCode())){
-            throw new ServiceException(client.getName() + " 没有关联财务客户，不能申请");
+            throw new ServiceException(client.getName() + " 没有关联财务客户,不能申请");
         }else{
             salOutStockDto.setCustomerNumber(client.getOutCode());
         }
-        salOutStockDto.setNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+shop.getName()+CharConstant.COMMA+shop.getContator()+CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+adGoodsOrder.getBillAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
+        salOutStockDto.setNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+shop.getName()+CharConstant.COMMA+expressOrder.getContator()+CharConstant.COMMA+expressOrder.getMobilePhone()+CharConstant.COMMA+adGoodsOrder.getBillAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
         List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
         List<AdGoodsOrderDetail> detailList = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
         String storeId  = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.AD_CHARGE_DEPOTS.name()).getCode();
@@ -202,12 +204,12 @@ public class SalOutStockManager {
             }
             entityDto.setQty(adGoodsOrderDetail.getBillQty());
             // 是否赠品-- 赠品(电教，imoo 的广告办事处的以原价出库)
-            if(BillTypeEnum.配件赠品.name().equals(adGoodsOrder.getBillType()) || CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())&&depotStore.getOutId().equals(storeId)){
+            if(BillTypeEnum.配件赠品.name().equals(adGoodsOrder.getBillType()) || (CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())&&depotStore.getOutId().equals(storeId))){
                 entityDto.setPrice(productMap.get(adGoodsOrderDetail.getProductId()).getPrice2());
             }else{
                 entityDto.setPrice(BigDecimal.ZERO);
             }
-            entityDto.setEntryNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+shop.getName()+CharConstant.COMMA+shop.getContator()+CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+adGoodsOrder.getBillAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
+            entityDto.setEntryNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+shop.getName()+CharConstant.COMMA+expressOrder.getContator()+CharConstant.COMMA+expressOrder.getMobilePhone()+CharConstant.COMMA+adGoodsOrder.getBillAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
             entityDtoList.add(entityDto);
         }
         salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);

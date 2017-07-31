@@ -20,8 +20,8 @@ feign:
     enabled: true
 
 ribbon:
-  ReadTimeout: 180000
-  ConnectTimeout: 180000
+  ReadTimeout: 18000
+  ConnectTimeout: 18000
 
 logging:
   file: global-tool.log

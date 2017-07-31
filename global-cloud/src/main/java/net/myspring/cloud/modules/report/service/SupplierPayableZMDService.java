@@ -105,13 +105,13 @@ public class SupplierPayableZMDService {
             }
             Map<String, BdSupplier> bdSupplierIdMap;
             if (supplierIdList.size()>0){
-                bdSupplierIdMap = bdSupplierRepository.findBySupplierIdList(supplierIdList).stream().collect(Collectors.toMap(BdSupplier::getFSupplierId, BdSupplier -> BdSupplier));
+                bdSupplierIdMap = bdSupplierRepository.findIncludeForbidBySupplierIdList(supplierIdList).stream().collect(Collectors.toMap(BdSupplier::getFSupplierId, BdSupplier -> BdSupplier));
             }else {
-                bdSupplierIdMap = bdSupplierRepository.findAll().stream().collect(Collectors.toMap(BdSupplier::getFSupplierId, BdSupplier -> BdSupplier));
+                bdSupplierIdMap = bdSupplierRepository.findAllIncludeForbid().stream().collect(Collectors.toMap(BdSupplier::getFSupplierId, BdSupplier -> BdSupplier));
             }
             Map<String, BdDepartment> bdDepartmentIdMap = Maps.newHashMap();
             if (departmentIdList.size()>0){
-                 bdDepartmentIdMap = bdDepartmentRepository.findAll().stream().collect(Collectors.toMap(BdDepartment::getFDeptId, BdDepartment -> BdDepartment));
+                 bdDepartmentIdMap = bdDepartmentRepository.findAllIncludeForbid().stream().collect(Collectors.toMap(BdDepartment::getFDeptId, BdDepartment -> BdDepartment));
             }
             for (SupplierPayableDto supplierPayable : supplierPayableDtoList) {
                 String key = supplierPayable.getSupplierId()+CharConstant.COMMA + supplierPayable.getDepartmentId();
@@ -193,17 +193,17 @@ public class SupplierPayableZMDService {
         }
         Map<String,BdSupplier> bdSupplierIdMap;
         if (CollectionUtil.isNotEmpty(supplierIdList)){
-            bdSupplierIdMap = bdSupplierRepository.findBySupplierIdList(supplierIdList).stream().collect(Collectors.toMap(BdSupplier::getFSupplierId,BdSupplier->BdSupplier));
+            bdSupplierIdMap = bdSupplierRepository.findIncludeForbidBySupplierIdList(supplierIdList).stream().collect(Collectors.toMap(BdSupplier::getFSupplierId,BdSupplier->BdSupplier));
         }else {
-            bdSupplierIdMap = bdSupplierRepository.findAll().stream().collect(Collectors.toMap(BdSupplier::getFSupplierId,BdSupplier->BdSupplier));
+            bdSupplierIdMap = bdSupplierRepository.findAllIncludeForbid().stream().collect(Collectors.toMap(BdSupplier::getFSupplierId,BdSupplier->BdSupplier));
         }
         Map<String,BdDepartment> bdDepartmentIdMap = Maps.newHashMap();
         if (CollectionUtil.isNotEmpty(departmentIdList)) {
-            bdDepartmentIdMap =  bdDepartmentRepository.findByIdList(departmentIdList).stream().collect(Collectors.toMap(BdDepartment::getFDeptId,BdDepartment->BdDepartment));
+            bdDepartmentIdMap =  bdDepartmentRepository.findIncludeForbidByIdList(departmentIdList).stream().collect(Collectors.toMap(BdDepartment::getFDeptId,BdDepartment->BdDepartment));
         }
         Map<String,BdMaterial> materialIdMap = Maps.newHashMap();
         if (materialIdList.size()>0){
-            materialIdMap = bdMaterialRepository.findByMasterIdList(materialIdList).stream().collect(Collectors.toMap(BdMaterial::getFMasterId,BdMaterial->BdMaterial));
+            materialIdMap = bdMaterialRepository.findIncludeForbidByMasterIdList(materialIdList).stream().collect(Collectors.toMap(BdMaterial::getFMasterId,BdMaterial->BdMaterial));
         }
         Map<String,List<SupplierPayableDetailDto>> result = Maps.newHashMap();
         if (keyToMainBillMap.size()>0) {

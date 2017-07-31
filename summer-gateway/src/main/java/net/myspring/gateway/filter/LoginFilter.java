@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Base64;
 import java.util.HashMap;
+
 import java.util.Map;
 
 /**
@@ -22,7 +23,7 @@ import java.util.Map;
  */
 public class LoginFilter extends ZuulFilter {
     private static Logger logger = LoggerFactory.getLogger(LoginFilter.class);
-
+//在日志输出的时候，可以打印出日志信息所在类
     private ObjectMapper mapper = new ObjectMapper();
 
     @Override

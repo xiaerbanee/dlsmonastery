@@ -109,22 +109,26 @@ public class AccountService {
     @Transactional
     public Account save(AccountForm accountForm) {
         Account account;
-        if (StringUtils.isNotBlank(accountForm.getPassword())) {
-            accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getPassword()));
-        } else {
-            if(accountForm.isCreate()){
-                accountForm.setPassword(StringUtils.getEncryptPassword("123456"));
-            }else {
-                accountForm.setPassword(accountRepository.findOne(accountForm.getId()).getPassword());
-            }
+        if(CollectionUtil.isEmpty(accountForm.getOfficeIdList())||accountForm.getOfficeIdList().size()==1){
+            accountForm.setOfficeIdList(Lists.newArrayList(accountForm.getOfficeId()));
         }
+        accountForm.setOfficeIds(StringUtils.join(accountForm.getOfficeIdList(),CharConstant.COMMA));
         if (accountForm.isCreate()) {
+            if (StringUtils.isNotBlank(accountForm.getPassword())) {
+                accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getPassword()));
+            } else {
+                accountForm.setPassword(StringUtils.getEncryptPassword("123456"));
+            }
             Position position=positionRepository.findOne(accountForm.getPositionId());
             accountForm.setRoleIds(position.getRoleId());
             account = BeanUtil.map(accountForm, Account.class);
             accountRepository.save(account);
         } else {
-            accountForm.setOfficeIds(StringUtils.join(accountForm.getOfficeIdList(),CharConstant.COMMA));
+            if (StringUtils.isNotBlank(accountForm.getPassword())) {
+                accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getPassword()));
+            } else {
+                accountForm.setPassword(accountRepository.findOne(accountForm.getId()).getPassword());
+            }
             account = accountRepository.findOne(accountForm.getId());
             ReflectionUtil.copyProperties(accountForm,account);
             accountRepository.save(account);

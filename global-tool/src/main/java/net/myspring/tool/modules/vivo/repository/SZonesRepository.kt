@@ -2,7 +2,10 @@ package net.myspring.tool.modules.vivo.repository
 
 import com.google.common.collect.Maps
 import net.myspring.tool.modules.vivo.domain.SZones
+import net.myspring.util.collection.CollectionUtil
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils
 import org.springframework.stereotype.Component
@@ -12,32 +15,35 @@ class SZonesRepository @Autowired constructor(val namedParameterJdbcTemplate: Na
 
     fun deleteAll():Int{
         val map = Maps.newHashMap<String,Any>()
-        return namedParameterJdbcTemplate.update("DELETE FROM S_ZONEs_M13E00 WHERE 1=1",map)
+        return namedParameterJdbcTemplate.update("DELETE FROM vivo_push_zones WHERE 1=1",map)
     }
 
     fun batchSave(sZonesM13e00List: MutableList<SZones>): IntArray {
         val sb = StringBuilder()
-        sb.append("insert into S_ZONEs_M13E00 (zoneID,zoneName,shortCut,zoneDepth,zonePath,fatherID,subCount,zoneTypes)")
-        sb.append("values (:zoneId,:zoneName,:shortcut,:zoneDepth,:zonePath,:fatherId,:subCount,:zoneTypes)")
+        sb.append("insert into vivo_push_zones (ZoneID,ZoneName,ShortCut,ZoneDepth,ZonePath,FatherID,SubCount,ZoneTypes,AgentCode)")
+        sb.append("values (:zoneId,:zoneName,:shortcut,:zoneDepth,:zonePath,:fatherId,:subCount,:zoneTypes,:agentCode)")
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sZonesM13e00List.toTypedArray()))
     }
 
-    fun batchSaveIDvivo(agentCode: String,sZonesM13e00List: MutableList<SZones>): IntArray {
+    fun batchSaveToFactroy(agentCode: String,sZonesList: MutableList<SZones>): IntArray {
         val sb = StringBuilder()
         sb.append(" insert into ")
         sb.append(" S_zones_"+agentCode)
-        sb.append(" (zoneID,zoneName,shortCut,zoneDepth,zonePath,fatherID,subCount,zoneTypes) ")
+        sb.append(" (ZoneID,ZoneName,ShortCut,ZoneDepth,ZonePath,FatherID,SubCount,ZoneTypes) ")
         sb.append(" values (:zoneId,:zoneName,:shortcut,:zoneDepth,:zonePath,:fatherId,:subCount,:zoneTypes) ")
-        return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sZonesM13e00List.toTypedArray()))
+        return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sZonesList.toTypedArray()))
     }
 
-    fun deleteIDvivoZones(){
+    fun deleteByAgentCode(agentCode:String){
         val map = Maps.newHashMap<String,String>()
-        namedParameterJdbcTemplate.update("""
-        delete from S_ZONES_R250082;
-        delete from S_ZONES_R2500821;
-        delete from S_ZONES_R2500822;
-        delete from S_ZONES_R2500823;
-        """, map)
+        val sb = "delete from S_ZONES_"+agentCode
+        namedParameterJdbcTemplate.update(sb, map)
+    }
+
+    fun findByAgentCodeIn(agentCodeList: MutableList<String>):MutableList<SZones>{
+        var paramMap = Maps.newHashMap<String, Any>()
+        paramMap.put("agentCodeList",agentCodeList)
+        val sb = "select * from vivo_push_zones where AgentCode in (:agentCodeList) "
+        return namedParameterJdbcTemplate.query(sb, paramMap, BeanPropertyRowMapper(SZones::class.java))
     }
 }

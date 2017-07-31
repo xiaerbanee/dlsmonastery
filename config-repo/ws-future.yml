@@ -24,8 +24,8 @@ app:
     version: 1.2
 
 ribbon:
-  ReadTimeout: 180000
-  ConnectTimeout: 180000
+  ReadTimeout: 30000
+  ConnectTimeout: 30000
 
 logging:
   file: ws-future.log

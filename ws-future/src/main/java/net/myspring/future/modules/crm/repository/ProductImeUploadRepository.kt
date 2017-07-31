@@ -3,7 +3,9 @@ package net.myspring.future.modules.crm.repository
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.ProductImeUpload
 import net.myspring.future.modules.crm.dto.ProductImeUploadDto
+import net.myspring.future.modules.crm.dto.ReportImeUploadDto
 import net.myspring.future.modules.crm.web.query.ProductImeUploadQuery
+import net.myspring.future.modules.crm.web.query.ProductMonthPriceSumQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
@@ -11,12 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.repository.Modifying
-import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
+import kotlin.collections.HashMap
 
 
 interface ProductImeUploadRepository : BaseRepository<ProductImeUpload, String>,  ProductImeUploadRepositoryCustom{
@@ -32,9 +33,160 @@ interface ProductImeUploadRepositoryCustom{
     fun findDto(id: String): ProductImeUploadDto
 
     fun setDepotIdForMerge(fromDepotId:String,toDepotId:String):Int
+
+    fun findByEnabledIsTrueAndMonth(month :String): MutableList<String>
+
+    fun findProductTypeIds(month: String): MutableList<String>
+
+    fun getReportDatas(productMonthPriceSumQuery: ProductMonthPriceSumQuery): MutableList<ReportImeUploadDto>
+
+
+    fun findByMonthAndOfficeId(month: String, offices:List<String>): MutableList<ProductImeUpload>
+
+    fun findImeUploads(productMonthPriceSumQuery: ProductMonthPriceSumQuery): MutableList<ProductImeUploadDto>
+
+    fun findAccountDepotNamesMap(accountIdList: Set<String>): List<Map<String,Any>>
+
+
+
+
 }
 
 class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeUploadRepositoryCustom {
+    override fun findAccountDepotNamesMap(accountIdList: Set<String>): List<Map<String,Any>>{
+        val sb = StringBuilder("""
+                     select
+                        t1.account_id accountId,
+                        group_concat(t2.name) accountShopNames
+                    from
+                        crm_account_depot t1 left join crm_depot t2 on t1.depot_id = t2.id
+                    where
+                        t1.account_id in(:accountIds)
+                    group by t1.account_id
+
+                """)
+        return namedParameterJdbcTemplate.queryForList(sb.toString(),Collections.singletonMap("accountIds", accountIdList));
+
+
+
+    }
+
+    override fun findImeUploads(productMonthPriceSumQuery: ProductMonthPriceSumQuery): MutableList<ProductImeUploadDto> {
+        val sb = StringBuilder("""
+                    SELECT
+                        ime.ime productImeIme,
+                        ime.product_id productImeProductId,
+                        depot.office_id shopOfficeId,
+                        depot.area_id shopAreaId,
+                        t1.*
+                    FROM
+                        crm_product_ime_upload t1,
+                        crm_depot depot,
+                        crm_product_ime ime
+                    WHERE
+                        t1.enabled = 1
+                        AND t1.shop_id = depot.id
+                        AND t1.product_ime_id = ime.id
+                    """)
+        if (StringUtils.isNotBlank(productMonthPriceSumQuery.status)) {
+            sb.append(""" and t1.status = :status """)
+        }
+        if (StringUtils.isNotBlank(productMonthPriceSumQuery.month)) {
+            sb.append("""  and t1.month = :month  """)
+        }
+        if (StringUtils.isNotBlank(productMonthPriceSumQuery.areaId)) {
+            sb.append(""" and depot.area_id = :areaId  """)
+        }
+
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productMonthPriceSumQuery), BeanPropertyRowMapper(ProductImeUploadDto::class.java))
+
+    }
+
+    override fun findByMonthAndOfficeId(month: String, offices: List<String>): MutableList<ProductImeUpload> {
+        val sb = StringBuilder("""
+                    SELECT
+                        t1.*
+                    FROM
+                        crm_product_ime_upload t1,
+                        crm_depot t2
+                    WHERE
+                        t1.enabled =1
+                    AND t2.enabled =1
+                    AND t1.shop_id = t2.id
+                    AND t1.month = :month
+                    AND t2.office_id in(:offices) """)
+        val params = HashMap<String, Any>()
+        params.put("month", month)
+        params.put("offices", offices)
+        return namedParameterJdbcTemplate.query(sb.toString(), params, BeanPropertyRowMapper(ProductImeUpload::class.java))
+    }
+
+    override fun findProductTypeIds(month: String): MutableList<String> {
+        return namedParameterJdbcTemplate.queryForList(
+                """
+                        SELECT
+                            distinct t1.id
+                        FROM
+                            crm_product_ime_upload t,
+                            crm_product_type t1
+                        WHERE
+                            t.enabled =1
+                            AND t1.enabled =1
+                            AND t1.id = t.product_type_id
+                            AND t.month=:month
+                        """, Collections.singletonMap("month", month), String::class.java)
+    }
+
+    override fun getReportDatas(productMonthPriceSumQuery: ProductMonthPriceSumQuery): MutableList<ReportImeUploadDto> {
+        val sb = StringBuilder("""
+                SELECT
+                    t1.shop_id shopId,
+                    t1.product_type_id productTypeId,
+                    t1.employee_id employeeId,
+                    t2.office_id officeId,
+	                t2.area_id areaId,
+                    count(*) qty
+                FROM
+                    crm_product_ime_upload t1,
+                    crm_depot t2
+               where
+	                t1.enabled = 1
+	                and t1.shop_id = t2.id
+	                and t2.enabled = 1
+                AND
+                    t1.month = :month
+            """)
+        if (StringUtils.isNotBlank(productMonthPriceSumQuery.status)) {
+            sb.append(""" AND t1.status = :status """)
+        }
+        if (StringUtils.isNotBlank(productMonthPriceSumQuery.areaId)) {
+            sb.append(""" AND t2.area_id = :areaId """)
+        }
+        if (CollectionUtil.isNotEmpty(productMonthPriceSumQuery.depotIdList)) {
+            sb.append("""  and t1.depot_id in (:depotIdList) """)
+        }
+        sb.append(""" GROUP BY t1.shop_id,t1.product_type_id,t1.employee_id """)
+
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productMonthPriceSumQuery), BeanPropertyRowMapper(ReportImeUploadDto::class.java))
+
+
+    }
+
+    override fun findByEnabledIsTrueAndMonth(month: String): MutableList<String> {
+        return namedParameterJdbcTemplate.queryForList(
+                """
+                        SELECT
+                            distinct t1.name
+                        FROM
+                            crm_product_ime_upload t,
+                            crm_product_type t1
+                        WHERE
+                            t.enabled =1
+                            AND t1.enabled =1
+                            AND t1.id = t.product_type_id
+                            AND t.month=:month
+                        """, Collections.singletonMap("month", month), String::class.java)
+    }
 
     override fun findDto(id: String): ProductImeUploadDto {
         return namedParameterJdbcTemplate.queryForObject("""

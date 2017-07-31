@@ -21,7 +21,9 @@
                 <date-range-picker v-model="formData.adGoodsOrderBillDateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderDetailList.processStatus')">
-                <process-status-select v-model="formData.adGoodsOrderProcessStatus" type="AdGoodsOrder" @afterInit="setSearchText"></process-status-select>
+                <el-select v-model="formData.adGoodsOrderProcessStatus" clearable filterable>
+                  <el-option v-for="item in formData.extra.statusList" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderDetailList.remarks')">
                 <el-input v-model="formData.adGoodsOrderRemarks" :placeholder="$t('adGoodsOrderDetailList.likeSearch')"></el-input>
@@ -85,14 +87,12 @@
 <script>
   import accountSelect from 'components/basic/account-select';
   import depotSelect from 'components/future/depot-select';
-  import processStatusSelect from 'components/general/process-status-select'
   import productSelect from 'components/future/product-select'
 
   export default {
     components:{
       accountSelect,
       depotSelect,
-      processStatusSelect,
       productSelect,
     },
     data() {

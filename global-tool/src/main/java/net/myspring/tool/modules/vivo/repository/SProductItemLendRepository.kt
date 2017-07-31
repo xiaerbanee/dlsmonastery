@@ -4,6 +4,7 @@ import com.google.common.collect.Maps
 import net.myspring.tool.modules.vivo.domain.SProductItemLend
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils
 import org.springframework.stereotype.Component
@@ -31,4 +32,15 @@ class SProductItemLendRepository @Autowired constructor(val namedParameterJdbcTe
         """)
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sProductItemLendM13e00List.toTypedArray()))
     }
+
+    fun findByDateAndAgentCodeIn(dateStart: String,dateEnd: String,agentCodeList: MutableList<String>):MutableList<SProductItemLend>{
+        val map = Maps.newHashMap<String,Any>()
+        map.put("dateStart",dateStart)
+        map.put("dateEnd",dateEnd)
+        map.put("agentCodeList",agentCodeList)
+        val sb = "select * from S_ProductItemLend_M13E00 where UpdateTime >= :dateStart and UpdateTime <dateEnd and AgentCode in (:agentCodeList) "
+        return namedParameterJdbcTemplate.query(sb, map, BeanPropertyRowMapper(SProductItemLend::class.java))
+    }
+
+
 }

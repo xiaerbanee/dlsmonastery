@@ -37,7 +37,7 @@
           return;
         }
         this.remoteLoading = true;
-        this.doSearchByKey(query).then(()=>{
+        this.doSearchByKey(this.innerId, query).then(()=>{
           this.remoteLoading = false;
         }).catch(()=>{
           this.remoteLoading = false;
@@ -63,21 +63,21 @@
         if(this.remote){
           return this.doSearchByIds(val);
         }else if(create){
-          return this.doSearchByKey(null);
+          return this.doSearchByKey(val, null);
         }else{
           return Promise.resolve();
         }
       },
-      doSearchByKey(query){
+      doSearchByKey(val, query){
         return axios.get('/api/basic/sys/office/search',{params:{officeRuleName:this.officeRuleName, name:query}}).then((response)=>{
           let newList = [];
           for(let item of this.itemList) {
-            if(this.selected(item)) {
+            if(this.selected(val, item)) {
               newList.push(item);
             }
           }
           for(let item of response.data) {
-            if(!this.selected(item)) {
+            if(!this.selected(val, item)) {
               newList.push(item);
             }
           }
@@ -86,16 +86,7 @@
       },
       doSearchByIds(val){
         if(val){
-          this.innerId=val;
-          let idStr=this.innerId;
-          if(this.multiple && this.innerId){
-            idStr=this.innerId;
-          }
-          if(util.isBlank(idStr)) {
-            return;
-          }
-          this.remoteLoading = true;
-          return axios.get('/api/basic/sys/office/findByIds?idStr='+ idStr).then((response)=>{
+          return axios.get('/api/basic/sys/office/findByIds?idStr='+ val).then((response)=>{
             if(response.data){
               this.itemList=response.data;
             }else{
@@ -107,31 +98,27 @@
           return Promise.resolve();
         }
       },
-      selected(item){
-        if(!this.innerId){
+      selected(val, item){
+        if(!val){
           return false;
         }
         if(this.multiple) {
-          return this.innerId.indexOf(item.id) >=0;
+          return val.indexOf(item.id) >=0;
         }
-        return this.innerId === item.id;
+        return val === item.id;
       }
     },created () {
-        if(util.isBlank(this.value)){
-            return;
-        }
       this.initItemList(this.value, true).then(()=>{
         this.setValue(this.value);
       });
     },watch: {
-      value: function (newVal) {
-        if (util.isBlank(newVal) || newVal.lengt==0) {
+      value :function (newVal) {
+        if(this.innerId === newVal){
           return;
-        } else {
-          this.initItemList(newVal, false).then(() => {
-            this.setValue(newVal);
-          });
         }
+        this.initItemList(newVal, false).then(()=>{
+          this.setValue(newVal);
+        });
       }
     }
   };
