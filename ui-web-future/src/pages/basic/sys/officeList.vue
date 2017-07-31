@@ -38,7 +38,7 @@
             <el-tag :type="scope.row.enabled? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="taskPoint" :label="$t('officeList.point')"></el-table-column>
+        <el-table-column prop="point" :label="$t('officeList.point')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('officeList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('officeList.operation')" width="140">
           <template scope="scope">
