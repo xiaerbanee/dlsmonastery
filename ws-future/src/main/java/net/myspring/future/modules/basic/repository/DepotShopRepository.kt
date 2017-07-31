@@ -420,7 +420,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     crm_depot_shop t6
                     WHERE
                     t1.enabled = 1
-                    t1.is_back=0
+                    and t1.is_back=0
                     and t5.depot_shop_id=t6.id
         """)
         if(reportQuery.scoreType!=null){

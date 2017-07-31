@@ -20,7 +20,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EntityScan(basePackageClasses = {SummerGeneralApplication.class, Jsr310JpaConverters.class})
 @EnableJpaRepositories(repositoryBaseClass = BaseRepositoryImpl.class)
 public class SummerGeneralApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(SummerGeneralApplication.class, args);
 	}

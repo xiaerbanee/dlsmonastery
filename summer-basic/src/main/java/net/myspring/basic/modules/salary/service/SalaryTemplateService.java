@@ -1,7 +1,6 @@
 package net.myspring.basic.modules.salary.service;
 
 import com.google.common.collect.Lists;
-import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.repository.EmployeeRepository;
 import net.myspring.basic.modules.hr.repository.SalaryTemplateDetailRepository;
 import net.myspring.basic.modules.hr.repository.SalaryTemplateRepository;
@@ -18,7 +17,6 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -40,7 +38,6 @@ public class SalaryTemplateService {
     public SimpleExcelBook findSimpleExcelSheet(String id)  {
         SalaryTemplate salaryTemplate=salaryTemplateRepository.findOne(id);
         Workbook workbook = new SXSSFWorkbook(100000);
-        List<EmployeeDto> employeeList = employeeRepository.findAllWorking(LocalDate.now());
         List<SimpleExcelColumn> simpleExcelColumnList= Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"accountName","登录名"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"areaName","办事处"));
@@ -50,7 +47,7 @@ public class SalaryTemplateService {
         for(SalaryTemplateDetail salaryTemplateDetail:salaryTemplateDetailList) {
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"",salaryTemplateDetail.getName()));
         }
-        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("工资导入模版",employeeList,simpleExcelColumnList);
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("工资导入模版",Lists.newArrayList(),simpleExcelColumnList);
         ExcelUtils.doWrite(workbook,simpleExcelSheet);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"工资导入模版-" +salaryTemplate.getName()+ ".xlsx",simpleExcelSheet);
         return simpleExcelBook;
