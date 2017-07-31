@@ -4,7 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary"@click="formVisible = true" icon="search" >{{$t('clientList.filter')}}</el-button>
-        <el-button type="primary" @click="synData"  icon="plus">{{$t('depotList.syn')}}</el-button>
+        <el-button type="primary" @click="synData"  icon="plus">{{$t('clientList.syn')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('clientList.filter')" v-model="formVisible"  size="tiny" class="search-form" z-index="1500" ref="searchDialog">
