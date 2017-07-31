@@ -34,11 +34,11 @@ Page({
       data: {},
       method: 'GET',
       header: {
-        Cookie: "JSESSIONID=" + app.globalData.sessionId
+        Cookie: "JSESSIONID=" + app.globalData.sessionId      
       },
       success: function (res) {
         console.log(res.data)
-        that.setData({ 'formProperty.areaList': res.data.extra.areaList, formData: res.data });
+        that.setData({ 'formProperty': res.data.extra, formData: res.data });
         that.pageRequest();
       }
     })
