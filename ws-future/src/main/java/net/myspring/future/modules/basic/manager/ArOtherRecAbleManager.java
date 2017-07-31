@@ -58,7 +58,11 @@ public class ArOtherRecAbleManager {
             entityDto.setAccountNumber("2241");//其他应付款
             entityDto.setCustomerForNumber(null);
             entityDto.setEmpInfoNumber("0001");//员工
-            entityDto.setOtherTypeNumber("2241.00028");//其他应付款-订货会订金
+            if(CompanyNameEnum.JXVIVO.name().equals(RequestUtils.getCompanyName())){
+                entityDto.setOtherTypeNumber("2241.00018");//其他应付款-订货会订金
+            }else if (CompanyNameEnum.JXOPPO.name().equals(RequestUtils.getCompanyName())){
+                entityDto.setOtherTypeNumber("2241.00028");//其他应付款-订货会订金
+            }
             entityDto.setAmount(shopGoodsDeposit.getAmount());
             entityDto.setExpenseTypeNumber("6602.000");//无
             entityDto.setComment(client.getName() + "-" + shopGoodsDeposit.getRemarks());
@@ -121,6 +125,16 @@ public class ArOtherRecAbleManager {
                     entityDto.setComment(client.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
                 } else if (ShopDepositTypeEnum.形象保证金.equals(type)) {
                     entityDto.setOtherTypeNumber("2241.101");//其他应付款-客户押金（批发）-形象押金
+                    entityDto.setComment(client.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                } else if (ShopDepositTypeEnum.演示机押金.equals(type)) {
+                    throw new ServiceException("财务暂时未开--其他应付款-客户押金（批发）-演示机押金");//其他应付款-客户押金（批发）-演示机押金
+                }
+            }else if (CompanyNameEnum.JXVIVO.name().equals(RequestUtils.getCompanyName())){
+                if (ShopDepositTypeEnum.市场保证金.equals(type)) {
+                    entityDto.setOtherTypeNumber("2241.00002B");//其他应付款-客户押金（批发）-市场保证金
+                    entityDto.setComment(client.getName() + CharConstant.COMMA + ShopDepositTypeEnum.市场保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
+                } else if (ShopDepositTypeEnum.形象保证金.equals(type)) {
+                    entityDto.setOtherTypeNumber("2241.00002A");//其他应付款-客户押金（批发）-形象押金
                     entityDto.setComment(client.getName() + CharConstant.COMMA + ShopDepositTypeEnum.形象保证金.name() + CharConstant.COMMA + shopDeposit.getRemarks());
                 } else if (ShopDepositTypeEnum.演示机押金.equals(type)) {
                     throw new ServiceException("财务暂时未开--其他应付款-客户押金（批发）-演示机押金");//其他应付款-客户押金（批发）-演示机押金
