@@ -2,6 +2,7 @@ package net.myspring.cloud.modules.sys.service;
 
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
+import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.dto.KingdeeBookDto;
 import net.myspring.cloud.modules.sys.repository.KingdeeBookRepository;
@@ -28,10 +29,13 @@ import java.util.Map;
 public class KingdeeBookService {
     @Autowired
     private KingdeeBookRepository kingdeeBookRepository;
+    @Autowired
+    private CacheUtils cacheUtils;
 
     public Page<KingdeeBookDto> findPage(Pageable pageable, KingdeeBookQuery kingdeeBookQuery){
         Page<KingdeeBook> page = kingdeeBookRepository.findPage(pageable,kingdeeBookQuery);
         Page<KingdeeBookDto> accountChangeDtoPage = BeanUtil.map(page,KingdeeBookDto.class);
+        cacheUtils.initCacheInput(accountChangeDtoPage.getContent());
         return accountChangeDtoPage;
     }
 
