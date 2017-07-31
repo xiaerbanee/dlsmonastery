@@ -35,7 +35,7 @@
         </div>
       </search-dialog>
       <el-table :data="tableDatas" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('expressOrderList.loading')" stripe border>
-        <el-table-column v-for="header in tableHeaders" :prop="header" :label="header" width="240"></el-table-column>
+        <el-table-column v-for="header in tableHeaders" :prop="header" :key="header" :label="header" :value="header" width="240"></el-table-column>
       </el-table>
       <div style="margin-top: 5px;">
         显示第{{index}}至{{sum}}项结果，共{{sum}}项

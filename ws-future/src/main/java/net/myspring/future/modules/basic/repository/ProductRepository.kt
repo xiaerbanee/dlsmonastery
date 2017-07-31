@@ -116,8 +116,9 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
 
     fun findByOutId(outId: String): Product
 
-
     fun findByOutGroupIdIn(outGroupIds: MutableList<String>): MutableList<Product>
+
+    fun findByOutGroupIdInAndPrice2IsNotNull(outGroupIds: MutableList<String>): MutableList<Product>
 
     @Query("""
         SELECT
