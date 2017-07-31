@@ -292,7 +292,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             crm_depot_shop t6
             WHERE
              t1.enabled = 1
-            t1.is_back=0
+            and t1.is_back=0
             and t2.depot_shop_id=t6.id
     """)
         if (productImeSaleReportQuery.dateStart != null) {

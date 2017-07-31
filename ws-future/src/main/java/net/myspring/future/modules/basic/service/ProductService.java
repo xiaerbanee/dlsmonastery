@@ -237,7 +237,8 @@ public class ProductService {
     }
 
     @Transactional
-    public void syn() {
+    public String syn() {
+        String newProductName = "";
         List<BdMaterial> bdMaterials = cloudClient.getAllProduct();
         List<Product> products = productRepository.findAllEnabled();
         Map<String,Product> productMapByOutId = CollectionUtil.extractToMap(products,"outId");
@@ -262,6 +263,7 @@ public class ProductService {
                         }else{
                             product.setHasIme(false);
                         }
+                        newProductName += bdMaterial.getFName()+CharConstant.SPACE;
                     }else{
                         product.setOldName(product.getName());
                         product.setOldOutId(product.getOutId());
@@ -279,6 +281,7 @@ public class ProductService {
             }
             productRepository.save(synProduct);
         }
+        return newProductName;
     }
 
     @Transactional
