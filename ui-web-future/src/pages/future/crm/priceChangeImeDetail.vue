@@ -44,6 +44,10 @@
           </el-col>
         </el-row>
       </el-form>
+      <el-dialog class="img-dialog" v-model="dialogVisible" size="tiny">
+        <img ref="img" width="100%" :src="dialogImageUrl" alt="">
+        <el-button class="btn-rotate" @click="rotate">旋转90度</el-button>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -53,6 +57,9 @@
       components:{boolRadioGroup},
       data(){
           return{
+            deg:0,
+            dialogVisible:false,
+            dialogImageUrl:'',
             isCreate:this.$route.query.id==null,
             action:this.$route.query.action,
             submitDisabled:false,
@@ -75,6 +82,10 @@
           }
       },
       methods:{
+        rotate(){
+          this.deg += 90;
+          this.$refs.img.style.transform = `rotate(${this.deg}deg)`
+        },
         formSubmit(){
           this.submitDisabled = true;
           let form = this.$refs["inputForm"];
@@ -106,7 +117,8 @@
           })
         },
         handlePreview(file) {
-          window.open(file.viewUrl);
+          this.dialogVisible = true;
+          this.dialogImageUrl = file.viewUrl;
         },handleChange(file, fileList) {
           this.fileList = fileList;
         },handleRemove(file, fileList) {
@@ -129,3 +141,11 @@
       }
     }
 </script>
+<style>
+  .img-dialog{
+    text-align: center;
+  }
+  .btn-rotate{
+    margin: 10px auto -10px auto;
+  }
+</style>
