@@ -16,8 +16,8 @@ zuul:
     max-semaphores: 2000
 
 ribbon:
-  ReadTimeout: 12000
-  ConnectTimeout: 12000
+  ReadTimeout: 18000
+  ConnectTimeout: 18000
 
 hystrix:
   command:
@@ -31,4 +31,4 @@ hystrix:
           semaphore:
             maxConcurrentRequests: 2000
           thread:
-            timeoutInMilliseconds: 12000
+            timeoutInMilliseconds: 18000
