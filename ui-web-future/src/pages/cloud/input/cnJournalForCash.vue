@@ -49,7 +49,7 @@
                 if(column === 0) {
                   let accountNumber = changes[i][3];
                   if (util.isNotBlank(accountNumber)) {
-                    axios.get('/api/global/cloud/kingdee/bdAccount/findByNumber?number=' + accountNumber).then((response) => {
+                    axios.get('/api/global/cloud/kingdee/bdAccount/findByNumber',{params:{number:accountNumber}}).then((response) => {
                       let account = response.data;
                       table.setDataAtCell(row, 4, account.fname);
                     });
@@ -68,7 +68,7 @@
                     otherTypeName = data[i][9];
                   }
                   if(otherTypeName !== "" && accountNumber !== "" && otherTypeName!== '无'){
-                    axios.get('/api/global/cloud/kingdee/basAssistant/findNumberSubByName?name=' + otherTypeName).then((response) => {
+                    axios.get('/api/global/cloud/kingdee/basAssistant/findNumberSubByName',{params:{name:otherTypeName}}).then((response) => {
                       let number = response.data;
                         if (accountNumber !== number){
                         table.setDataAtCell(i, 9, '');

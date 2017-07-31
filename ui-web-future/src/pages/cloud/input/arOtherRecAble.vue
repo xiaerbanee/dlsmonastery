@@ -54,7 +54,7 @@
                   otherTypeName = data[i][6];
                 }
                 if(otherTypeName !== "" && accountNumber !== "" && otherTypeName!== '无'){
-                  axios.get('/api/global/cloud/kingdee/basAssistant/findNumberSubByName?name=' + otherTypeName).then((response) => {
+                  axios.get('/api/global/cloud/kingdee/basAssistant/findNumberSubByName',{params:{name:otherTypeName}}).then((response) => {
                     let number = response.data;
                     if (accountNumber !== number){
                       table.setDataAtCell(i, 6, '');
