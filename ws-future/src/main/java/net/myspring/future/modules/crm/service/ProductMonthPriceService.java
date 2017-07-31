@@ -105,11 +105,8 @@ public class ProductMonthPriceService {
      * @return
      */
     public List<Object> getHeaders(String uploadMonth) {
-        String month = null;
         if (StringUtils.isBlank(uploadMonth)) {
-            month = LocalDateUtils.format(LocalDate.now().minusMonths(1),"yyyy-MM");
-        } else{
-            month = uploadMonth.substring(0, 7);
+            uploadMonth = LocalDateUtils.format(LocalDate.now().minusMonths(1),"yyyy-MM");
         }
         List<Object> headers = Lists.newArrayList();
         headers.add("办事处");
@@ -117,7 +114,7 @@ public class ProductMonthPriceService {
         headers.add("门店");
         headers.add("促销");
         headers.add("身份证号");
-        List<String> productTypeNames = productImeUploadRepository.findByEnabledIsTrueAndMonth(month);
+        List<String> productTypeNames = productImeUploadRepository.findByEnabledIsTrueAndMonth(uploadMonth);
         for (String productTypeName : productTypeNames) {
             headers.add(productTypeName);
         }
@@ -138,10 +135,7 @@ public class ProductMonthPriceService {
 
         if (StringUtils.isBlank(productMonthPriceSumQuery.getMonth())) {
             productMonthPriceSumQuery.setMonth(LocalDateUtils.format(LocalDate.now().minusMonths(1),"yyyy-MM"));
-        }else{
-            productMonthPriceSumQuery.setMonth(productMonthPriceSumQuery.getMonth().substring(0, 7));
         }
-
         productMonthPriceSumQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         List<ReportImeUploadDto> productImeUploads = Lists.newArrayList();
         //获取保卡数量
@@ -375,6 +369,12 @@ public class ProductMonthPriceService {
         cacheUtils.initCacheInput(productImeUploadDtos);
         cacheUtils.initCacheInput(productImeUploadDtos);
         cacheUtils.initCacheInput(productImeUploadDtos);
+        Set<String> accountIdList = CollectionUtil.extractToSet(productImeUploadDtos, "accountId");
+        List<Map<String, Object>> accountDepotNamesList = productImeUploadRepository.findAccountDepotNamesMap(accountIdList);
+        Map<String, String> accountDepotNamesMap= Maps.newHashMap();
+        for (Map<String, Object> map : accountDepotNamesList) {
+            accountDepotNamesMap.put(map.get("accountId").toString(), map.get("accountShopNames").toString());
+        }
 
         for (ProductImeUploadDto productImeUploadDto : productImeUploadDtos) {
             CellStyle dataCellStyle1 = cellStyleMap1.get(ExcelCellStyle.DATA.name());
@@ -401,7 +401,8 @@ public class ProductMonthPriceService {
             dataColumnList.add(new SimpleExcelColumn(dataCellStyle1, productImeUploadDto.getShopName()));
             dataColumnList.add(new SimpleExcelColumn(dataCellStyle1, productImeUploadDto.getSaleShopName()));
             dataColumnList.add(new SimpleExcelColumn(dataCellStyle1, productImeUploadDto.getGoodsOrderShopName()));
-            dataColumnList.add(new SimpleExcelColumn(dataCellStyle1, productImeUploadDto.getAccountShopNames()));
+            String accountShopNames = accountDepotNamesMap.get(productImeUploadDto.getAccountId()) != null ? accountDepotNamesMap.get(productImeUploadDto.getAccountId()) : "";
+            dataColumnList.add(new SimpleExcelColumn(dataCellStyle1, accountShopNames));
             excelColumnList1.add(dataColumnList);
         }
 
@@ -422,9 +423,11 @@ public class ProductMonthPriceService {
      */
     @Transactional
     public void uploadAudit(ProductMonthPriceSumQuery productMonthPriceSumQuery) {
-
+        if (StringUtils.isBlank(productMonthPriceSumQuery.getMonth())) {
+            productMonthPriceSumQuery.setMonth(LocalDateUtils.format(LocalDate.now().minusMonths(1),"yyyy-MM"));
+        }
         List<String> officeIds = officeClient.getChildOfficeIds(productMonthPriceSumQuery.getAreaId());
-        List<ProductImeUpload> productImeUploads = productImeUploadRepository.findByMonthAndOfficeId(productMonthPriceSumQuery.getMonth().substring(0, 7), officeIds);
+        List<ProductImeUpload> productImeUploads = productImeUploadRepository.findByMonthAndOfficeId(productMonthPriceSumQuery.getMonth(), officeIds);
 
         if (CollectionUtil.isNotEmpty(productImeUploads)) {
             for (ProductImeUpload productImeUpload : productImeUploads) {
