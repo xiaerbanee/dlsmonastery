@@ -1,6 +1,5 @@
 package net.myspring.basic.modules.sys.service;
 
-import com.alibaba.druid.sql.visitor.functions.Char;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
@@ -25,8 +24,8 @@ import net.myspring.common.constant.TreeConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
-import net.myspring.util.collection.CollectionUtil;
 import net.myspring.common.utils.HandsontableUtils;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
@@ -40,8 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
 import java.math.BigDecimal;
-import java.rmi.ServerException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -294,7 +292,8 @@ public class OfficeService {
     @Transactional
     public void logicDelete(OfficeForm officeForm) {
         Office office=officeRepository.findOne(officeForm.getId());
-        office.setName(office.getName()+"废弃"+ LocalDate.now());
+        office.setName(office.getName()+"废弃"+ LocalDateTime.now());
+        office.setEnabled(false);
         officeRepository.save(office);
     }
 

@@ -40,7 +40,7 @@
         <el-table-column prop="name" label="账套"></el-table-column>
         <el-table-column prop="type" label="账套类型"></el-table-column>
         <el-table-column prop="companyName" label="公司名称"></el-table-column>
-        <el-table-column prop="lastModifiedBy" label="修改人"></el-table-column>
+        <el-table-column prop="lastModifiedByName" label="修改人"></el-table-column>
         <el-table-column prop="lastModifiedDate" label="修改时间"></el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template scope="scope">

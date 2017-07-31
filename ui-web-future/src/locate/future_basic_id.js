@@ -164,6 +164,7 @@ export default {
     mobilePhone: "nomor telepon",
     add: "tambah",
     filter: "saring",
+    syn:"同步",
     export: "ekspor / mengeluarkan",
     filterOrExport: "saring  / ekspor",
     selectDateRange: "pilih rentang tanggal",

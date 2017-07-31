@@ -14,8 +14,7 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item label="月份" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.month" format="yyyy-MM" placeholder="请选择">
-                </el-date-picker>
+                <month-picker  v-model="formData.month" ></month-picker>
               </el-form-item>
               <el-form-item label="保卡状态" :label-width="formLabelWidth">
                 <el-select v-model="formData.status" clearable filterable >
@@ -35,7 +34,7 @@
         </div>
       </search-dialog>
       <el-table :data="tableDatas" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('expressOrderList.loading')" stripe border>
-        <el-table-column v-for="header in tableHeaders" :prop="header" :key="header" :label="header" :value="header" width="240"></el-table-column>
+        <el-table-column v-for="header in tableHeaders" :prop="header" :label="header" :key="header" width="240"></el-table-column>
       </el-table>
       <div style="margin-top: 5px;">
         显示第{{index}}至{{sum}}项结果，共{{sum}}项
@@ -44,7 +43,12 @@
   </div>
 </template>
 <script>
+
+  import monthPicker from 'components/common/month-picker'
   export default {
+    components:{
+      monthPicker,
+    },
     data() {
       return {
         searchText: "",
@@ -81,7 +85,7 @@
           this.tableDatas = this.composeDatas(this.tableHeaders, this.tableDatas);
           this.sum = this.tableDatas.length;
           this.index= 1;
-          if (this.tableDatas.length == 0) {
+          if (this.tableDatas.length === 0) {
             this.index = 0;
           }
           this.pageLoading = false;
@@ -101,6 +105,10 @@
         }).catch(()=>{});
       },
       uploadAudit(){
+        if(!this.formData.areaId) {
+          this.$message({message:"请选择办事处",type:"warning"});
+          return;
+        }
         util.confirmBeforeAction(this,"确认审核通过吗?").then(()=>{
           axios.get('/api/ws/future/crm/productMonthPriceSum/uploadAudit',{params: util.deleteExtra(this.formData)}).then((response)=>{
             this.$message(response.data.message);
@@ -124,9 +132,6 @@
       this.pageHeight = window.outerHeight - 325;
       this.initPromise = axios.get('/api/ws/future/crm/productMonthPriceSum/getQuery').then((response) => {
         that.formData = response.data;
-        console.log("====query start=====");
-        console.log(response.data);
-        console.log("====query end=====");
         util.copyValue(that.$route.query, that.formData);
         this.pageRequest();
       });

@@ -164,6 +164,7 @@ export default {
     mobilePhone: "手机号码",
     add: "添加",
     filter: "过滤",
+    syn:"同步",
     export: "导出",
     filterOrExport: "过滤OR导出",
     selectDateRange: "选择日期范围",
