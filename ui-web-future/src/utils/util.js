@@ -405,7 +405,7 @@ util.isNotBlank = function (val) {
   return _.trim(val) != "";
 }
 
-util.deleteExtra= function (json) {
+util.deleteExtra= function (json) {/**/
   var newJson = JSON.parse(JSON.stringify(json));
   delete newJson.extra;
   return newJson;

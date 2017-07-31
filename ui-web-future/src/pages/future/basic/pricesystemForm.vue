@@ -84,18 +84,21 @@
         })
       },searchDetail(){
         let val=this.productName;
+        console.log(this.productName)
+        console.log(this.filterPricesystemDetailList,"filter");
+        console.log(this.pricesystemDetailList)
         if(!val){
             this.filterPricesystemDetailList = this.pricesystemDetailList;
             return;
         }
         let tempList=new Array();
+//        for(let index of this.pricesystemDetailList){
+//          if(util.isNotBlank(index.price)){
+//            tempList.push(index)
+//          }
+//        }
         for(let index of this.pricesystemDetailList){
-          if(util.isNotBlank(index.price)){
-            tempList.push(index)
-          }
-        }
-        for(let index of this.pricesystemDetailList){
-          if(util.contains(index.productName,val)&&util.isBlank(index.price)){
+          if(util.contains(index.productName,val)&&util.isNotBlank(index.price)){
             tempList.push(index)
           }
         }
