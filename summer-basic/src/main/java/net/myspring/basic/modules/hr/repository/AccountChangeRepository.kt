@@ -41,6 +41,7 @@ class AccountChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
             t1.enabled=1
             and t1.account_id=account.id
             and account.office_id=office.id
+            and office.area_id=area.id
         """)
         if (CollectionUtil.isNotEmpty(accountChangeQuery.officeIdList)) {
             sb.append("""
@@ -61,9 +62,19 @@ class AccountChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
         if (accountChangeQuery.type != null) {
             sb.append(" and t1.type = :type ")
         }
-        if (accountChangeQuery.accountName != null) {
+        if (StringUtils.isNotBlank(accountChangeQuery.accountName)) {
             sb.append("""
                 and account.login_name like concat('%',:accountName,'%')
+            """)
+        }
+        if (StringUtils.isNotBlank(accountChangeQuery.createdByName)) {
+            sb.append("""
+                and t1.created_by in (
+                select t2.id
+                from hr_account t2
+                where t2.login_name like concat('%',:createdByName,'%')
+                and t2.enabled=1
+                )
             """)
         }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(), pageable)
