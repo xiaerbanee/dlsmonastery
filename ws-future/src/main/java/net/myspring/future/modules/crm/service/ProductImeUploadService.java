@@ -254,11 +254,12 @@ public class ProductImeUploadService {
         LocalDate dateEnd = dateStart.plusMonths(1);
 
         List<ProductImeSaleDto> productImeSaleDtoList = productImeSaleRepository.findForBatchUpload(dateStart.atStartOfDay(), dateEnd.atStartOfDay(), officeIds);
+        cacheUtils.initCacheInput(productImeSaleDtoList);
         if (CollectionUtil.isEmpty(productImeSaleDtoList)) {
             return uploadQty;
         }
         Map<String, ProductIme> productImeMap = productImeRepository.findMap(CollectionUtil.extractToList(productImeSaleDtoList, "productImeId"));
-        Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(productImeMap.values(), "productId"));
+        Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(productImeSaleDtoList, "productImeProductId"));
 
         for (ProductImeSaleDto productImeSaleDto : productImeSaleDtoList) {
 
