@@ -56,6 +56,44 @@
     data(){
       return this.getData()
     },mounted() {
+      let companyName=JSON.parse(window.localStorage.getItem("account")).companyName;
+      if (companyName == "JXVIVO"){
+        this.settings.colHeaders.push("LX对应货品");
+        this.settings.columns.push(
+          {
+            data:'lxProductName',
+            type: "autocomplete",
+            strict: true,
+            allowEmpty: true,
+            tempLxProductNames:[],
+            width:300,
+            source: function (query, process) {
+              var that = this;
+              if (that.tempLxProductNames.indexOf(query) >= 0) {
+                process(that.tempLxProductNames);
+              } else {
+                var lxProductNames = new Array();
+                if (query.length >= 2) {
+                  axios.get('/api/global/tool/factory/vivo/vivoPlantProducts/findByProductName?name=' + query).then((response) => {
+                    if (response.data.length > 0) {
+                      for (var index in response.data) {
+                        var productName = response.data[index].name;
+                        lxProductNames.push(productName);
+                        if (that.tempLxProductNames.indexOf(productName) < 0) {
+                          that.tempLxProductNames.push(productName);
+                        }
+                      }
+                    }
+                    process(lxProductNames);
+                  });
+                } else {
+                  process(lxProductNames);
+                }
+              }
+            },
+          }
+        );
+      }
       this.search();
       table = new Handsontable(this.$refs["handsontable"], this.settings);
     },methods: {
@@ -140,6 +178,7 @@
                 let createForm = {};
                 createForm.id = row[0];
                 createForm.productName = row[5];
+                createForm.lxProductName = row[6];
                 tableData.push(createForm);
               }
             }

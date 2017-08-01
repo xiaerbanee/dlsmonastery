@@ -11,6 +11,9 @@ public class VivoPlantProductsDto {
     private String productId;
     @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
     private String productName;
+    private String lxProductId;
+    @CacheInput(inputKey = "products",inputInstance = "lxProductId",outputInstance = "name")
+    private String lxProductName;
 
     public String getId() {
         return id;
@@ -66,5 +69,21 @@ public class VivoPlantProductsDto {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public String getLxProductId() {
+        return lxProductId;
+    }
+
+    public void setLxProductId(String lxProductId) {
+        this.lxProductId = lxProductId;
+    }
+
+    public String getLxProductName() {
+        return lxProductName;
+    }
+
+    public void setLxProductName(String lxProductName) {
+        this.lxProductName = lxProductName;
     }
 }
