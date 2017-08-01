@@ -75,6 +75,27 @@ export default{
     prerequisiteMessage:"必填信息",
     selectGroup: "请选择分类",
     selectMonth:"请选择月份"
+  },
+  salaryTemplateList:{
+    salaryTemplateList:"工资项目",
+    add:"添加",
+    loading: "拼命加载中",
+    name:"名称",
+    salaryTemplateDetailNames:"项目",
+    remarks:"备注",
+    operation:"操作",
+    edit: "修改",
+    delete: "删除",
+    download:"模板下载"
+  },
+  salaryTemplateForm:{
+    salaryTemplateForm:"工资项目编辑",
+    name:"名称",
+    remarks:"备注",
+    productName:"项目名称",
+    sort:"排序",
+    delete:"删除",
+    save:"保存"
   }
 }
 

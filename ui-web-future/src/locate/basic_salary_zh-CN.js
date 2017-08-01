@@ -87,5 +87,14 @@ export default{
     edit: "修改",
     delete: "删除",
     download:"模板下载"
+  },
+  salaryTemplateForm:{
+    salaryTemplateForm:"工资项目编辑",
+    name:"名称",
+    remarks:"备注",
+    productName:"项目名称",
+    sort:"排序",
+    delete:"删除",
+    save:"保存"
   }
 }
