@@ -19,6 +19,9 @@
             <el-form-item :label="$t('positionForm.remarks')" prop="remarks">
               <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
+            <el-form-item :label="$t('officeForm.sort')" prop="sort">
+              <el-input  v-model.number="inputForm.sort"></el-input>
+            </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('positionForm.save')}}</el-button>
             </el-form-item>
@@ -47,6 +50,7 @@
           rules: {
             name: [{required: true, message: this.$t('positionForm.prerequisiteMessage')}],
             permission: [{required: true, message: this.$t('positionForm.prerequisiteMessage')}],
+            sort: [{ required: true, message: this.$t('menuCategoryForm.prerequisiteMessage')},{ type: 'number', message: this.$t('menuCategoryForm.inputLegalValue')}]
           },
         };
       },

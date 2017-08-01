@@ -14,6 +14,15 @@ public class PositionDto extends DataDto<Position> {
     private String permission;
     private boolean locked;
     private String roleId;
+    private String sort;
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
 
     public String getRoleId() {
         return roleId;
