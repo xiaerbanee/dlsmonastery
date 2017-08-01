@@ -48,6 +48,12 @@
             <el-form-item style="margin-top:20px">
               <el-button type="primary" @click="print()" >打印</el-button>
             </el-form-item>
+            <el-form-item style="margin-top:20px">
+              <el-button type="primary" @click="confirmCollect()" >收藏</el-button>
+            </el-form-item>
+            <el-form-item style="margin-top:20px">
+              <el-button type="primary" @click="cancelCollect()" >取消收藏</el-button>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -105,7 +111,12 @@
         window.open('/#/basic/hr/auditFilePrint?id=' + this.$route.query.id);
       },
     },
+    confirmCollect(){
 
+    },
+    cancelCollect(){
+
+    },
     created(){
         axios.get('/api/basic/hr/auditFile/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;

@@ -49,8 +49,10 @@ public class VivoPlantProductsService {
         List<VivoPlantProducts> vivoPlantProductsList = Lists.newArrayList();
         for(Map<String,String> map:list){
             VivoPlantProducts vivoPlantProduct = vivoPlantProductsMap.get(map.get("id"));
-            ProductDto defaultProduct=productMap.get(map.get("productName"));
+            ProductDto defaultProduct = productMap.get(map.get("productName"));
+            ProductDto defaultLxProduct = productMap.get(map.get("lxProductName"));
             vivoPlantProduct.setProductId(defaultProduct==null?null:defaultProduct.getId());
+            vivoPlantProduct.setLxProductId(defaultProduct==null?null:defaultLxProduct.getId());
             vivoPlantProductsList.add(vivoPlantProduct);
         }
         vivoPlantProductsRepository.save(vivoPlantProductsList);

@@ -19,19 +19,16 @@ interface VivoPlantProductsRepository : BaseRepository<VivoPlantProducts, String
 }
 
 interface VivoPlantProductsRepositoryCustom{
-    fun findPlantProducts(companyName:String) :MutableList<VivoPlantProducts>
+    fun findPlantProducts() :MutableList<VivoPlantProducts>
     fun findItemNumbers(itemNumbers: MutableList<String>,companyName:String): MutableList<VivoPlantProducts>
     fun findAllByProductId():MutableList<VivoPlantProducts>
     fun findAll(vivoPlantProductsQuery: VivoPlantProductsQuery):MutableList<VivoPlantProductsDto>
 }
 
 class VivoPlantProductsRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) :VivoPlantProductsRepositoryCustom {
-    override fun findPlantProducts(companyName: String): MutableList<VivoPlantProducts>{
-        var sql = "select * from VR_PlantProducts";
-        if(CompanyNameEnum.IDVIVO.name.equals(companyName)) {
-            sql =" select * from vr_products_m13e00";
-        }
-        return namedParameterJdbcTemplate.query(sql,  BeanPropertyRowMapper(VivoPlantProducts::class.java));
+    override fun findPlantProducts(): MutableList<VivoPlantProducts>{
+        var sql =" select * from vr_products_m13e00"
+        return namedParameterJdbcTemplate.query(sql,BeanPropertyRowMapper(VivoPlantProducts::class.java))
     }
 
     override fun findItemNumbers(itemNumbers:MutableList<String>,companyName: String): MutableList<VivoPlantProducts>{

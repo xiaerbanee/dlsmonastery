@@ -11,6 +11,7 @@ import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
+import net.myspring.basic.modules.hr.web.validator.EmployeeValidator;
 import net.myspring.basic.modules.sys.service.DictEnumService;
 import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.common.constant.CharConstant;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,6 +48,8 @@ public class EmployeeController {
     private AccountService accountService;
     @Autowired
     private OfficeService officeService;
+    @Autowired
+    private EmployeeValidator employeeValidator;
 
     @RequestMapping(value = "delete")
     @PreAuthorize("hasPermission(null,'hr:employee:delete')")
@@ -57,8 +61,12 @@ public class EmployeeController {
 
     @RequestMapping(value = "save")
     @PreAuthorize("hasPermission(null,'hr:employee:edit')")
-    public RestResponse save(EmployeeForm employeeForm) {
+    public RestResponse save(EmployeeForm employeeForm, BindingResult bindingResult) {
+        employeeValidator.validate(employeeForm,bindingResult);
         RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        if(bindingResult.hasErrors()){
+            return new RestResponse(bindingResult,"保存失败", null);
+        }
         if(!employeeForm.isCreate()&&StringUtils.isBlank(employeeForm.getAccountForm().getId())){
             return new RestResponse("保存失败", ResponseCodeEnum.saved.name());
         }

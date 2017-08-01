@@ -19,7 +19,7 @@
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" :label-width="formLabelWidth">
-          <el-row :gutter="4">
+          <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="汇总">
                 <el-select v-model="formData.sumType" clearable filterable placeholder="请选择">
@@ -239,4 +239,7 @@
     }
   };
 </script>
+<style>
+
+</style>
 

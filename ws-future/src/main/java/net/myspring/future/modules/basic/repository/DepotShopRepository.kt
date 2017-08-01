@@ -392,7 +392,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
             sb.append(""" group by t1.depot_id""")
         }
-        if(StringUtils.isNotBlank(reportQuery.exportType)&&reportQuery.exportType=="按数量"){
+        if(StringUtils.isNotBlank(reportQuery.exportType)&&(reportQuery.exportType=="按数量"||reportQuery.exportType=="按合计")){
             sb.append(""" ,t3.id""")
         }
         print(sb.toString())
