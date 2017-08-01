@@ -4,6 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:bank:view'">过滤</el-button>
+        <el-button type="primary" @click="exportData()" icon="upload"  v-permit="'crm:bank:view'">导出</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -99,7 +100,10 @@
           }
           this.detailVisible=true;
         })
-      },exportData(command) {
+      },exportData() {
+        util.confirmBeforeExportData(this).then(() => {
+          window.location.href='/api/ws/future/basic/depotStore/export?'+qs.stringify(util.deleteExtra(this.formData));
+        }).catch(()=>{});
       }
     },created () {
       axios.get('/api/ws/future/basic/depotStore/getReportQuery').then((response) => {
