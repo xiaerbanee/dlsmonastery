@@ -11,6 +11,7 @@ import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.service.*;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
+import net.myspring.basic.modules.hr.web.validator.AccountValidator;
 import net.myspring.basic.modules.sys.dto.AccountCommonDto;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
 import net.myspring.basic.modules.sys.manager.RoleManager;
@@ -35,6 +36,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -76,6 +78,8 @@ public class AccountController {
     private RoleService roleService;
     @Autowired
     private OfficeService officeService;
+    @Autowired
+    private AccountValidator accountValidator;
 
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'hr:account:view')")
@@ -94,7 +98,11 @@ public class AccountController {
 
     @RequestMapping(value = "save")
     @PreAuthorize("hasPermission(null,'hr:account:edit')")
-    public RestResponse save(AccountForm accountForm) {
+    public RestResponse save(AccountForm accountForm, BindingResult bindingResult) {
+        accountValidator.validate(accountForm,bindingResult);
+        if(bindingResult.hasErrors()){
+            return new RestResponse(bindingResult,"保存失败", null);
+        }
         accountService.save(accountForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
