@@ -9,7 +9,9 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.AccountClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
+import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.manager.DepotManager;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderIme;
 import net.myspring.future.modules.crm.domain.ProductIme;
@@ -50,6 +52,8 @@ public class ProductImeUploadService {
     private ProductImeSaleRepository productImeSaleRepository;
     @Autowired
     private ProductImeRepository productImeRepository;
+    @Autowired
+    private ProductRepository productRepository;
     @Autowired
     private DepotManager depotManager;
     @Autowired
@@ -115,6 +119,7 @@ public class ProductImeUploadService {
         String employeeId = RequestUtils.getEmployeeId();
 
         List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
+        Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(productImeList, "productId"));
         List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByEnabledIsTrueAndProductImeIdIn(CollectionUtil.extractToList(productImeList,"id"));
         Map<String, GoodsOrderIme> goodsOrderImeMap = CollectionUtil.extractToMap(goodsOrderImeList,"product_ime_id");
         Map<String, GoodsOrder> goodsOrderMap = goodsOrderRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"goods_order_id"));
@@ -131,6 +136,7 @@ public class ProductImeUploadService {
             productImeUpload.setShopId(productImeUploadForm.getShopId());
             productImeUpload.setSaleShopId(productIme.getDepotId());
             productImeUpload.setProductImeId(productIme.getId());
+            productImeUpload.setProductTypeId(productMap.get(productIme.getProductId()).getProductTypeId());
             productImeUpload.setStatus(AuditStatusEnum.申请中.name());
 
             if(goodsOrderImeMap.get(productIme.getId())!=null && goodsOrderMap.get(goodsOrderImeMap.get(productIme.getId()).getGoodsOrderId())!=null){
@@ -252,6 +258,7 @@ public class ProductImeUploadService {
             return uploadQty;
         }
         Map<String, ProductIme> productImeMap = productImeRepository.findMap(CollectionUtil.extractToList(productImeSaleDtoList, "productImeId"));
+        Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(productImeMap.values(), "productId"));
 
         for (ProductImeSaleDto productImeSaleDto : productImeSaleDtoList) {
 
@@ -263,6 +270,7 @@ public class ProductImeUploadService {
                 productImeUpload.setEmployeeId(productImeSaleDto.getEmployeeId());
                 productImeUpload.setShopId(productImeSaleDto.getShopId());
                 productImeUpload.setProductImeId(productImeSaleDto.getProductImeId());
+                productImeUpload.setProductTypeId(productMap.get(productImeSaleDto.getProductImeProductId()).getProductTypeId());
                 productImeUploadRepository.save(productImeUpload);
 
                 ProductIme productIme = productImeMap.get(productImeSaleDto.getProductImeId());
