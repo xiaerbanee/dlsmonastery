@@ -10,7 +10,7 @@ import java.util.List;
 public class SimpleExcelSheet {
     private String sheetName;
     private List<Object> dataList;
-    private boolean isExcelColumn;
+    private boolean isExcelColumn=false;
     private List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
 
     private List<List<SimpleExcelColumn>> excelColumnList = Lists.newArrayList();

@@ -33,7 +33,16 @@ public class AuditFileForm extends BaseForm<AuditFile> {
     private String createdByName;
     private LocalDateTime createdDate;
     private boolean locked;
+    private boolean collect;
     private List<ActivitiDetailDto> activitiDetailList= Lists.newArrayList();
+
+    public boolean getCollect() {
+        return collect;
+    }
+
+    public void setCollect(boolean collect) {
+        this.collect = collect;
+    }
 
     public List<ActivitiDetailDto> getActivitiDetailList() {
         return activitiDetailList;

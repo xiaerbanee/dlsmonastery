@@ -39,10 +39,10 @@ public class SalaryTemplateService {
         SalaryTemplate salaryTemplate=salaryTemplateRepository.findOne(id);
         Workbook workbook = new SXSSFWorkbook(100000);
         List<SimpleExcelColumn> simpleExcelColumnList= Lists.newArrayList();
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"accountName","登录名"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"areaName","办事处"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"officeName","部门"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"name","姓名"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"","登录名"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"","办事处"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"","部门"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"","姓名"));
         List<SalaryTemplateDetail> salaryTemplateDetailList=salaryTemplateDetailRepository.findBySalaryTemplateId(id);
         for(SalaryTemplateDetail salaryTemplateDetail:salaryTemplateDetailList) {
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"",salaryTemplateDetail.getName()));

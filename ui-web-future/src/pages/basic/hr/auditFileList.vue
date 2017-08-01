@@ -73,9 +73,11 @@
         <el-table-column prop="memo":label="$t('auditFileList.memo')"></el-table-column>
         <el-table-column :label="$t('auditFileList.operation')" width="140">
           <template scope="scope">
-            <div class="action"> <el-button size="small" @click.native="itemAction(scope.row.id,'verify')"  class="action" v-if="scope.row.auditable">审核</el-button></div>
+            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'verify')"  class="action" v-if="scope.row.auditable">审核</el-button></div>
             <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')"  class="action"  v-permit="'hr:auditFile:view'">详细</el-button></div>
             <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')"  class="action" v-permit="'hr:auditFile:delete'" v-if="scope.row.editable">删除</el-button></div>
+            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'collect',scope.row)"  class="action"  v-if="scope.row.collect">取消收藏</el-button></div>
+            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'collect',scope.row)"  class="action"  v-if="!scope.row.collect">收藏</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -134,7 +136,7 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'auditFileForm'})
-      },itemAction:function(id,action){
+      },itemAction:function(id,action,row){
         if(action=="edit") {
           this.$router.push({ name: 'auditFileForm', query: { id: id }})
         } else if(action=="detail"){
@@ -148,6 +150,11 @@
             this.pageRequest();
           });
         }).catch(()=>{});
+        }else if(action=="collect") {
+          axios.get('/api/basic/hr/auditFileCollect/collect?auditFileId='+row.id+'&collect='+!row.collect).then((response) =>{
+            this.$message(response.data.message);
+            row.collect=!row.collect
+          });
         }
       }
     },created () {
