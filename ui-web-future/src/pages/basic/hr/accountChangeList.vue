@@ -17,6 +17,9 @@
           <el-form-item label="申请人">
             <el-input v-model="formData.accountName" auto-complete="off" :placeholder="$t('accountChangeList.likeSearch')"></el-input>
           </el-form-item>
+          <el-form-item label="创建人">
+            <el-input v-model="formData.createdByName" auto-complete="off" :placeholder="$t('accountChangeList.likeSearch')"></el-input>
+          </el-form-item>
           <el-form-item :label="$t('accountChangeList.areaName')">
             <el-select v-model="formData.officeId" filterable clearable :placeholder="$t('accountChangeList.inputKey')">
               <el-option v-for="area in formData.extra.areaList" :key="area.id" :label="area.name" :value="area.id"></el-option>
@@ -42,6 +45,7 @@
         <el-table-column  prop="oldLabel" :label="$t('accountChangeList.oldValue')" sortable></el-table-column>
         <el-table-column  prop="newLabel" :label="$t('accountChangeList.newValue')" sortable></el-table-column>
         <el-table-column  prop="processStatus" :label="$t('accountChangeList.processStatus')" sortable ></el-table-column>
+        <el-table-column  prop="createdByName" label="创建人" sortable ></el-table-column>
         <el-table-column  prop="remarks" :label="$t('accountChangeList.remarks')" sortable ></el-table-column>
         <el-table-column :label="$t('accountChangeList.operation')" width="140">
           <template scope="scope">
