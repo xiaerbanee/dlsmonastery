@@ -34,17 +34,22 @@ class AccountChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
         var sb = StringBuilder()
         sb.append("""
             select
-            t1.*,account.office_id
+            t1.*,account.login_name as accountName,area.name as areaName
             from
-            hr_account_change t1,hr_account account,sys_office office
+            hr_account_change t1,hr_account account,sys_office office,sys_office area
             where
             t1.enabled=1
             and t1.account_id=account.id
             and account.office_id=office.id
         """)
+        if (CollectionUtil.isNotEmpty(accountChangeQuery.officeIdList)) {
+            sb.append("""
+                and account.office_id  in (:officeIdList)
+            """)
+        }
         if (StringUtils.isNotBlank(accountChangeQuery.officeId)) {
             sb.append("""
-                and account.office_id = :officeId
+                and area.id  =:officeId
             """)
         }
         if (accountChangeQuery.createdDate != null) {

@@ -18,7 +18,6 @@ import net.myspring.basic.modules.sys.client.ActivitiClient;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.basic.modules.sys.repository.OfficeRepository;
-import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional(readOnly = true)
@@ -189,10 +187,6 @@ public class AccountChangeService {
 
     public Page<AccountChangeDto> findPage(Pageable pageable, AccountChangeQuery accountChangeQuery){
         Page<AccountChangeDto> page=accountChangeRepository.findPage(pageable,accountChangeQuery);
-        Map<String, Office> officeMap = officeRepository.findMap(CollectionUtil.extractToList(page.getContent(), "officeId"));
-        for(AccountChangeDto accountChangeDto:page.getContent()){
-            accountChangeDto.setAreaId(officeMap.get(accountChangeDto.getOfficeId()).getAreaId());
-        }
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
