@@ -17,9 +17,9 @@
         <el-button type="primary"@click="formVisible = true" icon="search" v-if="!nextIsShop&&'区域'==formData.sumType || '型号'==formData.sumType">过滤</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" :label-width="formLabelWidth">
-          <el-row :gutter="4">
+          <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="汇总">
                 <el-select v-model="formData.sumType" clearable filterable placeholder="请选择">
@@ -50,7 +50,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="货品">
-                <product-type-select v-model="formData.productTypeIdList"  @afterInit="setSearchText" multiple></product-type-select>
+                <product-type-select v-model="formData.productTypeIdList"  @afterInit="setSearchText"></product-type-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -239,4 +239,6 @@
     }
   };
 </script>
+<style>
+</style>
 
