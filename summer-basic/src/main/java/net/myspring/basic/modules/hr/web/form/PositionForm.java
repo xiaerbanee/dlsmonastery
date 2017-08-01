@@ -1,13 +1,9 @@
 package net.myspring.basic.modules.hr.web.form;
 
 
-import com.google.common.collect.Lists;
 import net.myspring.basic.modules.hr.domain.Position;
-import net.myspring.basic.modules.sys.dto.RoleDto;
 import net.myspring.common.form.BaseForm;
 import net.myspring.util.cahe.annotation.CacheInput;
-
-import java.util.List;
 
 /**
  * Created by admin on 2017/4/5.
@@ -21,7 +17,15 @@ public class PositionForm extends BaseForm<Position> {
     private String permission;
     private String remarks;
     private String roleId;
+    private Integer sort;
 
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
 
     public String getRoleName() {
         return roleName;

@@ -30,8 +30,38 @@ public class AuditFileQuery extends BaseQuery {
     private String processflowName;
     private LocalDate createdDateStart;
     private LocalDate createdDateEnd;
+    private boolean collect;
+    private String collectDate;
+    private String accountId;
     private List<String> processTypeIdList=Lists.newArrayList();
     private List<String> processFlowIdList=Lists.newArrayList();
+
+    public String getAccountId() {
+        if(StringUtils.isBlank(accountId)){
+            this.accountId=RequestUtils.getAccountId();
+        }
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public boolean getCollect() {
+        return collect;
+    }
+
+    public void setCollect(boolean collect) {
+        this.collect = collect;
+    }
+
+    public String getCollectDate() {
+        return collectDate;
+    }
+
+    public void setCollectDate(String collectDate) {
+        this.collectDate = collectDate;
+    }
 
     public List<String> getProcessTypeIdList() {
         return processTypeIdList;
@@ -188,5 +218,19 @@ public class AuditFileQuery extends BaseQuery {
 
     public void setDutyDateEnd(LocalDate dutyDateEnd) {
         this.createdDateEnd = dutyDateEnd;
+    }
+
+    public LocalDate getCollectDateStart() {
+        if(StringUtils.isNotBlank(collectDate)) {
+            return LocalDateUtils.parse(collectDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        }
+        return null;
+    }
+
+    public LocalDate getCollectDateEnd() {
+        if(StringUtils.isNotBlank(collectDate)) {
+            return LocalDateUtils.parse(collectDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        }
+        return null;
     }
 }

@@ -55,7 +55,6 @@
           <el-button type="primary" @click="search()">{{$t('auditFileList.sure')}}</el-button>
         </div>
       </search-dialog>
-
       <el-dialog  title="订单详细" v-model="updateVisible" size="tiny" class="search-form" z-index="1500">
         <el-form :model="inputForm" label-width="120px">
               <el-form-item :label="$t('auditFileList.memo')" prop="memo">
@@ -87,7 +86,9 @@
             <div class="action"> <el-button size="small" @click.native="itemAction(scope.row.id,'verify')"  class="action" v-if="scope.row.auditable">审核</el-button></div>
             <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')"  class="action"  v-permit="'hr:auditFile:view'">详细</el-button></div>
             <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')"  class="action" v-permit="'hr:auditFile:delete'" v-if="scope.row.editable">删除</el-button></div>
-            <div class="action" v-permit="'hr:auditFile:edit'"><el-button size="small" @click.native="updateMemo(scope.row)">批注修改</el-button></div>
+            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'collect',scope.row)"  class="action"  v-if="scope.row.collect">取消收藏</el-button></div>
+            <div class="action"><el-button size="small" @click.native="collect(scope.row)"  class="action"  v-if="!scope.row.collect">收藏</el-button></div>
+            <div class="action"><el-button size="small" @click.native="updateMemo(scope.row)"  v-permit="'hr:auditFile:updateMemo'">批注修改</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -157,15 +158,18 @@
           this.$router.push({ name: 'auditFileDetail', query: { id: id,action:"audit" }})
         }else if(action=="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
-            axios.get('/api/basic/hr/auditFile/delete', {params: {id: id}}).then((response) => {
-              this.$message(response.data.message);
-              this.pageRequest();
-            });
-          }).catch(() => {
+          axios.get('/api/basic/hr/auditFile/delete',{params:{id:id}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageRequest();
           });
+        }).catch(()=>{});
         }
+      },collect(row){
+        axios.get('/api/basic/hr/auditFileCollect/collect?auditFileId='+row.id+'&collect='+!row.collect).then((response) =>{
+          this.$message(response.data.message);
+          row.collect=!row.collect
+        });
       }, updateMemo(row){
-        console.log(row)
         this.updateVisible=true;
         this.inputForm=JSON.parse(JSON.stringify(row));
       },formSubmit(){

@@ -3,18 +3,17 @@ package net.myspring.util.excel;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
 import net.myspring.util.time.LocalTimeUtils;
-import net.myspring.util.text.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
-import net.myspring.util.collection.CollectionUtil;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -23,7 +22,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -243,22 +241,22 @@ public class ExcelUtils {
     }
 
     private static void doWriteSheet(Sheet sheet, SimpleExcelSheet simpleExcelSheet) {
-        if (CollectionUtil.isNotEmpty(simpleExcelSheet.getDataList())) {
-            int rowIndex = 0;
-            Row row = sheet.createRow(rowIndex);
-            for (int i = 0; i < simpleExcelSheet.getSimpleExcelColumnList().size(); i++) {
-                SimpleExcelColumn simpleExcelColumn = simpleExcelSheet.getSimpleExcelColumnList().get(i);
-                if (simpleExcelColumn.getWidth() != null) {
-                    if (simpleExcelColumn.getWidth() > 0) {
-                        sheet.setColumnWidth(i, simpleExcelColumn.getWidth());
-                    } else {
-                        sheet.autoSizeColumn(i);
-                    }
+        int rowIndex = 0;
+        Row row = sheet.createRow(rowIndex);
+        for (int i = 0; i < simpleExcelSheet.getSimpleExcelColumnList().size(); i++) {
+            SimpleExcelColumn simpleExcelColumn = simpleExcelSheet.getSimpleExcelColumnList().get(i);
+            if (simpleExcelColumn.getWidth() != null) {
+                if (simpleExcelColumn.getWidth() > 0) {
+                    sheet.setColumnWidth(i, simpleExcelColumn.getWidth());
+                } else {
+                    sheet.autoSizeColumn(i);
                 }
-                Cell cell = row.createCell(i);
-                cell.setCellStyle(simpleExcelColumn.getHeaderStyle());
-                setCellValue(cell, simpleExcelColumn.getLabel());
             }
+            Cell cell = row.createCell(i);
+            cell.setCellStyle(simpleExcelColumn.getHeaderStyle());
+            setCellValue(cell, simpleExcelColumn.getLabel());
+        }
+        if (CollectionUtil.isNotEmpty(simpleExcelSheet.getDataList())) {
             for (Object rowValue : simpleExcelSheet.getDataList()) {
                 rowIndex = rowIndex + 1;
                 row = sheet.createRow(rowIndex);

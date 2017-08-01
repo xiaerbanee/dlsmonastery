@@ -13,6 +13,15 @@ public class Position extends DataEntity<Position> {
     private Integer version = 0;
     private String permission;
     private String roleId;
+    private Integer sort;
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
 
     public String getRoleId() {
         return roleId;

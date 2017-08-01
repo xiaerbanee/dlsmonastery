@@ -87,8 +87,8 @@ public class AuditFileController {
     }
 
     @RequestMapping(value="updateMemo")
-    public RestResponse updateMemo(AuditFileForm auditFileForm){
-        auditFileService.updateMemo(auditFileForm);
+    public RestResponse updateMemo(String id,String memo){
+        auditFileService.updateMemo(id,memo);
         return new RestResponse("保存成功",null);
     }
 

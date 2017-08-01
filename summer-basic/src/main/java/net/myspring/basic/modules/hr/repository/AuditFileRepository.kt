@@ -31,15 +31,27 @@ class AuditFileRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempl
         var sb = StringBuilder()
         sb.append("""
             SELECT
-            t1.*,t3.office_id
-            FROM hr_audit_file t1,hr_account t3,sys_office office
+            t1.*,office.name as officeName,area.name as areaName,t2.id  as auditFileCollectId
+            FROM hr_audit_file t1 left join hr_audit_file_collect t2 on t1.id=t2.audit_file_id AND t2.enabled=1,
+            hr_account t3,sys_office office,sys_office area
             WHERE
             t1.created_by=t3.id
+            and office.area_id=area.id
             and t3.office_id=office.id
             AND t1.enabled=1
+
         """)
         if (CollectionUtil.isNotEmpty(auditFileQuery.officeIds)) {
             sb.append(" and t1.office_id IN :officeIds ")
+        }
+        if (auditFileQuery.collect) {
+            sb.append("and t2.account_id =:accountId ")
+            if (auditFileQuery.collectDateStart != null) {
+                sb.append(" and t2.collect_date >=:collectDateStart ")
+            }
+            if (auditFileQuery.collectDateEnd != null) {
+                sb.append(" and t2.collect_date < :collectDateEnd ")
+            }
         }
         if (StringUtils.isNotBlank(auditFileQuery.positionId)) {
             sb.append(" and t1.position_id=:positionId")

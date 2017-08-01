@@ -8,7 +8,6 @@ import net.myspring.basic.modules.hr.domain.AccountChange;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.dto.AccountChangeDto;
-import net.myspring.basic.modules.hr.dto.AuditFileDto;
 import net.myspring.basic.modules.hr.repository.AccountChangeRepository;
 import net.myspring.basic.modules.hr.repository.AccountRepository;
 import net.myspring.basic.modules.hr.repository.EmployeeRepository;
@@ -19,13 +18,6 @@ import net.myspring.basic.modules.sys.client.ActivitiClient;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.basic.modules.sys.repository.OfficeRepository;
-import net.myspring.common.enums.AuditTypeEnum;
-import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
-import net.myspring.general.modules.sys.dto.ActivitiStartDto;
-import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
-import net.myspring.general.modules.sys.form.ActivitiStartForm;
-import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional(readOnly = true)
@@ -187,7 +178,7 @@ public class AccountChangeService {
         }
         accountChange.setProcessStatus("省公司人事审核");
         accountChangeRepository.save(accountChange);
-        if(employee.getLeaveDate()==null){
+        if(accountChange.getType().equals(AccountChangeTypeEnum.离职.toString())&&employee.getLeaveDate()==null){
             audit(accountChange.getId(),true,null);
         }
         return accountChange;
@@ -196,10 +187,6 @@ public class AccountChangeService {
 
     public Page<AccountChangeDto> findPage(Pageable pageable, AccountChangeQuery accountChangeQuery){
         Page<AccountChangeDto> page=accountChangeRepository.findPage(pageable,accountChangeQuery);
-        Map<String, Office> officeMap = officeRepository.findMap(CollectionUtil.extractToList(page.getContent(), "officeId"));
-        for(AccountChangeDto accountChangeDto:page.getContent()){
-            accountChangeDto.setAreaId(officeMap.get(accountChangeDto.getOfficeId()).getAreaId());
-        }
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

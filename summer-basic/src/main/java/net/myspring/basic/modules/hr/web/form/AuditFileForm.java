@@ -32,9 +32,17 @@ public class AuditFileForm extends BaseForm<AuditFile> {
     @CacheInput(inputKey = "accounts",inputInstance = "createdBy",outputInstance = "loginName")
     private String createdByName;
     private LocalDateTime createdDate;
-    private String memo;
     private boolean locked;
+    private boolean collect;
     private List<ActivitiDetailDto> activitiDetailList= Lists.newArrayList();
+
+    public boolean getCollect() {
+        return collect;
+    }
+
+    public void setCollect(boolean collect) {
+        this.collect = collect;
+    }
 
     public List<ActivitiDetailDto> getActivitiDetailList() {
         return activitiDetailList;
@@ -149,13 +157,5 @@ public class AuditFileForm extends BaseForm<AuditFile> {
 
     public void setProcessTypeName(String processTypeName) {
         this.processTypeName = processTypeName;
-    }
-
-    public void setMemo(String memo) {
-        this.memo = memo;
-    }
-
-    public String getMemo() {
-        return memo;
     }
 }
