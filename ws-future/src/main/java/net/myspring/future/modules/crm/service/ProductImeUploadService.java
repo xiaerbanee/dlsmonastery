@@ -116,8 +116,6 @@ public class ProductImeUploadService {
             throw new ServiceException(errMsg);
         }
 
-        String employeeId = RequestUtils.getEmployeeId();
-
         List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
         Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(productImeList, "productId"));
         List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByEnabledIsTrueAndProductImeIdIn(CollectionUtil.extractToList(productImeList,"id"));
@@ -132,7 +130,7 @@ public class ProductImeUploadService {
             ProductImeUpload productImeUpload = new ProductImeUpload();
             productImeUpload.setMonth(productImeUploadForm.getMonth());
             productImeUpload.setRemarks(productImeUploadForm.getRemarks());
-            productImeUpload.setEmployeeId(employeeId);
+            productImeUpload.setEmployeeId(productImeUploadForm.getEmployeeId());
             productImeUpload.setShopId(productImeUploadForm.getShopId());
             productImeUpload.setSaleShopId(productIme.getDepotId());
             productImeUpload.setProductImeId(productIme.getId());

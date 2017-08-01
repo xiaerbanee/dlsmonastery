@@ -90,9 +90,13 @@ public class VivoPushService {
 
     @Transactional
     public  List<SZones> pushVivoZonesData(){
-        logger.info(DbContextHolder.get().getCompanyName()+DbContextHolder.get().getDataSourceType());
-        String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
         List<OfficeDto> officeDtoList = officeClient.findAll();
+        if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
+            String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
+            for (OfficeDto officeDto : officeDtoList){
+                officeDto.setAgentCode(mainCode);
+            }
+        }
         List<SZones> sZonesList = Lists.newArrayList();
         for(OfficeDto officeDto:officeDtoList){
             SZones sZones = new SZones();
@@ -123,7 +127,12 @@ public class VivoPushService {
 
     @Transactional
     public void pushVivoPushSCustomersData(List<SCustomerDto> futureCustomerDtoList,String date){
-        String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
+        if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
+            String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
+            for (SCustomerDto sCustomerDto : futureCustomerDtoList){
+                sCustomerDto.setAgentCode(mainCode);
+            }
+        }
         List<SCustomers> sCustomersList = Lists.newArrayList();
         for(SCustomerDto futureCustomerDto :futureCustomerDtoList){
             SCustomers sCustomers = new SCustomers();
@@ -142,9 +151,6 @@ public class VivoPushService {
                 sCustomers.setCustomerStr4(agentCode + "K0000");
             }
             sCustomers.setZoneId(getZoneId(agentCode,futureCustomerDto.getZoneId()));
-            if (StringUtils.isBlank(agentCode)){
-                System.err.println(futureCustomerDto.getCustomerId());
-            }
             sCustomers.setCompanyId(agentCode);
             sCustomers.setRecordDate(futureCustomerDto.getRecordDate());
             sCustomers.setCustomerStr1(futureCustomerDto.getCustomerStr1());
@@ -164,7 +170,12 @@ public class VivoPushService {
 
         String dateStart = LocalDateUtils.format(LocalDateUtils.parse(date));
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(dateStart));
-        String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
+        if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
+            String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
+            for (SPlantCustomerStockDto sPlantCustomerStockDto : sPlantCustomerStockDtoList){
+                sPlantCustomerStockDto.setAgentCode(mainCode);
+            }
+        }
 
         List<SPlantStockStores> sPlantStockStoresList = Lists.newArrayList();
         List<SPlantStockSupply> sPlantStockSupplyList = Lists.newArrayList();
@@ -239,9 +250,12 @@ public class VivoPushService {
     @Transactional
     public void pushCustomerStockDetailData(List<SPlantCustomerStockDetailDto> sPlantCustomerStockDetailDtoList,Map<String,String> productColorMap,String date){
 
-        LocalDate dateStart = LocalDateUtils.parse(date).minusYears(1);
-        LocalDate dateEnd = LocalDateUtils.parse(date).plusDays(1);
-        String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
+        if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
+            String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
+            for (SPlantCustomerStockDetailDto sPlantCustomerStockDetailDto : sPlantCustomerStockDetailDtoList){
+                sPlantCustomerStockDetailDto.setAgentCode(mainCode);
+            }
+        }
 
         List<SProductItemStocks> sProductItemStocksList = Lists.newArrayList();
         List<SProductItem000> sProductItem000List = Lists.newArrayList();
@@ -332,7 +346,12 @@ public class VivoPushService {
 
     @Transactional
     public void pushProductImeSaleData(List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList,Map<String,String> productColorMap,String date){
-        String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
+        if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
+            String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
+            for (VivoCustomerSaleImeiDto vivoCustomerSaleImeiDto : vivoCustomerSaleImeiDtoList){
+                vivoCustomerSaleImeiDto.setAgentCode(mainCode);
+            }
+        }
         if (StringUtils.isBlank(date)){
             date = LocalDateUtils.format(LocalDate.now());
         }
@@ -364,13 +383,13 @@ public class VivoPushService {
 
     @Transactional
     public void pushSStoreData(List<SStores> sStoresList){
-        String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
+            sStoresList = Lists.newArrayList();
+            String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
             SStores sStores = new SStores();
             sStores.setStoreID(mainCode + "K0000");
             sStores.setStoreName(mainCode + "大库");
             sStores.setAgentCode(mainCode);
-            sStoresList.clear();
             sStoresList.add(sStores);
         }
         logger.info("上抛一代仓库数据开始:"+LocalDateTime.now());

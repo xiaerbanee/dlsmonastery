@@ -19,7 +19,7 @@ class SProductItemLendRepository @Autowired constructor(val namedParameterJdbcTe
         map.put("dateEnd",dateEnd)
         val sb = StringBuilder()
         sb.append("""
-            DELETE FROM S_ProductItemLend_M13E00 WHERE UpdateTime >= :dateStart AND UpdateTime < :dateEnd
+            DELETE FROM vivo_push_productitemlend WHERE UpdateTime >= :dateStart AND UpdateTime < :dateEnd
         """)
         return namedParameterJdbcTemplate.update(sb.toString(),map)
     }
@@ -27,7 +27,7 @@ class SProductItemLendRepository @Autowired constructor(val namedParameterJdbcTe
     fun batchSave(sProductItemLendM13e00List: MutableList<SProductItemLend>):IntArray{
         val sb = StringBuilder()
         sb.append("""
-            INSERT INTO S_ProductItemLend_M13E00 (CompanyID,ProductID,ProductNo,StoreID,Status,StatusInfo,UpdateTime)
+            INSERT INTO vivo_push_productitemlend (CompanyID,ProductID,ProductNo,StoreID,Status,StatusInfo,UpdateTime)
             VALUES (:companyID,:productID,:productNo,:storeID,:status,:statusInfo,:updateTime)
         """)
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sProductItemLendM13e00List.toTypedArray()))
