@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.service;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.modules.kingdee.domain.BdStock;
 import net.myspring.future.common.utils.CacheUtils;
@@ -17,9 +18,13 @@ import net.myspring.future.modules.basic.web.form.DepotStoreForm;
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.*;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by liuj on 2017/5/12.
@@ -117,6 +123,55 @@ public class DepotStoreService {
             }
         }
         return map;
+    }
+
+    public SimpleExcelBook export(ReportQuery reportQuery1,ReportQuery reportQuery) {
+        //获取仓库报表基本信息
+        DepotStoreQuery depotStoreQuery = BeanUtil.map(reportQuery1, DepotStoreQuery.class);
+        List<DepotStoreDto> depotStoreDtos = findFilter(depotStoreQuery);
+
+        //获取仓库报表详细信息
+        List<List<Object>> dataDetails = Lists.newArrayList();
+        for (DepotStoreDto depotStoreDto : depotStoreDtos) {
+            reportQuery.setDepotId(depotStoreDto.getDepotId());
+            reportQuery.setIsDetail(true);
+            Map<String, Integer> map = getReportDetail(reportQuery);
+            for (Map.Entry<String, Integer> entry : map.entrySet()) {
+                List<Object> row = Lists.newArrayList();
+                row.add(depotStoreDto.getAreaName());
+                row.add(depotStoreDto.getOfficeName());
+                row.add(depotStoreDto.getDepotName());
+                row.add(entry.getKey());
+                row.add(entry.getValue());
+                dataDetails.add(row);
+            }
+        }
+
+        Workbook workbook = new SXSSFWorkbook(10000);
+        List<List<SimpleExcelColumn>> excelColumnList = Lists.newArrayList();
+        Map<String, CellStyle> cellStyleMap = ExcelUtils.getCellStyleMap(workbook);
+        CellStyle headCellStyle = cellStyleMap.get(ExcelCellStyle.HEADER.name());
+        CellStyle dataCellStyle = cellStyleMap.get(ExcelCellStyle.DATA.name());
+        //设置excel header
+        List<SimpleExcelColumn> headColumnList = Lists.newArrayList();
+        headColumnList.add(new SimpleExcelColumn(headCellStyle, "办事处"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle, "业务单元"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle, "仓库"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle, "货品"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle, "数量"));
+        excelColumnList.add(headColumnList);
+        //填充 excel data
+        for (List<Object> row : dataDetails) {
+            List<SimpleExcelColumn> simpleExcelColumns = Lists.newArrayList();
+            for (int i=0;i<row.size();i++) {
+                simpleExcelColumns.add(new SimpleExcelColumn(dataCellStyle, row.get(i)));
+            }
+            excelColumnList.add(simpleExcelColumns);
+        }
+        SimpleExcelSheet sheet = new SimpleExcelSheet("仓库报表", excelColumnList);
+        ExcelUtils.doWrite(workbook, sheet);
+
+        return new SimpleExcelBook(workbook, "仓库报表.xlsx", sheet);
     }
 
     private Integer setPercentage(List<DepotStoreDto> depotStoreList) {

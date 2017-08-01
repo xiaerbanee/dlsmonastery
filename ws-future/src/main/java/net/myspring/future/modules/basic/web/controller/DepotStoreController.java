@@ -15,6 +15,7 @@ import net.myspring.future.modules.basic.service.*;
 import net.myspring.future.modules.basic.web.form.DepotStoreForm;
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Map;
@@ -108,6 +110,19 @@ public class DepotStoreController {
     @RequestMapping(value = "storeReportDetail")
     public Map<String,Integer> storeReportDetail(ReportQuery reportQuery){
         return depotStoreService.getReportDetail(reportQuery);
+    }
+
+    /**
+     *  仓库表报导出
+     *  created by chenjl
+     * @param reportQuery
+     * @return
+     */
+    @RequestMapping(value = "export")
+    public ModelAndView export(ReportQuery reportQuery) {
+        ReportQuery reportQuery1 =reportQuery;
+        reportQuery1.setDepotIdList(depotService.filterDepotIds());
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", depotStoreService.export(reportQuery1,reportQuery));
     }
 
 
