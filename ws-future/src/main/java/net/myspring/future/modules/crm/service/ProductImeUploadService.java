@@ -258,6 +258,7 @@ public class ProductImeUploadService {
             return uploadQty;
         }
         Map<String, ProductIme> productImeMap = productImeRepository.findMap(CollectionUtil.extractToList(productImeSaleDtoList, "productImeId"));
+        Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(productImeMap.values(), "productId"));
 
         for (ProductImeSaleDto productImeSaleDto : productImeSaleDtoList) {
 
@@ -269,6 +270,7 @@ public class ProductImeUploadService {
                 productImeUpload.setEmployeeId(productImeSaleDto.getEmployeeId());
                 productImeUpload.setShopId(productImeSaleDto.getShopId());
                 productImeUpload.setProductImeId(productImeSaleDto.getProductImeId());
+                productImeUpload.setProductTypeId(productMap.get(productImeSaleDto.getProductImeProductId()).getProductTypeId());
                 productImeUploadRepository.save(productImeUpload);
 
                 ProductIme productIme = productImeMap.get(productImeSaleDto.getProductImeId());
