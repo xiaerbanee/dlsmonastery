@@ -19,7 +19,7 @@ class SProductItemLendRepository @Autowired constructor(val namedParameterJdbcTe
         map.put("dateEnd",dateEnd)
         val sb = StringBuilder()
         sb.append("""
-            DELETE FROM S_ProductItemLend_M13E00 WHERE UpdateTime >= :dateStart AND UpdateTime < :dateEnd
+            DELETE FROM vivo_push_productitemlend WHERE UpdateTime >= :dateStart AND UpdateTime < :dateEnd
         """)
         return namedParameterJdbcTemplate.update(sb.toString(),map)
     }
