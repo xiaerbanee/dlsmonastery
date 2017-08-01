@@ -105,9 +105,10 @@ public class AuditFileService {
         auditFileRepository.logicDelete(id);
     }
 
-    public  void updateMemo(AuditFileForm auditFileForm){
-        AuditFile auditFile=auditFileRepository.findOne(auditFileForm.getId());
-        auditFile.setMemo(auditFileForm.getMemo());
+    @Transactional
+    public  void updateMemo(String id,String memo){
+        AuditFile auditFile=auditFileRepository.findOne(id);
+        auditFile.setMemo(memo);
         auditFileRepository.save(auditFile);
     }
 }

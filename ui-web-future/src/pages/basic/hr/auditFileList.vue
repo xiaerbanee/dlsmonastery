@@ -87,8 +87,8 @@
             <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')"  class="action"  v-permit="'hr:auditFile:view'">详细</el-button></div>
             <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')"  class="action" v-permit="'hr:auditFile:delete'" v-if="scope.row.editable">删除</el-button></div>
             <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'collect',scope.row)"  class="action"  v-if="scope.row.collect">取消收藏</el-button></div>
-            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'collect',scope.row)"  class="action"  v-if="!scope.row.collect">收藏</el-button></div>
-            <div class="action" v-permit="'hr:auditFile:edit'"><el-button size="small" @click.native="updateMemo(scope.row)">批注修改</el-button></div>
+            <div class="action"><el-button size="small" @click.native="collect(scope.row)"  class="action"  v-if="!scope.row.collect">收藏</el-button></div>
+            <div class="action"><el-button size="small" @click.native="updateMemo(scope.row)"  v-permit="'hr:auditFile:updateMemo'">批注修改</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -149,7 +149,7 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'auditFileForm'})
-      },itemAction:function(id,action,row){
+      },itemAction:function(id,action){
         if(action=="edit") {
           this.$router.push({ name: 'auditFileForm', query: { id: id }})
         } else if(action=="detail"){
@@ -163,14 +163,13 @@
             this.pageRequest();
           });
         }).catch(()=>{});
-        }else if(action=="collect") {
-          axios.get('/api/basic/hr/auditFileCollect/collect?auditFileId='+row.id+'&collect='+!row.collect).then((response) =>{
-            this.$message(response.data.message);
-            row.collect=!row.collect
-          });
         }
+      },collect(row){
+        axios.get('/api/basic/hr/auditFileCollect/collect?auditFileId='+row.id+'&collect='+!row.collect).then((response) =>{
+          this.$message(response.data.message);
+          row.collect=!row.collect
+        });
       }, updateMemo(row){
-        console.log(row)
         this.updateVisible=true;
         this.inputForm=JSON.parse(JSON.stringify(row));
       },formSubmit(){
