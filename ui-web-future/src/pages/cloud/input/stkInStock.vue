@@ -50,7 +50,7 @@
           colHeaders: ["货品编码","货品","单价","数量","备注","售后服务费","服务费类型",'广告让利(返利1.5%输入1.5)','让利类型'],
           columns: [
             {type: 'text',allowEmpty: false, strict:true, readOnly: true},
-            {type: "autocomplete", strict: true, allowEmpty: false, materialName:[],source: this.materialName},
+            {type: 'autocomplete', allowEmpty: false, strict: true, materialName:[],source: this.materialName},
             {type: 'numeric', format:"0,0.00000000000", allowEmpty: false, strict: true},
             {type: 'numeric', format:"0,0", allowEmpty: false, strict: true},
             {type: 'text',allowEmpty: false, strict:true},
@@ -67,7 +67,7 @@
                 if(column === 1) {
                   let materialName = changes[i][3];
                   if (util.isNotBlank(materialName)){
-                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name=' + materialName).then((response) => {
+                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByName',{params:{name:materialName}}).then((response) => {
                       let material = response.data;
                       table.setDataAtCell(row, 0, material.fnumber);
                     });
@@ -78,7 +78,7 @@
                 if(column === 0){
                   let materialNumber = changes[i][3];
                   if (util.isNotBlank(materialNumber)){
-                    axios.get('/api/global/cloud/sys/product/findByCode?code=' + materialNumber).then((response) => {
+                    axios.get('/api/global/cloud/sys/product/findByCode',{params:{code:materialNumber}}).then((response) => {
                       let product = response.data;
                       if (product){
                         table.setDataAtCell(row, 2, product.price1);

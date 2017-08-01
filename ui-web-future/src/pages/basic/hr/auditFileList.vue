@@ -42,6 +42,12 @@
               <el-form-item :label="$t('auditFileList.title')">
                 <el-input v-model="formData.title" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
+              <el-form-item label="是否收藏">
+                <bool-select v-model="formData.collect"></bool-select>
+              </el-form-item>
+              <el-form-item label="收藏日期">
+                <date-range-picker v-model="formData.collectDate"></date-range-picker>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -79,9 +85,9 @@
 </template>
 <script>
   import officeSelect from 'components/basic/office-select'
-
+  import boolSelect from 'components/common/bool-select'
   export default {
-    components:{officeSelect},
+    components:{officeSelect,boolSelect},
     data() {
       return {
         page:{},

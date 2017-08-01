@@ -53,7 +53,7 @@
                 if(column === 2){
                   let name = changes[i][3];
                   if(util.isNotBlank(name)) {
-                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name='+ name).then((response) =>{
+                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByName',{params:{name:name}}).then((response) =>{
                       let material = response.data;
                       table.setDataAtCell(row,0,material.fnumber);
                     });
