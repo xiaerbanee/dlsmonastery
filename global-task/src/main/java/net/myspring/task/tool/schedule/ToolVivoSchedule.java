@@ -36,6 +36,17 @@ public class ToolVivoSchedule {
         }
     }
 
+    @Scheduled(cron = "0 0 0/1 * * ?")
+    public void pullvivoData(){
+        List<String> companyNameList = Arrays.asList(companyNames);
+        if(companyNameList.contains(CompanyNameEnum.JXVIVO.name())) {
+            logger.info("下拉工厂数据开始");
+            String date=LocalDateUtils.format(LocalDate.now());
+            toolVivoClient.pullFactoryData(CompanyNameEnum.JXVIVO.name(),date);
+            logger.info("下拉工厂数据结束");
+        }
+    }
+
     @Scheduled(cron = "0 20 21,22,23 * * ?")
     public void pushIdvivoToLocal(){
         List<String> companyNameList = Arrays.asList(companyNames);
@@ -57,5 +68,7 @@ public class ToolVivoSchedule {
             logger.info("上抛中转库数据至工厂数据库结束");
         }
     }
+
+
 
 }

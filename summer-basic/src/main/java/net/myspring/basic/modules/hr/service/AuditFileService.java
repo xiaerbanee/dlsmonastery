@@ -102,7 +102,13 @@ public class AuditFileService {
 
     }
     @Transactional
-    public void logicDelete(String id) {
+    public void logicDelete(String id){
         auditFileRepository.logicDelete(id);
+    }
+
+    public  void updateMemo(AuditFileForm auditFileForm){
+        AuditFile auditFile=auditFileRepository.findOne(auditFileForm.getId());
+        auditFile.setMemo(auditFileForm.getMemo());
+        auditFileRepository.save(auditFile);
     }
 }

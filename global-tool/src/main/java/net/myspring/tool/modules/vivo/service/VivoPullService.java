@@ -57,8 +57,8 @@ public class VivoPullService {
 
     //物料编码
     @FactoryDataSource
-    public List<VivoPlantProducts> getPlantProducts(String companyName) {
-        return vivoPlantProductsRepository.findPlantProducts(companyName);
+    public List<VivoPlantProducts> getPlantProducts() {
+        return vivoPlantProductsRepository.findPlantProducts();
     }
 
     //获取串码

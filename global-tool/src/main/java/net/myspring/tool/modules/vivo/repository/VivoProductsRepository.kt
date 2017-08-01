@@ -27,7 +27,7 @@ class VivoProductsRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
     override fun findColorIds(colorIdList: MutableList<String>): MutableList<String> {
         val map = Maps.newHashMap<String,Any>()
         map.put("colorIdList",colorIdList)
-        val sb = "select t.colorId from vivo_products t where t.color_id in (:colorIdList)"
+        val sb = "select t.color_id from vivo_products t where t.color_id in (:colorIdList)"
         return namedParameterJdbcTemplate.query(sb,map,BeanPropertyRowMapper(String::class.java))
     }
 }
