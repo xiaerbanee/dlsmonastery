@@ -67,7 +67,7 @@ public class EmployeeController {
         if(bindingResult.hasErrors()){
             return new RestResponse(bindingResult,"保存失败", null);
         }
-        if(!employeeForm.isCreate()&&StringUtils.isBlank(employeeForm.getAccountForm().getId())){
+        if(!employeeForm.isCreate()&& StringUtils.isBlank(employeeForm.getAccountForm().getId())){
             return new RestResponse("保存失败", ResponseCodeEnum.saved.name());
         }
         Employee employee=employeeService.save(employeeForm);
