@@ -38,7 +38,7 @@ public class VivoPullController {
             vivoPullService.pullProducts(vivoProductsList);
         }
         //同步物料编码
-         List<VivoPlantProducts> vivoPlantProducts=vivoPullService.getPlantProducts(companyName);
+         List<VivoPlantProducts> vivoPlantProducts=vivoPullService.getPlantProducts();
         vivoPullService.pullPlantProducts(vivoPlantProducts,companyName);
         //同步发货串码
         List<VivoPlantSendimei> vivoPlantSendimeis=vivoPullService.getPlantSendimei(date);

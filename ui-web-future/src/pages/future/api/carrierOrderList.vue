@@ -62,7 +62,7 @@
           <el-button type="primary" @click="search()">{{$t('productTypeList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-dialog  title="订单详细" v-model="detailVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
+      <el-dialog  title="订单详细" v-model="detailVisible" size="small" class="search-form" z-index="1500">
         <el-form :model="inputForm" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="12">
