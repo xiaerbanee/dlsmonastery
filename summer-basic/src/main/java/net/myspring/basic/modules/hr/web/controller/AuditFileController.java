@@ -86,6 +86,12 @@ public class AuditFileController {
         return restResponse;
     }
 
+    @RequestMapping(value="updateMemo")
+    public RestResponse updateMemo(AuditFileForm auditFileForm){
+        auditFileService.updateMemo(auditFileForm);
+        return new RestResponse("保存成功",null);
+    }
+
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'hr:auditFile:view')")
     public void view(AuditFile auditFile, HttpServletResponse response) {
