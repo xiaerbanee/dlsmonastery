@@ -28,14 +28,32 @@ public class AuditFileDto extends DataDto<AuditFile> {
     private String positionId;
     private boolean auditable;
     private boolean editable;
-
-    @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
     private String areaName;
-    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
     @CacheInput(inputKey = "processTypes",inputInstance = "processTypeId",outputInstance = "name")
     private String processTypeName;
     private boolean locked;
+    private boolean collect=false;
+    private String auditFileCollectId;
+
+    public String getAuditFileCollectId() {
+        return auditFileCollectId;
+    }
+
+    public void setAuditFileCollectId(String auditFileCollectId) {
+        this.auditFileCollectId = auditFileCollectId;
+    }
+
+    public boolean getCollect() {
+        if(StringUtils.isNotBlank(auditFileCollectId)){
+            this.collect=true;
+        }
+        return collect;
+    }
+
+    public void setCollect(boolean collect) {
+        this.collect = collect;
+    }
 
     public boolean getLocked() {
         return locked;

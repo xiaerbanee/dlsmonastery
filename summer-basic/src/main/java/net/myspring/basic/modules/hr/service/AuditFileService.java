@@ -3,21 +3,19 @@ package net.myspring.basic.modules.hr.service;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.AuditFile;
-import net.myspring.basic.modules.hr.dto.AccountChangeDto;
+import net.myspring.basic.modules.hr.domain.AuditFileCollect;
 import net.myspring.basic.modules.hr.dto.AuditFileDto;
+import net.myspring.basic.modules.hr.repository.AuditFileCollectRepository;
 import net.myspring.basic.modules.hr.repository.AuditFileRepository;
 import net.myspring.basic.modules.hr.web.form.AuditFileForm;
 import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
 import net.myspring.basic.modules.sys.client.ActivitiClient;
 import net.myspring.basic.modules.sys.client.ProcessTypeClient;
-import net.myspring.basic.modules.sys.domain.Office;
-import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.basic.modules.sys.repository.OfficeRepository;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
 import net.myspring.general.modules.sys.dto.ActivitiStartDto;
 import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
 import net.myspring.general.modules.sys.form.ActivitiStartForm;
-import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Map;
 
 @Service
 @Transactional(readOnly = true)
@@ -42,15 +38,13 @@ public class AuditFileService {
     private OfficeRepository officeRepository;
     @Autowired
     private ProcessTypeClient processTypeClient;
+    @Autowired
+    private AuditFileCollectRepository auditFileCollectRepository;
 
 
     public Page<AuditFileDto> findPage(Pageable pageable, AuditFileQuery auditFileQuery) {
         auditFileQuery.setProcessTypeIdList(processTypeClient.findByViewPositionId(RequestUtils.getPositionId()));
         Page<AuditFileDto> page = auditFileRepository.findPage(pageable, auditFileQuery);
-        Map<String, Office> officeMap = officeRepository.findMap(CollectionUtil.extractToList(page.getContent(), "officeId"));
-        for(AuditFileDto auditFileDto:page.getContent()){
-            auditFileDto.setAreaId(officeMap.get(auditFileDto.getOfficeId()).getAreaId());
-        }
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -65,6 +59,11 @@ public class AuditFileService {
             AuditFile auditFile = auditFileRepository.findOne(auditFileDto.getId());
             auditFileDto = BeanUtil.map(auditFile, AuditFileDto.class);
             auditFileDto.setActivitiDetailList(activitiClient.getActivitiDetail(auditFile.getProcessInstanceId()));
+            AuditFileCollect auditFileCollect=auditFileCollectRepository.findByAccountIdAndAuditFileIdAndEnabledIsTrue(RequestUtils.getAccountId(),auditFileDto.getId());
+            if(auditFileCollect!=null){
+                auditFileDto.setAuditFileCollectId(auditFileCollect.getId());
+                auditFileDto.setCollect(true);
+            }
             cacheUtils.initCacheInput(auditFileDto);
         }
         return auditFileDto;
@@ -106,9 +105,10 @@ public class AuditFileService {
         auditFileRepository.logicDelete(id);
     }
 
-    public  void updateMemo(AuditFileForm auditFileForm){
-        AuditFile auditFile=auditFileRepository.findOne(auditFileForm.getId());
-        auditFile.setMemo(auditFileForm.getMemo());
+    @Transactional
+    public  void updateMemo(String id,String memo){
+        AuditFile auditFile=auditFileRepository.findOne(id);
+        auditFile.setMemo(memo);
         auditFileRepository.save(auditFile);
     }
 }

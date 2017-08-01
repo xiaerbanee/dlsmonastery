@@ -42,17 +42,11 @@
             <el-form-item :label="$t('auditFileDetail.comment')" prop="comment" v-if="isAudit">
               <el-input v-model="submitData.comment" type="textarea" :rows="5"></el-input>
             </el-form-item>
-            <el-form-item v-if="isAudit">
-              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" >{{$t('auditFileDetail.save')}}</el-button>
-            </el-form-item>
-            <el-form-item style="margin-top:20px">
+            <el-form-item  style="margin-top:20px">
+              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" v-if="isAudit">{{$t('auditFileDetail.save')}}</el-button>
               <el-button type="primary" @click="print()" >打印</el-button>
-            </el-form-item>
-            <el-form-item style="margin-top:20px">
-              <el-button type="primary" @click="confirmCollect()" >收藏</el-button>
-            </el-form-item>
-            <el-form-item style="margin-top:20px">
-              <el-button type="primary" @click="cancelCollect()" >取消收藏</el-button>
+              <el-button type="primary" @click="collectAuditFile(true)" v-show="!inputForm.collect">收藏</el-button>
+              <el-button type="primary" @click="collectAuditFile(false)" v-show="inputForm.collect">取消收藏</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -109,17 +103,20 @@
       },
       print(){
         window.open('/#/basic/hr/auditFilePrint?id=' + this.$route.query.id);
+      },collectAuditFile(collectStatus){
+        var that=this;
+        axios.get('/api/basic/hr/auditFileCollect/collect?auditFileId='+this.inputForm.id+'&collect='+collectStatus).then((response) => {
+          this.$message(response.data.message);
+          this.inputForm.collect=collectStatus
+        }).catch(function () {
+          that.submitDisabled = false;
+        });
       },
-    },
-    confirmCollect(){
-
-    },
-    cancelCollect(){
-
     },
     created(){
         axios.get('/api/basic/hr/auditFile/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
+          console.log(response.data)
           if(this.inputForm.attachment != null) {
              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
                this.fileList= response.data;

@@ -1,9 +1,8 @@
 package net.myspring.basic.modules.hr.dto;
 
 
-import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.AccountChange;
-import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.common.dto.DataDto;
 
 public class AccountChangeDto extends DataDto<AccountChange> {
 
@@ -13,12 +12,8 @@ public class AccountChangeDto extends DataDto<AccountChange> {
     private String newLabel;
     private String type;
     private String processStatus;
-    private String areaId;
-    private String officeId;
-    @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
     private String areaName;
     private String accountId;
-    @CacheInput(inputKey = "accounts",inputInstance = "accountId",outputInstance = "loginName")
     private String accountName;
 
     public String getAccountId() {
@@ -51,22 +46,6 @@ public class AccountChangeDto extends DataDto<AccountChange> {
 
     public void setNewLabel(String newLabel) {
         this.newLabel = newLabel;
-    }
-
-    public String getAreaId() {
-        return areaId;
-    }
-
-    public void setAreaId(String areaId) {
-        this.areaId = areaId;
-    }
-
-    public String getOfficeId() {
-        return officeId;
-    }
-
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
     }
 
     public String getOldValue() {
