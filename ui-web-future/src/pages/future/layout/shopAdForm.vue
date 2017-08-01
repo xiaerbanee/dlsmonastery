@@ -29,7 +29,7 @@
               <bool-radio-group v-model="inputForm.specialArea"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.remarks')" prop="remarks">
-              <el-input v-model="inputForm.remarks" type="textarea"></el-input>
+              <el-input v-model="inputForm.remarks" :placeholder="$t('shopAdForm.placeRemarks')" type="textarea" :rows="4"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.attachment')" prop="attachment">
               <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/广告申请" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
@@ -73,6 +73,8 @@
             width: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')},{type:"number",message:this.$t('shopPrintForm.inputLegalValue')}],
             qty: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')},{type:"number",message:this.$t('shopPrintForm.inputLegalValue')}],
             content:[{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
+            specialArea:[{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
+            remarks:[{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
           },
         }
       },
