@@ -32,13 +32,11 @@
   var table = null;
   var accountNumberNameToFlexGroupNamesMap = {};
   var headers = [];
-  var debit = 0;
-  var credit = 0;
   var setCreditAndDebit = function (datas) {
     let debitColumn =headers.length - 2;
     let creditColumn = headers.length - 1;
-    let debit=0;
-    let credit=0;
+    var debit=0;
+    var credit=0;
     for(let i=0;i<datas.length; i++) {
       if(datas[i][debitColumn]) {
         debit = debit + datas[i][debitColumn]*1;
