@@ -224,6 +224,11 @@ public class AdApplyService {
     public void billSave(AdApplyBillForm adApplyBillForm){
         List<String> adApplyId  =CollectionUtil.extractToList(adApplyBillForm.getAdApplyDetailForms(),"id");
         Map<String,AdApplyDetailForm> adApplyDetailFormMap = CollectionUtil.extractToMap(adApplyBillForm.getAdApplyDetailForms(),"id");
+        List<String> shopIds = Lists.newArrayList();
+        for(AdApplyDetailForm adApplyDetailForm:adApplyBillForm.getAdApplyDetailForms()){
+            shopIds.add(adApplyDetailForm.getShopId());
+        }
+        Map<String,Depot> depotMap = CollectionUtil.extractToMap(depotRepository.findAll(shopIds),"id");
         Map<String,Product> productMap = CollectionUtil.extractToMap(productRepository.findAll(),"id");
         List<AdApply> adApplyList = adApplyRepository.findAll(adApplyId);
         Map<String,AdGoodsOrder> adGoodsOrderMap = Maps.newHashMap();
@@ -246,6 +251,7 @@ public class AdApplyService {
                 adGoodsOrder.setOutShopId(adApply.getShopId());
                 adGoodsOrder.setShopId(adApply.getShopId());
                 adGoodsOrder.setBillDate(adApplyBillForm.getBillDate());
+                adGoodsOrder.setBillAddress(depotMap.get(adApply.getShopId()).getAddress());
                 adGoodsOrder.setSmallQty(0);
                 adGoodsOrder.setMediumQty(0);
                 adGoodsOrder.setLargeQty(0);
@@ -283,7 +289,7 @@ public class AdApplyService {
             }
             adGoodsOrder.setAmount(amount);
             adGoodsOrder.setProcessStatus(GoodsOrderStatusEnum.待发货.name());
-            Depot depot = depotRepository.findOne(adGoodsOrder.getShopId());
+            Depot depot = depotMap.get(adGoodsOrder.getShopId());
             ExpressOrder expressOrder = new ExpressOrder();
             expressOrder.setExtendBusinessId(adGoodsOrder.getBusinessId());
             expressOrder.setExtendType(ExpressOrderTypeEnum.物料订单.name());
