@@ -1,23 +1,19 @@
 package net.myspring.basic.modules.hr.web.query;
 
 import com.google.common.collect.Lists;
-import net.myspring.basic.common.enums.EmployeeStatusEnum;
 import net.myspring.basic.common.query.BaseQuery;
-import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
  * Created by lihx on 2017/4/7.
  */
 public class EmployeeQuery extends BaseQuery {
-    private List<String> officeIds;
+    private List<String> officeIds=Lists.newArrayList();
     private String name;
     private String status;
     private String mobilePhone;

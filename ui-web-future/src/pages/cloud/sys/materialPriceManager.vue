@@ -3,7 +3,7 @@
     <head-tab active="materialPriceManager"></head-tab>
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :inline="true">
-        <el-button type="primary" @click="syn" icon="check">同步</el-button>
+        <el-button type="primary" :disabled="synDisabled" @click="syn" icon="check">同步</el-button>
         <el-button type="primary" :disabled="submitDisabled" @click="formSubmit" icon="check">保存</el-button>
         <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px"></div>
       </el-form>
@@ -40,7 +40,7 @@
                 let column = changes[i][1]==0;
                 if(column){
                   let name = changes[i][3];
-                  axios.get('/api/global/cloud/sys/product/findByName?name='+ name).then((response) =>{
+                  axios.get('/api/global/cloud/sys/product/findByName',{params:{name:name}}).then((response) =>{
                     let  material = response.data;
                     table.setDataAtCell(row,1,material.code);
                   });
@@ -53,6 +53,7 @@
           json:[],
         },
         submitDisabled:false,
+        synDisabled:false,
       };
     },
     mounted() {
@@ -76,8 +77,13 @@
             }
             this.formData.json = JSON.stringify(this.formData.json);
             axios.post('/api/global/cloud/sys/product/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
-              this.$message(response.data.message);
-              this.submitDisabled = false;
+              if(response.data.success){
+                this.$message(response.data.message);
+                this.submitDisabled = false;
+              }else{
+                this.$alert(response.data.message);
+                this.submitDisabled = false;
+              }
             }).catch(function () {
               this.submitDisabled = false;
             });
@@ -87,8 +93,15 @@
         })
       },
       syn(){
+        this.synDisabled = true;
         axios.post('/api/global/cloud/sys/product/syn').then((response)=> {
-          this.$message(response.data.message);
+          if(response.data.success){
+            this.$message(response.data.message);
+            this.synDisabled = false;
+          }else{
+            this.$alert(response.data.message);
+            this.synDisabled = false;
+          }
         })
       }
     }
