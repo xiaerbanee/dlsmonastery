@@ -60,7 +60,6 @@ public class EmployeeController {
     }
 
     @RequestMapping(value = "save")
-    @PreAuthorize("hasPermission(null,'hr:employee:edit')")
     public RestResponse save(EmployeeForm employeeForm, BindingResult bindingResult) {
         employeeValidator.validate(employeeForm,bindingResult);
         RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
