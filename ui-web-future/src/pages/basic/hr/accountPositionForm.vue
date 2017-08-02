@@ -8,7 +8,7 @@
             <el-form-item label="用户名" prop="loginName">
               <el-input v-model="inputForm.loginName" :readonly="true"></el-input>
             </el-form-item>
-            <el-form-item label="绑定岗位" prop="positionIdList">
+            <el-form-item label="绑定功能岗位" prop="positionIdList">
               <position-select v-model="inputForm.positionIdList" :multiple = "true"></position-select>
             </el-form-item>
             <el-form-item>
