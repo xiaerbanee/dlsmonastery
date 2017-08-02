@@ -21,6 +21,7 @@ import net.myspring.basic.modules.sys.service.RoleService;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.common.enums.BoolEnum;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
@@ -250,6 +251,18 @@ public class AccountController {
             map.put("currentAccount",accountService.findByOfficeIdList(Lists.newArrayList(officeId)));
         }
         return map;
+    }
+
+    @RequestMapping(value="updatePwd")
+    public RestResponse updatePwd(String password,String confirmPassword){
+        if(StringUtils.isBlank(password)||StringUtils.isBlank(confirmPassword)){
+            throw new ServiceException("请输入密码和确认密码");
+        }else if(!password.equals(confirmPassword)){
+            throw new ServiceException("密码不一致");
+        }
+        accountService.updatePwd(password);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+
     }
 
 }

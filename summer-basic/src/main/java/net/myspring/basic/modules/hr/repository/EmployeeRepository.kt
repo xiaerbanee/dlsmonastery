@@ -164,7 +164,7 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
             sb.append(" AND position.id=:positionId ");
         }
         if(StringUtils.isNotBlank(employeeQuery.officeId)) {
-            sb.append(" and account.office_id =:officeId");
+            sb.append(" and account.office_id in (select t1.id from sys_office t1 where t1.enabled=1 and (t1.parent_ids like concat('%,',:officeId,',%') or t1.id=:officeId))");
         }
         if(CollectionUtil.isNotEmpty(employeeQuery.officeIdList)) {
             sb.append(" and account.office_id in (:officeIdList)");

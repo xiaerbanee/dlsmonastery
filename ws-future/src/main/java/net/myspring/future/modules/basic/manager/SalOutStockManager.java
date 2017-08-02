@@ -34,6 +34,7 @@ import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailRepositor
 import net.myspring.future.modules.layout.repository.ShopAllotDetailRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
+import org.jsoup.helper.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -135,7 +136,7 @@ public class SalOutStockManager {
                 salOutStockDto.setCustomerNumber(client.getOutCode());
             }
             salOutStockDto.setNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+shop.getName()+CharConstant.COMMA+shop.getContator()
-                    +CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+adGoodsOrder.getBillAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
+                    +CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+adGoodsOrder.getBillAddress()+CharConstant.COMMA+(StringUtil.isBlank(adGoodsOrder.getBillRemarks())?"":adGoodsOrder.getBillRemarks()));
             List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
             List<AdGoodsOrderDetail> adGoodsOrderDetailLists = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
             String storeId  = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.AD_CHARGE_DEPOTS.name()).getCode();
@@ -160,7 +161,7 @@ public class SalOutStockManager {
                     entityDto.setPrice(BigDecimal.ZERO);
                 }
                 entityDto.setEntryNote(getFormatId(adGoodsOrder)+CharConstant.COMMA+shop.getName()+CharConstant.COMMA+shop.getContator()
-                        +CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+adGoodsOrder.getBillAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
+                        +CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+adGoodsOrder.getBillAddress()+CharConstant.COMMA+ (StringUtil.isBlank(adGoodsOrder.getBillRemarks())?"":adGoodsOrder.getBillRemarks()));
                 entityDtoList.add(entityDto);
             }
             salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);

@@ -1,1 +1,7 @@
 @import "/page/template/userInfo/userInfo.wxss";
+.page__bd_company{
+    width:450rpx;
+    text-align: center;
+    margin-bottom: 20rpx;
+    font-weight: bold;
+}
