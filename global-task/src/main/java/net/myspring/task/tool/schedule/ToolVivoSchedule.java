@@ -37,11 +37,11 @@ public class ToolVivoSchedule {
     }
 
     @Scheduled(cron = "0 0 0/1 * * ?")
-    public void pullvivoData(){
+    public void pullVivoData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXVIVO.name())) {
             logger.info("下拉工厂数据开始");
-            String date=LocalDateUtils.format(LocalDate.now());
+            String date= "2017-07-15";
             toolVivoClient.pullFactoryData(CompanyNameEnum.JXVIVO.name(),date);
             logger.info("下拉工厂数据结束");
         }
@@ -58,6 +58,17 @@ public class ToolVivoSchedule {
         }
     }
 
+    @Scheduled(cron = "0 20 21,22,23 * * ?")
+    public void pushVivoToLocal(){
+        List<String> companyNameList = Arrays.asList(companyNames);
+        if(companyNameList.contains(CompanyNameEnum.JXVIVO.name())) {
+            logger.info("同步业务数据至中转库开始");
+            String date= LocalDateUtils.format(LocalDate.now());
+            toolVivoClient.pushToLocal(CompanyNameEnum.JXVIVO.name(),date);
+            logger.info("同步业务数据至中转库结束");
+        }
+    }
+
     @Scheduled(cron = "0 40 21,22,23 * * ?")
     public void pushIdvivoData(){
         List<String> companyNameList = Arrays.asList(companyNames);
@@ -69,6 +80,15 @@ public class ToolVivoSchedule {
         }
     }
 
-
+//    @Scheduled(cron = "0 40 21,22,23 * * ?")
+    public void pushVivoData(){
+        List<String> companyNameList = Arrays.asList(companyNames);
+        if(companyNameList.contains(CompanyNameEnum.JXVIVO.name())) {
+            logger.info("上抛中转库数据至工厂数据库开始");
+            String date=LocalDateUtils.format(LocalDate.now());
+            toolVivoClient.pushFactoryData(CompanyNameEnum.JXVIVO.name(),date);
+            logger.info("上抛中转库数据至工厂数据库结束");
+        }
+    }
 
 }
