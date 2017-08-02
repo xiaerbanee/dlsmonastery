@@ -363,4 +363,22 @@ public class VoucherService {
         ExcelUtils.doWrite(workbook, simpleExcelSheet);
        return new SimpleExcelBook(workbook,voucherDto.getFDate()+"凭证"+voucherDto.getStatus()+".xlsx",simpleExcelSheet);
     }
+
+    @Transactional
+    public void delete(String id) {
+        Voucher voucher = voucherRepository.findOne(id);
+        if (voucher != null) {
+            List<VoucherEntry> voucherEntryList = voucherEntryRepository.findByVoucherId(voucher.getId());
+            if (CollectionUtil.isNotEmpty(voucherEntryList)) {
+                for (VoucherEntry voucherEntry : voucherEntryList) {
+                    List<VoucherEntryFlow> voucherEntryFlowList = voucherEntryFlowRepository.findByVoucherEntryId(voucherEntry.getId());
+                    if (CollectionUtil.isNotEmpty(voucherEntryFlowList)) {
+                        voucherEntryFlowRepository.deleteInBatch(voucherEntryFlowList);
+                    }
+                }
+                voucherEntryRepository.deleteInBatch(voucherEntryList);
+            }
+            voucherRepository.delete(voucher.getId());
+        }
+    }
 }

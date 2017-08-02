@@ -19,6 +19,7 @@ import net.myspring.cloud.modules.sys.service.VoucherService;
 import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.excel.ExcelView;
@@ -219,5 +220,15 @@ public class VoucherController {
                 return new RestResponse(e.getMessage(), ResponseCodeEnum.invalid.name(), false);
             }
         }
+    }
+
+    @RequestMapping(value = "delete")
+    public RestResponse delete(String id){
+        try {
+            voucherService.delete(id);
+        }catch (Exception e){
+            throw new ServiceException(e.getMessage());
+        }
+        return new RestResponse("删除成功",null,true);
     }
 }
