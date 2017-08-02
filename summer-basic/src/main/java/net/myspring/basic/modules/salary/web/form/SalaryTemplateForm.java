@@ -8,7 +8,7 @@ import java.util.List;
 
 public class SalaryTemplateForm extends BaseForm<SalaryTemplate>{
     private String name;
-    private List<SalaryTemplateDetailForm> salaryTemplateDetailFormList= Lists.newArrayList();
+    private List<SalaryTemplateDetailForm> salaryTemplateDetailList= Lists.newArrayList();
 
     public String getName() {
         return name;
@@ -18,11 +18,11 @@ public class SalaryTemplateForm extends BaseForm<SalaryTemplate>{
         this.name = name;
     }
 
-    public List<SalaryTemplateDetailForm> getSalaryTemplateDetailFormList() {
-        return salaryTemplateDetailFormList;
+    public List<SalaryTemplateDetailForm> getSalaryTemplateDetailList() {
+        return salaryTemplateDetailList;
     }
 
-    public void setSalaryTemplateDetailFormList(List<SalaryTemplateDetailForm> salaryTemplateDetailFormList) {
-        this.salaryTemplateDetailFormList = salaryTemplateDetailFormList;
+    public void setSalaryTemplateDetailList(List<SalaryTemplateDetailForm> salaryTemplateDetailList) {
+        this.salaryTemplateDetailList = salaryTemplateDetailList;
     }
 }

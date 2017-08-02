@@ -25,6 +25,7 @@
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
+        <el-table-column prop="roleName" label="角色"></el-table-column>
         <el-table-column prop="remarks" :label="$t('positionList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('positionList.operation')" width="140">
           <template scope="scope">

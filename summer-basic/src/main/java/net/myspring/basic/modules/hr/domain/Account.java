@@ -20,15 +20,15 @@ public class Account extends DataEntity<Account> {
     private String positionId;
     private String officeId;
     private String employeeId;
-    private String roleIds;
+    private String positionIds;
     private String officeIds;
 
-    public String getRoleIds() {
-        return roleIds;
+    public String getPositionIds() {
+        return positionIds;
     }
 
-    public void setRoleIds(String roleIds) {
-        this.roleIds = roleIds;
+    public void setPositionIds(String positionIds) {
+        this.positionIds = positionIds;
     }
 
     public String getOfficeIds() {

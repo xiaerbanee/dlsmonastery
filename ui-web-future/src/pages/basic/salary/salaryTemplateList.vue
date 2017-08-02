@@ -8,13 +8,13 @@
       </el-row>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('salaryTemplateList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('salaryTemplateList.name')" sortable width="150"></el-table-column>
-        <el-table-column prop="salaryTemplateDetailNames" :label="$t('salaryTemplateList.salaryTemplateDetailNames')"></el-table-column>
+        <el-table-column prop="salaryTemplateDetails" :label="$t('salaryTemplateList.salaryTemplateDetailNames')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('salaryTemplateList.remarks')" width="140"></el-table-column>
         <el-table-column fixed="right" :label="$t('salaryTemplateList.operation')" width="140">
           <template scope="scope">
             <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('salaryTemplateList.edit')}}</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('salaryTemplateList.delete')}}</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'download')">{{$t('salaryTemplateList.download')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'export')">{{$t('salaryTemplateList.download')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -74,6 +74,11 @@
               this.$message(response.data.message);
               this.pageRequest();
             });
+          }).catch(()=>{});
+        }else if(action=="export"){
+          util.confirmBeforeExportData(this).then(() => {
+            window.location.href='/api/basic/salary/salaryTemplate/export?id='+id;
+            this.pageRequest();
           }).catch(()=>{});
         }
       }

@@ -95,6 +95,7 @@ export default{
     productName:"项目名称",
     sort:"排序",
     delete:"删除",
-    save:"保存"
+    save:"保存",
+    prerequisiteMessage:"必填信息",
   }
 }
