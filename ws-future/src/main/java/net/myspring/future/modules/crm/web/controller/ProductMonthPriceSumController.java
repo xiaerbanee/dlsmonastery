@@ -38,15 +38,9 @@ public class ProductMonthPriceSumController {
     @PreAuthorize("hasPermission(null,'crm:productMonthPrice:sum')")
     public Map<String,Object> list(ProductMonthPriceSumQuery productMonthPriceSumQuery) {
 
-        Map<String, Object> map = Maps.newHashMap();
-        List<List<Object>> datas = Lists.newArrayList();
-        List<Object> header = productMonthPriceService.getHeaders(productMonthPriceSumQuery.getMonth());
-        map.put("header", header);
-        if (StringUtils.isNotBlank(productMonthPriceSumQuery.getAreaId())) {
-            datas = productMonthPriceService.getDatas(productMonthPriceSumQuery, false);
-        }
-        map.put("datas", datas);
-        return map;
+        Map<String, Object> data = productMonthPriceService.findProductMonthPriceSum(productMonthPriceSumQuery);
+        return data;
+
     }
 
     @RequestMapping(value = "getQuery", method = RequestMethod.GET)
