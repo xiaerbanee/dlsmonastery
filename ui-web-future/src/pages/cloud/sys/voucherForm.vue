@@ -39,10 +39,10 @@
     var credit=0;
     for(let i=0;i<datas.length; i++) {
       if(datas[i][debitColumn]) {
-        debit = debit + datas[i][debitColumn]*1;
+        debit = util.numTofixed(debit + datas[i][debitColumn]*1);
       }
       if(datas[i][creditColumn]) {
-        credit = credit + datas[i][creditColumn]*1;
+        credit = util.numTofixed(credit + datas[i][creditColumn]*1);
       }
     }
     document.getElementById("debit").innerHTML = debit;
@@ -146,8 +146,8 @@
               this.settings.columns[i].source = extra.empInfoNumberNameList;
             }
         }
-        this.settings.columns.push({type: 'numeric', format:"0,0.00", allowEmpty: true, width:80, strict: true});
-        this.settings.columns.push({type: 'numeric', format:"0,0.00", allowEmpty: true, width:80, strict: true});
+        this.settings.columns.push({type: 'numeric', format:"0,0.00", allowEmpty: true, width:100, strict: true});
+        this.settings.columns.push({type: 'numeric', format:"0,0.00", allowEmpty: true, width:100, strict: true});
         this.settings.data = extra.data;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
         setCreditAndDebit(table.getData());
