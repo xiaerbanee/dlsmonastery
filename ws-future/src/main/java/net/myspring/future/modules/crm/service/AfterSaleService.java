@@ -358,10 +358,10 @@ public class AfterSaleService {
                         productIme.setDepotId(afterSaleImeAllot.getFromDepotId());
                         productImeRepository.save(productIme);
                     }
-                    afterSaleImeAllotRepository.logicDelete(afterSaleImeAllot.getId());
+                    afterSaleImeAllotRepository.delete(afterSaleImeAllot);
                 }
             }
-            afterSaleRepository.logicDelete(afterSale.getId());
+            afterSaleRepository.delete(afterSale);
         }
     }
 
