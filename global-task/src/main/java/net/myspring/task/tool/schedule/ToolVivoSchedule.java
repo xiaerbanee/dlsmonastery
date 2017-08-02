@@ -41,7 +41,7 @@ public class ToolVivoSchedule {
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXVIVO.name())) {
             logger.info("下拉工厂数据开始");
-            String date= "2017-07-15";
+            String date= LocalDateUtils.format(LocalDate.now());
             toolVivoClient.pullFactoryData(CompanyNameEnum.JXVIVO.name(),date);
             logger.info("下拉工厂数据结束");
         }
