@@ -30,8 +30,8 @@ public class DutyAnnualController {
     public DutyAnnualQuery getQuery(DutyAnnualQuery dutyAnnualQuery) {
         return dutyAnnualQuery;
     }
+
     @RequestMapping(method = RequestMethod.GET)
-    @PreAuthorize("hasPermission(null,'hr:dutyAnnual:view')")
     public Page<DutyAnnualDto> list(Pageable pageable, DutyAnnualQuery dutyAnnualQuery) {
         dutyAnnualQuery.setCreatedBy(RequestUtils.getAccountId());
         Page<DutyAnnualDto> page  = dutyAnnualService.findPage(pageable,dutyAnnualQuery);
