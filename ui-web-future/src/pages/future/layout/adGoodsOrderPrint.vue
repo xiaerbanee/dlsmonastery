@@ -20,7 +20,7 @@
       <div class="span10">
         摘要：{{adGoodsOrder.expressOrderExpressCompanyName}}，{{adGoodsOrder.expressOrderAddress}}，{{adGoodsOrder.expressOrderMobilePhone}}
         <b style="font-size: 18px;font-family: '楷体';">&nbsp;{{adGoodsOrder.billRemarks}}</b><br/>
-        收货人：&nbsp;{{adGoodsOrder.expressOrderContator}}，{{adGoodsOrder.expressOrderMobilePhone}}，{{adGoodsOrder.expressOrderAddress }}， 业务：{{adGoodsOrder.employeeName }}&nbsp;{{adGoodsOrder.employeeMobilePhone}}
+        收货人：&nbsp;{{adGoodsOrder.expressOrderContator}}，{{adGoodsOrder.expressOrderMobilePhone}}，{{adGoodsOrder.billAddress }}， 业务：{{adGoodsOrder.employeeName }}&nbsp;{{adGoodsOrder.employeeMobilePhone}}
         &nbsp;地址 ：{{adGoodsOrder.shopAddress}}
       </div>
     </div>

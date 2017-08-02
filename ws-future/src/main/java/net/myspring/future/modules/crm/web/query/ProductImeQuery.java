@@ -23,17 +23,6 @@ public class ProductImeQuery extends BaseQuery{
     private String createdTimeRange;
     private String inputType;
 
-    private List<String> inputTypeList;
-
-
-    public List<String> getInputTypeList() {
-        return inputTypeList;
-    }
-
-    public void setInputTypeList(List<String> inputTypeList) {
-        this.inputTypeList = inputTypeList;
-    }
-
     public String getImeOrMeids() {
         return imeOrMeids;
     }
