@@ -31,7 +31,7 @@ import java.util.UUID;
  * Created by zhucc on 2017/7/4.
  */
 @Service
-@Transactional(readOnly=true)
+@Transactional(readOnly=true)/*有写数据库的操作会报异常*/
 public class AfterSaleStoreAllotService {
 
     @Autowired

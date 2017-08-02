@@ -97,61 +97,63 @@ public class ProductMonthPriceService {
         return result;
     }
 
-
-    /**
-     * 根据月份获取保卡统计页面的表头
-     * create by chenjl
-     * @param uploadMonth
-     * @return
-     */
-    public List<Object> getHeaders(String uploadMonth) {
-        if (StringUtils.isBlank(uploadMonth)) {
-            uploadMonth = LocalDateUtils.format(LocalDate.now().minusMonths(1),"yyyy-MM");
+    public Map<String, Object> findProductMonthPriceSum(ProductMonthPriceSumQuery productMonthPriceSumQuery) {
+        Map<String, Object> resultData = Maps.newHashMap();
+        if (StringUtils.isBlank(productMonthPriceSumQuery.getMonth())) {
+            productMonthPriceSumQuery.setMonth(LocalDateUtils.format(LocalDate.now().minusMonths(1),"yyyy-MM"));
         }
+        //获取动态的每月销售货品的类型列
+        List<Map<String, Object>> productTypes = productImeUploadRepository.findProductTypesByMonth(productMonthPriceSumQuery.getMonth());
+        List<Object> headers = getHeader(productTypes);
+        resultData.put("header", headers);
+
+        //获取动态的每月销售货品的数据
+        if (StringUtils.isNotBlank(productMonthPriceSumQuery.getAreaId())) {
+            Map<String,Object> map = getData(productMonthPriceSumQuery, productTypes, false);
+            resultData.put("message", map.get("message"));
+            resultData.put("data", map.get("data"));
+        }
+        return resultData;
+    }
+
+    public List<Object> getHeader(List<Map<String, Object>> productTypes) {
+
         List<Object> headers = Lists.newArrayList();
         headers.add("办事处");
         headers.add("考核区域");
         headers.add("门店");
         headers.add("促销");
         headers.add("身份证号");
-        List<String> productTypeNames = productImeUploadRepository.findByEnabledIsTrueAndMonth(uploadMonth);
-        for (String productTypeName : productTypeNames) {
-            headers.add(productTypeName);
+        for (Map<String,Object> mapEntry : productTypes) {
+            headers.add(mapEntry.get("productTypeName"));
         }
         headers.add("数量合计");
         headers.add("保卡合计");
         headers.add("销售合计");
         headers.add("销售总合计");
+
         return headers;
     }
 
-    /**
-     * 获取保卡统计页面中的数据
-     * create by chenjl
-     * @param productMonthPriceSumQuery
-     * @return
-     */
-    public List<List<Object>> getDatas(ProductMonthPriceSumQuery productMonthPriceSumQuery, Boolean isExport) {
+    public Map<String, Object> getData(ProductMonthPriceSumQuery productMonthPriceSumQuery, List<Map<String, Object>> productTypes, Boolean isExport) {
 
-        if (StringUtils.isBlank(productMonthPriceSumQuery.getMonth())) {
-            productMonthPriceSumQuery.setMonth(LocalDateUtils.format(LocalDate.now().minusMonths(1),"yyyy-MM"));
-        }
+        Map<String, Object> result = Maps.newHashMap();
         productMonthPriceSumQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
-        List<ReportImeUploadDto> productImeUploads = Lists.newArrayList();
-        //获取保卡数量
-        productImeUploads = productImeUploadRepository.getReportDatas(productMonthPriceSumQuery);
+        List<ReportImeUploadDto> productImeUploads = productImeUploadRepository.getReportDatas(productMonthPriceSumQuery);
         cacheUtils.initCacheInput(productImeUploads);
+
+        List<String> productTypeIds = Lists.newArrayList();
+        for (Map<String, Object> map : productTypes) {
+            productTypeIds.add(map.get("productTypeId").toString());
+        }
 
         //用于拼接前台要展示的保卡数据信息
         List<List<Object>> resultData = Lists.newArrayList();
 
         if (CollectionUtil.isNotEmpty(productImeUploads)) {
-            //获取保卡报表手机类型字段
-            List<String> productTypeIds = productImeUploadRepository.findProductTypeIds(productMonthPriceSumQuery.getMonth());
             ProductMonthPrice productMonthPrice = productMonthPriceRepository.findByMonthAndEnabledIsTrue(productMonthPriceSumQuery.getMonth());
-
             Map<String, ProductMonthPriceDetail> productMonthPriceDetailMap = Maps.newHashMap();
-            if (StringUtils.isNotBlank(productMonthPrice.getId())) {
+            if (productMonthPrice != null) {
                 List<ProductMonthPriceDetail> productMonthPriceDetails = productMonthPriceDetailRepository.findByProductMonthPriceId(productMonthPrice.getId());
                 if (CollectionUtil.isNotEmpty(productMonthPriceDetails)) {
                     for (ProductMonthPriceDetail productMonthPriceDetail : productMonthPriceDetails) {
@@ -160,12 +162,17 @@ public class ProductMonthPriceService {
                         }
                     }
                 }
+            } else {
+                //每月价格没有设置
+                result.put("message", productMonthPriceSumQuery.getMonth()+"没有进行每月价格的设置！");
+                result.put("data", resultData);
+                return result;
             }
             //根据门店和员工汇总数据
             Map<String,List<ReportImeUploadDto>> tableMap = Maps.newHashMap();
             for (ReportImeUploadDto reportImeUploadDto : productImeUploads) {
                 if (!tableMap.containsKey(reportImeUploadDto.getKey())) {
-                    tableMap.put(reportImeUploadDto.getKey(), new ArrayList<ReportImeUploadDto>());
+                    tableMap.put(reportImeUploadDto.getKey(), new ArrayList<>());
                 }
                 tableMap.get(reportImeUploadDto.getKey()).add(reportImeUploadDto);
             }
@@ -193,7 +200,6 @@ public class ProductMonthPriceService {
                 row.add(reportImeUploads.get(0).getIdcard());
 
                 //设置动态生成的列
-                //todo
                 for (String productTypeId : productTypeIds) {
                     Integer qty = 0;
                     if (productTypeMap.containsKey(productTypeId)) {
@@ -308,17 +314,20 @@ public class ProductMonthPriceService {
                 row.addAll(Arrays.asList("","","",""));
                 resultData.add(3,row);
             }
+
         }
-        return resultData;
+
+        result.put("data", resultData);
+        return result;
+
     }
 
-    /**
-     * 导出保卡报表数据
-     * create by chenjl
-     * @param productMonthPriceSumQuery
-     * @return
-     */
     public SimpleExcelBook export(ProductMonthPriceSumQuery productMonthPriceSumQuery) {
+        if (StringUtils.isBlank(productMonthPriceSumQuery.getMonth())) {
+            productMonthPriceSumQuery.setMonth(LocalDateUtils.format(LocalDate.now().minusMonths(1),"yyyy-MM"));
+        }
+        List<Map<String, Object>> productTypes = productImeUploadRepository.findProductTypesByMonth(productMonthPriceSumQuery.getMonth());
+
         Workbook workbook = new SXSSFWorkbook(10000);
         //sheet 汇总
         List<List<SimpleExcelColumn>> excelColumnList = Lists.newArrayList();
@@ -327,13 +336,14 @@ public class ProductMonthPriceService {
         CellStyle dataCellStyle = cellStyleMap.get(ExcelCellStyle.DATA.name());
 
         List<SimpleExcelColumn> headColumnList = Lists.newArrayList();
-        List<Object> headerTitles = getHeaders(productMonthPriceSumQuery.getMonth());
+        List<Object> headerTitles = getHeader(productTypes);
         for (Object title : headerTitles) {
             headColumnList.add(new SimpleExcelColumn(headCellStyle, title.toString()));
         }
         excelColumnList.add(headColumnList);
 
-        List<List<Object>> datas = getDatas(productMonthPriceSumQuery, true);
+        Map<String,Object> dataMap = getData(productMonthPriceSumQuery, productTypes,true);
+        List<List<Object>> datas = (List<List<Object>>) dataMap.get("data");
         for (List<Object> item : datas) {
             List<SimpleExcelColumn> simpleExcelColumns = Lists.newArrayList();
             for (int i =0;i<item.size();i++) {
@@ -416,11 +426,6 @@ public class ProductMonthPriceService {
 
     }
 
-    /**
-     *  保卡统计上报审核
-     *   create by chenjl
-     * @param productMonthPriceSumQuery
-     */
     @Transactional
     public void uploadAudit(ProductMonthPriceSumQuery productMonthPriceSumQuery) {
         if (StringUtils.isBlank(productMonthPriceSumQuery.getMonth())) {
