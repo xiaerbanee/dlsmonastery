@@ -4,6 +4,9 @@
     <template is="userinfo" data="{{userInfo}}" />
   </view>
   <view class="page__bd page__bd_spacing">
-    <button class="weui-btn" type="primary" bindtap="accountBind">账号绑定</button>
+    <button class="page__bd_company" type="primary" bindtap="accountBind">账号绑定</button>
+  </view>
+  <view class="page__bd page__bd_spacing">
+    <button class="page__bd_company" type="primary" bindtap="accountUpdate">修改密码</button>
   </view>
 </view>

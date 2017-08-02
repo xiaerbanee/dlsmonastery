@@ -52,7 +52,8 @@
     "page/crm/officeDataReport/officeDataReport",
     "page/crm/productDataReport/productDataReport",
     "page/crm/productSearch/productSearch",
-    "page/crm/productImeSaleReport/productImeSaleReport"
+    "page/crm/productImeSaleReport/productImeSaleReport",
+    "page/sys/accountUpdate/accountUpdate"
   ],
   "window": {
     "navigationBarTextStyle": "#fff",
