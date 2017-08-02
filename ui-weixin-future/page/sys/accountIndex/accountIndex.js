@@ -25,5 +25,10 @@ Page({
     wx.navigateTo({
       url: '/page/sys/accountBind/accountBind'
     })
+  },
+  accountUpdate:function(){
+    wx.navigateTo({
+      url: '/page/sys/accountUpdate/accountUpdate',
+    })
   }
 })

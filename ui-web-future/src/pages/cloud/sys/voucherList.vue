@@ -43,10 +43,10 @@
         <el-table-column prop="outCode" label="外部编码"></el-table-column>
         <el-table-column prop="createdByName" label="创建人"></el-table-column>
         <el-table-column prop="createdDate" label="创建时间"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="250">
+        <el-table-column fixed="right" label="操作" width="300">
           <template scope="scope">
             <el-button size="small" @click.native="itemAction(scope.row.id,'detail')">详细</el-button>
-            <!--<el-button size="small" @click.native="itemAction(scope.row.id,'export')">导出</el-button>-->
+            <el-button size="small" @click.native="itemAction(scope.row.id,'export')">导出</el-button>
             <el-button size="small" v-if="scope.row.status !== '已完成' " @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
             <el-button size="small" v-if="scope.row.status !== '已完成' " @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
           </template>
@@ -107,7 +107,11 @@
         }else if(action === "delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/global/cloud/sys/voucher/delete',{params:{id:id}}).then((response) =>{
-              this.$message(response.data.message);
+              if(response.data.success){
+                this.$message(response.data.message);
+              }else{
+                this.$alert(response.data.message);
+              }
               this.pageRequest();
             });
           }).catch(()=>{});

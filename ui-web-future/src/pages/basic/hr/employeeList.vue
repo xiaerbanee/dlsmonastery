@@ -4,7 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:employee:edit'">{{$t('employeeList.add')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'hr:account:view'">{{$t('accountList.filterOrExport')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" >{{$t('accountList.filterOrExport')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('employeeList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">

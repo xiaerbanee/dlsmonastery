@@ -233,4 +233,11 @@ public class AccountService {
         List<AccountDto> accountDtoList=BeanUtil.map(accountList,AccountDto.class);
         return accountDtoList;
     }
+
+    @Transactional
+    public void updatePwd(String password){
+        Account account=accountRepository.findOne(RequestUtils.getAccountId());
+        account.setPassword(StringUtils.getEncryptPassword(password));
+        accountRepository.save(account);
+    }
 }

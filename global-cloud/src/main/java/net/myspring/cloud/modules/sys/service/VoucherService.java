@@ -341,26 +341,44 @@ public class VoucherService {
         return list;
     }
 
-    //TODO Excel单元格导出有问题
     public SimpleExcelBook export(VoucherDto voucherDto){
         List<String> flexItemNameList = getHeaders(voucherDto.getBdFlexItemGroupList());
         List<List<String>> data = initData(voucherDto);
         Workbook workbook = new SXSSFWorkbook(10000);
         Map<String, CellStyle> cellStyleMap= ExcelUtils.getCellStyleMap(workbook);
         List<List<SimpleExcelColumn>> excelColumnList = Lists.newArrayList();
-        List<SimpleExcelColumn> simpleCell = Lists.newArrayList();
+        List<SimpleExcelColumn> simpleCellList = Lists.newArrayList();
         for (String head : flexItemNameList){
-            simpleCell.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),head));
+            simpleCellList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),head));
         }
-        excelColumnList.add(simpleCell);
+        excelColumnList.add(simpleCellList);
         for (List<String> row : data){
+            simpleCellList = Lists.newArrayList();
             for (String cell : row){
-                simpleCell.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.DATA.name()),cell));
+                simpleCellList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.DATA.name()),cell));
             }
-            excelColumnList.add(simpleCell);
+            excelColumnList.add(simpleCellList);
         }
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("凭证",excelColumnList);
-//       return new SimpleExcelBook(workbook,voucherDto.getFDate()+"凭证"+voucherDto.getStatus()+".xlsx",simpleExcelSheet);
-        return null;
+        ExcelUtils.doWrite(workbook, simpleExcelSheet);
+       return new SimpleExcelBook(workbook,voucherDto.getFDate()+"凭证"+voucherDto.getStatus()+".xlsx",simpleExcelSheet);
+    }
+
+    @Transactional
+    public void delete(String id) {
+        Voucher voucher = voucherRepository.findOne(id);
+        if (voucher != null) {
+            List<VoucherEntry> voucherEntryList = voucherEntryRepository.findByVoucherId(voucher.getId());
+            if (CollectionUtil.isNotEmpty(voucherEntryList)) {
+                for (VoucherEntry voucherEntry : voucherEntryList) {
+                    List<VoucherEntryFlow> voucherEntryFlowList = voucherEntryFlowRepository.findByVoucherEntryId(voucherEntry.getId());
+                    if (CollectionUtil.isNotEmpty(voucherEntryFlowList)) {
+                        voucherEntryFlowRepository.deleteInBatch(voucherEntryFlowList);
+                    }
+                }
+                voucherEntryRepository.deleteInBatch(voucherEntryList);
+            }
+            voucherRepository.delete(voucher.getId());
+        }
     }
 }

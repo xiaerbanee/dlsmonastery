@@ -51,8 +51,9 @@ public class ProductService {
         return productDtoList;
     }
 
-    public ProductDto findByName(String name){
-        if (StringUtils.isNotBlank(name)) {
+    public ProductDto findByName(String nameHtml){
+        if (StringUtils.isNotBlank(nameHtml)) {
+            String name = HtmlUtils.htmlUnescape(nameHtml);
             Product product = productRepository.findByNameAndCompanyName(RequestUtils.getCompanyName(), name);
             ProductDto productDto = BeanUtil.map(product, ProductDto.class);
             return productDto;
