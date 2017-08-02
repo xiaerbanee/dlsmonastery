@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class AuditFileQuery extends BaseQuery {
     private String id;
-    private String positionId;
     private String auditType;
     private List<String> officeIds;
     private String createdDate;
@@ -33,6 +32,7 @@ public class AuditFileQuery extends BaseQuery {
     private boolean collect;
     private String collectDate;
     private String accountId;
+    private List<String> positionIdList=Lists.newArrayList();
     private List<String> processTypeIdList=Lists.newArrayList();
     private List<String> processFlowIdList=Lists.newArrayList();
 
@@ -90,17 +90,17 @@ public class AuditFileQuery extends BaseQuery {
         this.id = id;
     }
 
-    public String getPositionId() {
+    public List<String> getPositionIdList() {
         if(StringUtils.isBlank(getAuditType())||!"全部".equals(getAuditType())) {
-            this.positionId= RequestUtils.getPositionId();
+            this.positionIdList= RequestUtils.getPositionIdList();
         }else {
-            this.positionId=null;
+            this.positionIdList=null;
         }
-        return positionId;
+        return positionIdList;
     }
 
-    public void setPositionId(String positionId) {
-        this.positionId = positionId;
+    public void setPositionIdList(List<String> positionIdList) {
+        this.positionIdList = positionIdList;
     }
 
     public String getCreatedDate() {

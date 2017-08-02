@@ -14,7 +14,6 @@ import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.basic.modules.hr.web.validator.AccountValidator;
 import net.myspring.basic.modules.sys.dto.AccountCommonDto;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
-import net.myspring.basic.modules.sys.manager.RoleManager;
 import net.myspring.basic.modules.sys.service.MenuService;
 import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.basic.modules.sys.service.PermissionService;
@@ -30,9 +29,7 @@ import net.myspring.util.excel.ExcelView;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
-import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -216,7 +213,7 @@ public class AccountController {
 
     @RequestMapping(value = "getTreeNode")
     public TreeNode getTreeNode() {
-        List<String> roleIdList = roleService.findByAccountId(RequestUtils.getAccountId());
+        List<String> roleIdList = RequestUtils.getRoleIdList();
         TreeNode treeNode = permissionService.findRolePermissionTree(roleIdList);
         return treeNode;
     }

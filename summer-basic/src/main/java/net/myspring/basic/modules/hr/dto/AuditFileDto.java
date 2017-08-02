@@ -179,7 +179,7 @@ public class AuditFileDto extends DataDto<AuditFile> {
         if (processFlowId == null) {
             return false;
         } else {
-            return RequestUtils.getPositionId().equals(positionId) || RequestUtils.getAdmin();
+            return RequestUtils.getPositionIdList().contains(positionId) || RequestUtils.getAdmin();
         }
     }
 

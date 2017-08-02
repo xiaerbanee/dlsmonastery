@@ -43,7 +43,7 @@ public class AuditFileService {
 
 
     public Page<AuditFileDto> findPage(Pageable pageable, AuditFileQuery auditFileQuery) {
-        auditFileQuery.setProcessTypeIdList(processTypeClient.findByViewPositionId(RequestUtils.getPositionId()));
+        auditFileQuery.setProcessTypeIdList(processTypeClient.findByViewPositionId());
         Page<AuditFileDto> page = auditFileRepository.findPage(pageable, auditFileQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
