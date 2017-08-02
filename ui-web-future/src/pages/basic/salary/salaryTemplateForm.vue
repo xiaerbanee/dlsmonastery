@@ -4,19 +4,19 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('salaryTemplateForm.name')" prop="name">
-          <el-input v-model="inputForm.name" :disabled="!isCreate"></el-input>
+          <el-input v-model="inputForm.name" :readonly="!isCreate"></el-input>
         </el-form-item>
         <el-form-item :label="$t('salaryTemplateForm.remarks')" prop="remarks">
-          <el-input v-model="inputForm.remarks" :disabled="!editable&&!isCreate"></el-input>
+          <el-input v-model="inputForm.remarks" :readonly="!editable&&!isCreate"></el-input>
         </el-form-item>
         <el-form-item >
-          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" v-if="editable||isCreate">{{$t('salaryTemplateForm.save')}}</el-button>
+          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('salaryTemplateForm.save')}}</el-button>
         </el-form-item>
         <template>
-          <el-table :data="inputForm.processFlowList" border stripe>
+          <el-table :data="inputForm.salaryTemplateDetailList" border stripe>
             <el-table-column :label="$t('salaryTemplateForm.productName')" >
               <template scope="scope">
-                <el-input v-model="scope.row.productName"></el-input>
+                <el-input v-model="scope.row.name"></el-input>
               </template>
             </el-table-column>
             <el-table-column :label="$t('salaryTemplateForm.sort')" >
@@ -24,7 +24,7 @@
                 <el-input v-model="scope.row.sort"></el-input>
               </template>
             </el-table-column>
-            <el-table-column :label="$t('salaryTemplateForm.operation')" :render-header="renderAction"  v-if="isCreate">
+            <el-table-column :label="$t('salaryTemplateForm.operation')" :render-header="renderAction" >
               <template scope="scope">
                 <el-button size="small" type="danger" @click.prevent="removeDomain(scope.row)">{{$t('salaryTemplateForm.delete')}}</el-button>
               </template>
@@ -52,7 +52,7 @@
           loading: false,
           inputForm:{
             extra:{},
-            processFlowList:[],
+            salaryTemplateDetailList:[],
           },
           rules: {
             name: [{ required: true, message: this.$t('salaryTemplateForm.prerequisiteMessage')}],
@@ -65,25 +65,25 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            var processFlowList=new Array();
-            for(var index in this.inputForm.processFlowList){
-              if(this.inputForm.processFlowList[index].name){
-                processFlowList.push(this.inputForm.processFlowList[index])
+            var salaryTemplateDetailList=new Array();
+            for(var index in this.inputForm.salaryTemplateDetailList){
+              if(this.inputForm.salaryTemplateDetailList[index].name){
+                salaryTemplateDetailList.push(this.inputForm.salaryTemplateDetailList[index])
               }
             }
-            if(processFlowList.length==0){
+            if(salaryTemplateDetailList.length==0){
               this.$message.error('请设置流程节点');
             }
             var submitData=util.deleteExtra(this.inputForm);
-            submitData.processFlowList=processFlowList;
-            axios.post('/api/general/sys/processType/save', qs.stringify(submitData, {allowDots:true})).then((response)=> {
+            submitData.salaryTemplateDetailList=salaryTemplateDetailList;
+            axios.post('/api/basic/salary/salaryTemplate/save', qs.stringify(submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 Object.assign(this.$data,this.getData());
                 this.initPage();
               }else{
                 this.submitDisabled = false;
-                this.$router.push({name:'processTypeList',query:util.getQuery("processTypeList")});
+                this.$router.push({name:'salaryTemplateList',query:util.getQuery("salaryTemplateList")});
               }
             }).catch(function () {
               that.submitDisabled = false;
@@ -93,9 +93,9 @@
           }
         })
       },removeDomain(item) {
-        var index = this.inputForm.processFlowList.indexOf(item)
+        var index = this.inputForm.salaryTemplateDetailList.indexOf(item)
         if (index !== -1) {
-          this.inputForm.processFlowList.splice(index, 1)
+          this.inputForm.salaryTemplateDetailList.splice(index, 1)
         }
       },renderAction(createElement) {
         return createElement(
@@ -111,21 +111,20 @@
         );
       },addDomain(){
         var sort = 10;
-        if(this.inputForm.processFlowList.length>0 && this.inputForm.processFlowList[this.inputForm.processFlowList.length-1].sort != null) {
-          sort = this.inputForm.processFlowList[this.inputForm.processFlowList.length-1].sort + 10;
+        if(this.inputForm.salaryTemplateDetailList.length>0 && this.inputForm.salaryTemplateDetailList[this.inputForm.salaryTemplateDetailList.length-1].sort != null) {
+          sort = this.inputForm.salaryTemplateDetailList[this.inputForm.salaryTemplateDetailList.length-1].sort + 10;
         }
-        this.inputForm.processFlowList.push({name:"",sort:sort,positionId:""});
+        this.inputForm.salaryTemplateDetailList.push({name:"",sort:sort,positionId:""});
       },initPage(){
         if(this.isCreate){
           for(var i = 0;i<3;i++) {
-            this.inputForm.processFlowList.push({name:"",sort:(i+1)*10,positionId:""});
+            this.inputForm.salaryTemplateDetailList.push({name:"",sort:(i+1)*10,positionId:""});
           }
         } else {
-          axios.get('/api/general/sys/processType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.inputForm=response.data;
-            axios.get('/api/general/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-              util.copyValue(response.data,this.inputForm);
-              console.log(this.inputForm);
+          axios.get('/api/basic/salary/salaryTemplate/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+            axios.get('/api/basic/salary/salaryTemplate/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+              console.log(response.data,"findOne");
+              this.inputForm=response.data;
             });
           });
         }

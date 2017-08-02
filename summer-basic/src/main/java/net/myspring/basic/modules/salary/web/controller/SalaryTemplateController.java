@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping(value = "hr/salaryTemplate")
+@RequestMapping(value = "salary/salaryTemplate")
 public class SalaryTemplateController {
 
     @Autowired
@@ -34,15 +34,19 @@ public class SalaryTemplateController {
         return salaryTemplateDto;
     }
 
+    @RequestMapping(value="getQuery",method=RequestMethod.GET)
+    public SalaryTemplateQuery getQuery(SalaryTemplateQuery salaryTemplateQuery){
+        return salaryTemplateQuery;
+    }
     @RequestMapping(value = "getForm", method = RequestMethod.GET)
     public SalaryTemplateForm getForm(SalaryTemplateForm salaryTemplateForm) {
         return salaryTemplateForm;
     }
 
-    @RequestMapping(value = "save", method = RequestMethod.GET)
+    @RequestMapping(value = "save", method = RequestMethod.POST)
     public RestResponse save(SalaryTemplateForm salaryTemplateForm) {
         salaryTemplateService.save(salaryTemplateForm);
-        return new RestResponse("删除成功",null);
+        return new RestResponse("保存成功",null);
     }
 
     @RequestMapping(value = "delete", method = RequestMethod.GET)
