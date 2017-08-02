@@ -15,6 +15,6 @@ import java.util.List;
 public interface ProcessTypeClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/sys/processType/findIdByViewPositionId")
-    List<String> findByViewPositionId(@RequestParam(value = "positionId") String positionId);
+    List<String> findByViewPositionId();
 
 }

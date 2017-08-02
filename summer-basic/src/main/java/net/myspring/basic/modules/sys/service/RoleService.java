@@ -148,9 +148,4 @@ public class RoleService {
         cacheUtils.initCacheInput(roleDtoList);
         return  roleDtoList;
     }
-
-    public List<String> findByAccountId(String accountId){
-        List<String> roleIdList=roleManager.findByAccountId(accountId);
-       return roleIdList;
-    }
 }

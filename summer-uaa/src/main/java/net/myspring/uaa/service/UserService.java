@@ -2,27 +2,17 @@ package net.myspring.uaa.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.common.constant.CharConstant;
-import net.myspring.uaa.datasource.DbContextHolder;
-import net.myspring.uaa.dto.AccountDto;
 import net.myspring.uaa.dto.AccountWeixinDto;
-import net.myspring.uaa.dto.PermissionDto;
 import net.myspring.uaa.dto.WeixinSessionDto;
 import net.myspring.uaa.manager.WeixinManager;
-import net.myspring.uaa.repository.AccountPermissionRepository;
 import net.myspring.uaa.repository.AccountWeixinDtoRepository;
-import net.myspring.uaa.repository.PermissionRepository;
-import net.myspring.util.collection.CollectionUtil;
 import okhttp3.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -271,7 +271,7 @@ public class ShopBuildDto extends DataDto<ShopBuild>{
     }
 
     public Boolean getIsAuditable(){
-        if(RequestUtils.getPositionId().equals(getProcessPositionId())|| RequestUtils.getAccountId().equalsIgnoreCase("1")){
+        if(RequestUtils.getPositionIdList().contains(getProcessPositionId())|| RequestUtils.getAdmin()){
             return true;
         }else {
             return false;
@@ -279,7 +279,7 @@ public class ShopBuildDto extends DataDto<ShopBuild>{
     }
 
     public Boolean getIsEditable(){
-        if (RequestUtils.getAccountId().equals(getCreatedBy())|| RequestUtils.getAccountId().equalsIgnoreCase("1")){
+        if (RequestUtils.getAccountId().equals(getCreatedBy())|| RequestUtils.getAdmin()){
             return true;
         }else {
             return false;

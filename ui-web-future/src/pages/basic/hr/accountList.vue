@@ -40,13 +40,14 @@
         <el-table-column prop="leaderName" sortable :label="$t('accountList.leader')" width="120"></el-table-column>
         <el-table-column prop="officeName" :label="$t('accountList.officeName')"></el-table-column>
         <el-table-column prop="dataScopeOfficeName" label="数据部门"></el-table-column>
+        <el-table-column prop="positionNameList" label="功能岗位"></el-table-column>
         <el-table-column prop="positionName" :label="$t('accountList.positionName')"></el-table-column>
         <el-table-column prop="employeeStatus" :label="$t('accountList.employeeStatus')"></el-table-column>
         <el-table-column fixed="right" :label="$t('accountList.operation')" width="140">
           <template scope="scope">
             <div  class="active"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'hr:account:edit'">{{$t('accountList.edit')}}</el-button></div>
             <div  class="active"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:account:delete'">{{$t('accountList.delete')}}</el-button></div>
-            <div  class="active"><el-button size="small" @click.native="itemAction(scope.row.id,'roleEdit')" v-permit="'hr:accountRole:edit'">角色修改</el-button></div>
+            <div  class="active"><el-button size="small" @click.native="itemAction(scope.row.id,'roleEdit')" v-permit="'hr:accountPosition:edit'">功能岗位修改</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -114,7 +115,7 @@
         if(action=="edit") {
           this.$router.push({ name: 'accountForm', query: { id: id }})
         } else  if(action=="roleEdit") {
-          this.$router.push({ name: 'accountRoleForm', query: { id: id }})
+          this.$router.push({ name: 'accountPositionForm', query: { id: id }})
         } else if(action=="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/basic/hr/account/delete',{params:{id:id}}).then((response) =>{

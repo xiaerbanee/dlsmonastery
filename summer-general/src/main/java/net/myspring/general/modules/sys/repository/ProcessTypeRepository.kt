@@ -34,14 +34,14 @@ interface ProcessTypeRepository : BaseRepository<ProcessType, String>,ProcessTyp
 interface ProcessTypeRepositoryCustom {
     fun findPage(pageable: Pageable, processTypeQuery: ProcessTypeQuery): Page<ProcessTypeDto>;
 
-    fun findByCreatePositionIdsLike(positionId:String):MutableList<ProcessType>
+    fun findByCreatePositionIdsLike(positionIdList:MutableList<String>):MutableList<ProcessType>
 
-    fun findByViewPositionIdsLike(positionId:String):MutableList<ProcessType>
+    fun findByViewPositionIdsLike(positionIdList: MutableList<String>):MutableList<ProcessType>
 
 }
 
 class ProcessTypeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ProcessTypeRepositoryCustom {
-    override fun findByCreatePositionIdsLike(positionId: String): MutableList<ProcessType> {
+    override fun findByCreatePositionIdsLike(positionIdList:MutableList<String>): MutableList<ProcessType> {
         var sb = StringBuilder()
         sb.append("""
                 SELECT
@@ -50,14 +50,23 @@ class ProcessTypeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemp
             sys_process_type t1
                 WHERE
             t1.audit_file_type=1
-            and t1.create_position_ids like concat('%,',:positionId,',%')
+            and (
         """)
-        var paramMap= Maps.newHashMap<String,Any>();
-        paramMap.put("positionId",positionId);
+        for ((index) in positionIdList.withIndex()) {
+            sb.append("  t1.create_position_ids like :positionId").append(index);
+            if (index < positionIdList.size - 1) {
+                sb.append(" or ");
+            }
+        }
+        sb.append(")");
+        var paramMap = Maps.newHashMap<String, String>();
+        for ((index, value) in positionIdList.withIndex()) {
+            paramMap.put("positionId" + index, "%,$value,%");
+        }
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(ProcessType::class.java));
     }
 
-    override fun findByViewPositionIdsLike(positionId: String): MutableList<ProcessType> {
+    override fun findByViewPositionIdsLike(positionIdList: MutableList<String>): MutableList<ProcessType> {
         var sb = StringBuilder()
         sb.append("""
                 SELECT
@@ -66,10 +75,19 @@ class ProcessTypeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemp
             sys_process_type t1
                 WHERE
          t1.audit_file_type=1
-            and t1.view_position_ids like concat('%,',:positionId,',%')
+            and   and (
         """)
-        var paramMap= Maps.newHashMap<String,Any>();
-        paramMap.put("positionId",positionId);
+        for ((index) in positionIdList.withIndex()) {
+            sb.append("  t1.view_position_ids like :positionId").append(index);
+            if (index < positionIdList.size - 1) {
+                sb.append(" or ");
+            }
+        }
+        sb.append(")");
+        var paramMap = Maps.newHashMap<String, String>();
+        for ((index, value) in positionIdList.withIndex()) {
+            paramMap.put("positionId" + index, "%,$value,%");
+        }
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(ProcessType::class.java));
     }
 

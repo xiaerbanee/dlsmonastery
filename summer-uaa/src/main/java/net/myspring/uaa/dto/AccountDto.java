@@ -3,7 +3,6 @@ package net.myspring.uaa.dto;
 import net.myspring.util.text.StringUtils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * Created by admin on 2017/4/5.
@@ -22,7 +21,7 @@ public class AccountDto {
     private boolean enabled;
     private boolean locked;
     private String officeIds;
-    private String roleIds;
+    private String positionIds;
 
     private LocalDate leaveDate;
 
@@ -34,12 +33,12 @@ public class AccountDto {
         this.officeIds = officeIds;
     }
 
-    public String getRoleIds() {
-        return roleIds;
+    public String getPositionIds() {
+        return positionIds;
     }
 
-    public void setRoleIds(String roleIds) {
-        this.roleIds = roleIds;
+    public void setPositionIds(String positionIds) {
+        this.positionIds = positionIds;
     }
 
     public String getCompanyName() {
