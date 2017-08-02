@@ -54,10 +54,11 @@ public class SalaryTemplateService {
         salaryTemplateRepository.save(salaryTemplate);
         List<SalaryTemplateDetail> salaryTemplateDetailList=salaryTemplateDetailRepository.findBySalaryTemplateId(salaryTemplate.getId());
         Map<String,SalaryTemplateDetail> salaryTemplateDetailMap=CollectionUtil.extractToMap(salaryTemplateDetailList,"name");
-        for(SalaryTemplateDetailForm salaryTemplateDetailForm:salaryTemplateForm.getSalaryTemplateDetailFormList()){
+        for(SalaryTemplateDetailForm salaryTemplateDetailForm:salaryTemplateForm.getSalaryTemplateDetailList()){
             SalaryTemplateDetail salaryTemplateDetail=salaryTemplateDetailMap.get(salaryTemplateDetailForm.getName());
             if(salaryTemplateDetail==null){
-                salaryTemplateDetail=BeanUtil.map(salaryTemplateDetail,SalaryTemplateDetail.class);
+                salaryTemplateDetail=BeanUtil.map(salaryTemplateDetailForm,SalaryTemplateDetail.class);
+                salaryTemplateDetail.setSalaryTemplateId(salaryTemplate.getId());
                 salaryTemplateDetailList.add(salaryTemplateDetail);
             }else {
                 ReflectionUtil.copyProperties(salaryTemplateDetailForm,salaryTemplateDetail);
@@ -72,19 +73,22 @@ public class SalaryTemplateService {
             SalaryTemplate salaryTemplate=salaryTemplateRepository.findOne(salaryTemplateDto.getId());
             List<SalaryTemplateDetail> salaryTemplateDetailList=salaryTemplateDetailRepository.findBySalaryTemplateId(salaryTemplateDto.getId());
             salaryTemplateDto= BeanUtil.map(salaryTemplate,SalaryTemplateDto.class);
-            salaryTemplateDto.setSalaryTemplateDetailDtoList(BeanUtil.map(salaryTemplateDetailList, SalaryTemplateDetailDto.class));
+            salaryTemplateDto.setSalaryTemplateDetailList(BeanUtil.map(salaryTemplateDetailList, SalaryTemplateDetailDto.class));
         }
         return salaryTemplateDto;
     }
 
     public  void delete(String id){
+        SalaryTemplate salaryTemplate=salaryTemplateRepository.findOne(id);
+        salaryTemplate.setEnabled(false);
         List<SalaryTemplateDetail> salaryTemplateDetailList=salaryTemplateDetailRepository.findBySalaryTemplateId(id);
         if(CollectionUtil.isNotEmpty(salaryTemplateDetailList)){
             for(SalaryTemplateDetail salaryTemplateDetail:salaryTemplateDetailList){
-                salaryTemplateDetailRepository.logicDelete(salaryTemplateDetail.getId());
+                salaryTemplateDetail.setEnabled(false);
+                salaryTemplateDetailRepository.save(salaryTemplateDetail);
             }
         }
-        salaryTemplateRepository.logicDelete(id);
+        salaryTemplateRepository.save(salaryTemplate);
     }
 
     public List<SalaryTemplateDto> findAll(){
