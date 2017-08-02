@@ -20,7 +20,7 @@
               <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
             <el-form-item :label="$t('officeForm.sort')" prop="sort">
-              <el-input  v-model.number="inputForm.sort"></el-input>
+              <el-input  v-model="inputForm.sort"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('positionForm.save')}}</el-button>
@@ -38,6 +38,15 @@
     },
     methods:{
       getData(){
+        let checkSort=(rule,value,callback)=>{
+          if(!value){
+            return callback(new Error(this.$t('positionForm.prerequisiteMessage')))
+          }else if(isNaN(value)){
+            return callback(new Error(this.$t('menuCategoryForm.inputLegalValue')))
+          }else{
+            return callback()
+          }
+        }
         return {
           remoteLoading: false,
           isCreate: this.$route.query.id == null,
@@ -50,7 +59,7 @@
           rules: {
             name: [{required: true, message: this.$t('positionForm.prerequisiteMessage')}],
             permission: [{required: true, message: this.$t('positionForm.prerequisiteMessage')}],
-            sort: [{ required: true, message: this.$t('menuCategoryForm.prerequisiteMessage')},{ type: 'number', message: this.$t('menuCategoryForm.inputLegalValue')}]
+            sort: [{ required: true,validator:checkSort}]
           },
         };
       },
