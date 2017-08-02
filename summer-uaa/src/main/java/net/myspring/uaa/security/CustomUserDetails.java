@@ -20,7 +20,7 @@ public class CustomUserDetails implements UserDetails {
     private final boolean enabled;
     private final String accountId;
     private final String companyName;
-    private final String positionId;
+    private final List<String> positionIdList;
     private final String officeId;
     private final String employeeId;
     @JsonIgnore
@@ -39,7 +39,7 @@ public class CustomUserDetails implements UserDetails {
             ,boolean accountNonLocked
             ,Collection<? extends GrantedAuthority> authorities
             ,String accountId
-            ,String positionId
+            ,List<String> positionIdList
             ,String officeId
             ,String employeeId
             ,String companyName
@@ -57,7 +57,7 @@ public class CustomUserDetails implements UserDetails {
         this.accountNonLocked = accountNonLocked;
         this.authorities = Sets.newHashSet(authorities);
         this.accountId = accountId;
-        this.positionId = positionId;
+        this.positionIdList = positionIdList;
         this.officeId=officeId;
         this.employeeId=employeeId;
         this.companyName=companyName;
@@ -106,8 +106,8 @@ public class CustomUserDetails implements UserDetails {
         return accountId;
     }
 
-    public String getPositionId() {
-        return positionId;
+    public List<String> getPositionIdList() {
+        return positionIdList;
     }
 
     public String getOfficeId() {

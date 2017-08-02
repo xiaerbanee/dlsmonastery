@@ -47,9 +47,9 @@ class ProcessTaskRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
                 and t1.office_id in (:officeIds)
             """)
         }
-        if (StringUtils.isNotBlank(processTaskQuery.positionId)) {
+        if (CollectionUtil.isNotEmpty(processTaskQuery.positionIdList)) {
             sb.append("""
-                and t1.position_id =:positionId
+                and t1.position_id in (::positionIdList)
             """)
         }
         if (StringUtils.isNotBlank(processTaskQuery.name)) {

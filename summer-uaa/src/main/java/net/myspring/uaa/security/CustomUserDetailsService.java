@@ -12,13 +12,12 @@ import net.myspring.uaa.manager.OfficeManager;
 import net.myspring.uaa.manager.WeixinManager;
 import net.myspring.uaa.repository.AccountDtoRepository;
 import net.myspring.uaa.repository.AccountWeixinDtoRepository;
-import net.myspring.uaa.repository.CompanyConfigRepository;
+import net.myspring.uaa.repository.PositionRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -48,9 +47,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private OfficeManager officeManager;
     @Autowired
-    private RedisTemplate redisTemplate;
-    @Autowired
-    private CompanyConfigRepository companyConfigRepository;
+    private PositionRepository positionRepository;
 
     @Override
     public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -93,7 +90,8 @@ public class CustomUserDetailsService implements UserDetailsService {
             Set<SimpleGrantedAuthority> authList = Sets.newHashSet();
             authList.add(new SimpleGrantedAuthority(accountDto.getPositionId()));
             //将用户权限设置到缓存中
-            List<String> roleIdList=StringUtils.getSplitList(accountDto.getRoleIds(),CharConstant.COMMA);
+            List<String> positionIdList=StringUtils.getSplitList(accountDto.getPositionIds(),CharConstant.COMMA);
+            List<String> roleIdList=positionRepository.findByIds(positionIdList);
             List<String> officeIds=StringUtils.getSplitList(accountDto.getOfficeIds(),CharConstant.COMMA);
             Boolean admin = StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(accountDto.getId());
             List<OfficeDto> officeList = officeManager.findByIds(officeIds);
@@ -114,7 +112,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                     !accountDto.getLocked(),
                     authList,
                     accountDto.getId(),
-                    accountDto.getPositionId(),
+                    positionIdList,
                     accountDto.getOfficeId(),
                     accountDto.getEmployeeId(),
                     accountDto.getCompanyName(),

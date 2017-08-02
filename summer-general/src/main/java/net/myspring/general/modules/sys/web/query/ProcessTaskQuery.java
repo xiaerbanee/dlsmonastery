@@ -9,9 +9,10 @@ import java.util.List;
  * Created by wangzm on 2017/6/5.
  */
 public class ProcessTaskQuery extends BaseQuery{
-    private String positionId;
+
     private String name;
     private String status;
+    private List<String> positionIdList=Lists.newArrayList();
     private List<String> officeIds= Lists.newArrayList();
 
     public String getName() {
@@ -30,12 +31,12 @@ public class ProcessTaskQuery extends BaseQuery{
         this.status = status;
     }
 
-    public String getPositionId() {
-        return positionId;
+    public List<String> getPositionIdList() {
+        return positionIdList;
     }
 
-    public void setPositionId(String positionId) {
-        this.positionId = positionId;
+    public void setPositionIdList(List<String> positionIdList) {
+        this.positionIdList = positionIdList;
     }
 
     public List<String> getOfficeIds() {

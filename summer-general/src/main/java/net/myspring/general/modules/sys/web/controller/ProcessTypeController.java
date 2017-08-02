@@ -69,8 +69,8 @@ public class ProcessTypeController {
         if(RequestUtils.getAdmin()){
             processTypeDtoList=processTypeService.findAll();
         }else {
-            processTypeDtoList=processTypeService.findByCreatePositionId(RequestUtils.getPositionId());
-        }
+            processTypeDtoList=processTypeService.findByCreatePositionId(RequestUtils.getPositionIdList());
+    }
         return processTypeDtoList;
     }
 
@@ -78,7 +78,7 @@ public class ProcessTypeController {
     public List<String> findIdByViewPositionId(){
         List<String> ids= Lists.newArrayList();
         if(!RequestUtils.getAdmin()){
-            List<ProcessTypeDto> processTypeDtos=processTypeService.findByViewPositionId(RequestUtils.getPositionId());
+            List<ProcessTypeDto> processTypeDtos=processTypeService.findByViewPositionId(RequestUtils.getPositionIdList());
             ids=CollectionUtil.extractToList(processTypeDtos,"id");
         }
         return ids;

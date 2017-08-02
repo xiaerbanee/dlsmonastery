@@ -28,7 +28,7 @@
               <el-form-item :label="$t('productImeUploadForm.shopId')" prop="shopId">
                 <depot-select v-model="inputForm.shopId" category="shop"></depot-select>
               </el-form-item>
-              <el-form-item :label="$t('productImeUploadForm.saleEmployee')" prop="employeeId">
+              <el-form-item :label="$t('productImeUploadForm.saleEmployee')">
                 <employee-select v-model="inputForm.employeeId"></employee-select>
               </el-form-item>
               <el-form-item :label="$t('productImeUploadForm.remarks')" prop="remarks">
@@ -61,15 +61,15 @@
                 <el-table-column prop="productImeSaleShopName"
                                  :label="$t('productImeUploadForm.saleShopName')"></el-table-column>
                 <el-table-column prop="productImeUploadCreatedByName"
-                                 :label="$t('productImeUploadForm.updateDate')"></el-table-column>
+                                 :label="$t('productImeUploadForm.uploadCreatedFullName')"></el-table-column>
                 <el-table-column prop="productImeUploadCreatedDate"
-                                 :label="$t('productImeUploadForm.updateDate')"></el-table-column>
+                                 :label="$t('productImeUploadForm.uploadCreatedDate')"></el-table-column>
                 <el-table-column prop="productImeUploadStatus"
                                  :label="$t('productImeUploadForm.productImeUploadStatus')"></el-table-column>
                 <el-table-column prop="productImeUploadShopName"
                                  :label="$t('productImeUploadForm.uploadShopName')"></el-table-column>
                 <el-table-column prop="productImeUploadEmployeeName"
-                                 :label="$t('productImeUploadForm.saleEmployee')"></el-table-column>
+                                 :label="$t('productImeUploadForm.uploadEmployee')"></el-table-column>
               </el-table>
             </template>
           </el-col>
@@ -114,7 +114,6 @@
             imeStr: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage'),trigger:"blur"}],
             shopId: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage'),trigger:"change"}],
             month: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage'),trigger:"change"}],
-            employeeId: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage'),trigger:"change"}],
           },
         }
       },
@@ -139,8 +138,7 @@
                 this.initPage();
               }
             }
-          }).
-            catch(() => {
+          }).catch(() => {
               this.submitDisabled = false;
           });
           }
@@ -148,13 +146,11 @@
       );
       }, onImeStrChange(){
         this.searched = true;
-        axios.post('/api/ws/future/crm/productImeUpload/checkForUpload', qs.stringify({imeStr: this.inputForm.imeStr})).then((response) =>
-        {
+        axios.post('/api/ws/future/crm/productImeUpload/checkForUpload', qs.stringify({imeStr: this.inputForm.imeStr})).then((response) => {
           this.errMsg = response.data;
         }
       );
-        axios.post('/api/ws/future/crm/productIme/findDtoListByImes', qs.stringify({imeStr: this.inputForm.imeStr})).then((response) =>
-        {
+        axios.post('/api/ws/future/crm/productIme/findDtoListByImes', qs.stringify({imeStr: this.inputForm.imeStr})).then((response) => {
           this.productImeList = response.data;
 
           let tmpMap = new Map();
@@ -182,7 +178,7 @@
       }, initPage(){
         axios.get('/api/ws/future/crm/productImeUpload/getForm').then((response) => {
           this.inputForm = response.data;
-      })
+        });
       }
     }, created () {
       this.initPage();

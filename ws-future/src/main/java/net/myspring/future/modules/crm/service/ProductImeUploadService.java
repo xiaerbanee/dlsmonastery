@@ -119,8 +119,8 @@ public class ProductImeUploadService {
         List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
         Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(productImeList, "productId"));
         List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByEnabledIsTrueAndProductImeIdIn(CollectionUtil.extractToList(productImeList,"id"));
-        Map<String, GoodsOrderIme> goodsOrderImeMap = CollectionUtil.extractToMap(goodsOrderImeList,"product_ime_id");
-        Map<String, GoodsOrder> goodsOrderMap = goodsOrderRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"goods_order_id"));
+        Map<String, GoodsOrderIme> goodsOrderImeMap = CollectionUtil.extractToMap(goodsOrderImeList,"productImeId");
+        Map<String, GoodsOrder> goodsOrderMap = goodsOrderRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"goodsOrderId"));
         String accountShopIds = getAccountShopIds(productImeUploadForm.getEmployeeId());
 
         for (ProductIme productIme : productImeList) {
@@ -153,6 +153,9 @@ public class ProductImeUploadService {
     }
 
     private String getAccountShopIds(String employeeId) {
+        if(StringUtils.isBlank(employeeId)){
+            return null;
+        }
         AccountCommonDto accountCommonDto = accountClient.findByEmployeeId(employeeId);
         String accountShopIds = null;
         if(accountCommonDto !=null && StringUtils.isNotBlank(accountCommonDto.getId())){

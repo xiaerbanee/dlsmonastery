@@ -74,10 +74,10 @@ public class ShopBuildQuery extends BaseQuery {
         this.areaId = areaId;
     }
 
-    public String getPositionId() {
+    public List<String> getPositionIdList() {
         if(StringUtils.isNotBlank(auditType)){
             if(ShopBuildAuditEnum.待批需要我审核.name().equalsIgnoreCase(auditType)){
-                return RequestUtils.getPositionId();
+                return RequestUtils.getPositionIdList();
             }
         }
         return null;

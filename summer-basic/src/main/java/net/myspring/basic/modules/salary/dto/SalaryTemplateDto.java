@@ -8,15 +8,15 @@ import java.util.List;
 
 public class SalaryTemplateDto extends DataDto<SalaryTemplate> {
     private String name;
-    private List<SalaryTemplateDetailDto> salaryTemplateDetailDtoList= Lists.newArrayList();
+    private List<SalaryTemplateDetailDto> salaryTemplateDetailList= Lists.newArrayList();
     private String salaryTemplateDetails;
 
-    public List<SalaryTemplateDetailDto> getSalaryTemplateDetailDtoList() {
-        return salaryTemplateDetailDtoList;
+    public List<SalaryTemplateDetailDto> getSalaryTemplateDetailList() {
+        return salaryTemplateDetailList;
     }
 
-    public void setSalaryTemplateDetailDtoList(List<SalaryTemplateDetailDto> salaryTemplateDetailDtoList) {
-        this.salaryTemplateDetailDtoList = salaryTemplateDetailDtoList;
+    public void setSalaryTemplateDetailList(List<SalaryTemplateDetailDto> salaryTemplateDetailList) {
+        this.salaryTemplateDetailList = salaryTemplateDetailList;
     }
 
     public String getSalaryTemplateDetails() {

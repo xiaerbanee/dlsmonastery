@@ -5,6 +5,7 @@ import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery
 import net.myspring.common.dto.NameValueDto
 import net.myspring.util.repository.SQLServerDialect
 import net.myspring.util.text.StringUtils
+import net.myspring.util.time.LocalDateTimeUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -299,6 +300,6 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
                 and t1.FFORBIDSTATUS = 'A'
                 and t1.FDOCUMENTSTATUS = 'C'
                 and t1.FMODIFYDATE > :modifyDate
-        """,Collections.singletonMap("modifyDate",modifyDate.toString()), BeanPropertyRowMapper(BdCustomer::class.java))
+        """,Collections.singletonMap("modifyDate",LocalDateTimeUtils.format(modifyDate)), BeanPropertyRowMapper(BdCustomer::class.java));
     }
 }

@@ -25,8 +25,8 @@ public class RequestUtils {
         return (Boolean) getSecurityMap().get("admin");
     }
 
-    public static String getPositionId() {
-        return (String) getSecurityMap().get("positionId");
+    public static List<String> getPositionIdList() {
+        return (List<String>) getSecurityMap().get("positionIdList");
     }
 
     public static String getDataSourceType() {

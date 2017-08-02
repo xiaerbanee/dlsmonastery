@@ -2,15 +2,14 @@ package net.myspring.basic.modules.hr.dto;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.RequestUtils;
+import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
-import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -33,12 +32,12 @@ public class AccountDto extends DataDto<Account> {
     private LocalDate regularDate;
     private String employeeName;
     private String employeeStatus;
-    private String roleIds;
-    private List<String> roleIdList=Lists.newArrayList();
+    private String positionIds;
+    private List<String> positionIdList=Lists.newArrayList();
     private String officeIds;
     private List<String> officeIdList=Lists.newArrayList();
-    @CacheInput(inputKey = "roles",inputInstance = "roleIdList",outputInstance = "name")
-    private List<String> roleNameList=Lists.newArrayList();
+    @CacheInput(inputKey = "positions",inputInstance = "positionIdList",outputInstance = "name")
+    private List<String> positionNameList=Lists.newArrayList();
     @CacheInput(inputKey = "offices",inputInstance = "officeIdList",outputInstance = "name")
     private List<String> officeNameList=Lists.newArrayList();
 
@@ -55,23 +54,31 @@ public class AccountDto extends DataDto<Account> {
         this.dataScopeOfficeName = dataScopeOfficeName;
     }
 
-    public String getRoleIds() {
-        return roleIds;
+    public String getPositionIds() {
+        return positionIds;
     }
 
-    public void setRoleIds(String roleIds) {
-        this.roleIds = roleIds;
+    public void setPositionIds(String positionIds) {
+        this.positionIds = positionIds;
     }
 
-    public List<String> getRoleIdList() {
-        if(CollectionUtil.isEmpty(roleIdList)&&StringUtils.isNotBlank(roleIds)){
-            this.roleIdList=StringUtils.getSplitList(roleIds, CharConstant.COMMA);
+    public List<String> getPositionIdList() {
+        if(CollectionUtil.isEmpty(positionIdList)&&StringUtils.isNotBlank(positionIds)){
+            this.positionIdList=StringUtils.getSplitList(positionIds, CharConstant.COMMA);
         }
-        return roleIdList;
+        return positionIdList;
     }
 
-    public void setRoleIdList(List<String> roleIdList) {
-        this.roleIdList = roleIdList;
+    public void setPositionIdList(List<String> positionIdList) {
+        this.positionIdList = positionIdList;
+    }
+
+    public List<String> getPositionNameList() {
+        return positionNameList;
+    }
+
+    public void setPositionNameList(List<String> positionNameList) {
+        this.positionNameList = positionNameList;
     }
 
     public String getOfficeIds() {
@@ -91,14 +98,6 @@ public class AccountDto extends DataDto<Account> {
 
     public void setOfficeIdList(List<String> officeIdList) {
         this.officeIdList = officeIdList;
-    }
-
-    public List<String> getRoleNameList() {
-        return roleNameList;
-    }
-
-    public void setRoleNameList(List<String> roleNameList) {
-        this.roleNameList = roleNameList;
     }
 
     public List<String> getOfficeNameList() {

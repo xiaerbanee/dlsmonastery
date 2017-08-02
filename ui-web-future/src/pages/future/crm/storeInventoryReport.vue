@@ -3,7 +3,7 @@
     <head-tab active="storeInventoryReport"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:bank:view'">过滤</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bank:view'">过滤</el-button>
         <el-button type="primary" @click="exportData()" icon="upload"  v-permit="'crm:bank:view'">导出</el-button>
         <span v-html="searchText"></span>
       </el-row>

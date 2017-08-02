@@ -2,7 +2,7 @@ package net.myspring.basic.modules.salary.web.form;
 
 public class SalaryTemplateDetailForm {
     private String name;
-    private String sort;
+    private Integer sort;
 
     public String getName() {
         return name;
@@ -12,11 +12,11 @@ public class SalaryTemplateDetailForm {
         this.name = name;
     }
 
-    public String getSort() {
+    public Integer getSort() {
         return sort;
     }
 
-    public void setSort(String sort) {
+    public void setSort(Integer sort) {
         this.sort = sort;
     }
 }

@@ -127,6 +127,7 @@ export default {
       arRefundBill:'收款退款单',
       arReceiveBill:'收款单',
       apPayBill:'付款单',
+      batchMaterial:"物料批量添加",
       cloudReportCategory:"财务报表",
       supplierPayable:"应付对账报表",
       supplierPayableZMD:"应付对账报表（专卖店）",
