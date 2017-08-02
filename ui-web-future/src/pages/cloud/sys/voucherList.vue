@@ -107,7 +107,11 @@
         }else if(action === "delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/global/cloud/sys/voucher/delete',{params:{id:id}}).then((response) =>{
-              this.$message(response.data.message);
+              if(response.data.success){
+                this.$message(response.data.message);
+              }else{
+                this.$alert(response.data.message);
+              }
               this.pageRequest();
             });
           }).catch(()=>{});
