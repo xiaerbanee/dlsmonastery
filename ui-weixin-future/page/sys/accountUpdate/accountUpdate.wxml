@@ -1,0 +1,30 @@
+<view class="page">
+  <form catchsubmit="formSubmit">
+    <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">{{response.error}}</view>
+    <input type="hidden" name="id" value="{{formData.id}}" class="hidden" />
+    <view class="weui-cells weui-cells_after-title form_bd">
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="freeDate">
+        <view class="weui-cell__hd">
+          <view class="weui-label">密码</view>
+        </view>
+         <view class="weui-cell__bd">
+          <input name="password" value="{{formData.password}}" password class="weui-input" />
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.password}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">确认密码</view>
+        </view>
+         <view class="weui-cell__bd">
+          <input name="confirmPassword" value="{{formData.confirmPassword}}" password class="weui-input" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-btn-area">
+      <button disabled="{{submitDisabled}}" formType="submit" class="weui-btn" type="primary">确定</button>
+    </view>
+  </form>
+</view>
