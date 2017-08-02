@@ -93,7 +93,7 @@
       },
       syn(){
         this.synDisabled = true;
-        axios.post('/api/global/cloud/sys/product/syn').then((response)=> {
+        axios.get('/api/global/cloud/sys/product/syn').then((response)=> {
           if(response.data.success){
             this.$message(response.data.message);
             this.synDisabled = false;
