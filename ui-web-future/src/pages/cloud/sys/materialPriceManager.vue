@@ -33,7 +33,6 @@
             {type: 'numeric',allowEmpty: false,format:"0,0.00"},
           ],
           afterChange: function (changes, source) {
-            var that = this;
             if (source === 'edit') {
               for (let i = changes.length - 1; i >= 0; i--) {
                 let row = changes[i][0];
