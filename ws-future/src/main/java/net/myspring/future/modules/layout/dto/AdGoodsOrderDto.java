@@ -432,11 +432,11 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     }
 
     public Boolean getAuditable(){
-        return RequestUtils.getPositionId().equals(getProcessPositionId()) || RequestUtils.getAccountId().equalsIgnoreCase("1");
+        return RequestUtils.getPositionIdList().contains(getProcessPositionId()) || RequestUtils.getAdmin();
     }
 
     public Boolean getEditable(){
-        return RequestUtils.getAccountId().equals(getCreatedBy()) || RequestUtils.getAccountId().equalsIgnoreCase("1");
+        return RequestUtils.getAccountId().equals(getCreatedBy()) || RequestUtils.getAdmin();
     }
 
     public boolean getPrint(){

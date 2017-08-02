@@ -6,7 +6,6 @@ import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.AccountPermission;
 import net.myspring.basic.modules.hr.domain.Employee;
-import net.myspring.basic.modules.hr.domain.Position;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.repository.AccountPermissionRepository;
 import net.myspring.basic.modules.hr.repository.AccountRepository;
@@ -119,8 +118,7 @@ public class AccountService {
             } else {
                 accountForm.setPassword(StringUtils.getEncryptPassword("123456"));
             }
-            Position position=positionRepository.findOne(accountForm.getPositionId());
-            accountForm.setRoleIds(position.getRoleId());
+            accountForm.setPositionIds(accountForm.getPositionId());
             account = BeanUtil.map(accountForm, Account.class);
             accountRepository.save(account);
         } else {

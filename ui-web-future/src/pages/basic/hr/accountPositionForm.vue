@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="accountRoleForm"></head-tab>
+    <head-tab active="accountPositionForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-row :gutter = "20">
@@ -8,10 +8,8 @@
             <el-form-item label="用户名" prop="loginName">
               <el-input v-model="inputForm.loginName" :readonly="true"></el-input>
             </el-form-item>
-            <el-form-item label="绑定角色" prop="roleIdList">
-              <el-select v-model="inputForm.roleIdList"   :placeholder="$t('accountForm.inputWord')" multiple>
-                <el-option v-for="item in inputForm.extra.roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
+            <el-form-item label="绑定岗位" prop="positionIdList">
+              <position-select v-model="inputForm.positionIdList" :multiple = "true"></position-select>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('positionForm.save')}}</el-button>
@@ -23,7 +21,9 @@
   </div>
 </template>
 <script>
+  import positionSelect from 'components/basic/position-select'
   export default{
+    components:{positionSelect},
     data(){
       return this.getData();
     },
