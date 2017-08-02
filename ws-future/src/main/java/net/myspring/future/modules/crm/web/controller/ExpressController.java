@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
@@ -11,6 +12,7 @@ import net.myspring.future.modules.crm.web.query.ExpressQuery;
 import net.myspring.util.excel.ExcelView;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping(value = "crm/express")
@@ -35,6 +38,9 @@ public class ExpressController {
 
     @RequestMapping(value = "getQuery")
     public ExpressQuery getQuery(ExpressQuery expressQuery) {
+        LocalDate today = LocalDate.now();
+        LocalDate firstDayOfMonth = LocalDateTimeUtils.getFirstDayOfMonth(today.atStartOfDay()).toLocalDate();
+        expressQuery.setCreatedDateRange(firstDayOfMonth.toString()+ CharConstant.DATE_RANGE_SPLITTER+today.toString());
         expressQuery.getExtra().put("expressOrderExtendTypeList",ExpressOrderTypeEnum.getList());
         return expressQuery;
     }

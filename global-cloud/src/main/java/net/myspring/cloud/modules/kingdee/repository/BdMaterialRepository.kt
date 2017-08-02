@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.kingdee.repository
 
 import net.myspring.cloud.modules.kingdee.domain.BdMaterial
+import net.myspring.common.dto.NameValueDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 
@@ -260,5 +261,33 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
                 AND t1.FMATERIALID = t5.FMATERIALID
                 and t1.FMASTERID in (:MasterIdList)
         """,Collections.singletonMap("MasterIdList",MasterIdList),BeanPropertyRowMapper(BdMaterial::class.java))
+    }
+
+    fun findAllCategory():MutableList<NameValueDto>?{
+        return namedParameterJdbcTemplate.query("""
+            select
+                t1.FNUMBER as value,
+                t2.FNAME as name
+            from
+                T_BD_MATERIALCATEGORY t1,
+                T_BD_MATERIALCATEGORY_L t2
+            where
+                t1.FCATEGORYID=t2.FCATEGORYID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
+         """,BeanPropertyRowMapper(NameValueDto::class.java))
+    }
+
+    fun findAllGroup():MutableList<NameValueDto>?{
+        return namedParameterJdbcTemplate.query("""
+            select
+                t1.FNUMBER as value,
+                t2.FNAME as name
+            from
+                T_BD_MaterialGroup t1,
+                T_BD_MaterialGroup_L t2
+            where
+                t1.FID=t2.FID
+         """,BeanPropertyRowMapper(NameValueDto::class.java))
     }
 }

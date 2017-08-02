@@ -58,8 +58,6 @@ public class VoucherController {
     @Autowired
     private HrEmpInfoService hrEmpInfoService;
     @Autowired
-    private GlVoucherService glVoucherService;
-    @Autowired
     private KingdeeBookService kingdeeBookService;
     @Autowired
     private AccountKingdeeBookService accountKingdeeBookService;

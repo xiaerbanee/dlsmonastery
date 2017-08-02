@@ -9,6 +9,7 @@ const arOtherRecAble  = r => require.ensure([], () => r(require('pages/cloud/inp
 const apPayBill  = r => require.ensure([], () => r(require('pages/cloud/input/apPayBill.vue')));
 const arRefundBill  = r => require.ensure([], () => r(require('pages/cloud/input/arRefundBill.vue')));
 const arReceiveBill  = r => require.ensure([], () => r(require('pages/cloud/input/arReceiveBill.vue')));
+const batchMaterial  = r => require.ensure([], () => r(require('pages/cloud/input/batchMaterial.vue')));
 
 
 let routes = [
@@ -23,6 +24,7 @@ let routes = [
   {path: '/cloud/input/apPayBill',component: apPayBill,name: 'apPayBill'},
   {path: '/cloud/input/arRefundBill',component: arRefundBill,name: 'arRefundBill'},
   {path: '/cloud/input/arReceiveBill',component: arReceiveBill,name: 'arReceiveBill'},
+  {path: '/cloud/input/batchMaterial',component: batchMaterial,name: 'batchMaterial'},
 
 ];
 

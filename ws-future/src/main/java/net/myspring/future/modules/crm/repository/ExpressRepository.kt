@@ -112,9 +112,11 @@ class ExpressRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val paramMap = BeanPropertySqlParameterSource(expressQuery)
         val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ExpressDto::class.java))
-        return PageImpl(list,pageable,((pageable.pageNumber + 100) * pageable.pageSize).toLong())
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap,Long::class.java)
+        return PageImpl(list,pageable,count)
     }
 
 
