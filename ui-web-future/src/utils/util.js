@@ -417,4 +417,10 @@ util.getImgListSize = function(imgList){
   })
   return size;
 }
+util.numTofixed = function(num) {
+  if (typeof num == 'number') {
+    num = parseFloat(num.toFixed(7))
+  }
+  return num;
+}
 export default util;

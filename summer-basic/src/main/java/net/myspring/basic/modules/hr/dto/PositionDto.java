@@ -1,14 +1,12 @@
 package net.myspring.basic.modules.hr.dto;
 
-import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.Position;
-import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.common.dto.DataDto;
 
 /**
  * Created by admin on 2017/4/5.
  */
 public class PositionDto extends DataDto<Position> {
-    @CacheInput(inputKey = "roles",inputInstance = "roleId",outputInstance = "name")
     protected String roleName;
     private String name;
     private String permission;

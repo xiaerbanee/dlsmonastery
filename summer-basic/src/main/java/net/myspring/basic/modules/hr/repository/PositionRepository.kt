@@ -43,7 +43,7 @@ interface PositionRepositoryCustom{
 }
 class PositionRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): PositionRepositoryCustom{
     override fun findPage(pageable: Pageable, positionQuery: PositionQuery): Page<PositionDto> {
-        var sb = StringBuilder("select t1.* from hr_position t1 where t1.enabled=1 ");
+        var sb = StringBuilder("select t1.* ,t2.name as roleName from hr_position t1 left join sys_role t2 on t1.role_id=t2.id and t2.enabled=1 where t1.enabled=1 ");
         if(StringUtils.isNotBlank(positionQuery.name)) {
             sb.append(" and t1.name like concat('%',:name,'%')");
         }

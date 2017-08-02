@@ -34,9 +34,7 @@ interface ProductImeUploadRepositoryCustom{
 
     fun setDepotIdForMerge(fromDepotId:String,toDepotId:String):Int
 
-    fun findByEnabledIsTrueAndMonth(month :String): MutableList<String>
-
-    fun findProductTypeIds(month: String): MutableList<String>
+    fun findProductTypesByMonth(month: String): List<Map<String,Any>>
 
     fun getReportDatas(productMonthPriceSumQuery: ProductMonthPriceSumQuery): MutableList<ReportImeUploadDto>
 
@@ -53,6 +51,23 @@ interface ProductImeUploadRepositoryCustom{
 }
 
 class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeUploadRepositoryCustom {
+    override fun findProductTypesByMonth(month: String): List<Map<String, Any>> {
+        val sb = StringBuilder("""
+                     SELECT
+                            distinct t1.id  productTypeId,
+                            t1.name  productTypeName
+                        FROM
+                            crm_product_ime_upload t,
+                            crm_product_type t1
+                        WHERE
+                            t.enabled =1
+                            AND t1.enabled =1
+                            AND t1.id = t.product_type_id
+                            AND t.month=:month
+                    """)
+        return namedParameterJdbcTemplate.queryForList(sb.toString(),Collections.singletonMap("month",month))
+    }
+
     override fun findAccountDepotNamesMap(accountIdList: Set<String>): List<Map<String,Any>>{
         val sb = StringBuilder("""
                      select
@@ -121,22 +136,6 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJd
         return namedParameterJdbcTemplate.query(sb.toString(), params, BeanPropertyRowMapper(ProductImeUpload::class.java))
     }
 
-    override fun findProductTypeIds(month: String): MutableList<String> {
-        return namedParameterJdbcTemplate.queryForList(
-                """
-                        SELECT
-                            distinct t1.id
-                        FROM
-                            crm_product_ime_upload t,
-                            crm_product_type t1
-                        WHERE
-                            t.enabled =1
-                            AND t1.enabled =1
-                            AND t1.id = t.product_type_id
-                            AND t.month=:month
-                        """, Collections.singletonMap("month", month), String::class.java)
-    }
-
     override fun getReportDatas(productMonthPriceSumQuery: ProductMonthPriceSumQuery): MutableList<ReportImeUploadDto> {
         val sb = StringBuilder("""
                 SELECT
@@ -170,22 +169,6 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJd
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productMonthPriceSumQuery), BeanPropertyRowMapper(ReportImeUploadDto::class.java))
 
 
-    }
-
-    override fun findByEnabledIsTrueAndMonth(month: String): MutableList<String> {
-        return namedParameterJdbcTemplate.queryForList(
-                """
-                        SELECT
-                            distinct t1.name
-                        FROM
-                            crm_product_ime_upload t,
-                            crm_product_type t1
-                        WHERE
-                            t.enabled =1
-                            AND t1.enabled =1
-                            AND t1.id = t.product_type_id
-                            AND t.month=:month
-                        """, Collections.singletonMap("month", month), String::class.java)
     }
 
     override fun findDto(id: String): ProductImeUploadDto {

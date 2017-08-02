@@ -1,6 +1,11 @@
 server:
   port: 9999
 
+
+ribbon:
+  ReadTimeout: 1800000
+  ConnectTimeout: 1800000
+
 security:
   oauth2:
     client:

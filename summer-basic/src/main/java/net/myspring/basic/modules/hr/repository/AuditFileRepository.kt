@@ -54,7 +54,7 @@ class AuditFileRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempl
             }
         }
         if (CollectionUtil.isNotEmpty(auditFileQuery.positionIdList)) {
-            sb.append(" and t1.position_id in (:positionId)")
+            sb.append(" and t1.position_id in (:positionIdList)")
         }
         if (auditFileQuery.createdDateStart != null) {
             sb.append(" and t1.created_date > :createdDateStart ")

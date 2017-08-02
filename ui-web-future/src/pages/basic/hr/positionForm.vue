@@ -58,6 +58,7 @@
           roleList: [],
           rules: {
             name: [{required: true, message: this.$t('positionForm.prerequisiteMessage')}],
+            roleId: [{required: true, message: this.$t('positionForm.prerequisiteMessage')}],
             permission: [{required: true, message: this.$t('positionForm.prerequisiteMessage')}],
             sort: [{ required: true,validator:checkSort}]
           },

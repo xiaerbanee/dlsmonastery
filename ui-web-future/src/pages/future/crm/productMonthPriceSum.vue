@@ -37,7 +37,6 @@
         <el-table-column v-for="header in tableHeaders" :prop="header" :label="header" :key="header" width="240"></el-table-column>
       </el-table>
       <div style="margin-top: 5px;">
-        显示第{{index}}至{{sum}}项结果，共{{sum}}项
       </div>
     </div>
   </div>
@@ -59,8 +58,6 @@
 
         tableHeaders: [],
         tableDatas: [],
-        index:0,
-        sum:0,
         initPromise: {},
         formVisible: false,
         formLabelWidth: '120px',
@@ -81,14 +78,14 @@
         axios.get('/api/ws/future/crm/productMonthPriceSum', {params: submitData}).then((response) => {
           this.page = response.data;
           this.tableHeaders = response.data.header;
-          this.tableDatas = response.data.datas;
-          this.tableDatas = this.composeDatas(this.tableHeaders, this.tableDatas);
-          this.sum = this.tableDatas.length;
-          this.index= 1;
-          if (this.tableDatas.length === 0) {
-            this.index = 0;
+          this.tableDatas = response.data.data;
+          if(response.data.data) {
+            this.tableDatas = this.composeDatas(this.tableHeaders, this.tableDatas);
           }
           this.pageLoading = false;
+          if (response.data.message) {
+            this.$message({message:response.data.message,type:"warning"});
+          }
         })
       },
       search() {
@@ -115,12 +112,12 @@
           })
         })
       },
-      composeDatas(titles, datas) {
+      composeDatas(headerList, datasList) {
         let mapDatas = new Array();
-        for (let i=0;i<datas.length;i++) {
+        for (let i=0;i<datasList.length;i++) {
           let obj = new Object();
-          for(let j=0;j<titles.length;j++) {
-            obj[titles[j]] = datas[i][j];
+          for(let j=0;j<headerList.length;j++) {
+            obj[headerList[j]] = datasList[i][j];
           }
           mapDatas.push(obj);
         }
