@@ -49,6 +49,7 @@
           roleList: [],
           rules: {
             name: [{required: true, message: this.$t('positionForm.prerequisiteMessage')}],
+            roleId: [{required: true, message: this.$t('positionForm.prerequisiteMessage')}],
             permission: [{required: true, message: this.$t('positionForm.prerequisiteMessage')}],
             sort: [{ required: true, message: this.$t('menuCategoryForm.prerequisiteMessage')},{ type: 'number', message: this.$t('menuCategoryForm.inputLegalValue')}]
           },
