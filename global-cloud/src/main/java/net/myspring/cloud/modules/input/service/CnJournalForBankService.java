@@ -74,7 +74,7 @@ public class CnJournalForBankService {
         KingdeeSynDto kingdeeSynDto;
         Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
         if(isLogin) {
-            kingdeeSynDto = save(cnJournalForBankDto,kingdeeBook,accountKingdeeBook);
+            kingdeeSynDto = save(cnJournalForBankDto,kingdeeBook);
         }else{
             throw new ServiceException("登入金蝶系统失败，请检查您的账户密码是否正确");
         }
