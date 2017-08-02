@@ -300,6 +300,6 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
                 and t1.FFORBIDSTATUS = 'A'
                 and t1.FDOCUMENTSTATUS = 'C'
                 and t1.FMODIFYDATE > :modifyDate
-        """,Collections.singletonMap("modifyDate",LocalDateTimeUtils.format(modifyDate)), BeanPropertyRowMapper(BdCustomer::class.java))
+        """,Collections.singletonMap("modifyDate",LocalDateTimeUtils.format(modifyDate)), BeanPropertyRowMapper(BdCustomer::class.java));
     }
 }
