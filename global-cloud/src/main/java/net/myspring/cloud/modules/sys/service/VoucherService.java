@@ -341,7 +341,6 @@ public class VoucherService {
         return list;
     }
 
-    //TODO Excel单元格导出有问题
     public SimpleExcelBook export(VoucherDto voucherDto){
         List<String> flexItemNameList = getHeaders(voucherDto.getBdFlexItemGroupList());
         List<List<String>> data = initData(voucherDto);
