@@ -296,7 +296,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     t3.id IS NULL
                     OR t3.created_date > :date
                 )
-                AND t1.created_date <= :date
+                AND t1.created_date < :date
             """)
         }
         if (StringUtils.isNotBlank(reportQuery.townType)) {
@@ -363,7 +363,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append(""" and t1.retail_date>=:dateStart """)
         }
         if(reportQuery.dateEnd!=null){
-            sb.append(""" and t1.retail_date<=:dateEnd """)
+            sb.append(""" and t1.retail_date<:dateEnd """)
         }
         if (StringUtils.isNotBlank(reportQuery.townType)) {
             sb.append(""" and t5.town_type=:townType """)
@@ -430,7 +430,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append(""" and t1.created_date>=:dateStart """)
         }
         if(reportQuery.dateEnd!=null){
-            sb.append(""" and t1.created_date<=:dateEnd """)
+            sb.append(""" and t1.created_date<:dateEnd """)
         }
         if (StringUtils.isNotBlank(reportQuery.townType)) {
             sb.append(""" and t6.town_type=:townType """)
