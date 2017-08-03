@@ -15,7 +15,7 @@ update sys_office of,sys_office of1  set of.area_id=of1.id where  of.parent_ids 
 update sys_office  set area_id=id where area_id is NULL;
 update sys_office set all_data_scope=1 where type='职能部门';
 
-update hr_account t1,hr_position t2 SET t1.role_ids=t2.role_id where t1.position_id=t2.id and t1.role_ids is NULL;
+update hr_account set position_ids=position_id where  position_ids is NULL;
 update hr_account t1 SET t1.office_ids=t1.office_id where t1.office_ids is NULL ;
 
 

@@ -59,7 +59,7 @@ public class ProductController {
     }
 
     @RequestMapping(value = "syn")
-    public RestResponse syn(ProductForm productForm){
+    public RestResponse syn(){
         LocalDateTime maxDate = productService.findMaxOutDate();
         List<BdMaterial> bdMaterialList;
         if (maxDate != null){

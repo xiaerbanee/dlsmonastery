@@ -375,7 +375,7 @@ public class ProductImeService {
             }
             productIme.setProductId(product.getId());
 
-            Depot depot = depotRepository.findByEnabledIsTrueAndName( productImeCreateForm.getStoreName());
+            Depot depot = depotRepository.findByEnabledIsTrueAndName(productImeCreateForm.getStoreName());
             if (depot == null) {
                 throw new ServiceException("仓库：" + productImeCreateForm.getStoreName() + " 在本公司中无效或不存在");
             }

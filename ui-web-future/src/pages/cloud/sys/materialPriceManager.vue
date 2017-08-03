@@ -33,7 +33,6 @@
             {type: 'numeric',allowEmpty: false,format:"0,0.00"},
           ],
           afterChange: function (changes, source) {
-            var that = this;
             if (source === 'edit') {
               for (let i = changes.length - 1; i >= 0; i--) {
                 let row = changes[i][0];
@@ -94,7 +93,7 @@
       },
       syn(){
         this.synDisabled = true;
-        axios.post('/api/global/cloud/sys/product/syn').then((response)=> {
+        axios.get('/api/global/cloud/sys/product/syn').then((response)=> {
           if(response.data.success){
             this.$message(response.data.message);
             this.synDisabled = false;

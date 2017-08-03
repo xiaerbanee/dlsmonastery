@@ -19,7 +19,7 @@
           </el-dropdown-menu>
         </el-dropdown>
         <el-button type="primary" @click="exportData" v-permit="'crm:productIme:view'">{{$t('productImeList.export')}}</el-button>
-        <el-button type="primary" @click="batchQuery"  >{{$t('productImeList.batchQuery')}}</el-button>
+        <el-button type="primary" @click="batchQuery" v-permit="'crm:productIme:view'">{{$t('productImeList.batchQuery')}}</el-button>
         <el-button type="primary" v-permit="'crm:productIme:view'" @click="formVisible = true" icon="search">{{$t('productImeList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
@@ -42,16 +42,16 @@
               <el-form-item :label="$t('productImeList.depotName')">
                 <depot-select v-model="formData.depotId" category="store" @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="$t('productImeList.inputType')">
-                <el-select v-model="formData.inputType" clearable filterable :placeholder="$t('productImeList.selectInputType')">
-                  <el-option v-for="item in formData.extra.inputTypeList" :key="item" :label="item" :value="item"></el-option>
-                </el-select>
-              </el-form-item>
               <el-form-item :label="$t('productImeList.imeOrMeids')">
                 <el-input  type="textarea"   v-model="formData.imeOrMeids" :placeholder="$t('productImeList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
+              <el-form-item :label="$t('productImeList.inputType')">
+                <el-select v-model="formData.inputType" clearable filterable :placeholder="$t('productImeList.selectInputType')">
+                  <el-option v-for="item in formData.extra.inputTypeList" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+              </el-form-item>
               <el-form-item :label="$t('productImeList.productType')">
                 <product-select v-model="formData.productId" @afterInit="setSearchText" :hasIme="true" ></product-select>
               </el-form-item>
