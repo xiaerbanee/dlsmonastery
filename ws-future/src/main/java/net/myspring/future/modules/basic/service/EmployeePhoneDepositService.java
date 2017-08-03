@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.modules.sys.dto.AccountCommonDto;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.EmployeePhoneDepositStatusEnum;
 import net.myspring.future.common.enums.EmployeePhoneStatusEnum;
@@ -93,7 +94,7 @@ public class EmployeePhoneDepositService {
         EmployeePhoneDeposit employeePhoneDeposit;
         if (employeePhoneDepositForm.isCreate()) {
             String bankName = "GC邮（备用金）";
-            if ("JXvivo".equalsIgnoreCase(RequestUtils.getCompanyName())) {
+            if (CompanyNameEnum.JXVIVO.name().equalsIgnoreCase(RequestUtils.getCompanyName())) {
                 bankName = "ZBL邮（备用金）";
             }
             employeePhoneDeposit=BeanUtil.map(employeePhoneDepositForm,EmployeePhoneDeposit.class);
@@ -200,7 +201,7 @@ public class EmployeePhoneDepositService {
                 return new RestResponse("保存失败，门店" + depotName + "在系统中不存在",null);
             }
             String bankName="GC邮（备用金）";
-            if("JXvivo".equalsIgnoreCase(RequestUtils.getCompanyName())){
+            if(CompanyNameEnum.JXVIVO.name().equalsIgnoreCase(RequestUtils.getCompanyName())){
                 bankName="ZBL邮（备用金）";
             }
             EmployeePhoneDeposit employeePhoneDeposit = new EmployeePhoneDeposit();

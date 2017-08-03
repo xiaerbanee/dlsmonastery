@@ -517,6 +517,7 @@ public class AfterSaleService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"businessId","单号"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"badProductIme","坏机串码"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"badProductName","坏机货品"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"toAreaProductIme","替换机串码"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"toAreaProductName","替换机货品"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"areaDepotName","地区"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"packageStatus","包装"));
@@ -526,7 +527,6 @@ public class AfterSaleService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"toStoreDate","退机日期"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"toCompanyDate","返厂日期"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"fromCompanyDate","返仓日期"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"toAreaProductIme","替换机串码"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"replaceProductImeId","垫机"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"badType","坏机类型"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"fromCompanyProductName","返仓型号"));
