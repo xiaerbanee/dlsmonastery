@@ -1,10 +1,5 @@
 package net.myspring.tool.modules.vivo.dto;
 
-
-import net.myspring.tool.common.domain.IdEntity;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 public class VivoPlantSendimeiDto  {

@@ -39,8 +39,6 @@ interface ProductImeUploadRepositoryCustom{
 
     fun findImeUploads(productMonthPriceSumQuery: ProductMonthPriceSumQuery): MutableList<ProductImeUploadDto>
 
-    fun findAccountDepotNamesMap(accountIdList: Set<String>): List<Map<String,Any>>
-
 }
 
 class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeUploadRepositoryCustom {
@@ -59,20 +57,6 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJd
                             AND t.month=:month
                     """)
         return namedParameterJdbcTemplate.queryForList(sb.toString(),Collections.singletonMap("month",month))
-    }
-
-    override fun findAccountDepotNamesMap(accountIdList: Set<String>): List<Map<String,Any>>{
-        val sb = StringBuilder("""
-                     select
-                        t1.account_id accountId,
-                        group_concat(t2.name) accountShopNames
-                    from
-                        crm_account_depot t1 left join crm_depot t2 on t1.depot_id = t2.id
-                    where
-                        t1.account_id in(:accountIds)
-                    group by t1.account_id
-                """)
-        return namedParameterJdbcTemplate.queryForList(sb.toString(),Collections.singletonMap("accountIds", accountIdList))
     }
 
     override fun findImeUploads(productMonthPriceSumQuery: ProductMonthPriceSumQuery): MutableList<ProductImeUploadDto> {
