@@ -159,7 +159,7 @@ ADD COLUMN `process_position_id`  bigint(20) NULL AFTER `process_flow_id`;
 update crm_shop_print t1,sys_process_flow t2 set t1.process_position_id = t2.position_id where t1.process_flow_id=t2.id;
 
 ALTER TABLE `hr_account`
-ADD COLUMN `role_ids`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `password_backup`,
+ADD COLUMN `position_ids`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `password_backup`,
 ADD COLUMN `office_ids`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `role_ids`;
 
 ALTER TABLE `hr_account_change`

@@ -240,7 +240,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                     t3.id IS NULL
                     OR t3.created_date > :date
                 )
-                AND t1.created_date <= :date
+                AND t1.created_date < :date
             """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.townType)) {
@@ -299,7 +299,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(""" and t1.created_date>=:dateStart """)
         }
         if (productImeSaleReportQuery.dateEnd != null) {
-            sb.append(""" and t1.created_date<=:dateEnd """)
+            sb.append(""" and t1.created_date<:dateEnd """)
         }
         if (productImeSaleReportQuery.scoreType != null) {
             sb.append(""" and t5.score_type=:scoreType""")
@@ -357,7 +357,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(""" and t1.retail_date>=:dateStart """)
         }
         if (productImeSaleReportQuery.dateEnd != null) {
-            sb.append(""" and t1.retail_date<=:dateEnd """)
+            sb.append(""" and t1.retail_date<:dateEnd """)
         }
         if (productImeSaleReportQuery.scoreType != null) {
             sb.append(""" and t4.score_type=:scoreType """)
