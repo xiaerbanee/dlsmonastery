@@ -26,7 +26,7 @@ public class ImooController {
     public String pullFactoryData(String companyName,String date){
         logger.info("imoo:开始同步串码"+ LocalDateTime.now());
         if (StringUtils.isBlank(RequestUtils.getCompanyName())){
-            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXDJ.name());
+            DbContextHolder.get().setCompanyName(companyName);
         }
         if(org.apache.commons.lang.StringUtils.isBlank(RequestUtils.getAccountId())) {
             AuditorContextHolder.get().setAccountId("1");
