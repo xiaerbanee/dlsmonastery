@@ -32,6 +32,33 @@
           <el-button type="primary" @click="search()">{{$t('demoPhoneList.sure')}}</el-button>
         </div>
       </search-dialog>
+      <el-dialog :title = "$t('demoPhoneList.editRemarks')" v-model="remarksEditVisible" size="tiny" class="search-form"  z-index="1500">
+        <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
+          <el-row :gutter="4">
+            <el-col :span="24">
+              <el-form-item :label="$t('demoPhoneList.ime')">{{inputForm.ime}}
+              </el-form-item>
+              <el-form-item :label="$t('demoPhoneList.areaName')">{{inputForm.areaName}}
+              </el-form-item>
+              <el-form-item :label="$t('demoPhoneList.shopName')">{{inputForm.shopName}}
+              </el-form-item>
+              <el-form-item :label="$t('demoPhoneList.demoPhoneType')">{{inputForm.demoPhoneType}}
+              </el-form-item>
+              <el-form-item :label="$t('demoPhoneList.employeeName')">{{inputForm.employeeName}}
+              </el-form-item>
+              <el-form-item :label="$t('demoPhoneList.status')">{{inputForm.status}}
+              </el-form-item>
+              <el-form-item :label="$t('demoPhoneList.remarks')" prop="remarks">
+                <el-input v-model="inputForm.remarks" type="textarea"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="remarksEditVisible = false">{{$t('demoPhoneList.cancel')}}</el-button>
+          <el-button type="primary"  @click="formSubmit()">{{$t('demoPhoneList.save')}}</el-button>
+        </div>
+      </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('demoPhoneList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="ime" :label="$t('demoPhoneList.ime')" sortable></el-table-column>
         <el-table-column prop="areaName" :label="$t('demoPhoneList.areaName')"></el-table-column>
@@ -57,6 +84,7 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('demoPhoneList.operation')" width="140">
           <template scope="scope">
+            <div class="action" v-permit="'crm:demoPhone:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('demoPhoneList.edit')}}</el-button></div>
             <div class="action" v-permit="'crm:demoPhone:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('demoPhoneList.delete')}}</el-button></div>
           </template>
         </el-table-column>
@@ -80,10 +108,13 @@
         formData:{
             extra:{}
         },
+        inputForm:{
+
+        },
         initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
-
+        remarksEditVisible:false,
       };
     },
     methods: {
@@ -117,6 +148,15 @@
       },itemCollect(){
         this.$router.push({ name: 'demoPhoneTypeOfficeList'})
       },itemAction:function(id,action){
+        if(action=="edit") {
+          this.remarksEditVisible=true;
+          let page=this.page.content;
+          for(let item in page){
+            if(id==page[item].id){
+              this.inputForm=page[item];
+            }
+          }
+        }
         if(action=="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/ws/future/crm/demoPhone/delete',{params:{id:id}}).then((response) =>{
@@ -125,6 +165,17 @@
           });
         }).catch(()=>{});
         }
+      },formSubmit(){
+        let form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            axios.post('/api/ws/future/crm/demoPhone/saveRemarks', qs.stringify(this.inputForm)).then((response) => {
+              this.$message(response.data.message);
+              this.remarksEditVisible = false;
+              this.pageRequest();
+            })
+          }
+        })
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
           window.location.href='/api/ws/future/crm/demoPhone/export?'+qs.stringify(util.deleteExtra(this.formData));
