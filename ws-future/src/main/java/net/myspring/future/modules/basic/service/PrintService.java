@@ -268,7 +268,7 @@ public class PrintService {
                         expressOrderPrintDto.setFromDepotName(depotMap.get(expressOrder.getFromDepotId()).getName());
                         expressOrderPrintDto.setToDepotName(depotMap.get(expressOrder.getToDepotId()).getName());
                         expressOrderPrintDto.setBillDate(adGoodsOrder.getBillDate());
-                        expressOrderPrintDto.setFormatId(adGoodsOrder.getBusinessId());
+                        expressOrderPrintDto.setFormatId(adGoodsOrder.getId());
                         expressOrderPrintDto.setPrintId(adGoodsOrder.getId());
                         expressOrderPrintDto.setContator(expressOrder.getContator());
                         expressOrderPrintDto.setMobilePhone(expressOrder.getMobilePhone());

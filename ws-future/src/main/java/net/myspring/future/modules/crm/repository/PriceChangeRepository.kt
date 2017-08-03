@@ -56,7 +56,7 @@ interface PriceChangeRepositoryCustom{
 class PriceChangeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): PriceChangeRepositoryCustom {
     override fun findNearPriceChange(): PriceChange {
         return namedParameterJdbcTemplate.queryForObject("""
-        SELECT t1
+        SELECT t1.*
         FROM crm_price_change t1
         ORDER BY  t1.price_change_date DESC ,t1.upload_end_date DESC
         limit 0,1
