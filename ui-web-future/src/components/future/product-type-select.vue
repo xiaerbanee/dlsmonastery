@@ -1,13 +1,30 @@
 <template>
-  <div>
+  <div   :class="className">
     <el-select v-model="innerId"  filterable remote :multiple="multiple" :disabled="disabled" :placeholder="$t('su_district.inputKey')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
       <el-option v-for="item in itemList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
     </el-select>
   </div>
 </template>
+<style>
+  .fixedHeight .el-select{
+    margin-right: 5px;
+    max-height: 157px;
+    overflow: auto;
+  }
+  .fixedHeight .el-select::-webkit-scrollbar{
+    width:5px;
+    height: 5px;
+    background: #ccc;
+    border-radius: 10px;
+  }
+  .fixedHeight .el-select::-webkit-scrollbar-thumb{
+    background: #4db3ff;
+    border-radius: 10px;
+  }
+</style>
 <script>
   export default {
-    props: ['value','multiple','disabled'],
+    props: ['value','multiple','disabled','className'],
     data() {
       return {
         innerId:this.value,

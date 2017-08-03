@@ -4,7 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:productMonthPrice:sum'">过滤</el-button>
-        <el-button type="primary" @click="exportDatas()" icon="upload"  v-permit="'crm:productMonthPrice:sum'">导出</el-button>
+        <el-button type="primary" @click="exportData()" icon="upload" v-permit="'crm:productMonthPrice:sum'">导出</el-button>
         <el-button type="primary" @click="uploadAudit()" icon="check">上报审核</el-button>
         <span v-html="searchText"></span>
       </el-row>
@@ -92,12 +92,12 @@
         this.formVisible = false;
         this.pageRequest();
       },
-      exportDatas(){
+      exportData(){
         if(!this.formData.areaId) {
           this.$message({message:"请选择办事处",type:"warning"});
           return;
         }
-        util.confirmBeforeExportData(this).then(() => {
+        util.confirmBeforeAction(this, "最多导出50000条记录，确认导出?").then(() => {
           window.location.href='/api/ws/future/crm/productMonthPriceSum/export?'+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
       },
@@ -113,9 +113,9 @@
         })
       },
       composeDatas(headerList, datasList) {
-        let mapDatas = new Array();
+        let mapDatas = [];
         for (let i=0;i<datasList.length;i++) {
-          let obj = new Object();
+          let obj = {};
           for(let j=0;j<headerList.length;j++) {
             obj[headerList[j]] = datasList[i][j];
           }
@@ -125,11 +125,10 @@
       }
     },
     created() {
-      let that = this;
       this.pageHeight = window.outerHeight - 325;
       this.initPromise = axios.get('/api/ws/future/crm/productMonthPriceSum/getQuery').then((response) => {
-        that.formData = response.data;
-        util.copyValue(that.$route.query, that.formData);
+        this.formData = response.data;
+        util.copyValue(this.$route.query, this.formData);
         this.pageRequest();
       });
     }

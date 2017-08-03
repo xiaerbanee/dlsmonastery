@@ -80,23 +80,23 @@ public class OfficeChangeService {
         List<List<Object>> data = ObjectMapperUtils.readValue(HtmlUtils.htmlUnescape(json), ArrayList.class);
         List<String> parentNameList = Lists.newArrayList();
         List<String> idList = Lists.newArrayList();
-        BigDecimal afterTaskPoint = BigDecimal.ZERO;
+        BigDecimal afterPoint = BigDecimal.ZERO;
         for(List<Object> row: data){
             idList.add(HandsontableUtils.getValue(row,0));
             parentNameList.add(HandsontableUtils.getValue(row,5));
-            String tempTaskPoint = HandsontableUtils.getValue(row,7);
-            if (StringUtils.isNotBlank(tempTaskPoint)){
-                afterTaskPoint = afterTaskPoint.add(new BigDecimal(tempTaskPoint));
+            String tempPoint = HandsontableUtils.getValue(row,7);
+            if (StringUtils.isNotBlank(tempPoint)){
+                afterPoint = afterPoint.add(new BigDecimal(tempPoint));
             }
         }
         List<OfficeChangeFormDto> officeChangeFormDtos = findByOfficeId(id);
-        BigDecimal beforeTaskPoint = BigDecimal.ZERO;
+        BigDecimal beforePoint = BigDecimal.ZERO;
         for (OfficeChangeFormDto officeChangeFormDto : officeChangeFormDtos){
-            if (officeChangeFormDto.getTaskPoint() != null){
-                beforeTaskPoint = beforeTaskPoint.add(officeChangeFormDto.getTaskPoint());
+            if (officeChangeFormDto.getPoint() != null){
+                beforePoint = beforePoint.add(officeChangeFormDto.getPoint());
             }
         }
-        if (afterTaskPoint.compareTo(beforeTaskPoint) == 0) {
+        if (afterPoint.compareTo(beforePoint) == 0) {
             Map<String, Office> officeNameMap = officeRepository.findByNameIn(parentNameList).stream().collect(Collectors.toMap(Office::getName, Office -> Office));
             Map<String, Office> officeIdMap = officeRepository.findMap(idList);
             List<OfficeChange> officeChangeList=Lists.newArrayList();
@@ -104,7 +104,7 @@ public class OfficeChangeService {
                 String officeId = HandsontableUtils.getValue(row, 0);
                 String parentName = HandsontableUtils.getValue(row, 5);
                 String name = HandsontableUtils.getValue(row, 6);
-                String taskPoint = HandsontableUtils.getValue(row, 7);
+                String point = HandsontableUtils.getValue(row, 7);
                 Office office = officeIdMap.get(officeId);
                 Office parent = officeNameMap.get(parentName);
                 if(!office.getParentId().equals(parent.getId())){
@@ -117,13 +117,13 @@ public class OfficeChangeService {
                     officeChange.setOfficeId(officeId);
                     officeChangeList.add(officeChange);
                 }
-                if(office.getTaskPoint().compareTo(new BigDecimal(taskPoint))!=0){
+                if(office.getPoint().compareTo(new BigDecimal(point))!=0){
                     OfficeChange officeChange=new OfficeChange();
-                    officeChange.setType(OfficeChnageTypeEnum.任务点位.name());
-                    officeChange.setNewLabel(taskPoint);
-                    officeChange.setNewValue(taskPoint);
-                    officeChange.setOldLabel(office.getTaskPoint().toString());
-                    officeChange.setOldValue(office.getTaskPoint().toString());
+                    officeChange.setType(OfficeChnageTypeEnum.点位.name());
+                    officeChange.setNewLabel(point);
+                    officeChange.setNewValue(point);
+                    officeChange.setOldLabel(office.getPoint().toString());
+                    officeChange.setOldValue(office.getPoint().toString());
                     officeChange.setOfficeId(officeId);
                     officeChangeList.add(officeChange);
                 }
@@ -169,8 +169,8 @@ public class OfficeChangeService {
                     }
                 }
                 officeRepository.save(list);
-            } else if (officeChange.getType().equals(OfficeChnageTypeEnum.任务点位.toString())) {
-                office.setTaskPoint(new BigDecimal(officeChange.getNewValue()));
+            } else if (officeChange.getType().equals(OfficeChnageTypeEnum.点位.toString())) {
+                office.setPoint(new BigDecimal(officeChange.getNewValue()));
             }
             officeRepository.save(office);
         }else {
@@ -178,6 +178,7 @@ public class OfficeChangeService {
         }
         officeChangeRepository.save(officeChange);
     }
+
     @Transactional
     public void batchPass(String[] ids, boolean pass){
         List<String> idList= Arrays.asList(ids);
