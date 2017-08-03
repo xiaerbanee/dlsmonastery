@@ -3,7 +3,7 @@
     <head-tab active="salaryTemplateList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus">{{$t('employeeSalaryList.add')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus">{{$t('salaryTemplateList.add')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('salaryTemplateList.loading')" @sort-change="sortChange" stripe border>
@@ -47,7 +47,7 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("employeeSalaryList",submitData);
+        util.setQuery("salaryTemplateList",submitData);
         axios.get('/api/basic/salary/salaryTemplate?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
