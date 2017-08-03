@@ -16,6 +16,11 @@ spring:
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
+      JXVIVO:
+        url: jdbc:mysql://168.192.1.243:3336/summer_vivo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
       JXDJ:
         url: jdbc:mysql://168.192.1.17:3316/summer_future?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
@@ -27,6 +32,11 @@ spring:
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
+      JXVIVO:
+        url: jdbc:mysql://168.192.1.243:3336/summer_vivo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
       JXDJ:
         url: jdbc:mysql://168.192.1.17:3316/summer_future?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
@@ -35,6 +45,11 @@ spring:
     summer-general:
       JXOPPO:
         url: jdbc:mysql://168.192.1.17:3326/summer_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
+      JXVIVO:
+        url: jdbc:mysql://168.192.1.243:3336/summer_vivo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
@@ -54,6 +69,11 @@ spring:
         username: sa
         password: bbk@123456
         driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      JXVIVO:
+        url: jdbc:sqlserver://168.192.1.13:1433;DatabaseName=AIS2017040100VIVO
+        username: sa
+        password: bbk@123456
+        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     factory:
       JXOPPO:
         url: jdbc:jtds:sqlserver://121.10.21.123:1439/plantesaleweb
@@ -64,6 +84,11 @@ spring:
         url: jdbc:jtds:sqlserver://esaledb.eebbk.com:1439/fxncbbk
         username: nceebbk
         password: 159#ncbbk@583
+        driver-class-name: net.sourceforge.jtds.jdbc.Driver
+      JXVIVO:
+        url: jdbc:jtds:sqlserver://218.19.66.180:13120/plantesaleweb
+        username: user_m13e00
+        password:  user_m13e00
         driver-class-name: net.sourceforge.jtds.jdbc.Driver
   redis:
     JXOPPO:
@@ -80,6 +105,13 @@ spring:
       database: 1
       max-idle: 100
       max-total: 200
+    JXVIVO:
+      host: localhost
+      password:
+      port: 6379
+      database: 2
+      max-idle: 100
+      max-total: 200
     oauth2:
       host: localhost
       password:
@@ -87,4 +119,4 @@ spring:
       database: 15
       max-idle: 100
       max-total: 200
-companyNames: JXOPPO,JXDJ
+companyNames: JXOPPO,JXVIVO,JXDJ
