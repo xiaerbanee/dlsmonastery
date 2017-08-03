@@ -107,6 +107,10 @@ class DepotStoreRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (StringUtils.isNotEmpty(depotStoreQuery.mobilePhone)) {
             sb.append("""  and t1.mobile_phone LIKE CONCAT('%',:mobilePhone,'%') """)
         }
+        if (StringUtils.isNotEmpty(depotStoreQuery.depotId)) {
+            sb.append(""" and t1.id = :depotId """)
+        }
+
         if (StringUtils.isNotEmpty(depotStoreQuery.officeId)) {
             sb.append("""  and t1.office_id =:officeId """)
         }

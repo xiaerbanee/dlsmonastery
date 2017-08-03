@@ -12,7 +12,7 @@ import java.util.*;
  */
 public class CollectionUtil extends org.springside.modules.utils.collection.CollectionUtil {
 
-    public static Set extractToSet(final Collection collection, final String propertyName) {
+    public static <E> Set<E> extractToSet(final Collection collection, final String propertyName) {
         if (isEmpty(collection)) {
             return Sets.newHashSet();
         }

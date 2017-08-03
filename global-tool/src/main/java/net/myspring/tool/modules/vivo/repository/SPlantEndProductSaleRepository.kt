@@ -4,7 +4,6 @@ import com.google.common.collect.Maps
 import net.myspring.tool.modules.vivo.domain.SPlantEndProductSale
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils
 import org.springframework.stereotype.Component
@@ -55,7 +54,7 @@ class SPlantEndProductSaleRepository @Autowired constructor(val namedParameterJd
         map.put("dateStart",dateStart)
         map.put("dateEnd",dateEnd)
         map.put("agentCodeList",agentCodeList)
-        val sb = "select * from vivo_push_plantendproductsale where CreatedTime >= :dateStart and CreatedTime < :dateEnd and AgentCode in (:agentCodeList) "
+        val sb = "select * from vivo_push_plantendproductsale where BillDate >= :dateStart and BillDate < :dateEnd and AgentCode in (:agentCodeList) "
         return namedParameterJdbcTemplate.query(sb, map, BeanPropertyRowMapper(SPlantEndProductSale::class.java))
     }
 

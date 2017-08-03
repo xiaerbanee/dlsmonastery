@@ -31,11 +31,11 @@ public class ProductImeUploadDto extends DataDto<ProductImeUpload> {
     private String status;
     private Boolean enabled;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "accountId")
-    private String accountId;
-    @CacheInput(inputKey = "accounts",inputInstance = "accountId",outputInstance = "positionId")
-    private String positionId;
-    @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "name")
-    private String positionName;
+    private String employeeAccountId;
+    @CacheInput(inputKey = "accounts",inputInstance = "employeeAccountId",outputInstance = "positionId")
+    private String employeePositionId;
+    @CacheInput(inputKey = "positions",inputInstance = "employeePositionId",outputInstance = "name")
+    private String employeePositionName;
     private String saleShopId;
     private String goodsOrderShopId;
     private String accountShopIds;
@@ -43,11 +43,10 @@ public class ProductImeUploadDto extends DataDto<ProductImeUpload> {
     private String saleShopName;
     @CacheInput(inputKey = "depots",inputInstance = "goodsOrderShopId",outputInstance = "name")
     private String goodsOrderShopName;
-    @CacheInput(inputKey = "depots",inputInstance = "accountShopIds",outputInstance = "name")
-    private String accountShopNames;
+
 
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "salerName")
-    private String saleName;
+    private String employeeSalerName;
 
     public String getShopOfficeId() {
         return shopOfficeId;
@@ -177,28 +176,36 @@ public class ProductImeUploadDto extends DataDto<ProductImeUpload> {
         this.enabled = enabled;
     }
 
-    public String getAccountId() {
-        return accountId;
+    public String getEmployeeAccountId() {
+        return employeeAccountId;
     }
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
+    public void setEmployeeAccountId(String employeeAccountId) {
+        this.employeeAccountId = employeeAccountId;
     }
 
-    public String getPositionId() {
-        return positionId;
+    public String getEmployeePositionId() {
+        return employeePositionId;
     }
 
-    public void setPositionId(String positionId) {
-        this.positionId = positionId;
+    public void setEmployeePositionId(String employeePositionId) {
+        this.employeePositionId = employeePositionId;
     }
 
-    public String getPositionName() {
-        return positionName;
+    public String getEmployeePositionName() {
+        return employeePositionName;
     }
 
-    public void setPositionName(String positionName) {
-        this.positionName = positionName;
+    public void setEmployeePositionName(String employeePositionName) {
+        this.employeePositionName = employeePositionName;
+    }
+
+    public String getEmployeeSalerName() {
+        return employeeSalerName;
+    }
+
+    public void setEmployeeSalerName(String employeeSalerName) {
+        this.employeeSalerName = employeeSalerName;
     }
 
     public String getSaleShopId() {
@@ -241,19 +248,4 @@ public class ProductImeUploadDto extends DataDto<ProductImeUpload> {
         this.goodsOrderShopName = goodsOrderShopName;
     }
 
-    public String getAccountShopNames() {
-        return accountShopNames;
-    }
-
-    public void setAccountShopNames(String accountShopNames) {
-        this.accountShopNames = accountShopNames;
-    }
-
-    public String getSaleName() {
-        return saleName;
-    }
-
-    public void setSaleName(String saleName) {
-        this.saleName = saleName;
-    }
 }

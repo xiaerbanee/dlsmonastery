@@ -27,7 +27,7 @@ public class PositionService {
 
 
     public List<PositionDto> findAll(){
-        List<Position> positionList=positionRepository.findAll();
+        List<Position> positionList=positionRepository.findByEnabledIsTrue();
         List<PositionDto> positionDtoList= BeanUtil.map(positionList,PositionDto.class);
         cacheUtils.initCacheInput(positionDtoList);
         return positionDtoList;
@@ -47,7 +47,7 @@ public class PositionService {
     }
 
     public List<PositionDto> findByIds(List<String> ids){
-        List<Position> positionList = positionRepository.findByIdIn(ids);
+        List<Position> positionList = positionRepository.findByIdInAndEnabledIsTrue(ids);
         List<PositionDto> positionDtoList=BeanUtil.map(positionList,PositionDto.class);
         return positionDtoList;
     }

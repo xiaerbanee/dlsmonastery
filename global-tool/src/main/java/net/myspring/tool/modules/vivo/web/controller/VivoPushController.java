@@ -1,14 +1,12 @@
 package net.myspring.tool.modules.vivo.web.controller;
 
 import net.myspring.common.enums.CompanyNameEnum;
-import net.myspring.tool.common.client.OfficeClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.future.service.FutureCustomerService;
 import net.myspring.tool.modules.future.service.FutureDemoPhoneService;
 import net.myspring.tool.modules.future.service.FutureProductImeSaleService;
 import net.myspring.tool.modules.future.service.FutureProductImeService;
-import net.myspring.tool.modules.vivo.domain.SProductItemLend;
 import net.myspring.tool.modules.vivo.dto.*;
 import net.myspring.tool.modules.vivo.service.VivoPushService;
 import org.apache.commons.lang.StringUtils;
@@ -16,12 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
-
 @RestController
 @RequestMapping(value = "factory/vivo")
-public class vivoPushController {
+public class VivoPushController {
 
     @Autowired
     private VivoPushService vivoPushService;
@@ -63,9 +58,6 @@ public class vivoPushController {
     public String pushFactoryData(String companyName,String date){
         if (StringUtils.isBlank(RequestUtils.getCompanyName())){
             DbContextHolder.get().setCompanyName(companyName);
-        }
-        if (!CompanyNameEnum.IDVIVO.name().equals(DbContextHolder.get().getCompanyName())){
-            return "数据上抛失败";
         }
         VivoPushDto vivoPushDto = vivoPushService.getPushFactoryDate(date);
         vivoPushService.pushFactoryData(vivoPushDto,date);

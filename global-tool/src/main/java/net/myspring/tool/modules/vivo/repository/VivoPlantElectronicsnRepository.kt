@@ -8,9 +8,6 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
-import java.time.LocalDate;
-
-
 interface VivoPlantElectronicsnRepository : BaseRepository<VivoPlantElectronicsn, String>, VivoPlantElectronicsnRepositoryCustom {
     @Query("select  t from #{#entityName}  t where t.snImei in (?1)")
     fun findSnImeis(snImeis: MutableList<String>): MutableList<VivoPlantElectronicsn>

@@ -21,13 +21,10 @@ import kotlin.collections.HashMap
 
 
 interface ProductImeUploadRepository : BaseRepository<ProductImeUpload, String>,  ProductImeUploadRepositoryCustom{
-
-    fun findByProductImeId(productImeId: String): MutableList<ProductImeUpload>
-
-
 }
 
 interface ProductImeUploadRepositoryCustom{
+
     fun findPage(pageable: Pageable, productImeUploadQuery : ProductImeUploadQuery): Page<ProductImeUploadDto>
 
     fun findDto(id: String): ProductImeUploadDto
@@ -36,17 +33,11 @@ interface ProductImeUploadRepositoryCustom{
 
     fun findProductTypesByMonth(month: String): List<Map<String,Any>>
 
-    fun getReportDatas(productMonthPriceSumQuery: ProductMonthPriceSumQuery): MutableList<ReportImeUploadDto>
+    fun getReportData(productMonthPriceSumQuery: ProductMonthPriceSumQuery): MutableList<ReportImeUploadDto>
 
-
-    fun findByMonthAndOfficeId(month: String, offices:List<String>): MutableList<ProductImeUpload>
+    fun findForBatchAudit(month: String, auditOfficeIds:List<String>): MutableList<ProductImeUpload>
 
     fun findImeUploads(productMonthPriceSumQuery: ProductMonthPriceSumQuery): MutableList<ProductImeUploadDto>
-
-    fun findAccountDepotNamesMap(accountIdList: Set<String>): List<Map<String,Any>>
-
-
-
 
 }
 
@@ -66,24 +57,6 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJd
                             AND t.month=:month
                     """)
         return namedParameterJdbcTemplate.queryForList(sb.toString(),Collections.singletonMap("month",month))
-    }
-
-    override fun findAccountDepotNamesMap(accountIdList: Set<String>): List<Map<String,Any>>{
-        val sb = StringBuilder("""
-                     select
-                        t1.account_id accountId,
-                        group_concat(t2.name) accountShopNames
-                    from
-                        crm_account_depot t1 left join crm_depot t2 on t1.depot_id = t2.id
-                    where
-                        t1.account_id in(:accountIds)
-                    group by t1.account_id
-
-                """)
-        return namedParameterJdbcTemplate.queryForList(sb.toString(),Collections.singletonMap("accountIds", accountIdList));
-
-
-
     }
 
     override fun findImeUploads(productMonthPriceSumQuery: ProductMonthPriceSumQuery): MutableList<ProductImeUploadDto> {
@@ -117,7 +90,7 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJd
 
     }
 
-    override fun findByMonthAndOfficeId(month: String, offices: List<String>): MutableList<ProductImeUpload> {
+    override fun findForBatchAudit(month: String, auditOfficeIds: List<String>): MutableList<ProductImeUpload> {
         val sb = StringBuilder("""
                     SELECT
                         t1.*
@@ -129,14 +102,14 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJd
                     AND t2.enabled =1
                     AND t1.shop_id = t2.id
                     AND t1.month = :month
-                    AND t2.office_id in(:offices) """)
+                    AND t2.office_id in (:auditOfficeIds) """)
         val params = HashMap<String, Any>()
         params.put("month", month)
-        params.put("offices", offices)
+        params.put("auditOfficeIds", auditOfficeIds)
         return namedParameterJdbcTemplate.query(sb.toString(), params, BeanPropertyRowMapper(ProductImeUpload::class.java))
     }
 
-    override fun getReportDatas(productMonthPriceSumQuery: ProductMonthPriceSumQuery): MutableList<ReportImeUploadDto> {
+    override fun getReportData(productMonthPriceSumQuery: ProductMonthPriceSumQuery): MutableList<ReportImeUploadDto> {
         val sb = StringBuilder("""
                 SELECT
                     t1.shop_id shopId,
@@ -167,8 +140,6 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJd
         sb.append(""" GROUP BY t1.shop_id,t1.product_type_id,t1.employee_id """)
 
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productMonthPriceSumQuery), BeanPropertyRowMapper(ReportImeUploadDto::class.java))
-
-
     }
 
     override fun findDto(id: String): ProductImeUploadDto {
@@ -185,7 +156,6 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJd
             AND ime.enabled = 1
             AND t1.id = :id
                 """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ProductImeUploadDto::class.java))
-
     }
 
     override fun findPage(pageable: Pageable, productImeUploadQuery: ProductImeUploadQuery): Page<ProductImeUploadDto> {
