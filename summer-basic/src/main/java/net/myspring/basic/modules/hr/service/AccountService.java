@@ -111,6 +111,9 @@ public class AccountService {
         if(CollectionUtil.isEmpty(accountForm.getOfficeIdList())||accountForm.getOfficeIdList().size()==1){
             accountForm.setOfficeIdList(Lists.newArrayList(accountForm.getOfficeId()));
         }
+        if(CollectionUtil.isEmpty(accountForm.getPositionIdList())||accountForm.getPositionIdList().size()==1){
+            accountForm.setPermissionIdList(Lists.newArrayList(accountForm.getPositionId()));
+        }
         accountForm.setOfficeIds(StringUtils.join(accountForm.getOfficeIdList(),CharConstant.COMMA));
         if (accountForm.isCreate()) {
             if (StringUtils.isNotBlank(accountForm.getPassword())) {
@@ -118,7 +121,6 @@ public class AccountService {
             } else {
                 accountForm.setPassword(StringUtils.getEncryptPassword("123456"));
             }
-            accountForm.setPositionIds(accountForm.getPositionId());
             account = BeanUtil.map(accountForm, Account.class);
             accountRepository.save(account);
         } else {
