@@ -186,11 +186,11 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findBaokaStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append("""   SELECT t6.id as depotId,t6.name as 'depotName', COUNT(t1.id) AS qty,t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId'""")
+            sb.append("""   SELECT t6.id as depotId,t6.name as 'depotName', COUNT(t1.id) AS qty,t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type""")
         }else if(reportQuery.isDetail){
             sb.append("""
                SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName',
-               t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId'
+               t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type
             """)
         }
         sb.append("""
@@ -259,10 +259,10 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append("""  SELECT t6.id as depotId,t6.name as depotName,COUNT(t1.id) AS qty ,t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId'""")
+            sb.append("""  SELECT t6.id as depotId,t6.name as depotName,COUNT(t1.id) AS qty ,t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type""")
         }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName',t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId'
+               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName',t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type
             """)
         }
         sb.append("""
@@ -337,7 +337,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findBaokaSaleReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append("""  SELECT t4.id as 'depotId',t4.name as 'depotName', COUNT(t1.id) AS qty,t7.name as 'chainName',t3.name as 'productTypeName',t4.office_id as 'officeId',t4.area_id as 'areaId' """)
+            sb.append("""  SELECT t4.id as 'depotId',t4.name as 'depotName', COUNT(t1.id) AS qty,t7.name as 'chainName',t3.name as 'productTypeName',t4.office_id as 'officeId',t4.area_id as 'areaId',t4.area_type """)
         }else if(reportQuery.isDetail){
             sb.append("""
                SELECT t2.id as 'productId',t2.name as 'productName',t1.ime,t1.retail_date,t6.employee_id,t4.office_id as 'officeId',t4.area_id as 'areaId',
@@ -402,11 +402,11 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findSaleReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append("""  SELECT t5.id as 'depotId',t5.name as 'depotName', COUNT(t1.id) AS qty,t7.name as 'chainName',t4.name as 'productTypeName',t5.office_id as 'officeId',t5.area_id as 'areaId'""")
+            sb.append("""  SELECT t5.id as 'depotId',t5.name as 'depotName', COUNT(t1.id) AS qty,t7.name as 'chainName',t4.name as 'productTypeName',t5.office_id as 'officeId',t5.area_id as 'areaId',t5.area_type""")
         }else if(reportQuery.isDetail){
             sb.append("""
                SELECT t3.id as 'productId',t3.name as 'productName',t2.ime,t2.retail_date,t1.employee_id,t5.office_id as 'officeId',t5.area_id as 'areaId',
-               t1.created_date as 'saleDate',t5.id as 'depotId',t5.name as 'depotName',t7.name as 'chainName',t4.name as 'productTypeName'
+               t1.created_date as 'saleDate',t5.id as 'depotId',t5.name as 'depotName',t7.name as 'chainName',t4.name as 'productTypeName',t5.area_type
             """)
         }
         sb.append("""

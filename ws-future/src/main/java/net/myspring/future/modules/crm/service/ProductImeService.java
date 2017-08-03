@@ -302,6 +302,7 @@ public class ProductImeService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaName", "办事处"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "officeName", "机构"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotName", "门店名称"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaType", "区域类型"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "chainName", "连锁体系"));
         if ("按数量".equals(reportQuery.getExportType())) {
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productTypeName", "产品型号"));
