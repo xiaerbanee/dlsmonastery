@@ -46,8 +46,8 @@ public class AccountKingdeeBookService {
 
     public AccountKingdeeBookQuery getQuery(){
         AccountKingdeeBookQuery accountKingdeeBookQuery = new AccountKingdeeBookQuery();
-        List<String> nameList = kingdeeBookRepository.findNames();
-        List<String> typeList = kingdeeBookRepository.findTypes();
+        List<String> nameList = kingdeeBookRepository.findNamesByCompanyName(RequestUtils.getCompanyName());
+        List<String> typeList = kingdeeBookRepository.findTypesByCompanyName(RequestUtils.getCompanyName());
         Map<String,Object> map = Maps.newHashMap();
         map.put("kingdeeBookNameList",nameList);
         map.put("kingdeeBookTypeList",typeList);

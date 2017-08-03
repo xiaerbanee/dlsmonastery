@@ -3,6 +3,7 @@ package net.myspring.cloud.modules.sys.service;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.utils.CacheUtils;
+import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.dto.KingdeeBookDto;
 import net.myspring.cloud.modules.sys.repository.KingdeeBookRepository;
@@ -41,8 +42,8 @@ public class KingdeeBookService {
 
     public KingdeeBookQuery getQuery(){
         KingdeeBookQuery kingdeeBookQuery = new KingdeeBookQuery();
-        List<String> nameList = kingdeeBookRepository.findNames();
-        List<String> typeList = kingdeeBookRepository.findTypes();
+        List<String> nameList = kingdeeBookRepository.findNamesByCompanyName(RequestUtils.getCompanyName());
+        List<String> typeList = kingdeeBookRepository.findTypesByCompanyName(RequestUtils.getCompanyName());
         Map<String,Object> map = Maps.newHashMap();
         map.put("nameList",nameList);
         map.put("typeList",typeList);
@@ -56,7 +57,7 @@ public class KingdeeBookService {
             KingdeeBook kingdeeBook = kingdeeBookRepository.findOne(kingdeeBookForm.getId());
             kingdeeBookForm = BeanUtil.map(kingdeeBook,KingdeeBookForm.class);
         }
-        List<String> typeList = kingdeeBookRepository.findTypes();
+        List<String> typeList = kingdeeBookRepository.findTypesByCompanyName(RequestUtils.getCompanyName());
         kingdeeBookForm.setTypeList(typeList);
         return kingdeeBookForm;
     }
