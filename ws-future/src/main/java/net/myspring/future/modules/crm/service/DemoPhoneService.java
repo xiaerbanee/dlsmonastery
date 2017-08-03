@@ -77,6 +77,16 @@ public class DemoPhoneService {
         demoPhoneRepository.save(demoPhone);
     }
 
+    @Transactional
+    public void saveRemarks(DemoPhoneForm demoPhoneForm) {
+        if(demoPhoneForm.isCreate()){
+            throw new ServiceException("该演示用机在系统中未找到");
+        }
+        DemoPhone demoPhone = demoPhoneRepository.findOne(demoPhoneForm.getId());
+        demoPhone.setRemarks(demoPhoneForm.getRemarks());
+        demoPhoneRepository.save(demoPhone);
+    }
+
     public SimpleExcelBook export(DemoPhoneQuery demoPhoneQuery) {
         Workbook workbook = new SXSSFWorkbook(10000);
 

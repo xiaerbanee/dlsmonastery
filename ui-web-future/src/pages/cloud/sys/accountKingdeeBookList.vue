@@ -20,11 +20,6 @@
               </el-form-item>
             </el-row>
             <el-row :gutter="4">
-              <el-form-item label="公司名称" >
-                <el-input v-model="formData.companyName" placeholder="请输入"></el-input>
-              </el-form-item>
-            </el-row>
-            <el-row :gutter="4">
             <el-form-item label="账套名称" >
               <el-select v-model="formData.kingdeeBookName" filterable clearable placeholder="请选择">
                 <el-option v-for="name in formData.extra.kingdeeBookNameList" :key="name" :label="name" :value="name"></el-option>
