@@ -17,6 +17,7 @@ public class DepotStoreQuery extends BaseQuery {
     private String jointLevel;
     private String contator;
     private String mobilePhone;
+    private String depotId;
 
 
 
@@ -99,5 +100,13 @@ public class DepotStoreQuery extends BaseQuery {
 
     public String getAreaId() {
         return areaId;
+    }
+
+    public String getDepotId() {
+        return depotId;
+    }
+
+    public void setDepotId(String depotId) {
+        this.depotId = depotId;
     }
 }

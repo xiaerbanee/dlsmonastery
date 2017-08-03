@@ -175,10 +175,10 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                 sb.append("""  and t1.to_company_date  < :toCompanyDateEnd """)
             }
             if (afterSaleQuery.createdDateStart!= null) {
-                sb.append("""  and t1.created_date  < :createdDateStart """)
+                sb.append("""  and t1.created_date  >= :createdDateStart """)/*modify*/
             }
             if (afterSaleQuery.createdDateEnd != null) {
-                sb.append("""  and t1.created_date  >= :createdDateEnd """)
+                sb.append("""  and t1.created_date  < :createdDateEnd """)/*modify*/
             }
             if (afterSaleQuery.fromCompanyDateStart != null) {
                 sb.append("""  and t1.from_company_date  >= :fromCompanyDateStart """)
