@@ -51,7 +51,6 @@
     data() {
       return {
         searchText: "",
-        page: {},
         formData: {
           extra: {}
         },
@@ -74,19 +73,17 @@
         this.pageLoading = true;
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
-        util.setQuery("dictEnumList", submitData);
+        util.setQuery("productMonthPriceSum", submitData);
         axios.get('/api/ws/future/crm/productMonthPriceSum', {params: submitData}).then((response) => {
-          this.page = response.data;
           this.tableHeaders = response.data.header;
           this.tableDatas = response.data.data;
           if(response.data.data) {
             this.tableDatas = this.composeDatas(this.tableHeaders, this.tableDatas);
           }
           this.pageLoading = false;
-          if (response.data.message) {
-            this.$message({message:response.data.message,type:"warning"});
-          }
-        })
+        }).catch(()=>{
+          this.pageLoading = false;
+        });
       },
       search() {
         this.formVisible = false;

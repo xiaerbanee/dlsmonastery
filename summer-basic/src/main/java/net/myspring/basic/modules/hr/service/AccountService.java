@@ -74,6 +74,10 @@ public class AccountService {
         return account;
     }
 
+    public List<Account> findByEmployeeIdInAndType(List<String> employeeIdList, String type){
+        return accountRepository.findByEmployeeIdInAndType(employeeIdList, type);
+    }
+
     public AccountDto findOne(AccountDto accountDto) {
         if(!accountDto.isCreate()){
             accountDto = accountRepository.findDto(accountDto.getId());
