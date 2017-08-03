@@ -2,10 +2,13 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
+import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.crm.domain.ProductImeUpload;
 import net.myspring.future.modules.crm.domain.ProductMonthPrice;
 import net.myspring.future.modules.crm.domain.ProductMonthPriceDetail;
@@ -52,6 +55,8 @@ public class ProductMonthPriceService {
     private CacheUtils cacheUtils;
     @Autowired
     private OfficeClient officeClient;
+    @Autowired
+    private DepotRepository depotRepository;
 
     public Page<ProductMonthPriceDto> findPage(Pageable pageable, ProductMonthPriceQuery productMonthPriceQuery) {
         Page<ProductMonthPriceDto> page = productMonthPriceRepository.findPage(pageable, productMonthPriceQuery);
@@ -317,15 +322,13 @@ public class ProductMonthPriceService {
         excelColumnList.add(headColumnList);
 
         List<ProductImeUploadDto> productImeUploadDtos = productImeUploadRepository.findImeUploads(productMonthPriceSumQuery);
+        //三次緩存，获取相应的关联值
         cacheUtils.initCacheInput(productImeUploadDtos);
         cacheUtils.initCacheInput(productImeUploadDtos);
         cacheUtils.initCacheInput(productImeUploadDtos);
-        Set<String> accountIdList = CollectionUtil.extractToSet(productImeUploadDtos, "accountId");
-        List<Map<String, Object>> accountDepotNamesList = productImeUploadRepository.findAccountDepotNamesMap(accountIdList);
-        Map<String, String> accountDepotNamesMap= Maps.newHashMap();
-        for (Map<String, Object> map : accountDepotNamesList) {
-            accountDepotNamesMap.put(map.get("accountId").toString(), map.get("accountShopNames").toString());
-        }
+
+        List<String> accountShopIdList = productImeUploadDtos.stream().filter(each -> StringUtils.isNotBlank(each.getAccountShopIds())).flatMap(each -> Arrays.stream(each.getAccountShopIds().split(CharConstant.COMMA))).distinct().collect(Collectors.toList());
+        Map<String, Depot> depotMap = depotRepository.findMap(accountShopIdList);
 
         for (ProductImeUploadDto productImeUploadDto : productImeUploadDtos) {
             CellStyle dataCellStyle = getCellStyle(cellStyleMap, productImeUploadDto);
@@ -334,20 +337,27 @@ public class ProductMonthPriceService {
             dataColumnList.add(new SimpleExcelColumn(dataCellStyle, productImeUploadDto.getShopAreaName()));
             dataColumnList.add(new SimpleExcelColumn(dataCellStyle, productImeUploadDto.getShopOfficeName()));
             dataColumnList.add(new SimpleExcelColumn(dataCellStyle, productImeUploadDto.getShopName()));
-            dataColumnList.add(new SimpleExcelColumn(dataCellStyle, productImeUploadDto.getPositionName()));
-            dataColumnList.add(new SimpleExcelColumn(dataCellStyle, productImeUploadDto.getEmployeeName()));
-            dataColumnList.add(new SimpleExcelColumn(dataCellStyle, productImeUploadDto.getSaleName()));
+            dataColumnList.add(new SimpleExcelColumn(dataCellStyle, StringUtils.isBlank(productImeUploadDto.getEmployeeId()) ? "" : productImeUploadDto.getEmployeePositionName()));
+            dataColumnList.add(new SimpleExcelColumn(dataCellStyle, StringUtils.isBlank(productImeUploadDto.getEmployeeId()) ? "无促销员" : productImeUploadDto.getEmployeeName()));
+            dataColumnList.add(new SimpleExcelColumn(dataCellStyle, StringUtils.isBlank(productImeUploadDto.getEmployeeId()) ? "无促销员" : productImeUploadDto.getEmployeeSalerName()));
             dataColumnList.add(new SimpleExcelColumn(dataCellStyle, productImeUploadDto.getProductTypeName()));
             dataColumnList.add(new SimpleExcelColumn(dataCellStyle, productImeUploadDto.getProductImeProductName()));
             dataColumnList.add(new SimpleExcelColumn(dataCellStyle, productImeUploadDto.getProductImeIme()));
             dataColumnList.add(new SimpleExcelColumn(dataCellStyle, productImeUploadDto.getShopName()));
             dataColumnList.add(new SimpleExcelColumn(dataCellStyle, productImeUploadDto.getSaleShopName()));
             dataColumnList.add(new SimpleExcelColumn(dataCellStyle, productImeUploadDto.getGoodsOrderShopName()));
-            String accountShopNames = accountDepotNamesMap.get(productImeUploadDto.getAccountId()) != null ? accountDepotNamesMap.get(productImeUploadDto.getAccountId()) : "";
-            dataColumnList.add(new SimpleExcelColumn(dataCellStyle, accountShopNames));
+            dataColumnList.add(new SimpleExcelColumn(dataCellStyle, getDepotNameStr(depotMap, productImeUploadDto.getAccountShopIds())));
             excelColumnList.add(dataColumnList);
         }
         return new SimpleExcelSheet("串码", excelColumnList);
+    }
+
+    private String getDepotNameStr(Map<String, Depot> depotMap, String accountShopIds) {
+        if(StringUtils.isBlank(accountShopIds)){
+            return "";
+        }
+        List<String> depotNameList = Arrays.stream(accountShopIds.split(CharConstant.COMMA)).map(each -> depotMap.get(each).getName()).collect(Collectors.toList());
+        return StringUtils.join(depotNameList, CharConstant.COMMA);
     }
 
     private CellStyle getCellStyle(Map<String, CellStyle> cellStyleMap, ProductImeUploadDto productImeUploadDto) {
