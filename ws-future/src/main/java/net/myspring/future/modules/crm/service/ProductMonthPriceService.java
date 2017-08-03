@@ -259,7 +259,7 @@ public class ProductMonthPriceService {
 
     public SimpleExcelBook export(ProductMonthPriceSumQuery productMonthPriceSumQuery) {
 
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(50000);
         Map<String, CellStyle> cellStyleMap = ExcelUtils.getCellStyleMap(workbook);
 
         SimpleExcelSheet sumSheet = getSumSheet(productMonthPriceSumQuery, cellStyleMap);
