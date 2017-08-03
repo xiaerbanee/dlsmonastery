@@ -55,7 +55,7 @@ class SPlantEndProductSaleRepository @Autowired constructor(val namedParameterJd
         map.put("dateStart",dateStart)
         map.put("dateEnd",dateEnd)
         map.put("agentCodeList",agentCodeList)
-        val sb = "select * from vivo_push_plantendproductsale where CreatedTime >= :dateStart and CreatedTime < :dateEnd and AgentCode in (:agentCodeList) "
+        val sb = "select * from vivo_push_plantendproductsale where BillDate >= :dateStart and BillDate < :dateEnd and AgentCode in (:agentCodeList) "
         return namedParameterJdbcTemplate.query(sb, map, BeanPropertyRowMapper(SPlantEndProductSale::class.java))
     }
 

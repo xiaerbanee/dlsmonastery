@@ -23,10 +23,8 @@ class SProductItem000Repository @Autowired constructor(val namedParameterJdbcTem
         return namedParameterJdbcTemplate.update(sb.toString(),map)
     }
 
-    fun deleteByAgentCode(dateStart:String,dateEnd:String,agentCode:String):Int{
+    fun deleteByAgentCode(agentCode:String):Int{
         val map = Maps.newHashMap<String,String>()
-        map.put("dateStart",dateStart)
-        map.put("dateEnd",dateEnd)
         val sb = "DELETE FROM S_ProductItem000_"+agentCode
         return namedParameterJdbcTemplate.update(sb,map)
     }

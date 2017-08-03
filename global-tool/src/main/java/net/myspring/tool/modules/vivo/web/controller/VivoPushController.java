@@ -21,7 +21,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "factory/vivo")
-public class vivoPushController {
+public class VivoPushController {
 
     @Autowired
     private VivoPushService vivoPushService;
@@ -63,9 +63,6 @@ public class vivoPushController {
     public String pushFactoryData(String companyName,String date){
         if (StringUtils.isBlank(RequestUtils.getCompanyName())){
             DbContextHolder.get().setCompanyName(companyName);
-        }
-        if (!CompanyNameEnum.IDVIVO.name().equals(DbContextHolder.get().getCompanyName())){
-            return "数据上抛失败";
         }
         VivoPushDto vivoPushDto = vivoPushService.getPushFactoryDate(date);
         vivoPushService.pushFactoryData(vivoPushDto,date);
