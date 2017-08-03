@@ -380,6 +380,9 @@ export default {
     delete: "删除",
     audit: "审核",
     collect:"汇总",
+    editRemarks:"备注修改",
+    cancel:"取消",
+    save:"保存",
   },
   demoPhoneTypeOfficeList:{
     demoPhoneTypeOfficeList:"演示机型汇总",

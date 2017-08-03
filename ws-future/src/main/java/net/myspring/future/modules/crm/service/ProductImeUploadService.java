@@ -2,7 +2,6 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.dto.AccountCommonDto;
-import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
@@ -39,8 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -121,7 +119,7 @@ public class ProductImeUploadService {
         List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByEnabledIsTrueAndProductImeIdIn(CollectionUtil.extractToList(productImeList,"id"));
         Map<String, GoodsOrderIme> goodsOrderImeMap = CollectionUtil.extractToMap(goodsOrderImeList,"productImeId");
         Map<String, GoodsOrder> goodsOrderMap = goodsOrderRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"goodsOrderId"));
-        String accountShopIds = getAccountShopIds(productImeUploadForm.getEmployeeId());
+        String accountShopIds = getEmployeeDepotIds(productImeUploadForm.getEmployeeId());
 
         for (ProductIme productIme : productImeList) {
             if(productIme.getProductImeUploadId()!=null){
@@ -150,21 +148,6 @@ public class ProductImeUploadService {
             productImeRepository.save(productIme);
 
         }
-    }
-
-    private String getAccountShopIds(String employeeId) {
-        if(StringUtils.isBlank(employeeId)){
-            return null;
-        }
-        AccountCommonDto accountCommonDto = accountClient.findByEmployeeId(employeeId);
-        String accountShopIds = null;
-        if(accountCommonDto !=null && StringUtils.isNotBlank(accountCommonDto.getId())){
-            List depotIds = depotManager.filterDepotIds(accountCommonDto.getId());
-            if(CollectionUtil.isNotEmpty(depotIds)){
-                accountShopIds = StringUtils.join(depotIds, CharConstant.COMMA);
-            }
-        }
-        return accountShopIds;
     }
 
     public String checkForUploadBack(List<String> imeList) {
@@ -259,8 +242,14 @@ public class ProductImeUploadService {
         if (CollectionUtil.isEmpty(productImeSaleDtoList)) {
             return uploadQty;
         }
-        Map<String, ProductIme> productImeMap = productImeRepository.findMap(CollectionUtil.extractToList(productImeSaleDtoList, "productImeId"));
+        List<String> productImeIdList = CollectionUtil.extractToList(productImeSaleDtoList, "productImeId");
+        Map<String, ProductIme> productImeMap = productImeRepository.findMap(productImeIdList);
         Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(productImeSaleDtoList, "productImeProductId"));
+        List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByEnabledIsTrueAndProductImeIdIn(productImeIdList);
+        Map<String, GoodsOrderIme> goodsOrderImeMap = CollectionUtil.extractToMap(goodsOrderImeList,"productImeId");
+        Map<String, GoodsOrder> goodsOrderMap = goodsOrderRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"goodsOrderId"));
+
+        Map<String, String> employeeDepotIdsMap = getEmployeeDepotIdsMap(new ArrayList<>(CollectionUtil.extractToSet(productImeSaleDtoList, "employeeId")));
 
         for (ProductImeSaleDto productImeSaleDto : productImeSaleDtoList) {
 
@@ -273,6 +262,13 @@ public class ProductImeUploadService {
                 productImeUpload.setShopId(productImeSaleDto.getShopId());
                 productImeUpload.setProductImeId(productImeSaleDto.getProductImeId());
                 productImeUpload.setProductTypeId(productMap.get(productImeSaleDto.getProductImeProductId()).getProductTypeId());
+
+                if(goodsOrderImeMap.get(productImeSaleDto.getProductImeId())!=null && goodsOrderMap.get(goodsOrderImeMap.get(productImeSaleDto.getProductImeId()).getGoodsOrderId())!=null){
+                    productImeUpload.setGoodsOrderShopId(goodsOrderMap.get(goodsOrderImeMap.get(productImeSaleDto.getProductImeId()).getGoodsOrderId()).getShopId());
+                }else{
+                    productImeUpload.setGoodsOrderShopId(null);
+                }
+                productImeUpload.setAccountShopIds(employeeDepotIdsMap.get(productImeSaleDto.getEmployeeId()));
                 productImeUploadRepository.save(productImeUpload);
 
                 ProductIme productIme = productImeMap.get(productImeSaleDto.getProductImeId());
@@ -283,5 +279,23 @@ public class ProductImeUploadService {
             }
         }
         return uploadQty;
+    }
+
+    private Map<String, String> getEmployeeDepotIdsMap(List<String> employeeIdList) {
+       if(CollectionUtil.isEmpty(employeeIdList)){
+           return new HashMap<>();
+       }
+       List<AccountCommonDto> accountCommonDtoList = accountClient.findByEmployeeIdList(employeeIdList);
+       Map<String, String> interMap = productImeUploadRepository.findAccountDepotIdsMap(new ArrayList<>(CollectionUtil.extractToSet(accountCommonDtoList, "id")));
+
+       Map<String, String> result = new HashMap<>();
+       for(AccountCommonDto accountCommonDto : accountCommonDtoList){
+           result.put(accountCommonDto.getEmployeeId(), interMap.get(accountCommonDto.getId()));
+       }
+       return result;
+    }
+
+    private String getEmployeeDepotIds(String employeeId) {
+        return getEmployeeDepotIdsMap(Collections.singletonList(employeeId)).get(employeeId);
     }
 }
