@@ -41,7 +41,7 @@ public class AccountForm extends BaseForm<Account> {
     private List<String> officeListName=Lists.newArrayList();
 
     public String getPositionIds() {
-        if(StringUtils.isNotBlank(positionIds)&&CollectionUtil.isNotEmpty(positionIdList)){
+        if(StringUtils.isBlank(positionIds)&&CollectionUtil.isNotEmpty(positionIdList)){
             this.positionIds=StringUtils.join(positionIdList,CharConstant.COMMA);
         }
         return positionIds;
