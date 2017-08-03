@@ -1,5 +1,6 @@
 package net.myspring.future.modules.layout.web.query;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.enums.ShopBuildAuditEnum;
 import net.myspring.future.common.query.BaseQuery;
@@ -78,9 +79,12 @@ public class ShopBuildQuery extends BaseQuery {
         if(StringUtils.isNotBlank(auditType)){
             if(ShopBuildAuditEnum.待批需要我审核.name().equalsIgnoreCase(auditType)){
                 return RequestUtils.getPositionIdList();
+            }else {
+                return Lists.newArrayList();
             }
+        }else {
+            return Lists.newArrayList();
         }
-        return null;
     }
 
     public String getShopName() {
