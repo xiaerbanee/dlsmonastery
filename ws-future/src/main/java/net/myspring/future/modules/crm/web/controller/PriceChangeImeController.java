@@ -41,8 +41,7 @@ public class PriceChangeImeController {
     @RequestMapping(value = "getQuery")
     @PreAuthorize("hasPermission(null,'crm:priceChangeIme:view')")
     public PriceChangeImeQuery getQuery(PriceChangeImeQuery priceChangeImeQuery){
-        priceChangeImeQuery.getExtra().put("statusList",AuditStatusEnum.getList());
-        return priceChangeImeQuery;
+        return priceChangeImeService.getQuery(priceChangeImeQuery);
     }
 
 

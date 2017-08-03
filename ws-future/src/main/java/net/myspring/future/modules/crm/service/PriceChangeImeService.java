@@ -95,6 +95,15 @@ public class PriceChangeImeService {
         return priceChangeImeForm;
     }
 
+    public PriceChangeImeQuery getQuery(PriceChangeImeQuery priceChangeImeQuery){
+        PriceChange priceChange = priceChangeRepository.findNearPriceChange();
+        if(priceChange != null){
+            priceChangeImeQuery.setPriceChangeName(priceChange.getName());
+        }
+        priceChangeImeQuery.getExtra().put("statusList",AuditStatusEnum.getList());
+        return priceChangeImeQuery;
+    }
+
     @Transactional
     public void delete(String id){
         priceChangeImeRepository.delete(id);
