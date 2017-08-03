@@ -35,10 +35,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
@@ -158,6 +155,12 @@ public class AccountController {
     public AccountCommonDto findByEmployeeId(String employeeId) {
         Account account = accountService.findByEmployeeIdAndType(employeeId,"主账号");
         return BeanUtil.map(account,AccountCommonDto.class);
+    }
+
+    @RequestMapping(value = "findByEmployeeIdList")
+    public List<AccountCommonDto> findByEmployeeIdList(@RequestBody List<String> employeeIdList) {
+        List<Account> accountList = accountService.findByEmployeeIdInAndType(employeeIdList,"主账号");
+        return BeanUtil.map(accountList, AccountCommonDto.class);
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
