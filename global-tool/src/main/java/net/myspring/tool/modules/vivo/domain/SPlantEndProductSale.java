@@ -1,7 +1,6 @@
 package net.myspring.tool.modules.vivo.domain;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 public class SPlantEndProductSale {
     private String id;
