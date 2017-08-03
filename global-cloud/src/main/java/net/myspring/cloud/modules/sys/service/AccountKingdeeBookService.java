@@ -71,7 +71,9 @@ public class AccountKingdeeBookService {
             accountKingdeeBookQuery.setAccountId(accountId);
             accountKingdeeBookQuery.setCompanyName(RequestUtils.getCompanyName());
             AccountKingdeeBook accountKingdeeBook =  accountKingdeeBookRepository.findFilter(accountKingdeeBookQuery).get(0);
-            accountKingdeeBook.setPassword(null);
+            if (accountKingdeeBook != null) {
+                accountKingdeeBook.setPassword(null);
+            }
             return accountKingdeeBook;
         }
         return null;
