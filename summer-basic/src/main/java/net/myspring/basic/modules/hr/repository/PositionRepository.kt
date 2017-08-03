@@ -34,7 +34,9 @@ interface PositionRepository : BaseRepository<Position,String>,PositionRepositor
     @CachePut(key="#p0.id")
     fun save(position: Position): Position
 
-    fun findByIdIn(id: MutableList<String>): MutableList<Position>
+    fun findByIdInAndEnabledIsTrue(id: MutableList<String>): MutableList<Position>
+
+    fun findByEnabledIsTrue(): MutableList<Position>
 }
 interface PositionRepositoryCustom{
     fun findByNameLike(@Param("name") name: String): MutableList<Position>
