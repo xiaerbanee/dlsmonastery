@@ -33,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by liuj on 2017/5/12.
@@ -125,9 +124,9 @@ public class DepotStoreService {
         return map;
     }
 
-    public SimpleExcelBook export(ReportQuery reportQuery1,ReportQuery reportQuery) {
+    public SimpleExcelBook export(ReportQuery depotStoreQuery1,ReportQuery reportQuery) {
         //获取仓库报表基本信息
-        DepotStoreQuery depotStoreQuery = BeanUtil.map(reportQuery1, DepotStoreQuery.class);
+        DepotStoreQuery depotStoreQuery = BeanUtil.map(depotStoreQuery1, DepotStoreQuery.class);
         List<DepotStoreDto> depotStoreDtos = findFilter(depotStoreQuery);
 
         //获取仓库报表详细信息
@@ -163,8 +162,8 @@ public class DepotStoreService {
         //填充 excel data
         for (List<Object> row : dataDetails) {
             List<SimpleExcelColumn> simpleExcelColumns = Lists.newArrayList();
-            for (int i=0;i<row.size();i++) {
-                simpleExcelColumns.add(new SimpleExcelColumn(dataCellStyle, row.get(i)));
+            for (Object cell : row) {
+                simpleExcelColumns.add(new SimpleExcelColumn(dataCellStyle, cell));
             }
             excelColumnList.add(simpleExcelColumns);
         }
@@ -172,6 +171,57 @@ public class DepotStoreService {
         ExcelUtils.doWrite(workbook, sheet);
 
         return new SimpleExcelBook(workbook, "仓库报表.xlsx", sheet);
+    }
+
+    public SimpleExcelBook exportDetail(ReportQuery reportQuery, ReportQuery depotStoreQuery1) {
+        DepotStoreQuery depotStoreQuery = BeanUtil.map(depotStoreQuery1, DepotStoreQuery.class);
+        List<DepotStoreDto> depotStoreDtos = findFilter(depotStoreQuery);
+
+        List<List<Object>> tableData = Lists.newArrayList();
+        for (DepotStoreDto depotStoreDto : depotStoreDtos) {
+            reportQuery.setDepotId(depotStoreDto.getDepotId());
+            reportQuery.setIsDetail(true);
+            List<DepotReportDto> depotReportList = depotStoreRepository.findStoreReport(reportQuery);
+            for (DepotReportDto depotReportDto : depotReportList) {
+                List<Object> row = Lists.newArrayList();
+                row.add(depotStoreDto.getAreaName());
+                row.add(depotStoreDto.getOfficeName());
+                row.add(depotStoreDto.getDepotName());
+                row.add(depotReportDto.getProductName());
+                row.add(depotReportDto.getIme());
+                tableData.add(row);
+            }
+        }
+
+        Workbook workbook = new SXSSFWorkbook(200000);
+        List<List<SimpleExcelColumn>> excelColumnList = Lists.newArrayList();
+        Map<String, CellStyle> cellStyleMap = ExcelUtils.getCellStyleMap(workbook);
+
+        //设置excel头
+        List<SimpleExcelColumn> headColumnList = Lists.newArrayList();
+        CellStyle headCellStyle = cellStyleMap.get(ExcelCellStyle.HEADER.name());
+        headColumnList.add(new SimpleExcelColumn(headCellStyle, "办事处"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle, "业务单元"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle, "仓库"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle, "货品"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle, "串码"));
+        excelColumnList.add(headColumnList);
+
+        //设置excel体
+        CellStyle dataCellStyle = cellStyleMap.get(ExcelCellStyle.DATA.name());
+        for (List<Object> row : tableData) {
+            List<SimpleExcelColumn> dataColumnList = Lists.newArrayList();
+            for (Object cell : row) {
+                dataColumnList.add(new SimpleExcelColumn(dataCellStyle, cell));
+            }
+            excelColumnList.add(dataColumnList);
+        }
+
+        //设置sheet并将数据写入excel
+        SimpleExcelSheet sheet = new SimpleExcelSheet("仓库串码明细", excelColumnList);
+        ExcelUtils.doWrite(workbook, sheet);
+
+        return new SimpleExcelBook(workbook, "仓库串码明细.xlsx", sheet);
     }
 
     private Integer setPercentage(List<DepotStoreDto> depotStoreList) {

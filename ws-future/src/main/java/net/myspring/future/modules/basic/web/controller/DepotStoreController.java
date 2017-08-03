@@ -112,29 +112,32 @@ public class DepotStoreController {
         return depotStoreService.getReportDetail(reportQuery);
     }
 
-    /**
-     *  仓库表报导出
-     *  created by chenjl
-     * @param reportQuery
-     * @return
-     */
+
     @RequestMapping(value = "export")
     public ModelAndView export(ReportQuery reportQuery) {
-        ReportQuery reportQuery1 =reportQuery;
-        reportQuery1.setDepotIdList(depotService.filterDepotIds());
-        return new ModelAndView(new ExcelView(), "simpleExcelBook", depotStoreService.export(reportQuery1,reportQuery));
+        ReportQuery depotStoreQuery;
+        depotStoreQuery = reportQuery;
+        depotStoreQuery.setDepotIdList(depotService.filterDepotIds());
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", depotStoreService.export(depotStoreQuery,reportQuery));
     }
 
+    @RequestMapping(value = "exportDetail")
+    public ModelAndView exportDetail(ReportQuery reportQuery) {
+        ReportQuery depotStoreQuery;
+        depotStoreQuery = reportQuery;
+        depotStoreQuery.setDepotIdList(depotService.filterDepotIds());
+        return new ModelAndView(new ExcelView() ,"simpleExcelBook",depotStoreService.exportDetail(reportQuery, depotStoreQuery));
+    }
 
     @RequestMapping(value = "getReportQuery")
-    public ReportQuery getReportQuery(ReportQuery reportQuery){
+    public ReportQuery getReportQuery(ReportQuery reportQuery) {
         reportQuery.getExtra().put("typeList", ReportTypeEnum.getList());
         reportQuery.getExtra().put("outTypeList", OutTypeEnum.getList());
         reportQuery.getExtra().put("boolMap", BoolEnum.getMap());
         CompanyConfigCacheDto companyConfigCacheDto = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.PRODUCT_NAME.name());
-        if(companyConfigCacheDto != null && "WZOPPO".equals(companyConfigCacheDto.getValue())) {
+        if (companyConfigCacheDto != null && "WZOPPO".equals(companyConfigCacheDto.getValue())) {
             reportQuery.setOutType(ProductImeStockReportOutTypeEnum.核销.name());
-        }else{
+        } else {
             reportQuery.setOutType(ProductImeStockReportOutTypeEnum.电子保卡.name());
         }
         reportQuery.setType(ReportTypeEnum.核销.name());

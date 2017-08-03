@@ -5,6 +5,13 @@
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bank:view'">过滤</el-button>
         <el-button type="primary" @click="exportData()" icon="upload"  v-permit="'crm:bank:view'">导出</el-button>
+        <el-dropdown @command="exportData">
+            <el-button type="primary">导出 <i class="el-icon-caret-bottom el-icon--right"></i></el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="按合计">按合计导出</el-dropdown-item>
+              <el-dropdown-item command="按串码">按串码导出</el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -18,6 +25,9 @@
                 <el-select v-model="formData.scoreType" clearable filterable placeholder="请选择">
                   <el-option v-for="(key,value) in formData.extra.boolMap" :key="key" :label="value | bool2str" :value="key"></el-option>
                 </el-select>
+              </el-form-item>
+              <el-form-item label="仓库名" :label-width="formLabelWidth">
+                <depot-select v-model="formData.depotId"  category="store"></depot-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -47,10 +57,11 @@
 </template>
 <script>
   import productTypeSelect from 'components/future/product-type-select'
-
+  import depotSelect from 'components/future/depot-select'
   export default {
     components:{
-      productTypeSelect
+      productTypeSelect,
+      depotSelect
     },
     data() {
       return {
@@ -100,10 +111,15 @@
           }
           this.detailVisible=true;
         })
-      },exportData() {
-        util.confirmBeforeExportData(this).then(() => {
-          window.location.href='/api/ws/future/basic/depotStore/export?'+qs.stringify(util.deleteExtra(this.formData));
-        }).catch(()=>{});
+      },exportData(command) {
+        if(command ==='按合计') {
+          util.confirmBeforeExportData(this).then(() => {
+            window.location.href='/api/ws/future/basic/depotStore/export?'+qs.stringify(util.deleteExtra(this.formData));
+          }).catch(()=>{});
+        }
+        if (command === '按串码'){
+          window.location.href='/api/ws/future/basic/depotStore/exportDetail?'+qs.stringify(util.deleteExtra(this.formData));
+        }
       }
     },created () {
       axios.get('/api/ws/future/basic/depotStore/getReportQuery').then((response) => {

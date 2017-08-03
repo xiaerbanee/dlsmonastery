@@ -102,7 +102,7 @@
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("afterSaleList",submitData);
         axios.get('/api/ws/future/crm/afterSale',{params:submitData}).then((response) => {
-            console.log(response.data)
+            console.log(response.data);
           this.page = response.data;
           this.pageLoading = false;
         })
