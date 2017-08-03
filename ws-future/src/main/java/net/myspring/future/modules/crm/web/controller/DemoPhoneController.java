@@ -50,6 +50,12 @@ public class DemoPhoneController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
+    @RequestMapping(value = "saveRemarks")
+    public RestResponse saveRemarks(DemoPhoneForm demoPhoneForm){
+        demoPhoneService.saveRemarks(demoPhoneForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
     @RequestMapping(value = "getForm")
     public DemoPhoneForm getForm(DemoPhoneForm demoPhoneForm){
         return demoPhoneForm;

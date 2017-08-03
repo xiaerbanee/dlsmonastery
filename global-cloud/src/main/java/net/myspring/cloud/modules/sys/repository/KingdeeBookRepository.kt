@@ -23,14 +23,15 @@ interface  KingdeeBookRepository : BaseRepository<KingdeeBook,String>,KingdeeBoo
         SELECT t1.name
         FROM  #{#entityName} t1
         where t1.enabled = 1
+            and t1.companyName = :companyName
      """)
-    fun findNames():MutableList<String>
+    fun findNamesByCompanyName(@Param("companyName")companyName:String):MutableList<String>
 
     @Query("""
         SELECT t1
         FROM  #{#entityName} t1
         where t1.enabled = 1
-        and t1.companyName = :companyName
+            and t1.companyName = :companyName
      """)
     fun findByCompanyName(@Param("companyName")companyName:String): KingdeeBook
 
@@ -38,8 +39,9 @@ interface  KingdeeBookRepository : BaseRepository<KingdeeBook,String>,KingdeeBoo
         SELECT distinct t1.type
         FROM  #{#entityName} t1
         where t1.enabled = 1
+            and t1.companyName = :companyName
      """)
-    fun findTypes():MutableList<String>
+    fun findTypesByCompanyName(@Param("companyName")companyName:String):MutableList<String>
 }
 
 interface KingdeeBookRepositoryCustom{

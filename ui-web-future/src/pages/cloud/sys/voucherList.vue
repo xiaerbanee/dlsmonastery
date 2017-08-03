@@ -39,7 +39,11 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" label="编号" sortable width="120"></el-table-column>
         <el-table-column prop="fdate" label="凭证日期"></el-table-column>
-        <el-table-column prop="status" label="状态"></el-table-column>
+        <el-table-column prop="status" label="状态">
+          <template scope="scope">
+            <el-tag :type="scope.row.status === '省公司财务审核' ? 'success' : 'primary'" close-transition>{{scope.row.status}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="outCode" label="外部编码"></el-table-column>
         <el-table-column prop="createdByName" label="创建人"></el-table-column>
         <el-table-column prop="createdDate" label="创建时间"></el-table-column>
@@ -48,7 +52,7 @@
             <el-button size="small" @click.native="itemAction(scope.row.id,'detail')">详细</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'export')">导出</el-button>
             <el-button size="small" v-if="scope.row.status !== '已完成' " @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
-            <el-button size="small" v-if="scope.row.status !== '已完成' " @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
+            <el-button size="small" type="danger" v-if="scope.row.status !== '已完成' " @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

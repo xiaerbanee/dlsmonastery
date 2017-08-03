@@ -1,7 +1,6 @@
 package net.myspring.task.tool.schedule;
 
 import net.myspring.common.enums.CompanyNameEnum;
-import net.myspring.task.tool.client.FutureOppoClient;
 import net.myspring.task.tool.client.FutureVivoClient;
 import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;

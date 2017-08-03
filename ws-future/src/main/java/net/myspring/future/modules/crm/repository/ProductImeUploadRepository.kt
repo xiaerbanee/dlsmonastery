@@ -39,7 +39,7 @@ interface ProductImeUploadRepositoryCustom{
 
     fun findImeUploads(productMonthPriceSumQuery: ProductMonthPriceSumQuery): MutableList<ProductImeUploadDto>
 
-    fun findAccountDepotNamesMap(accountIdList: Set<String>): List<Map<String,Any>>
+    fun findAccountDepotIdsMap(accountIdList: List<String>): Map<String, String>
 
 }
 
@@ -61,18 +61,23 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJd
         return namedParameterJdbcTemplate.queryForList(sb.toString(),Collections.singletonMap("month",month))
     }
 
-    override fun findAccountDepotNamesMap(accountIdList: Set<String>): List<Map<String,Any>>{
-        val sb = StringBuilder("""
+    override fun findAccountDepotIdsMap(accountIdList: List<String>): Map<String, String>{
+        val list = namedParameterJdbcTemplate.queryForList("""
                      select
                         t1.account_id accountId,
-                        group_concat(t2.name) accountShopNames
+                        group_concat(t1.depot_id) depotIds
                     from
-                        crm_account_depot t1 left join crm_depot t2 on t1.depot_id = t2.id
+                        crm_account_depot t1
                     where
-                        t1.account_id in(:accountIds)
+                        t1.account_id in (:accountIdList)
                     group by t1.account_id
-                """)
-        return namedParameterJdbcTemplate.queryForList(sb.toString(),Collections.singletonMap("accountIds", accountIdList))
+                """, Collections.singletonMap("accountIdList", accountIdList))
+
+        val resultMap = HashMap<String, String>()
+        for (map in list) {
+            resultMap.put(map["accountId"].toString(), map["depotIds"].toString())
+        }
+        return resultMap
     }
 
     override fun findImeUploads(productMonthPriceSumQuery: ProductMonthPriceSumQuery): MutableList<ProductImeUploadDto> {

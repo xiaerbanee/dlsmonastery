@@ -37,6 +37,8 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
 
     fun findByEmployeeIdAndType(employeeId:String,type:String):Account
 
+    fun findByEmployeeIdInAndType(employeeIdList :List<String>,type:String): MutableList<Account>
+
     @Query("""
         SELECT t
         FROM  #{#entityName} t

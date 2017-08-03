@@ -417,6 +417,9 @@ export default {
     delete: "hapus",
     audit: "ubah",
     collect:"ringkasan",
+    editRemarks:"备注修改",
+    cancel:"取消",
+    save:"保存",
   },
   demoPhoneTypeOfficeList:{
     demoPhoneTypeOfficeList:"演示机型汇总",

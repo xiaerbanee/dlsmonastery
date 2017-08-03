@@ -120,7 +120,7 @@
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
         util.setQuery("shopBuildList",submitData);
-        axios.get('/api/ws/future/layout/shopBuild',{params:submitData}).then((response) => {
+        axios.get('/api/ws/future/layout/shopBuild?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
