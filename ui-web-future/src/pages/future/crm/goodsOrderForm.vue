@@ -22,7 +22,7 @@
                   <el-option v-for="item in inputForm.extra.netTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <div v-if="inputForm.netType==='联信'">
+              <div v-if="inputForm.netType==='联信' && ( companyName==='JXOPPO' || companyName === 'JXVIVO')">
                 <el-form-item :label="$t('goodsOrderForm.lxMallOrder')" prop="lxMallOrder">
                   <bool-select v-model="inputForm.lxMallOrder"></bool-select>
                 </el-form-item>
@@ -90,6 +90,7 @@
     methods:{
       getData() {
         return{
+          companyName:JSON.parse(window.localStorage.getItem("account")).companyName,
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
           pageLoading:false,
@@ -180,9 +181,9 @@
         return tmpList;
       },
       netTypeChange(){
-          if(this.inputForm.netType!=='联信'){
-            this.inputForm.lxMallOrder = null;
-          }
+         if((this.companyName==='JXOPPO' || this.companyName === 'JXVIVO') && this.inputForm.netType!=='联信'){
+           this.inputForm.lxMallOrder = null;
+         }
         this.refreshDetailList();
       }
       ,refreshDetailList(){
