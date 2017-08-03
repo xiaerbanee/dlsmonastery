@@ -23,16 +23,16 @@
           </el-col>
           <el-col :span="8">
             <el-form-item :label="$t('accountForm.officeName')" prop="officeId">
-              <office-select v-model="inputForm.officeId"></office-select>
+              <office-select v-model="inputForm.officeId" :disabled="!isCreate&&!hasPermit"></office-select>
             </el-form-item>
             <el-form-item :label="$t('accountForm.leader')" prop="leaderId">
-              <account-select v-model="inputForm.leaderId"></account-select>
+              <account-select v-model="inputForm.leaderId" :disabled="!isCreate&&!hasPermit"></account-select>
             </el-form-item>
             <el-form-item label="数据部门" prop="officeIdList">
               <office-select v-model="inputForm.officeIdList" :multiple="true"></office-select>
             </el-form-item>
             <el-form-item :label="$t('accountForm.position')" prop="positionId">
-              <el-select v-model="inputForm.positionId"  filterable :placeholder="$t('accountForm.selectGroup')" :clearable=true>
+              <el-select v-model="inputForm.positionId"  filterable :placeholder="$t('accountForm.selectGroup')" :clearable=true :disabled="!isCreate&&!hasPermit">
                 <el-option v-for="position in inputForm.extra.positionDtoList" :key="position.id" :label="position.name" :value="position.id"></el-option>
               </el-select>
             </el-form-item>
@@ -85,6 +85,7 @@
         return{
           isCreate:this.$route.query.id==null,
           multiple:true,
+          hasPermit:util.isPermit('hr:employee:enableUpdate'),
           submitDisabled:false,
           inputForm:{
             extra:{}

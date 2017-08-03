@@ -1,7 +1,7 @@
 package net.myspring.task.tool.schedule;
 
 import net.myspring.common.enums.CompanyNameEnum;
-import net.myspring.task.tool.client.FutureVivoClient;
+import net.myspring.task.tool.client.FutureImooClient;
 import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,24 +14,24 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-
 @Service
-public class FutureVivoSchedule {
+public class FutureImooSchedule {
     @Autowired
-    private FutureVivoClient futureVivoClient;
+    private FutureImooClient futureImooClient;
 
     @Value("${companyNames}")
     private String[] companyNames;
 
+
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Scheduled(cron = "0 0 0/1 * * ?")
-    public void pullIdvivoFactoryData(){
+    public void pullJximooFactoryData(){
         List<String> companyNameList = Arrays.asList(companyNames);
-        if(companyNameList.contains(CompanyNameEnum.IDVIVO.name())) {
+        if(companyNameList.contains(CompanyNameEnum.JXDJ.name())) {
             logger.info("同步串码数据开始");
-            String date=LocalDateUtils.format(LocalDate.now());
-            futureVivoClient.pullFactoryData(CompanyNameEnum.IDVIVO.name(),date);
+            String date= LocalDateUtils.format(LocalDate.now());
+            futureImooClient.pullFactoryData(CompanyNameEnum.JXDJ.name(),date);
             logger.info("同步串码数据结束");
         }
     }

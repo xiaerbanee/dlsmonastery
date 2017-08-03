@@ -50,7 +50,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="货品">
-                <product-type-select v-model="formData.productTypeIdList"  @afterInit="setSearchText" multiple></product-type-select>
+                <product-type-select v-model="formData.productTypeIdList"  @afterInit="setSearchText" multiple class="fixedHeight"></product-type-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -240,6 +240,5 @@
   };
 </script>
 <style>
-
 </style>
 

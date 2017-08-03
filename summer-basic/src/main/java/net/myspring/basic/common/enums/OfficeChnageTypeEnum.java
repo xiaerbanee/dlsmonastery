@@ -7,7 +7,7 @@ import java.util.List;
 
 public enum  OfficeChnageTypeEnum {
 
-    上级,任务点位,名称;
+    上级,点位,名称;
     private static List<String> list= Lists.newArrayList();
 
     public static List<String> getList(){

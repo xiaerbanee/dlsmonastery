@@ -1,7 +1,6 @@
 package net.myspring.tool.modules.vivo.repository;
 
 import com.google.common.collect.Maps
-import net.myspring.common.enums.CompanyNameEnum
 import net.myspring.tool.common.repository.BaseRepository
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts
 import net.myspring.tool.modules.vivo.dto.VivoPlantProductsDto

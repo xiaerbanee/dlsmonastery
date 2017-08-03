@@ -5,14 +5,11 @@ import net.myspring.tool.common.repository.BaseRepository
 import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
 import net.myspring.tool.modules.vivo.dto.VivoPlantSendimeiDto
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils
 import java.lang.StringBuilder
-
-import java.time.LocalDate;
 
 interface VivoPlantSendimeiRepository : BaseRepository<VivoPlantSendimei, String>, VivoPlantSendimeiRepositoryCustom {
 
