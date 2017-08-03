@@ -16,11 +16,11 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item :label="$t('officeChangeForm.oldTaskPoint')" >
-          <span id="oldTaskPoint"></span>
+        <el-form-item label="总旧点位" >
+          <span id="oldPoint"></span>
         </el-form-item>
-        <el-form-item :label="$t('officeChangeForm.newTaskPoint')">
-          <span  id="newTaskPoint"></span>
+        <el-form-item label="总新点位">
+          <span  id="newPoint"></span>
         </el-form-item>
         <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
       </el-form>
@@ -34,26 +34,26 @@
   import officeSelect from 'components/basic/office-select';
   import Handsontable from 'handsontable/dist/handsontable.full.js';
   var table = null;
-  var newTaskPoint = 0;
-  var oldTaskPoint = 0;
-  var setNewTaskPoint = function (datas) {
-    let newTaskPoint=0;
+  var newPoint = 0;
+  var oldPoint = 0;
+  var setNewPoint = function (datas) {
+    let newPoint=0;
     for(let i=0;i<datas.length; i++) {
       if(datas[i][7]) {
-        newTaskPoint = newTaskPoint + datas[i][7]*1;
+        newPoint = newPoint + datas[i][7]*1;
       }
     }
-    document.getElementById("newTaskPoint").innerHTML = newTaskPoint;
+    document.getElementById("newPoint").innerHTML = newPoint;
   };
-  var setOldTaskPoint = function (datas) {
-    let oldTaskPoint=0;
+  var setOldPoint = function (datas) {
+    let oldPoint=0;
     for(let i=0;i<datas.length; i++) {
       if(datas[i][4]) {
-        oldTaskPoint = oldTaskPoint + datas[i][4]*1;
+        oldPoint = oldPoint + datas[i][4]*1;
       }
     }
-    document.getElementById("newTaskPoint").innerHTML = oldTaskPoint;
-    document.getElementById("oldTaskPoint").innerHTML = oldTaskPoint;
+    document.getElementById("newPoint").innerHTML = oldPoint;
+    document.getElementById("oldPoint").innerHTML = oldPoint;
   };
   export default {
     components:{
@@ -73,10 +73,10 @@
             {type: "text", data: "parentName", allowEmpty: false, readOnly: true, strict: true},
             {type: "text", data: "name", allowEmpty: true, readOnly: true, strict: true},
             {type: 'text', data: "type", allowEmpty: false, readOnly: true,},
-            {type: "numeric", data: "taskPoint",  format:"0,0.00000",allowEmpty: false, readOnly: true,},
-            {type: "autocomplete", data: "parentName", allowEmpty: false, strict: true, officeName: [], source: this.officeName},
-            {type: "text", data: "name", allowEmpty: true, strict: true},
-            {type: "numeric", data: "taskPoint",  format:"0,0.00000",allowEmpty: false}
+            {type: "numeric", data: "point",  format:"0,0.00000",allowEmpty: false, readOnly: true,},
+            {type: "autocomplete", data: "newParentName", allowEmpty: false, strict: true, officeName: [], source: this.officeName},
+            {type: "text", data: "newName", allowEmpty: true, strict: true},
+            {type: "numeric", data: "newPoint",  format:"0,0.00000",allowEmpty: false}
           ],
           contextMenu: true,
           afterChange: function (changes, source) {
@@ -84,9 +84,9 @@
               for (let i = changes.length - 1; i >= 0; i--) {
                 let row = changes[i][0];
                 let column = changes[i][1];
-                if (column === 'taskPoint') {//修改后任务点位
+                if (column === 'point') {//修改后任务点位
                   if (changes[i][3] !== '') {
-                    setNewTaskPoint(table.getData());
+                    setNewPoint(table.getData());
                   }
                 }
               }
@@ -146,7 +146,7 @@
             axios.get('/api/basic/hr/officeChange/findByOfficeId?officeId=' + this.formData.id).then((response) => {
               this.settings.data = response.data;
               table.loadData(this.settings.data);
-              setOldTaskPoint(table.getData());
+              setOldPoint(table.getData());
             });
           }
       },
