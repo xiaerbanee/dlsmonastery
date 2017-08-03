@@ -11,8 +11,9 @@
           <date-picker v-model="date"></date-picker>
         </div>
         <div style="float: left;margin-left: 10px">
-          <el-button type="primary" @click="synData" icon="plus">工厂同步</el-button>
-          <el-button type="primary" @click="exportData" >发货串码导出<i class="el-icon-caret-bottom el-icon--right"></i></el-button>
+          <el-button type="primary" @click="pullFactoryData">下拉工厂数据</el-button>
+          <el-button type="primary" @click="synData">数据同步</el-button>
+          <el-button type="primary" @click="exportData" >发货串码导出</el-button>
         </div>
         <span v-html="searchText"></span>
       </el-row>
@@ -164,7 +165,6 @@
         if(this.date){
           this.loading = true;
           let companyName = JSON.parse(window.localStorage.getItem("account")).companyName;
-          console.log("companyName:"+companyName);
           axios.get('/api/ws/future/third/factory/oppo/pullFactoryData?companyName='+companyName+'&date='+this.date).then((response)=>{
             this.loading = false;
             this.$message(response.data);
@@ -175,6 +175,16 @@
         }else{
           this.$message({message:"请选择同步日期",type:'warning'});
         }
+      },pullFactoryData() {
+        this.loading = true;
+        let companyName = JSON.parse(window.localStorage.getItem("account")).companyName;
+        axios.get('/api/global/tool/factory/oppo/pullFactoryData?companyName='+companyName+'&date='+this.date).then((response)=>{
+          this.loading = false;
+          this.$message(response.data);
+        }).catch(function () {
+          this.loading = false;
+          this.$message({message:"数据下拉失败",type:'error'});
+        });
       },exportData(){
         if(this.date){
           window.location.href='/api/global/tool/factory/oppo/oppoPlantSendImeiPpsel/export?date='+this.date;
