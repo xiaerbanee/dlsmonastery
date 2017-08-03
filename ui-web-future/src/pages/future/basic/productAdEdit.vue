@@ -92,7 +92,7 @@
               autoColumnSize:true,
               columns: [
                 {data:"id",readOnly: true, strict: true ,width: 50 },
-                {data:"code",readOnly: true, strict: true, width: 300 },
+                {data:"code",readOnly: true, strict: true, width: 100 },
                 {data:"name",readOnly: true, strict: true, width: 450 },
                 {data:"visible", type: "autocomplete", strict: true, source:['是','否'], width: 70},
                 {data:"allowOrder", type: "autocomplete", strict: true, source:['是','否'], width: 80},
@@ -129,7 +129,14 @@
             this.submitDisabled = true;
             table.validateCells((valid)=> {
             if(valid) {
-              this.inputForm.productList = JSON.stringify(table.getData());
+              let tableData = [];
+              let list = table.getData();
+              for(let item in list){
+                if(!table.isEmptyRow(item) && list[item][0]){
+                  tableData.push(list[item]);
+                }
+              }
+              this.inputForm.productList = JSON.stringify(tableData);
               axios.post('/api/ws/future/basic/product/batchSave', qs.stringify(this.inputForm, {allowDots: true})).then((response) => {
                 this.$message(response.data.message);
               }).catch( ()=> {
