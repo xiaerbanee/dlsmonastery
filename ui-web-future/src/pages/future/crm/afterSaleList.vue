@@ -39,6 +39,9 @@
               <el-form-item :label="$t('afterSaleList.badProductIme')" >
                 <el-input type="textarea" v-model="formData.badImeStr" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"  :autosize="{ minRows: 2, maxRows: 5}"></el-input>
               </el-form-item>
+              <el-form-item :label="$t('afterSaleList.createdBy')" >
+                <el-input type="textarea" v-model="formData.createdBy" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"  :autosize="{ minRows: 2, maxRows: 5}"></el-input>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
