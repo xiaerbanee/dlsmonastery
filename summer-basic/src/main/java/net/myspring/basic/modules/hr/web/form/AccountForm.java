@@ -30,7 +30,6 @@ public class AccountForm extends BaseForm<Account> {
     private Boolean viewReport;
     private String outId;
     private String outPassword;
-    private String remarks;
     private String positionId;
     private List<String> permissionIdList=Lists.newArrayList();
     private String positionIds;
