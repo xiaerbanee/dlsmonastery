@@ -1,14 +1,14 @@
 package net.myspring.tool.modules.vivo.domain;
 
 
-import net.myspring.tool.common.domain.IdEntity;
+import net.myspring.tool.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="vivo_plant_products")
-public class VivoPlantProducts extends IdEntity<VivoPlantProducts> {
+public class VivoPlantProducts extends DataEntity<VivoPlantProducts> {
     private String companyName;
     private String typeId;
     private String colorId;
