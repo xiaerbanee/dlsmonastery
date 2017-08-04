@@ -10,9 +10,14 @@ import net.myspring.tool.modules.future.service.FutureProductImeService;
 import net.myspring.tool.modules.vivo.dto.*;
 import net.myspring.tool.modules.vivo.service.VivoPushService;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
+
 
 @RestController
 @RequestMapping(value = "factory/vivo")
@@ -29,8 +34,11 @@ public class VivoPushController {
     @Autowired
     private FutureProductImeSaleService futureProductImeSaleService;
 
+    protected Logger logger = LoggerFactory.getLogger(getClass());
+
     @RequestMapping(value = "pushToLocal")
     public String pushVivoData(String companyName,String date){
+        logger.info("开始同步数据至中转库:"+ LocalDateTime.now());
         if(StringUtils.isBlank(RequestUtils.getCompanyName())) {
             DbContextHolder.get().setCompanyName(companyName);
         }
@@ -51,16 +59,19 @@ public class VivoPushController {
             pushToLocalDto.setsStoresList(futureCustomerService.findIDvivoStore());
         }
         vivoPushService.pushToLocal(pushToLocalDto);
+        logger.info("同步数据至中转库结束:"+ LocalDateTime.now());
         return "数据同步成功";
     }
 
     @RequestMapping(value = "pushFactoryData")
     public String pushFactoryData(String companyName,String date){
+        logger.info("上抛数据至工厂开始:"+LocalDateTime.now());
         if (StringUtils.isBlank(RequestUtils.getCompanyName())){
             DbContextHolder.get().setCompanyName(companyName);
         }
         VivoPushDto vivoPushDto = vivoPushService.getPushFactoryDate(date);
         vivoPushService.pushFactoryData(vivoPushDto,date);
+        logger.info("上抛数据至工厂完成:"+LocalDateTime.now());
         return "数据上抛成功";
     }
 
