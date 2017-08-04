@@ -11,7 +11,8 @@
           <date-picker v-model="date"></date-picker>
         </div>
         <div style="float: left;margin-left: 10px">
-          <el-button type="primary" @click="synData" icon="plus">工厂同步</el-button>
+          <el-button type="primary" @click="pullFactoryData">下拉工厂数据</el-button>
+          <el-button type="primary" @click="synData" icon="plus">数据同步</el-button>
           <!--待完成-->
           <!--<el-button type="primary" @click="exportData" >发货串码导出<i class="el-icon-caret-bottom el-icon&#45;&#45;right"></i></el-button>-->
         </div>
@@ -216,6 +217,21 @@
           let companyName = JSON.parse(window.localStorage.getItem("account")).companyName;
           console.log("companyName:"+companyName);
           axios.get('/api/ws/future/third/factory/vivo/pullFactoryData?companyName='+companyName+'&date='+this.date).then((response)=>{
+            this.loading = false;
+            this.$message(response.data);
+          }).catch(function () {
+            this.loading = false;
+            this.$message({message:"同步失败",type:'error'});
+          });
+        }else{
+          this.$message({message:"请选择同步日期",type:'warning'});
+        }
+      },pullFactoryData(){
+        if(this.date){
+          this.loading = true;
+          let companyName = JSON.parse(window.localStorage.getItem("account")).companyName;
+          console.log("companyName:"+companyName);
+          axios.get('/api/global/tool/factory/vivo/pullFactoryData?companyName='+companyName+'&date='+this.date).then((response)=>{
             this.loading = false;
             this.$message(response.data);
           }).catch(function () {

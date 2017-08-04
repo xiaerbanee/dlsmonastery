@@ -116,10 +116,10 @@ public class VivoPushService {
             sZones.setAgentCode(officeDto.getAgentCode());
             sZonesList.add(sZones);
         }
-        logger.info("开始上抛机构数据"+ LocalDateTime.now());
+        logger.info("机构数据同步开始"+ LocalDateTime.now());
         sZonesRepository.deleteAll();
         sZonesRepository.batchSave(sZonesList);
-        logger.info("上抛机构数据完成"+LocalDateTime.now());
+        logger.info("机构数据同步完成"+LocalDateTime.now());
         return sZonesList;
     }
 
@@ -157,10 +157,10 @@ public class VivoPushService {
             sCustomers.setAgentCode(agentCode);
             sCustomersList.add(sCustomers);
         }
-        logger.info("开始上抛客户数据"+LocalDateTime.now());
+        logger.info("客户数据同步开始"+LocalDateTime.now());
         sCustomersRepository.deleteAll();
         sCustomersRepository.batchSave(sCustomersList);
-        logger.info("上抛客户数据完成"+LocalDateTime.now());
+        logger.info("客户数据同步完成"+LocalDateTime.now());
     }
 
 
@@ -230,20 +230,20 @@ public class VivoPushService {
             }
         }
 
-        logger.info("开始上抛一代库库存数据"+LocalDateTime.now());
+        logger.info("一代库库存数据同步开始"+LocalDateTime.now());
         sPlantStockStoresRepository.deleteByAccountDate(dateStart,dateEnd);
         sPlantStockStoresRepository.batchSave(sPlantStockStoresList);
-        logger.info("上抛一代库库存数据成功"+LocalDateTime.now());
+        logger.info("一代库库存数据同步完成"+LocalDateTime.now());
 
-        logger.info("开始上抛二代库库存数据"+LocalDateTime.now());
+        logger.info("二代库库存数据同步开始"+LocalDateTime.now());
         sPlantStockSupplyRepository.deleteByAccountDate(dateStart,dateEnd);
         sPlantStockSupplyRepository.batchSave(sPlantStockSupplyList);
-        logger.info("上抛二代库库存数据成功"+LocalDateTime.now());
+        logger.info("二代库库存数据同步完成"+LocalDateTime.now());
 
-        logger.info("开始上抛经销商库存数据"+LocalDateTime.now());
+        logger.info("经销商库存数据同步开始"+LocalDateTime.now());
         sPlantStockDealerRepository.deleteByAccountDate(dateStart,dateEnd);
         sPlantStockDealerRepository.batchSave(sPlantStockDealerList);
-        logger.info("上抛经销商库存数据成功"+LocalDateTime.now());
+        logger.info("经销商库存数据同步完成"+LocalDateTime.now());
     }
 
     @Transactional
@@ -306,12 +306,12 @@ public class VivoPushService {
             }
         }
 
-        logger.info("开始同步库存串码明细数据:"+LocalDateTime.now());
+        logger.info("库存串码明细数据同步开始:"+LocalDateTime.now());
         sProductItemStocksRepository.deleteByUpdateTime(date,LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1)));
         sProductItemStocksRepository.batchSave(sProductItemStocksList);
         sProductItem000Repository.deleteByUpdateTime(date,LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1)));
         sProductItem000Repository.batchSave(sProductItem000List);
-        logger.info("同步库存串码明细数据完成:"+LocalDateTime.now());
+        logger.info("库存串码明细数据同步完成:"+LocalDateTime.now());
     }
 
     @Transactional
@@ -337,10 +337,10 @@ public class VivoPushService {
             sProductItemLends.add(sProductItemLend);
         }
 
-        logger.info("开始上抛借机数据:"+LocalDateTime.now());
+        logger.info("借机数据同步开始:"+LocalDateTime.now());
         sProductItemLendRepository.deleteByUpdateTime(dateStart,dateEnd);
         sProductItemLendRepository.batchSave(sProductItemLends);
-        logger.info("上抛借机数据结束:"+LocalDateTime.now());
+        logger.info("借机数据同步完成:"+LocalDateTime.now());
     }
 
     @Transactional
@@ -374,10 +374,10 @@ public class VivoPushService {
             sPlantEndProductSale.setAgentCode(agentCode);
             sPlantEndProductSaleList.add(sPlantEndProductSale);
         }
-        logger.info("开始上抛核销记录数据:"+LocalDateTime.now());
+        logger.info("核销记录数据同步开始:"+LocalDateTime.now());
         sPlantEndProductSaleRepository.deleteByBillDate(dateStart,dateEnd);
         sPlantEndProductSaleRepository.batchSave(sPlantEndProductSaleList);
-        logger.info("上抛核销记录数据结束:"+LocalDateTime.now());
+        logger.info("核销记录数据同步结束:"+LocalDateTime.now());
     }
 
     @Transactional
@@ -391,10 +391,10 @@ public class VivoPushService {
             sStores.setAgentCode(mainCode);
             sStoresList.add(sStores);
         }
-        logger.info("上抛一代仓库数据开始:"+LocalDateTime.now());
+        logger.info("一代仓库数据同步开始:"+LocalDateTime.now());
         sStoresRepository.deleteAll();
         sStoresRepository.batchSave(sStoresList);
-        logger.info("上抛一代仓库数据结束:"+LocalDateTime.now());
+        logger.info("一代仓库数据同步结束:"+LocalDateTime.now());
     }
 
 
@@ -434,6 +434,7 @@ public class VivoPushService {
         }else {
             return null;
         }
+        logger.info("数据准备开始:"+LocalDateTime.now());
         VivoPushDto vivoPushDto = new VivoPushDto();
         vivoPushDto.setsZonesList(sZonesRepository.findByAgentCodeIn(agentCodeList));
         vivoPushDto.setsCustomersList(sCustomersRepository.findByAgentCodeIn(agentCodeList));
@@ -447,13 +448,14 @@ public class VivoPushService {
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
             vivoPushDto.setsProductItemLendList(sProductItemLendRepository.findByDate(dateStart,dateEnd));
         }
-        logger.info("数据获取成功");
+        logger.info("数据准备完成:"+LocalDateTime.now());
         return vivoPushDto;
     }
 
     @FactoryDataSource
     @Transactional
     public void pushFactoryData(VivoPushDto vivoPushDto,String date){
+        logger.info("开始上抛数据:"+LocalDateTime.now());
         List<String> agentCodeList = Lists.newArrayList();
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
             agentCodeList.add(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0]);
@@ -537,8 +539,6 @@ public class VivoPushService {
                 }
             }
 
-            logger.info("上抛数据至工厂数据库开始");
-
             sZonesRepository.deleteByAgentCode(agentCode);
             sZonesRepository.batchSaveToFactroy(agentCode,sZonesList);
 
@@ -570,9 +570,8 @@ public class VivoPushService {
                 sProductItemLendRepository.deletePushFactoryDataByUpdateTime(dateSart,dateEnd);
                 sProductItemLendRepository.batchSavePushFactoryData(sProductItemLendList);
             }
-
-            logger.info("上抛数据至工厂数据库结束");
         }
+        logger.info("上抛数据完成:"+LocalDateTime.now());
     }
 
 }
