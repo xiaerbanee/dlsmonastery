@@ -77,10 +77,10 @@
         <el-table-column column-key="productId" prop="productCode" :label="$t('adApplyList.productCode')" sortable></el-table-column>
         <el-table-column prop="expiryDateRemarks" :label="$t('adApplyList.expiryDateRemarks')"></el-table-column>
         <el-table-column column-key="productId" prop="productName" :label="$t('adApplyList.product')" sortable></el-table-column>
-        <el-table-column prop="applyQty" :label="$t('adApplyList.applyQty')+'('+totalApplyQty+')'" sortable></el-table-column>
-        <el-table-column prop="confirmQty" :label="$t('adApplyList.confirmQty')+'('+totalConfirmQty+')'" sortable></el-table-column>
-        <el-table-column prop="billedQty" :label="$t('adApplyList.billedQty')+'('+totalBilledQty+')'" sortable></el-table-column>
-        <el-table-column prop="leftQty" :label="$t('adApplyList.leftQty')+'('+totalLeftQty+')'" sortable></el-table-column>
+        <el-table-column prop="applyQty" :label="$t('adApplyList.applyQty')+'('+totalQty.totalApplyQty+')'" sortable></el-table-column>
+        <el-table-column prop="confirmQty" :label="$t('adApplyList.confirmQty')+'('+totalQty.totalConfirmQty+')'" sortable></el-table-column>
+        <el-table-column prop="billedQty" :label="$t('adApplyList.billedQty')+'('+totalQty.totalBilledQty+')'" sortable></el-table-column>
+        <el-table-column prop="leftQty" :label="$t('adApplyList.leftQty')+'('+totalQty.totalLeftQty+')'" sortable></el-table-column>
         <el-table-column prop="orderId" :label="$t('adApplyList.orderId')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('adApplyList.remarks')"></el-table-column>
         <el-table-column :label="$t('adApplyList.operation')" width="140">
@@ -126,10 +126,12 @@
         leftQtyVisible:false,
         pageLoading: false,
         remoteLoading: false,
-        totalApplyQty:"0",
-        totalConfirmQty:"0",
-        totalBilledQty:"0",
-        totalLeftQty:"0",
+        totalQty:{
+          totalApplyQty:'',
+          totalConfirmQty:'',
+          totalBilledQty:'',
+          totalLeftQty:'',
+        },
         productCode:'',
         rules: {
           confirmQty: [{ required: true, message: this.$t('adApplyEditForm.prerequisiteMessage')},{type:"number",message:this.$t('adApplyEditForm.inputLegalValue')}],
@@ -154,11 +156,13 @@
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
         util.setQuery("adApplyList", submitData);
-        axios.get('/api/ws/future/layout/adApply',{params:submitData}).then((response) => {
-          let content = response.data.content;
-          this.getTotalQty(content);
-          this.page = response.data;
-          this.pageLoading = false;
+        //this.getTotalQty(submitData);
+        axios.get('/api/ws/future/layout/adApply/getCountQty',{params:submitData}).then((response) => {
+          this.totalQty=response.data;
+          axios.get('/api/ws/future/layout/adApply',{params:submitData}).then((response) => {
+            this.page = response.data;
+            this.pageLoading = false;
+          })
         })
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
@@ -207,33 +211,10 @@
             })
           }
         })
-      },getTotalQty(content){
-          if(content == null){
-              return;
-          }
-          let tempApplyQty = 0;
-          let tempConfirmQty = 0;
-          let tempBilledQty = 0;
-          let tempLeftQty = 0;
-          for(let index in content){
-            let detail=content[index];
-            if(util.isNotBlank(detail.applyQty)){
-              tempApplyQty += detail.applyQty;
-            }
-            if(util.isNotBlank(detail.confirmQty)){
-              tempConfirmQty += detail.confirmQty;
-            }
-            if(util.isNotBlank(detail.billedQty)){
-              tempBilledQty += detail.billedQty;
-            }
-            if(util.isNotBlank(detail.leftQty)){
-              tempLeftQty += detail.leftQty;
-            }
-          }
-          this.totalApplyQty = tempApplyQty;
-          this.totalConfirmQty = tempConfirmQty;
-          this.totalBilledQty = tempBilledQty;
-          this.totalLeftQty = tempLeftQty;
+      },getTotalQty(query){
+          axios.get('/api/ws/future/layout/adApply/getCountQty',{params:query}).then((response) => {
+            this.totalQty=response.data;
+          })
       }
     },created () {
       let that = this;
