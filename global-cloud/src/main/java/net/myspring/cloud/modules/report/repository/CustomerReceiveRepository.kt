@@ -406,8 +406,8 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 and t12.FENTRYID = t14.FENTRYID
                 and t12.FMATERIALID = t13.FMATERIALID
                 and t11.FCUSTOMERID IN (:customerIdList)
-                and t11.FDATE >:dateStart
-                and t11.FDATE <:dateEnd
+                and t11.FDATE >=:dateStart
+                and t11.FDATE <=:dateEnd
 
             UNION ALL
             SELECT
@@ -431,7 +431,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 and t22.FMATERIALID = t23.FMATERIALID
                 and t21.FRETCUSTID IN (:customerIdList)
                 and t21.FDATE >=:dateStart
-                and t21.FDATE <:dateEnd
+                and t21.FDATE <=:dateEnd
         """, paramMap, BeanPropertyRowMapper(CustomerReceiveDetailDto::class.java))
     }
 
@@ -463,8 +463,8 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
             WHERE
                 t3.FID = t4.FID
                 and t3.FCONTACTUNIT  IN (:customerIdList)
-                and t3.FDATE  >:dateStart
-                and t3.FDATE <:dateEnd
+                and t3.FDATE  >=:dateStart
+                and t3.FDATE <=:dateEnd
             UNION ALL
             SELECT
                 t5.FBILLNO AS name,
@@ -475,8 +475,8 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
             WHERE
                 t5.FID = t6.FID
                 and t5.FCONTACTUNIT IN (:customerIdList)
-                and t5.FDATE  >:dateStart
-                and t5.FDATE <:dateEnd
+                and t5.FDATE  >=:dateStart
+                and t5.FDATE <=:dateEnd
         """, paramMap, BeanPropertyRowMapper(NameValueDto::class.java))
 
     }

@@ -99,15 +99,17 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	public static String getNumberStr(String str) {
 		if(isBlank(str)) {
 			return "";
-		} else {
-			StringBuilder sb = new StringBuilder();
-			for(int i=0;i<str.length();i++) {
-				if (str.charAt(i) >= 48 && str.charAt(i) <= 57) {
-					sb.append(str.charAt(i));
-				}
-			}
-			return sb.toString();
 		}
+		String trimmedStr = str.trim();
+		StringBuilder sb = new StringBuilder();
+		for(int i=0;i<trimmedStr.length();i++) {
+			if (trimmedStr.charAt(i) >= 48 && trimmedStr.charAt(i) <= 57) {
+				sb.append(trimmedStr.charAt(i));
+			}else{
+				break;
+			}
+		}
+		return sb.toString();
 	}
 
 	public static String division(Integer totalQty, Integer qty) {
