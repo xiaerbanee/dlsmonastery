@@ -12,7 +12,7 @@ interface PricesystemDetailRepository : BaseRepository<PricesystemDetail,String>
 
     fun findByPricesystemIdIn(pricesystemIds: MutableList<String>): MutableList<PricesystemDetail>
 
-    fun findByPricesystemIdAndProductId( pricesystemId: String, productId: String): PricesystemDetail
+    fun findByPricesystemIdAndProductId( pricesystemId: String, productId: String): PricesystemDetail?
 
     fun findByProductId(productId:String): MutableList<PricesystemDetail>
 

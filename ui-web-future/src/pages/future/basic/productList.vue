@@ -50,7 +50,7 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="name" :label="$t('productList.name')" sortable width="300"></el-table-column>
+        <el-table-column prop="name" :label="$t('productList.name')" sortable width="300"></el-table-column>
         <el-table-column prop="code" :label="$t('productList.code')" sortable></el-table-column>
         <el-table-column prop="netType" :label="$t('productList.netType')" sortable></el-table-column>
         <el-table-column prop="outId" :label="$t('productList.outId')" sortable></el-table-column>
@@ -79,7 +79,7 @@
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" :label="$t('productList.operation')">
+        <el-table-column :label="$t('productList.operation')">
           <template scope="scope">
             <div class="action" v-permit="'crm:product:edit'"><el-button size="small" @click.native="itemEdit(scope.row.id)">{{$t('shopAdTypeList.edit')}}</el-button></div>
           </template>
