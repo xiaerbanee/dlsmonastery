@@ -24,9 +24,11 @@ public class AfterSaleQuery  extends BaseQuery{
     private String fromCompanyDateRange;
     private String createdRange;
     private String depotName;
+    private String createdBy;
     private List<String> imeList=Lists.newArrayList();
     private List<String> toAreaImeList=Lists.newArrayList();
     private List<String> businessIdList=Lists.newArrayList();
+    private List<String> createdByList=Lists.newArrayList();
 
     private boolean fromCompany=false;
 
@@ -46,6 +48,21 @@ public class AfterSaleQuery  extends BaseQuery{
         this.businessIdStr = businessIdStr;
     }
 
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public List<String> getCreatedByList(){
+        if(CollectionUtil.isEmpty(createdByList)&&StringUtils.isNotBlank(createdBy)){
+            this.createdByList=StringUtils.getFilterList(createdBy);
+        }
+        return createdByList;
+    }
+
     public List<String> getBusinessIdList() {
         if(StringUtils.isNotBlank(businessIdStr)){
             List<String> formatIdList=StringUtils.getFilterList(businessIdStr);
@@ -61,6 +78,9 @@ public class AfterSaleQuery  extends BaseQuery{
         this.businessIdList = businessIdList;
     }
 
+    public void setCreatedByList(List<String> createdByList){
+        this.createdByList=createdByList;
+    }
 
     public String getToAreaImeStr() {
         return toAreaImeStr;
@@ -137,7 +157,6 @@ public class AfterSaleQuery  extends BaseQuery{
     public void setDepotName(String depotName) {
         this.depotName = depotName;
     }
-
 
     public List<String> getImeList() {
         if(CollectionUtil.isEmpty(imeList)&&StringUtils.isNotBlank(badImeStr)){
