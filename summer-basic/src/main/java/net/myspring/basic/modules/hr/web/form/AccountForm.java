@@ -30,7 +30,6 @@ public class AccountForm extends BaseForm<Account> {
     private Boolean viewReport;
     private String outId;
     private String outPassword;
-    private String remarks;
     private String positionId;
     private List<String> permissionIdList=Lists.newArrayList();
     private String positionIds;
@@ -41,7 +40,7 @@ public class AccountForm extends BaseForm<Account> {
     private List<String> officeListName=Lists.newArrayList();
 
     public String getPositionIds() {
-        if(StringUtils.isBlank(positionIds)&&CollectionUtil.isNotEmpty(positionIdList)){
+        if(CollectionUtil.isNotEmpty(positionIdList)){
             this.positionIds=StringUtils.join(positionIdList,CharConstant.COMMA);
         }
         return positionIds;
@@ -63,7 +62,7 @@ public class AccountForm extends BaseForm<Account> {
     }
 
     public String getOfficeIds() {
-        if(StringUtils.isBlank(officeIds)&&CollectionUtil.isNotEmpty(officeIdList)){
+        if(CollectionUtil.isNotEmpty(officeIdList)){
             this.officeIds=StringUtils.join(officeIdList,CharConstant.COMMA);
         }
         return officeIds;
