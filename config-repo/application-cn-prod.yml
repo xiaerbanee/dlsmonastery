@@ -86,7 +86,7 @@ spring:
         password: 159#ncbbk@583
         driver-class-name: net.sourceforge.jtds.jdbc.Driver
       JXVIVO:
-        url: jdbc:jtds:sqlserver://218.19.66.180:13120/plantesaleweb
+        url: jdbc:jtds:sqlserver://218.16.99.180:13120/plantesaleweb
         username: user_m13e00
         password:  user_m13e00
         driver-class-name: net.sourceforge.jtds.jdbc.Driver
