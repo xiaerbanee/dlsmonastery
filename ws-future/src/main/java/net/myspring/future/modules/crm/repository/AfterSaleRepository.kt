@@ -159,6 +159,7 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                 left join crm_product t6 on t5.product_id=t6.id
                 left join crm_depot t7 on t2.retail_shop_id=t7.id
                 left join crm_product t8 on t1.from_company_product_id=t8.id
+                left join hr_account t9 on t1.created_by = t9.id
              WHERE
                  t1.enabled=1
             """)
@@ -203,6 +204,9 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             }
             if (CollectionUtil.isNotEmpty(afterSaleQuery.depotIdList)) {
                 sb.append("""  and ( t4.id in (:depotIdList) or t7.id in (:depotIdList) ) """)
+            }
+            if (CollectionUtil.isNotEmpty(afterSaleQuery.createdByList)) {
+                sb.append("""  and ( t9.login_name in (:createdByList) )""")
             }
             var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
             var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
