@@ -460,7 +460,7 @@ public class GoodsOrderService {
         productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
         for(PricesystemDetail pricesystemDetail : pricesystemDetailList) {
             Product product = productMap.get(pricesystemDetail.getProductId());
-            if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && productValidForOrderOrBill(netType, pricesystemDetail, product) && allowOrder(product, shipType)) {
+            if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && productValidForOrderOrBill(netType, product) && allowOrder(product, shipType)) {
                 GoodsOrderDetailDto goodsOrderDetailDto= new GoodsOrderDetailDto();
                 goodsOrderDetailDto.setProductId(pricesystemDetail.getProductId());
                 goodsOrderDetailDto.setPrice(pricesystemDetail.getPrice());
@@ -489,9 +489,8 @@ public class GoodsOrderService {
         return goodsOrderDetailDtoList;
     }
 
-    private boolean productValidForOrderOrBill(String netType, PricesystemDetail pricesystemDetail, Product product) {
-        return product != null && pricesystemDetail != null && product.getEnabled() && Boolean.TRUE.equals(product.getVisible()) && netTypeMatch(netType, product.getNetType())
-                && (!product.getHasIme() || (pricesystemDetail.getPrice() != null && pricesystemDetail.getPrice().compareTo(BigDecimal.ZERO) > 0));
+    private boolean productValidForOrderOrBill(String netType, Product product) {
+        return product != null && product.getEnabled() && Boolean.TRUE.equals(product.getVisible()) && netTypeMatch(netType, product.getNetType());
     }
 
     private boolean allowOrder(Product product, String shipType) {
@@ -541,7 +540,7 @@ public class GoodsOrderService {
 
         for(PricesystemDetail pricesystemDetail : pricesystemDetailList) {
             Product product = productMap.get(pricesystemDetail.getProductId());
-            if(!goodsOrderDetailDtoMap.containsKey(pricesystemDetail.getProductId()) && productValidForOrderOrBill(goodsOrderDto.getNetType(), pricesystemDetail, product)) {
+            if(!goodsOrderDetailDtoMap.containsKey(pricesystemDetail.getProductId()) && productValidForOrderOrBill(goodsOrderDto.getNetType(), product)) {
                 GoodsOrderDetailDto goodsOrderDetailDto = new GoodsOrderDetailDto();
                 goodsOrderDetailDto.setProductId(product.getId());
                 goodsOrderDetailDto.setProductOutId(product.getOutId());
