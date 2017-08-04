@@ -1,6 +1,7 @@
 package net.myspring.tool.modules.vivo.web.controller;
 
 import net.myspring.common.enums.CompanyNameEnum;
+import net.myspring.tool.common.config.AuditorContextHolder;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
@@ -32,6 +33,7 @@ public class VivoPullController {
         if(StringUtils.isBlank(RequestUtils.getCompanyName())) {
             DbContextHolder.get().setCompanyName(companyName);
         }
+        AuditorContextHolder.get().setAccountId("1");
         //同步颜色编码
         if (CompanyNameEnum.JXVIVO.name().equals(companyName)){
             List<VivoProducts> vivoProductsList = vivoPullService.getProducts();
