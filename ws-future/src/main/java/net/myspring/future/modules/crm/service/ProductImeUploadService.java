@@ -296,6 +296,9 @@ public class ProductImeUploadService {
     }
 
     private String getEmployeeDepotIds(String employeeId) {
+        if(StringUtils.isBlank(employeeId)){
+            return null;
+        }
         return getEmployeeDepotIdsMap(Collections.singletonList(employeeId)).get(employeeId);
     }
 }
