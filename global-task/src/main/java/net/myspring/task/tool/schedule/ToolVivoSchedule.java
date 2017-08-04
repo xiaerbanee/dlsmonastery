@@ -58,7 +58,7 @@ public class ToolVivoSchedule {
         }
     }
 
-    @Scheduled(cron = "0 10 0/1 * * ?")
+    @Scheduled(cron = "0 0/20 * * * ?")
     public void pushVivoToLocal(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXVIVO.name())) {
