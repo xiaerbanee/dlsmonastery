@@ -73,14 +73,15 @@
             address: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
             contator: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
             mobilePhone: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
+            attachment: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
           },
         }
       },
       formSubmit(){
         this.submitDisabled = true;
         let form = this.$refs["inputForm"];
+        this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
         form.validate((valid) => {
-          this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
           if (valid) {
             axios.post('/api/ws/future/layout/shopPrint/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
