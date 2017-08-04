@@ -84,7 +84,6 @@ public class AccountForm extends BaseForm<Account> {
         this.officeIdList = officeIdList;
     }
 
-
     public List<String> getPermissionIdList() {
         return permissionIdList;
     }
@@ -195,16 +194,6 @@ public class AccountForm extends BaseForm<Account> {
 
     public void setOutPassword(String outPassword) {
         this.outPassword = outPassword;
-    }
-
-    @Override
-    public String getRemarks() {
-        return remarks;
-    }
-
-    @Override
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
     }
 
     public String getPositionId() {
