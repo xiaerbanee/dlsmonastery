@@ -25,6 +25,8 @@
           rowHeaders:true,
           autoColumnSize:true,
           stretchH: 'all',
+          minRows: 10,
+          minSpareRows:1,
           height: 650,
           colHeaders: ["货品","货品编码","价格"],
           columns: [
@@ -55,12 +57,6 @@
         synDisabled:false,
       };
     },
-    mounted() {
-      axios.get('/api/global/cloud/sys/product/form').then((response)=>{
-        this.settings.columns[0].source = response.data.productNameList;
-        table = new Handsontable(this.$refs["handsontable"], this.settings);
-      });
-    },
     methods: {
       formSubmit(){
         this.submitDisabled = true;
@@ -79,6 +75,7 @@
               if(response.data.success){
                 this.$message(response.data.message);
                 this.submitDisabled = false;
+                this.initPage();
               }else{
                 this.$alert(response.data.message);
                 this.submitDisabled = false;
@@ -102,7 +99,16 @@
             this.synDisabled = false;
           }
         })
-      }
-    }
+      },
+      initPage() {
+        axios.get('/api/global/cloud/sys/product/form').then((response)=>{
+          this.settings.columns[0].source = response.data.productNameList;
+          table = new Handsontable(this.$refs["handsontable"], this.settings);
+        });
+      },
+    },
+    created() {
+      this.initPage();
+    },
   }
 </script>

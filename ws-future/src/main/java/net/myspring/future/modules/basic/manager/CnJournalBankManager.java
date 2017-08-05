@@ -47,7 +47,7 @@ public class CnJournalBankManager {
         cnJournalForBankDto.setExtendId(shopDeposit.getId());
         cnJournalForBankDto.setExtendType(ExtendTypeEnum.押金列表.name());
         cnJournalForBankDto.setDate(shopDeposit.getBillDate());
-        cnJournalForBankDto.setAccountNumberForBank("1002");//银行存款(vivo没有这个科目)
+        cnJournalForBankDto.setAccountNumberForBank("1002");//银行存款
         List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
         CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
         if (shopDeposit.getAmount().compareTo(BigDecimal.ZERO) == 1) {
@@ -128,6 +128,7 @@ public class CnJournalBankManager {
                 cnJournalForBankDto.setExtendId(employeePhoneDeposit.getId());
                 cnJournalForBankDto.setExtendType(ExtendTypeEnum.导购用机.name());
                 cnJournalForBankDto.setDate(LocalDate.now());
+                cnJournalForBankDto.setAccountNumberForBank("1002");
                 List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
                 CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
                 if (employeePhoneDeposit.getAmount().compareTo(BigDecimal.ZERO) == 1) {
