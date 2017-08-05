@@ -27,8 +27,10 @@
             </el-form-item>
           </el-row>
           <el-row :gutter="4">
-            <el-form-item label="创建人" >
-              <el-input v-model="formData.createdByName" placeholder="模糊匹配查询"></el-input>
+            <el-form-item label="创建人">
+              <el-select v-model="formData.createdBy" filterable remote placeholder="模糊匹配查询" :remote-method="remoteAccount" :loading="remoteLoading">
+                <el-option v-for="item in accountCommonList" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
+              </el-select>
             </el-form-item>
           </el-row>
         </el-form>
@@ -69,6 +71,7 @@
         formData:{
           extra:{}
         },
+        accountCommonList:{},
         initPromise:{},
         formLabelWidth: '28%',
         formVisible: false,
@@ -122,7 +125,17 @@
         }else if(action === "export"){
           window.location.href = '/api/global/cloud/sys/voucher/export?id='+id;
         }
-      }
+      },remoteAccount(query) {
+        if (query !== '') {
+          this.remoteLoading = true;
+          axios.get('/api/basic/hr/account/findByLoginNameLike',{params:{loginName:query}}).then((response)=>{
+            this.accountCommonList = response.data;
+            this.remoteLoading = false;
+          })
+        } else {
+          this.accountCommonList = {};
+        }
+      },
     },created () {
       let that = this;
       that.pageHeight = 0.75*window.innerHeight;

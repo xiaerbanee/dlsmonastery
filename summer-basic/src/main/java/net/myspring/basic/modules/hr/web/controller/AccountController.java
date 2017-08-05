@@ -238,6 +238,16 @@ public class AccountController {
         return accountCommonDtoList;
     }
 
+    @RequestMapping(value = "findByLoginNameLike")
+    public List<AccountCommonDto> findByLoginNameLike(@RequestParam(value = "loginName") String loginName) {
+        List<AccountCommonDto> accountCommonDtoList = Lists.newArrayList();
+        if (StringUtils.isNotBlank(loginName)) {
+            List<AccountDto> accountDtoList=accountService.findByLoginNameLike(loginName);
+            accountCommonDtoList= BeanUtil.map(accountDtoList,AccountCommonDto.class);
+        }
+        return accountCommonDtoList;
+    }
+
     @RequestMapping(value = "getAccountId")
     public Map<String,Object> getAccountId() {
         Map<String,Object> map = Maps.newHashMap();
