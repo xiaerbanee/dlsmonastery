@@ -2,7 +2,7 @@ spring:
   application:
     name: summer-discovery
   profiles:
-    active: discovery2
+    active: discovery1-dev
 
 logging:
   file: summer-discovery.log
