@@ -43,7 +43,7 @@ public class ProductController {
 
     @RequestMapping(value = "findByName")
     public ProductDto findByName(String name){
-        ProductDto productDto = productService.findByName(name);
+        ProductDto productDto = productService.findByNameAndCompanyName(name);
         return productDto;
     }
 
@@ -55,12 +55,12 @@ public class ProductController {
 
     @RequestMapping(value = "findByCode")
     public ProductDto findByCode(String code){
-        return productService.findByCode(code);
+        return productService.findByCodeAndCompanyName(code);
     }
 
     @RequestMapping(value = "syn")
     public RestResponse syn(){
-        LocalDateTime maxDate = productService.findMaxOutDate();
+        LocalDateTime maxDate = productService.findMaxOutDateByCompanyName();
         List<BdMaterial> bdMaterialList;
         if (maxDate != null){
             bdMaterialList = bdMaterialService.findByMaxModifyDate(maxDate);

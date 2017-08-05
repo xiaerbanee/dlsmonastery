@@ -3,6 +3,14 @@ spring:
     name: config
   profiles:
     active: dev
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:1000/eureka/
+
   cloud:
     config:
       server:
@@ -14,7 +22,3 @@ spring:
           timeout: 300
 server:
   port: 9900
-
-eureka:
-  instance:
-    prefer-ip-address: true
