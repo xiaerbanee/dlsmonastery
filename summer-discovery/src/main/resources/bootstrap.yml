@@ -9,3 +9,7 @@ eureka:
 
 logging:
   file: summer-discovery.log
+
+spring:
+  application:
+    name: summer-discovery

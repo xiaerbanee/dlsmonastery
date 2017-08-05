@@ -113,10 +113,10 @@ public class AccountService {
     public Account save(AccountForm accountForm) {
         Account account;
         if(CollectionUtil.isEmpty(accountForm.getOfficeIdList())||accountForm.getOfficeIdList().size()==1){
-            accountForm.setOfficeIdList(Lists.newArrayList(accountForm.getOfficeId()));
+            accountForm.setOfficeIds(accountForm.getOfficeId());
         }
         if(CollectionUtil.isEmpty(accountForm.getPositionIdList())||accountForm.getPositionIdList().size()==1){
-            accountForm.setPermissionIdList(Lists.newArrayList(accountForm.getPositionId()));
+            accountForm.setPositionIds(accountForm.getPositionId());
         }
         accountForm.setOfficeIds(StringUtils.join(accountForm.getOfficeIdList(),CharConstant.COMMA));
         if (accountForm.isCreate()) {
@@ -236,6 +236,12 @@ public class AccountService {
 
     public List<AccountDto> findByLoginNameList(List<String> loginNameList){
         List<Account> accountList=accountRepository.findByLoginNameList(loginNameList);
+        List<AccountDto> accountDtoList=BeanUtil.map(accountList,AccountDto.class);
+        return accountDtoList;
+    }
+
+    public List<AccountDto> findByLoginNameLike(String loginName){
+        List<Account> accountList=accountRepository.findByLoginNameLike(loginName);
         List<AccountDto> accountDtoList=BeanUtil.map(accountList,AccountDto.class);
         return accountDtoList;
     }

@@ -155,11 +155,6 @@ public class VoucherService {
         return voucher;
     }
 
-    @Transactional
-    public Voucher save(Voucher voucher){
-        return voucherRepository.save(voucher);
-    }
-
     public RestResponse check(VoucherForm voucherForm,List<BdAccount> bdAccountList,List<BdFlexItemGroup> bdFlexItemGroupList) {
         String json = HtmlUtils.htmlUnescape(voucherForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
