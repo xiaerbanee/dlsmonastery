@@ -1,5 +1,4 @@
 server:
-  port: 443
   ssl:
     key-store: classpath:hi.ncoppo.com.jks
     key-store-password: 882421615w0f

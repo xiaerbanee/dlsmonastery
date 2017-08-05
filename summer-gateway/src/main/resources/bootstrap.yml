@@ -14,5 +14,4 @@ spring:
         max-attempts: 10
 
 server:
-  http:
-    port : 1200
+    port : 443
