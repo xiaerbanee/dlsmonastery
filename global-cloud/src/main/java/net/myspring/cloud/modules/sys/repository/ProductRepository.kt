@@ -58,12 +58,20 @@ interface ProductRepository : BaseRepository<Product,String>{
         FROM  #{#entityName} t1
         WHERE t1.companyName = :companyName
      """)
-    fun findMaxOutDate(@Param("companyName")companyName:String): LocalDateTime
+    fun findMaxOutDateByCompanyName(@Param("companyName")companyName:String): LocalDateTime
 
     @Query("""
         SELECT DISTINCT(t1.returnOutId)
         FROM  #{#entityName} t1
         WHERE  t1.companyName = :companyName
      """)
-    fun findReturnOutId(@Param("companyName")companyName:String):String
+    fun findReturnOutIdByCompanyName(@Param("companyName")companyName:String):String
+
+    @Query("""
+        SELECT t1
+        FROM  #{#entityName} t1
+        WHERE  t1.companyName = :companyName
+            and t1.outId = :outId
+    """)
+    fun findByOutIdAndCompanyName(@Param("outId")outId:String,@Param("companyName")companyName:String):Product
 }
