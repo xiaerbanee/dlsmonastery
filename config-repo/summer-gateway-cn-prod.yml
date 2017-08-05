@@ -1,23 +1,20 @@
 server:
-  port: 443
   ssl:
     key-store: classpath:hi.ncoppo.com.jks
     key-store-password: 882421615w0f
-  http:
-    port : 1200
 
 zuul:
   host:
-    socket-timeout-millis: 10000
-    connect-timeout-millis: 10000
+    socket-timeout-millis: 30000
+    connect-timeout-millis: 30000
     max-total-connections: 400
   add-proxy-headers: true
   semaphore:
     max-semaphores: 2000
 
 ribbon:
-  ReadTimeout: 10000
-  ConnectTimeout: 10000
+  ReadTimeout: 30000
+  ConnectTimeout: 30000
 
 hystrix:
   command:
@@ -31,4 +28,4 @@ hystrix:
           semaphore:
             maxConcurrentRequests: 2000
           thread:
-            timeoutInMilliseconds: 10000
+            timeoutInMilliseconds: 30000

@@ -48,7 +48,7 @@ public class PricesystemDetailService {
                 if(pricesystemDetailMap.get(pricesystem.getId()) != null){
                     rows.add(pricesystemDetailMap.get(pricesystem.getId()).getPrice());
                 }else{
-                    rows.add(BigDecimal.ZERO);
+                    rows.add(null);
                 }
             }
             pricesystemDetailDtoLists.add(rows);
