@@ -13,7 +13,6 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.CustomerDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
-import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
@@ -50,8 +49,7 @@ public class DepotController {
     @RequestMapping(value = "directShop")
     public List<DepotDto>  directShop(DepotQuery depotQuery) {
         depotQuery.setClientIsNull(false);
-        List<DepotDto> result = depotService.findShopList(depotQuery);
-        return result;
+        return depotService.findShopList(depotQuery);
     }
 
     //代理门店查询
@@ -108,8 +106,7 @@ public class DepotController {
 
     @RequestMapping(value = "findByIds")
     public List<DepotDto> findByListIds(@RequestParam("idStr") List<String> ids) {
-        List<DepotDto> depotDtoList =depotService.findByIds(ids);
-        return depotDtoList;
+        return depotService.findByIds(ids);
     }
 
     @RequestMapping(value = "getDepotAccountQuery")
@@ -135,7 +132,7 @@ public class DepotController {
         if(StringUtils.isNotBlank(dateRange)){
             String[] tempParamValues = dateRange.split(" - ");
             customerReceiveDetailQuery.setDateStart(LocalDate.parse(tempParamValues[0]));
-            customerReceiveDetailQuery.setDateEnd(LocalDate.parse(tempParamValues[1]).plusDays(1));
+            customerReceiveDetailQuery.setDateEnd(LocalDate.parse(tempParamValues[1]));
         }
 
         return cloudClient.getCustomerReceiveDetailList(customerReceiveDetailQuery);
@@ -182,7 +179,7 @@ public class DepotController {
     }
 
     @RequestMapping(value = "scheduleSynArea")
-    public RestResponse scheduleSynArea(String accountId) {
+    public RestResponse scheduleSynArea() {
         depotService.scheduleSynArea();
         return new RestResponse("同步成功",null);
     }
@@ -240,13 +237,11 @@ public class DepotController {
 
     @RequestMapping(value="findOppoCustomers")
     public List<CustomerDto> findOppoCustomers(){
-        List<CustomerDto> oppoCustomers=depotService.findOppoCustomers();
-        return oppoCustomers;
+        return depotService.findOppoCustomers();
     }
 
     @RequestMapping(value = "findByClientId")
     public List<DepotDto> findByClientId(String clientId){
-        List<DepotDto> depotDtos = depotService.findByClientId(clientId);
-        return depotDtos;
+        return depotService.findByClientId(clientId);
     }
 }
