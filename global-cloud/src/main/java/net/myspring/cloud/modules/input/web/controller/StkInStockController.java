@@ -13,7 +13,6 @@ import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeSynService;
 import net.myspring.cloud.modules.sys.service.ProductService;
-import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.mapper.BeanUtil;
@@ -22,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 采购入库单
@@ -48,9 +45,9 @@ public class StkInStockController {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
         KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
         if (!KingdeeNameEnum.JXDJ.name().equals(kingdeeBook.getName())){
-            Map<String,ProductDto> productOutIdMap = productService.findAll().stream().collect(Collectors.toMap(ProductDto::getOutId, ProductDto-> ProductDto));
-            String returnOutId = productService.findReturnOutId();
-            String type = productOutIdMap.get(returnOutId)==null?"":productOutIdMap.get(returnOutId).getName();
+            String returnOutId = productService.findReturnOutIdByCompanyName();
+            ProductDto productDto = productService.findByOutIdAndCompanyName(returnOutId);
+            String type = productDto==null?"":productDto.getName();
             stkInStockForm.getTypeList().add(type);
         }
         stkInStockForm = stkInStockService.getForm(stkInStockForm,kingdeeBook);

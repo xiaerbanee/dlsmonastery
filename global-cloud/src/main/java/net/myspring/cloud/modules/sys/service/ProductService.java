@@ -35,8 +35,8 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public LocalDateTime findMaxOutDate(){
-        return productRepository.findMaxOutDate(RequestUtils.getCompanyName());
+    public LocalDateTime findMaxOutDateByCompanyName(){
+        return productRepository.findMaxOutDateByCompanyName(RequestUtils.getCompanyName());
     }
 
     public ProductForm getForm(ProductForm productForm){
@@ -45,13 +45,13 @@ public class ProductService {
         return productForm;
     }
 
-    public List<ProductDto> findAll(){
+    public List<ProductDto> findByCompanyName(){
         List<Product> productList = productRepository.findByCompanyName(RequestUtils.getCompanyName());
         List<ProductDto> productDtoList = BeanUtil.map(productList,ProductDto.class);
         return productDtoList;
     }
 
-    public ProductDto findByName(String nameHtml){
+    public ProductDto findByNameAndCompanyName(String nameHtml){
         if (StringUtils.isNotBlank(nameHtml)) {
             String name = HtmlUtils.htmlUnescape(nameHtml);
             Product product = productRepository.findByNameAndCompanyName(RequestUtils.getCompanyName(), name);
@@ -61,11 +61,17 @@ public class ProductService {
         return null;
     }
 
-    public String findReturnOutId(){
-        return productRepository.findReturnOutId(RequestUtils.getCompanyName());
+    public String findReturnOutIdByCompanyName(){
+        return productRepository.findReturnOutIdByCompanyName(RequestUtils.getCompanyName());
     }
 
-    public ProductDto findByCode(String code){
+    public ProductDto findByOutIdAndCompanyName(String outId){
+        Product product =  productRepository.findByOutIdAndCompanyName(outId,RequestUtils.getCompanyName());
+        ProductDto productDto = BeanUtil.map(product, ProductDto.class);
+        return productDto;
+    }
+
+    public ProductDto findByCodeAndCompanyName(String code){
         if (StringUtils.isNotBlank(code)){
             Product product = productRepository.findByCodeAndCompanyName(RequestUtils.getCompanyName(),code);
             ProductDto productDto = BeanUtil.map(product,ProductDto.class);
@@ -97,7 +103,7 @@ public class ProductService {
         String returnOutId = "";
         String companyName = RequestUtils.getCompanyName();
         if(!KingdeeNameEnum.JXDJ.name().equals(kingdeeBook.getName())){
-            returnOutId = productRepository.findReturnOutId(companyName);
+            returnOutId = productRepository.findReturnOutIdByCompanyName(companyName);
         }
         Map<String,Product> productMap = productRepository.findByCompanyName(companyName).stream().collect(Collectors.toMap(Product::getOutId,Product->Product));
         for (BdMaterial bdmaterial : bdMaterialList) {
