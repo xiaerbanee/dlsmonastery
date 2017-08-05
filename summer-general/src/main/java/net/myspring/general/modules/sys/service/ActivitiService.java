@@ -21,7 +21,9 @@ import net.myspring.general.modules.sys.repository.ProcessTaskRepository;
 import net.myspring.general.modules.sys.repository.ProcessTypeRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
-import org.activiti.engine.*;
+import org.activiti.engine.IdentityService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
@@ -130,7 +132,9 @@ public class ActivitiService {
                 if (StringUtils.isNotBlank(historicTaskInstance.getAssignee())) {
                     ActivitiDetailDto activitiDetailDto=new ActivitiDetailDto();
                     activitiDetailDto.setAuditBy(historicTaskInstance.getAssignee());
-                    activitiDetailDto.setAuditDate(LocalDateTime.ofInstant(historicTaskInstance.getEndTime().toInstant(), ZoneId.systemDefault()));
+                    if(historicTaskInstance.getEndTime()!=null){
+                        activitiDetailDto.setAuditDate(LocalDateTime.ofInstant(historicTaskInstance.getEndTime().toInstant(), ZoneId.systemDefault()));
+                    }
                     activitiDetailDto.setProcessStatus(historicTaskInstance.getName());
                     activitiDetailDto.setComment(activitiEntity.getCommonMap().get(historicTaskInstance.getId()));
                     activitiDetailDtoList.add(activitiDetailDto);
