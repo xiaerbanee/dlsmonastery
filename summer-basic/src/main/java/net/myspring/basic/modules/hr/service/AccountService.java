@@ -240,6 +240,12 @@ public class AccountService {
         return accountDtoList;
     }
 
+    public List<AccountDto> findByLoginNameLike(String loginName){
+        List<Account> accountList=accountRepository.findByLoginNameLike(loginName);
+        List<AccountDto> accountDtoList=BeanUtil.map(accountList,AccountDto.class);
+        return accountDtoList;
+    }
+
     @Transactional
     public void updatePwd(String password){
         Account account=accountRepository.findOne(RequestUtils.getAccountId());
