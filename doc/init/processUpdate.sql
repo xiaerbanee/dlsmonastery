@@ -128,6 +128,47 @@ INSERT INTO crm_simple_process_step (
     process_instance_id in  (select process_instance_id from crm_bank_in where process_instance_id is not null) or process_instance_id in  (select process_instance_id from crm_ad_goods_order where process_instance_id is not null)
 );
 
+INSERT INTO crm_simple_process (
+  SELECT
+    simple_process_id,
+    (select id from sys_process_type where name = 'AdGoodsOrder' ),
+    process_status,
+    process_position_id,
+    '',
+    created_by,
+    created_date,
+    created_by,
+    created_date,
+    0,
+    0,
+    1
+  FROM
+    crm_ad_goods_order
+  WHERE
+    simple_process_id is not null and simple_process_id not in  (select id from crm_simple_process)
+);
+
+INSERT INTO crm_simple_process (
+  SELECT
+    simple_process_id,
+    (select id from sys_process_type where name = 'BankIn' ),
+    process_status,
+    position_id,
+    '',
+    created_by,
+    created_date,
+    created_by,
+    created_date,
+    0,
+    0,
+    1
+  FROM
+    crm_bank_in
+  WHERE
+    simple_process_id is not null and simple_process_id not in  (select id from crm_simple_process)
+);
+
+
 INSERT INTO crm_simple_process_detail (
   SELECT
     t1.ID_,
