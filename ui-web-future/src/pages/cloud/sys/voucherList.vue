@@ -75,7 +75,8 @@
         initPromise:{},
         formLabelWidth: '28%',
         formVisible: false,
-        pageLoading: false
+        pageLoading: false,
+        remoteLoading:false
       };
     },
     methods: {
