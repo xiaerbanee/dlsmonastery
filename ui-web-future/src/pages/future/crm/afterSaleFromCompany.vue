@@ -8,7 +8,7 @@
     </el-row>
     <search-dialog @enter="search()" :title="$t('afterSaleFromCompany.filter')" @hide="formVisible = false" :show="formVisible" v-model="formVisible"  size="tiny" class="search-form">
       <el-form :model="formData" :label-width="formLabelWidth">
-        <el-form-item :label="$t('productTypeForm.product')" prop="productIdList">
+        <el-form-item :label="$t('afterSaleFromCompany.badProductName')" prop="productIdList">
           <product-select v-model="formData.badProductName" @afterInit="setSearchText"></product-select>
         </el-form-item>
     <!--    <el-form-item :label="$t('afterSaleFromCompany.badProductName')" >
