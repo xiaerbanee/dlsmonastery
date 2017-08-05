@@ -25,7 +25,7 @@ public class ToolOppoSchedule {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Scheduled(cron = "0 0 0/1 * * ?")
+    @Scheduled(cron = "0 0 2-18 * * ?")
     public void pullJxoppoData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXOPPO.name())) {
@@ -36,9 +36,7 @@ public class ToolOppoSchedule {
         }
     }
 
-
-
-    @Scheduled(cron = "0 30 21,22,23 * * ?")
+    @Scheduled(cron = "0 0 20,21,22 * * ?")
     public void pushJxoppoToLocal(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXOPPO.name())) {
@@ -48,7 +46,5 @@ public class ToolOppoSchedule {
             logger.info("工厂上抛数据结束");
         }
     }
-
-
 
 }
