@@ -124,6 +124,8 @@ public class EmployeePhoneDepositService {
 
     @Transactional
     public void batchAudit(List<String> ids, boolean pass) {
+
+
         List<EmployeePhoneDeposit> employeePhoneDepositList=employeePhoneDepositRepository.findAll(ids);
         if (!pass) {
             for(EmployeePhoneDeposit employeePhoneDeposit:employeePhoneDepositList){

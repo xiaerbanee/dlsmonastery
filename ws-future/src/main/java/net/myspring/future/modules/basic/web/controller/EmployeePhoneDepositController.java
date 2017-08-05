@@ -1,5 +1,7 @@
 package net.myspring.future.modules.basic.web.controller;
 
+import net.myspring.common.exception.ServiceException;
+import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.EmployeePhoneDepositStatusEnum;
 import net.myspring.future.modules.basic.client.CloudClient;
@@ -46,13 +48,13 @@ public class EmployeePhoneDepositController {
     @RequestMapping(value = "delete")
     public RestResponse delete(EmployeePhoneDepositForm employeePhoneDepositForm) {
         employeePhoneDepositService.logicDeleteOne(employeePhoneDepositForm);
-        return new RestResponse("删除成功",null);
+        return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "save")
     public RestResponse save(EmployeePhoneDepositForm employeePhoneDepositForm) {
         employeePhoneDepositService.save(employeePhoneDepositForm);
-        return new RestResponse("保存成功",null);
+        return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "batchAudit")
@@ -63,9 +65,12 @@ public class EmployeePhoneDepositController {
                 return new RestResponse("审核失败,"+employeePhoneDeposit.getDepotName()+"没有绑定财务门店；",null);
             }
         }
+        if(ids == null){
+            throw new ServiceException("未选择任何记录");
+        }
         employeePhoneDepositService.batchAudit(Arrays.asList(ids),pass);
         //同步金蝶
-        return new RestResponse("批量审核成功",null);
+        return new RestResponse("批量审核成功",ResponseCodeEnum.audited.name());
     }
 
     @RequestMapping(value = "batchSave")
@@ -82,6 +87,7 @@ public class EmployeePhoneDepositController {
 
     @RequestMapping(value="getForm")
     public EmployeePhoneDepositForm getForm(EmployeePhoneDepositForm employeePhoneDepositForm){
+        employeePhoneDepositForm.getExtra().put("departMentList", cloudClient.findAllDepartment());
         return employeePhoneDepositForm;
     }
 
