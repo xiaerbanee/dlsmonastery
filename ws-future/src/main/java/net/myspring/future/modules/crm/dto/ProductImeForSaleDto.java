@@ -33,7 +33,16 @@ public class ProductImeForSaleDto extends DataDto<ProductIme> {
     private Boolean fromChain;
     private String depotChainId;
     private String depotDepotStoreId;
+    private String saleShopId;
     private List<DepotDto> accessChainDepotList = new ArrayList<>();
+
+    public String getSaleShopId() {
+        return saleShopId;
+    }
+
+    public void setSaleShopId(String saleShopId) {
+        this.saleShopId = saleShopId;
+    }
 
     public String getDepotDepotStoreId() {
         return depotDepotStoreId;
