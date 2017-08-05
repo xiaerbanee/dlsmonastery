@@ -36,7 +36,7 @@ public class ToolOppoSchedule {
         }
     }
 
-    @Scheduled(cron = "0 0/10 * * * ?")
+    @Scheduled(cron = "0 0 20,21,22 * * ?")
     public void pushJxoppoToLocal(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXOPPO.name())) {
@@ -46,4 +46,5 @@ public class ToolOppoSchedule {
             logger.info("工厂上抛数据结束");
         }
     }
+
 }

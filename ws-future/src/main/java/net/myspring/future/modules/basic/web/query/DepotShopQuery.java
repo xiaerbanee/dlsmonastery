@@ -2,6 +2,8 @@ package net.myspring.future.modules.basic.web.query;
 
 import net.myspring.future.common.query.BaseQuery;
 
+import java.util.List;
+
 public class DepotShopQuery extends BaseQuery {
 
     private String name;
@@ -10,6 +12,7 @@ public class DepotShopQuery extends BaseQuery {
     private Boolean ScoreType;
     private String sumType;
     private String officeId;
+    private List<String> childOfficeIds;
     private String jointLevel;
     private String areaType;
     private String pricesystemId;
@@ -25,6 +28,14 @@ public class DepotShopQuery extends BaseQuery {
     private Boolean adShop;
     private Boolean isHidden;
 
+
+    public List<String> getChildOfficeIds() {
+        return childOfficeIds;
+    }
+
+    public void setChildOfficeIds(List<String> childOfficeIds) {
+        this.childOfficeIds = childOfficeIds;
+    }
 
     public String getName() {
         return name;

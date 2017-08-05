@@ -20,7 +20,7 @@
                 <date-range-picker v-model="formData.dutyDateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('depotAccountList.officeName')">
-                <office-select v-model="formData.officeId" @afterInit="setSearchText" ></office-select>
+                <office-select v-model="formData.officeIds" @afterInit="setSearchText" multiple="multiple" ></office-select>
               </el-form-item>
               <el-form-item :label="$t('depotAccountList.areaName')">
                 <el-select v-model="formData.areaId" @afterInit="setSearchText" >

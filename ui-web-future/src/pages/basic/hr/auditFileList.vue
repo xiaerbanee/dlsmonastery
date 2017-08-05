@@ -20,7 +20,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('auditFileForm.processTypeName')" prop="processTypeName">
-                <el-select v-model="inputForm.processTypeId" filterable clearable :placeholder="$t('auditFileForm.inputWord')">
+                <el-select v-model="formData.processTypeId" filterable clearable :placeholder="$t('auditFileForm.inputWord')">
                   <el-option v-for="type in processTypeList" :key="type.id" :label="type.name" :value="type.id"></el-option>
                 </el-select>
               </el-form-item>
