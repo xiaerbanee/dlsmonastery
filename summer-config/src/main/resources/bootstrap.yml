@@ -4,6 +4,13 @@ spring:
   profiles:
     active: dev
 
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:1000/eureka/
+
   cloud:
     config:
       server:
