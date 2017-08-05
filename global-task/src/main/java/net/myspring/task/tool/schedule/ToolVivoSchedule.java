@@ -25,7 +25,7 @@ public class ToolVivoSchedule {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Scheduled(cron = "0 0 0/1 * * ?")
+    @Scheduled(cron = "0 0 2-18 * * ?")
     public void pullIdvivoData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.IDVIVO.name())) {
@@ -36,7 +36,7 @@ public class ToolVivoSchedule {
         }
     }
 
-    @Scheduled(cron = "0 0 0/1 * * ?")
+    @Scheduled(cron = "0 0 2-18 * * ?")
     public void pullVivoData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXVIVO.name())) {
@@ -47,7 +47,7 @@ public class ToolVivoSchedule {
         }
     }
 
-    @Scheduled(cron = "0 20 21,22,23 * * ?")
+    @Scheduled(cron = "0 30 20,21,22 * * ?")
     public void pushIdvivoToLocal(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.IDVIVO.name())) {
@@ -58,7 +58,7 @@ public class ToolVivoSchedule {
         }
     }
 
-    @Scheduled(cron = "0 20 21,22,23 * * ?")
+    @Scheduled(cron = "0 30 20,21,22 * * ?")
     public void pushVivoToLocal(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXVIVO.name())) {
@@ -69,7 +69,7 @@ public class ToolVivoSchedule {
         }
     }
 
-    @Scheduled(cron = "0 40 21,22,23 * * ?")
+    @Scheduled(cron = "0 0,30 23 * * ?")
     public void pushIdvivoData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.IDVIVO.name())) {
@@ -80,7 +80,7 @@ public class ToolVivoSchedule {
         }
     }
 
-    @Scheduled(cron = "0 40 21,22,23 * * ?")
+    @Scheduled(cron = "0 0,30 23 * * ?")
     public void pushVivoData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXVIVO.name())) {
