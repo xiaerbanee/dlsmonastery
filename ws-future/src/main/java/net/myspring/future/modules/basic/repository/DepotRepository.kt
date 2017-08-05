@@ -346,8 +346,8 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         if(StringUtils.isNotBlank(depotAccountQuery.name)){
             sb.append("""  and t1.name like concat('%', :name,'%') """)
         }
-        if(StringUtils.isNotBlank(depotAccountQuery.officeId)){
-            sb.append("""  and t1.office_id = :officeId  """)
+        if(CollectionUtil.isNotEmpty(depotAccountQuery.officeIds)){
+            sb.append("""  and t1.office_id in (:officeIds)  """)
         }
         if(StringUtils.isNotBlank(depotAccountQuery.areaId)){
             sb.append("""  and t1.area_id = :areaId  """)
