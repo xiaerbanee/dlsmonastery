@@ -55,7 +55,7 @@
         settings: {
           rowHeaders:true,
           autoColumnSize:true,
-          minSpareRows: 10,
+          minRows: 10,
           height: 650,
           colHeaders: [],
           columns: [],
