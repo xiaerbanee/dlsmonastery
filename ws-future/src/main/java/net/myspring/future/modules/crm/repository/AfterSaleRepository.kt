@@ -117,7 +117,8 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append("""  and ( t4.id in (:depotIdList) or t7.id in (:depotIdList) ) """)
         }
         if (StringUtils.isNotBlank(afterSaleQuery.badProductName)) {
-            sb.append("""  and t3.name like concat('%',:badProductName,'%') """)
+//            sb.append("""  and t3.name like concat('%',:badProductName,'%') """)
+            sb.append("""  and t3.id =:badProductName """)/*modify*/
         }
         if (afterSaleQuery.fromCompany) {
             sb.append("""  and t1.from_company_date is null  """)
