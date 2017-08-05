@@ -1,7 +1,7 @@
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:1000/eureka/
+      defaultZone: http://summer-discovery-1:1000/eureka/
 
 spring:
   datasource:
