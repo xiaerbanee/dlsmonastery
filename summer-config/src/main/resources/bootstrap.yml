@@ -1,6 +1,8 @@
 spring:
   application:
     name: config
+  profiles:
+    active: dev
   cloud:
     config:
       server:
@@ -16,6 +18,3 @@ server:
 eureka:
   instance:
     prefer-ip-address: true
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:1000/eureka/,http://localhost:1001/eureka/
