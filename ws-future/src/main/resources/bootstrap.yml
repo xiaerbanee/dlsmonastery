@@ -12,3 +12,5 @@ spring:
         max-interval: 10000
         multiplier: 2
         max-attempts: 10
+server:
+  port: 3000
