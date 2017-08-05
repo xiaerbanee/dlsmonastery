@@ -13,7 +13,9 @@
           <el-input v-model.number="inputForm.amount"></el-input>
         </el-form-item>
         <el-form-item :label="$t('employeePhoneDepositForm.department')" prop="department">
-          <office-select v-model="inputForm.department"></office-select>
+          <el-select v-model="inputForm.department"  clearable :placeholder="$t('employeePhoneDepositForm.inputKey')">
+            <el-option v-for="item in inputForm.extra.departMentList" :key="item.fnumber" :label="item.ffullName" :value="item.fnumber"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item :label="$t('employeePhoneDepositForm.productName')" prop="productId">
           <product-select v-model="inputForm.productId" :hasIme=true></product-select>
@@ -31,14 +33,12 @@
 <script>
   import employeeSelect from 'components/basic/employee-select'
   import productSelect from 'components/future/product-select'
-  import officeSelect from 'components/basic/office-select'
   import depotSelect from 'components/future/depot-select'
 
     export default{
       components:{
         employeeSelect,
         productSelect,
-        officeSelect,
         depotSelect
       },
       data(){
@@ -49,7 +49,9 @@
           return{
             submitDisabled:false,
             formProperty:{},
-            inputForm:{},
+            inputForm:{
+              extra:{},
+            },
             remoteLoading:false,
             formLabelWidth: '120px',
             rules: {
@@ -62,9 +64,8 @@
           }
         },
         formSubmit(){
-          var that = this;
           this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
+          let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
               axios.post('/api/ws/future/basic/employeePhoneDeposit/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
@@ -75,8 +76,8 @@
                 }else{
                   this.$router.push({name:'employeePhoneDepositList',query:util.getQuery("employeePhoneDepositList"),params:{_closeFrom:true}})
                 }
-              }).catch(function () {
-                that.submitDisabled = false;
+              }).catch(()=> {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;
@@ -85,10 +86,6 @@
         },initPage(){
           axios.get('/api/ws/future/basic/employeePhoneDeposit/getForm').then((response)=>{
             this.inputForm = response.data;
-            axios.get('/api/ws/future/basic/employeePhoneDeposit/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-              util.copyValue(response.data,this.inputForm);
-            });
-            console.log(this.inputForm);
           });
         }
       },created () {

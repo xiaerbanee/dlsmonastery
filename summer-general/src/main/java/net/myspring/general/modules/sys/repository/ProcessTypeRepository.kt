@@ -24,6 +24,8 @@ interface ProcessTypeRepository : BaseRepository<ProcessType, String>,ProcessTyp
 
     fun findByName(name: String): ProcessType
 
+    fun findByAuditFileTypeIsTrueAndEnabledIsTrue():MutableList<ProcessType>
+
 
     @Query("select t from #{#entityName} t where t.auditFileType=1 and t.enabled=1")
     fun findEnabledAuditFileType(): MutableList<ProcessType>

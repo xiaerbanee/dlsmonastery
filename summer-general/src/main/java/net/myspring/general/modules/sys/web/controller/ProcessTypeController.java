@@ -88,4 +88,11 @@ public class ProcessTypeController {
     public ProcessTypeQuery getQuery(ProcessTypeQuery processTypeQuery){
         return processTypeQuery;
     }
+
+    @RequestMapping(value = "findByAuditFileTypeIsTrue")
+    public List<ProcessTypeDto> findByAuditFileTypeIsTrue(){
+        List<ProcessTypeDto> list=processTypeService.findByAuditFileTypeIsTrue();
+        return list;
+    }
+
 }

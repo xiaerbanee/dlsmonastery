@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,7 @@ public class OppoPushController {
     //将需要上抛的数据先同步到本地数据库
     @RequestMapping(value = "pushToLocal")
     public String pushToLocal(String companyName,String date) {
+        logger.info("开始同步JXOPPO数据至本地:"+ LocalDateTime.now());
         if(StringUtils.isBlank(RequestUtils.getCompanyName())) {
             DbContextHolder.get().setCompanyName(companyName);
         }
@@ -80,7 +82,7 @@ public class OppoPushController {
         oppoPushDto.setOppoCustomerDemoPhones(futureDemoPhoneService.getFutureOppoCustomerDemoPhone(date));
 
         oppoPushSerivce.pushToLocal(oppoPushDto);
-
+        logger.info("同步JXOPPO数据至本地成功:"+ LocalDateTime.now());
         return "OPPO同步成功";
     }
 

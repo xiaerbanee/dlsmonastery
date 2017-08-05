@@ -6,6 +6,7 @@ import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class DepotAccountQuery extends BaseQuery {
 
@@ -15,6 +16,7 @@ public class DepotAccountQuery extends BaseQuery {
     private String areaId;
     private Boolean specialityStore;
     private Boolean accountTaxPermitted;
+    private List<String> officeIds;
 
     public String getAreaId() {
         return areaId;
@@ -78,5 +80,13 @@ public class DepotAccountQuery extends BaseQuery {
 
     public void setSpecialityStore(Boolean specialityStore) {
         this.specialityStore = specialityStore;
+    }
+
+    public List<String> getOfficeIds() {
+        return officeIds;
+    }
+
+    public void setOfficeIds(List<String> officeIds) {
+        this.officeIds = officeIds;
     }
 }

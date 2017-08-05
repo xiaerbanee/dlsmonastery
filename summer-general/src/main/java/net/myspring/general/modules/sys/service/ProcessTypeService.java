@@ -191,4 +191,8 @@ public class ProcessTypeService {
         return BeanUtil.map(processTypeList, ProcessTypeDto.class);
     }
 
+    public List<ProcessTypeDto> findByAuditFileTypeIsTrue() {
+        List<ProcessType> processTypeList = processTypeRepository.findByAuditFileTypeIsTrueAndEnabledIsTrue();
+        return BeanUtil.map(processTypeList, ProcessTypeDto.class);
+    }
 }

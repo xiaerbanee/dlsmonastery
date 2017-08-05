@@ -19,6 +19,11 @@
                   <el-option v-for="item in auditTypes" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
+              <el-form-item :label="$t('auditFileForm.processTypeName')" prop="processTypeName">
+                <el-select v-model="formData.processTypeId" filterable clearable :placeholder="$t('auditFileForm.inputWord')">
+                  <el-option v-for="type in processTypeList" :key="type.id" :label="type.name" :value="type.id"></el-option>
+                </el-select>
+              </el-form-item>
               <el-form-item :label="$t('auditFileList.officeName')">
                 <el-input v-model="formData.officeName" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
@@ -118,7 +123,8 @@
         formVisible: false,
         pageLoading: false,
         remoteLoading:false,
-        updateVisible:false
+        updateVisible:false,
+        processTypeList:[],
       };
     },
     methods: {
@@ -186,6 +192,9 @@
         this.formData=response.data;
         util.copyValue(that.$route.query,this.formData);
       });
+      axios.get('/api/general/sys/processType/findByAuditFileTypeIsTrue').then((response)=>{
+        this.processTypeList = response.data;
+      })
     },activated() {
       this.initPromise.then(()=> {
         this.pageRequest();

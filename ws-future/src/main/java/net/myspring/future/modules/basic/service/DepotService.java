@@ -7,6 +7,7 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
@@ -15,8 +16,9 @@ import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.DepotShop;
-import net.myspring.future.modules.basic.dto.*;
+import net.myspring.future.modules.basic.dto.CustomerDto;
+import net.myspring.future.modules.basic.dto.DepotAccountDto;
+import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
@@ -109,8 +111,7 @@ public class DepotService {
     public List<DepotDto> findByOfficeId(String officeId){
         List<String> officeIdList=officeClient.getSameAreaByOfficeId(officeId);
         List<Depot> depotList=depotRepository.findByOfficeIdIn(officeIdList);
-        List<DepotDto> depotDtos=BeanUtil.map(depotList,DepotDto.class);
-        return depotDtos;
+        return BeanUtil.map(depotList,DepotDto.class);
     }
 
     public DepotDto findByDepotShopId(String depotShopId) {
@@ -132,8 +133,11 @@ public class DepotService {
 
         CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
         customerReceiveQuery.setQueryDetail(queryDetail);
-        customerReceiveQuery.setDateStart(depotAccountQuery.getDutyDateStart());
-        customerReceiveQuery.setDateEnd(depotAccountQuery.getDutyDateEnd());
+        if(StringUtils.isNotBlank(depotAccountQuery.getDutyDateRange())){
+            String[] tempParamValues = depotAccountQuery.getDutyDateRange().split(" - ");
+            customerReceiveQuery.setDateStart(LocalDate.parse(tempParamValues[0]));
+            customerReceiveQuery.setDateEnd(LocalDate.parse(tempParamValues[1]));
+        }
         customerReceiveQuery.setCustomerIdList(CollectionUtil.extractToList(page.getContent(), "clientOutId"));
         List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
         Map<String, CustomerReceiveDto> customerReceiveDtoMap = CollectionUtil.extractToMap(customerReceiveDtoList, "customerId");
