@@ -437,7 +437,7 @@ public class GoodsOrderService {
         }
     }
 
-    public List<GoodsOrderDetailDto> findDetailList(String id,String shopId,String netType,String shipType) {
+    public List<GoodsOrderDetailDto> findDetailList(String id, String shopId, String netType,String shipType) {
         List<GoodsOrderDetailDto> goodsOrderDetailDtoList   = Lists.newArrayList();
         Map<String,GoodsOrderDetail> goodsOrderDetailMap = Maps.newHashMap();
         Map<String,Product> productMap = Maps.newHashMap();
@@ -458,7 +458,7 @@ public class GoodsOrderService {
         Depot shop = depotRepository.findOne(shopId);
         List<PricesystemDetail> pricesystemDetailList = pricesystemDetailRepository.findByPricesystemId(shop.getPricesystemId());
         productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
-        for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
+        for(PricesystemDetail pricesystemDetail : pricesystemDetailList) {
             Product product = productMap.get(pricesystemDetail.getProductId());
             if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && productValidForOrderOrBill(netType, product) && allowOrder(product, shipType)) {
                 GoodsOrderDetailDto goodsOrderDetailDto= new GoodsOrderDetailDto();
@@ -525,9 +525,11 @@ public class GoodsOrderService {
         List<GoodsOrderDetailDto> goodsOrderDetailDtoList = BeanUtil.map(goodsOrderDetailList,GoodsOrderDetailDto.class);
         Map<String,GoodsOrderDetailDto> goodsOrderDetailDtoMap = CollectionUtil.extractToMap(goodsOrderDetailDtoList,"productId");
         List<PricesystemDetail> pricesystemDetailList = pricesystemDetailRepository.findByPricesystemId(shop.getPricesystemId());
-        Map<String,PricesystemDetail> pricesystemDetailMap =  CollectionUtil.extractToMap(pricesystemDetailList,"productId");
-        Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
-        for(GoodsOrderDetailDto goodsOrderDetailDto:goodsOrderDetailDtoList) {
+        Map<String, PricesystemDetail> pricesystemDetailMap =  CollectionUtil.extractToMap(pricesystemDetailList,"productId");
+        Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
+        productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
+
+        for(GoodsOrderDetailDto goodsOrderDetailDto : goodsOrderDetailDtoList) {
             Product product = productMap.get(goodsOrderDetailDto.getProductId());
             goodsOrderDetailDto.setPrice(pricesystemDetailMap.get(product.getId()).getPrice());
             goodsOrderDetailDto.setProductName(product.getName());
@@ -535,15 +537,14 @@ public class GoodsOrderService {
             goodsOrderDetailDto.setHasIme(product.getHasIme());
             goodsOrderDetailDto.setProductOutId(product.getOutId());
         }
-        //价格体系
-        productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
-        for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
+
+        for(PricesystemDetail pricesystemDetail : pricesystemDetailList) {
             Product product = productMap.get(pricesystemDetail.getProductId());
             if(!goodsOrderDetailDtoMap.containsKey(pricesystemDetail.getProductId()) && productValidForOrderOrBill(goodsOrderDto.getNetType(), product)) {
                 GoodsOrderDetailDto goodsOrderDetailDto = new GoodsOrderDetailDto();
                 goodsOrderDetailDto.setProductId(product.getId());
                 goodsOrderDetailDto.setProductOutId(product.getOutId());
-                goodsOrderDetailDto.setPrice(pricesystemDetailMap.get(product.getId()).getPrice());
+                goodsOrderDetailDto.setPrice(pricesystemDetail.getPrice());
 
                 goodsOrderDetailDto.setProductName(product.getName());
                 goodsOrderDetailDto.setAllowOrder(product.getAllowOrder());

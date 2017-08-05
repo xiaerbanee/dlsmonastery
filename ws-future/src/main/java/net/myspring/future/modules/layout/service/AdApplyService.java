@@ -26,6 +26,7 @@ import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.layout.domain.AdApply;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
+import net.myspring.future.modules.layout.dto.AdApplyCountDto;
 import net.myspring.future.modules.layout.dto.AdApplyDto;
 import net.myspring.future.modules.layout.repository.AdApplyRepository;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailRepository;
@@ -86,6 +87,27 @@ public class AdApplyService {
         Page<AdApplyDto> page = adApplyRepository.findPage(pageable, adApplyQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
+    }
+
+    public AdApplyCountDto getCountQty(AdApplyQuery adApplyQuery){
+        AdApplyCountDto adApplyCountDto = new AdApplyCountDto();
+        Integer totalApplyQty = 0;
+        Integer totalBilledQty = 0;
+        Integer totalConfirmQty = 0;
+        Integer totalLeftQty = 0;
+
+        List<AdApplyDto> adApplyDtos = adApplyRepository.findByFilter(adApplyQuery);
+        for(AdApplyDto adApplyDto:adApplyDtos){
+            totalApplyQty += adApplyDto.getApplyQty()==null?0:adApplyDto.getApplyQty();
+            totalBilledQty += adApplyDto.getBilledQty()==null?0:adApplyDto.getBilledQty();
+            totalConfirmQty += adApplyDto.getConfirmQty()==null?0:adApplyDto.getConfirmQty();
+            totalLeftQty += adApplyDto.getLeftQty()==null?0:adApplyDto.getLeftQty();
+        }
+        adApplyCountDto.setTotalApplyQty(totalApplyQty);
+        adApplyCountDto.setTotalBilledQty(totalBilledQty);
+        adApplyCountDto.setTotalConfirmQty(totalConfirmQty);
+        adApplyCountDto.setTotalLeftQty(totalLeftQty);
+        return adApplyCountDto;
     }
 
     public AdApplyDto findOne(String id){

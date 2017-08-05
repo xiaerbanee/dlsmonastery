@@ -4,6 +4,7 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.modules.layout.dto.AdApplyCountDto;
 import net.myspring.future.modules.layout.dto.AdApplyDto;
 import net.myspring.future.modules.layout.service.AdApplyService;
 import net.myspring.future.modules.layout.web.form.*;
@@ -36,6 +37,12 @@ public class AdApplyController {
     @PreAuthorize("hasPermission(null,'crm:adApply:view')")
     public Page<AdApplyDto> findPage(Pageable pageable, AdApplyQuery adApplyQuery){
         return adApplyService.findPage(pageable,adApplyQuery);
+    }
+
+    @RequestMapping(value = "getCountQty",method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'crm:adApply:view')")
+    public AdApplyCountDto getCountQty(AdApplyQuery adApplyQuery){
+        return adApplyService.getCountQty(adApplyQuery);
     }
 
     @RequestMapping(value = "getQuery", method = RequestMethod.GET)
