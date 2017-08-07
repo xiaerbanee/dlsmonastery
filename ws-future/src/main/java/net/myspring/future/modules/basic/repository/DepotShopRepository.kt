@@ -89,6 +89,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                 t1.office_id officeId,
                 t1.contator,
                 t1.mobile_phone mobilePhone,
+                t1.address address,
                 t2.*,
                 t3.name as 'pricesystemName',
                 t4.name as 'clientName',
@@ -514,8 +515,8 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (StringUtils.isNotEmpty(depotShopQuery.specialityStoreType)) {
             sb.append("""  and t1.speciality_store_type =:specialityStoreType """)
         }
-        if (StringUtils.isNotEmpty(depotShopQuery.officeId)) {
-            sb.append("""  and t1.office_id =:officeId """)
+        if (CollectionUtil.isNotEmpty(depotShopQuery.childOfficeIds)) {
+            sb.append("""  and t1.office_id in (:childOfficeIds) """)
         }
         if (StringUtils.isNotEmpty(depotShopQuery.chainId)) {
             sb.append("""  and t1.chain_id =:chainId """)

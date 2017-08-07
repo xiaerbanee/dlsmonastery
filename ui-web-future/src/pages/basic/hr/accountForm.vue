@@ -134,7 +134,6 @@
           this.inputForm=response.data;
           axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
-            console.log(response.data)
           })
         });
       }
