@@ -194,6 +194,7 @@ export default {
       employeeList: "员工管理",
       accountWeixinList:"微信解绑",
       employeePhoneDepositForm: "押金收款编辑",
+      employeePhoneDepositBatchForm: "押金收款批量添加",
       employeePhoneDepositList: "押金收款",
       employeePhoneForm: "导购用机编辑",
       employeePhoneList: "导购用机",

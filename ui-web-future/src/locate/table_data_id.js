@@ -177,6 +177,7 @@ export default {
       accountWeixinList:"微信解绑",
       employeeList: "daftar karyawan",
       employeePhoneDepositForm: "formulir deposit karyawan",
+      employeePhoneDepositBatchForm: "押金收款批量添加",
       employeePhoneDepositList: "daftar deposit karyawan",
       employeePhoneForm: "edit mesin promotor",
       employeePhoneList: "handphone promotor",
