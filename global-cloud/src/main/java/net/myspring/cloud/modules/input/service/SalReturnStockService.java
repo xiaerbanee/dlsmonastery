@@ -6,6 +6,7 @@ import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.enums.SalReturnStockBillTypeEnum;
+import net.myspring.cloud.modules.kingdee.repository.BdStockRepository;
 import net.myspring.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.dto.SalReturnStockDto;
@@ -55,6 +56,8 @@ public class SalReturnStockService {
     private BdDepartmentRepository bdDepartmentRepository;
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
+    @Autowired
+    private BdStockRepository bdStockRepository;
 
     private KingdeeSynExtendDto save(SalReturnStockDto salReturnStockDto, KingdeeBook kingdeeBook) {
         KingdeeSynExtendDto kingdeeSynExtendDto = new KingdeeSynExtendDto(
@@ -184,6 +187,7 @@ public class SalReturnStockService {
         }
         map.put("bdCustomerNameList",bdCustomerRepository.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList()));
         map.put("bdMaterialNameList",bdMaterialRepository.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList()));
+        map.put("stockList",bdStockRepository.findAll());
         salStockForm.setExtra(map);
         return salStockForm;
     }

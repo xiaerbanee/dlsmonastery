@@ -1,10 +1,14 @@
 package net.myspring.cloud.modules.input.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
+import net.myspring.cloud.modules.kingdee.repository.BdDepartmentRepository;
+import net.myspring.cloud.modules.kingdee.repository.BdStockRepository;
+import net.myspring.cloud.modules.kingdee.repository.BdSupplierRepository;
 import net.myspring.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.*;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
@@ -43,6 +47,12 @@ public class StkInStockService {
     private BdMaterialRepository bdMaterialRepository;
     @Autowired
     private PurMrbService purMrbService;
+    @Autowired
+    private BdSupplierRepository bdSupplierRepository;
+    @Autowired
+    private BdDepartmentRepository bdDepartmentRepository;
+    @Autowired
+    private BdStockRepository bdStockRepository;
 
     private KingdeeSynDto save(StkInStockDto stkInStockDto, KingdeeBook kingdeeBook) {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
@@ -158,6 +168,7 @@ public class StkInStockService {
 
     public StkInStockForm getForm(StkInStockForm stkInStockForm,KingdeeBook kingdeeBook){
         List<String> typeList = Lists.newArrayList();
+        Map<String,Object> map = Maps.newHashMap();
         if (KingdeeNameEnum.JXDJ.name().equals(kingdeeBook.getName())){
             typeList.add("电玩广告让利");
             typeList.add("电话广告让利");
@@ -166,9 +177,13 @@ public class StkInStockService {
             typeList.add("vivo售后服务费");
         }
         stkInStockForm.getTypeList().addAll(typeList);
-        stkInStockForm.setKingdeeName(kingdeeBook.getName());
+        map.put("kingdeeName", kingdeeBook.getName());
         List<BdMaterial> materialList = bdMaterialRepository.findByErpCleId("1");
-        stkInStockForm.setMaterialNameList(materialList.stream().map(BdMaterial::getFName).collect(Collectors.toList()));
+        map.put("materialNameList", materialList.stream().map(BdMaterial::getFName).collect(Collectors.toList()));
+        map.put("supplierList", bdSupplierRepository.findAll());
+        map.put("departmentList", bdDepartmentRepository.findAll());
+        map.put("stockList", bdStockRepository.findAll());
+        stkInStockForm.setExtra(map);
         return stkInStockForm;
     }
 }

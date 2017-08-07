@@ -2,6 +2,7 @@ package net.myspring.cloud.modules.input.web.form;
 
 
 import com.google.common.collect.Lists;
+import net.myspring.common.form.BaseForm;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  * 采购入库
  * Created by lihx on 2017/6/13.
  */
-public class StkInStockForm{
+public class StkInStockForm extends BaseForm<StkInStockForm> {
     private LocalDate billDate;
     private String stockNumber;
     private String departmentNumber;
@@ -18,9 +19,7 @@ public class StkInStockForm{
     private String json;
 
     //附带属性
-    private List<String>  typeList = Lists.newArrayList();
-    private String kingdeeName;
-    private List<String> materialNameList = Lists.newArrayList();
+    private List<String> typeList = Lists.newArrayList();
 
     public LocalDate getBillDate() {
         return billDate;
@@ -70,19 +69,4 @@ public class StkInStockForm{
         this.typeList = typeList;
     }
 
-    public String getKingdeeName() {
-        return kingdeeName;
-    }
-
-    public void setKingdeeName(String kingdeeName) {
-        this.kingdeeName = kingdeeName;
-    }
-
-    public List<String> getMaterialNameList() {
-        return materialNameList;
-    }
-
-    public void setMaterialNameList(List<String> materialNameList) {
-        this.materialNameList = materialNameList;
-    }
 }
