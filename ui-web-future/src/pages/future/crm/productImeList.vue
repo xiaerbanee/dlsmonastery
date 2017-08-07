@@ -40,7 +40,7 @@
                 <el-input v-model="formData.meid" :placeholder="$t('productImeList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('productImeList.depotName')">
-                <depot-select v-model="formData.depotId" category="store" @afterInit="setSearchText"></depot-select>
+                <depot-select v-model="formData.depotId" category="depot" @afterInit="setSearchText"></depot-select>
               </el-form-item>
               <el-form-item :label="$t('productImeList.imeOrMeids')">
                 <el-input  type="textarea"   v-model="formData.imeOrMeids" :placeholder="$t('productImeList.likeSearch')"></el-input>
