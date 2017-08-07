@@ -65,9 +65,6 @@ public class EmployeePhoneDepositController {
                 return new RestResponse("审核失败,"+employeePhoneDeposit.getDepotName()+"没有绑定财务门店；",null);
             }
         }
-        if(ids == null){
-            throw new ServiceException("未选择任何记录");
-        }
         employeePhoneDepositService.batchAudit(Arrays.asList(ids),pass);
         //同步金蝶
         return new RestResponse("批量审核成功",ResponseCodeEnum.audited.name());
