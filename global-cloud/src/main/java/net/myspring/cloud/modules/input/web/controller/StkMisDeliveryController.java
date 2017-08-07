@@ -75,13 +75,13 @@ public class StkMisDeliveryController {
     public KingdeeSynReturnDto saveForWS(@RequestBody StkMisDeliveryDto stkMisDeliveryDto) {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
         KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
-        KingdeeSynDto kingdeeSynDto;
+        KingdeeSyn kingdeeSyn;
         if (accountKingdeeBook != null) {
-            kingdeeSynDto = stkMisDeliveryService.saveForWS(stkMisDeliveryDto, kingdeeBook, accountKingdeeBook);
-            kingdeeSynService.save(BeanUtil.map(kingdeeSynDto, KingdeeSyn.class));
+            KingdeeSynDto kingdeeSynDto = stkMisDeliveryService.saveForWS(stkMisDeliveryDto, kingdeeBook, accountKingdeeBook);
+            kingdeeSyn = kingdeeSynService.save(BeanUtil.map(kingdeeSynDto, KingdeeSyn.class));
         }else {
             throw new ServiceException("您没有金蝶账号，不能开单");
         }
-        return BeanUtil.map(kingdeeSynDto,KingdeeSynReturnDto.class);
+        return BeanUtil.map(kingdeeSyn,KingdeeSynReturnDto.class);
     }
 }

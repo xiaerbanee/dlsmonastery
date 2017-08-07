@@ -77,14 +77,14 @@ public class ArReceiveBillController {
     public List<KingdeeSynReturnDto> saveForShopDeposit(@RequestBody List<ArReceiveBillDto> arReceiveBillDtoList) {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
         KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
-        List<KingdeeSynDto> kingdeeSynDtoList;
+        List<KingdeeSyn> kingdeeSynList;
         if(accountKingdeeBook != null) {
-            kingdeeSynDtoList = arReceiveBillService.saveForWS(arReceiveBillDtoList, kingdeeBook, accountKingdeeBook);
-            kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
+            List<KingdeeSynDto> kingdeeSynDtoList = arReceiveBillService.saveForWS(arReceiveBillDtoList, kingdeeBook, accountKingdeeBook);
+            kingdeeSynList = kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
         }else {
             logger.info("您没有金蝶账号，不能开单：用户ID为" + RequestUtils.getAccountId() );
             throw new ServiceException("您没有金蝶账号，不能开单：用户ID为:[" + RequestUtils.getAccountId() + "]" );
         }
-        return BeanUtil.map(kingdeeSynDtoList,KingdeeSynReturnDto.class);
+        return BeanUtil.map(kingdeeSynList,KingdeeSynReturnDto.class);
     }
 }

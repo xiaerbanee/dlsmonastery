@@ -74,13 +74,13 @@ public class CnJournalForBankController {
     public List<KingdeeSynReturnDto> saveForWS(@RequestBody List<CnJournalForBankDto> cnJournalForBankDtoList) {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
         KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
-        List<KingdeeSynDto> kingdeeSynDtoList;
+        List<KingdeeSyn> kingdeeSynList;
         if (accountKingdeeBook != null) {
-            kingdeeSynDtoList = cnJournalForBankService.saveForWS (cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
-            kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
+            List<KingdeeSynDto> kingdeeSynDtoList = cnJournalForBankService.saveForWS (cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
+            kingdeeSynList = kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
         }else {
             throw new ServiceException("您没有金蝶账号，不能开单");
         }
-        return BeanUtil.map(kingdeeSynDtoList,KingdeeSynReturnDto.class);
+        return BeanUtil.map(kingdeeSynList,KingdeeSynReturnDto.class);
     }
 }
