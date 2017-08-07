@@ -7,17 +7,17 @@
           <date-picker v-model="formData.billDate"></date-picker>
         </el-form-item>
         <el-form-item label="供应商"   prop="supplierNumber">
-          <el-select v-model="formData.supplierNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteSupplier" :loading="remoteLoading">
+          <el-select v-model="formData.supplierNumber" filterable placeholder="请输入关键词">
             <el-option v-for="item in supplierList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="仓库"   prop="stockNumber">
-          <el-select v-model="formData.stockNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteStock" :loading="remoteLoading">
+          <el-select v-model="formData.stockNumber" filterable placeholder="请输入关键词">
             <el-option v-for="item in stockList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="部门"   prop="departmentNumber">
-          <el-select v-model="formData.departmentNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteDepartment" :loading="remoteLoading">
+          <el-select v-model="formData.departmentNumber" filterable placeholder="请输入关键词">
             <el-option v-for="item in departmentList" :key="item.fnumber" :label="item.ffullName" :value="item.fnumber"></el-option>
           </el-select>
         </el-form-item>
@@ -34,49 +34,41 @@
   import Handsontable from 'handsontable/dist/handsontable.full.js';
   var table = null;
   export default {
-    data() {
-      return {
-        table:null,
-        supplierList:{},
-        stockList:{},
-        departmentList:{},
-        settings: {
-          rowHeaders:true,
-          autoColumnSize:true,
-          stretchH: 'all',
-          minSpareRows: 1,
-          height: 650,
-          colHeaders: ["货品", "单价","数量", "备注"],
-          columns: [
-            {type: "autocomplete", strict: true, allowEmpty: false, productName:[],source: this.productName},
-            {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true},
-            {type: 'numeric', format:"0,0", allowEmpty: false, strict: true},
-            {allowEmpty: false, strict:true, type: 'text'}
-          ],
-          contextMenu: true,
-        },
-        formData:{
-          billDate:new Date().toLocaleDateString(),
-          json:[],
-        },
-        rules: {
-          billDate: [{ required: true, message: '必填项'}],
-          supplierNumber: [{ required: true, message: '必填项'}],
-          stockNumber: [{ required: true, message: '必填项'}],
-          departmentNumber: [{ required: true, message: '必填项'}],
-        },
-        submitDisabled:false,
-        remoteLoading:false
-      };
-    },
-    mounted() {
-      axios.get('/api/global/cloud/input/purMrb/form').then((response)=>{
-        let extra = response.data.extra;
-        this.settings.columns[0].source = extra.materialNameList;
-        table = new Handsontable(this.$refs["handsontable"], this.settings);
-      });
+    data:function () {
+      return this.getData();
     },
     methods: {
+      getData() {
+        return {
+          supplierList:{},
+          stockList:{},
+          departmentList:{},
+          settings: {
+            rowHeaders:true,
+            autoColumnSize:true,
+            stretchH: 'all',
+            minSpareRows: 1,
+            height: 650,
+            colHeaders: ["货品", "单价","数量", "备注"],
+            columns: [
+              {type: "autocomplete", strict: true, allowEmpty: false, productName:[],source: this.productName},
+              {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true},
+              {type: 'numeric', format:"0,0", allowEmpty: false, strict: true},
+              {allowEmpty: false, strict:true, type: 'text'}
+            ],
+            contextMenu: true,
+          },
+          formData:{
+          },
+          rules: {
+            billDate: [{ required: true, message: '必填项'}],
+            supplierNumber: [{ required: true, message: '必填项'}],
+            stockNumber: [{ required: true, message: '必填项'}],
+            departmentNumber: [{ required: true, message: '必填项'}],
+          },
+          submitDisabled:false,
+        };
+      },
       formSubmit(){
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
@@ -94,10 +86,12 @@
             axios.post('/api/global/cloud/input/purMrb/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
               if(response.data.success){
                 this.$message(response.data.message);
+                this.initPage();
+                Object.assign(this.$data,this.getData());
               }else{
                 this.$alert(response.data.message);
-                this.submitDisabled = false;
               }
+              this.submitDisabled = false;
             }).catch(function () {
               this.submitDisabled = false;
             });
@@ -106,39 +100,20 @@
           }
         })
       },
-      remoteSupplier(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/global/cloud/kingdee/bdSupplier/findByNameLike',{params:{name:query}}).then((response)=>{
-            this.supplierList = response.data;
-            this.remoteLoading = false;
-          })
-        } else {
-          this.supplierList = {};
-        }
+      initPage() {
+        table = new Handsontable(this.$refs["handsontable"], this.settings);
       },
-      remoteStock(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/global/cloud/kingdee/bdStock/findByNameLike',{params:{name:query}}).then((response)=>{
-            this.stockList = response.data;
-            this.remoteLoading = false;
-          })
-        } else {
-          this.stockList = {};
-        }
-      },
-      remoteDepartment(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/global/cloud/kingdee/bdDepartment/findByNameLike',{params:{name:query}}).then((response)=>{
-            this.departmentList = response.data;
-            this.remoteLoading = false;
-          })
-        } else {
-          this.departmentList = {};
-        }
-      },
-    }
+    },
+    created() {
+      axios.get('/api/global/cloud/input/purMrb/form').then((response)=>{
+        this.formData = response.data;
+        let extra = response.data.extra;
+        this.settings.columns[0].source = extra.materialNameList;
+        this.initPage();
+        this.supplierList = extra.supplierList;
+        this.stockList = extra.stockList;
+        this.departmentList = extra.departmentList;
+      });
+    },
   }
 </script>
