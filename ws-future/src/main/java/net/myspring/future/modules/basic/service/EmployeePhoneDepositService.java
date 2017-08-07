@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.modules.sys.dto.AccountCommonDto;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.EmployeePhoneDepositStatusEnum;
@@ -127,6 +128,7 @@ public class EmployeePhoneDepositService {
 
 
         List<EmployeePhoneDeposit> employeePhoneDepositList=employeePhoneDepositRepository.findAll(ids);
+        Map<String,EmployeePhoneDeposit> employeePhoneDepositMap = CollectionUtil.extractToMap(employeePhoneDepositList,"id");
         if (!pass) {
             for(EmployeePhoneDeposit employeePhoneDeposit:employeePhoneDepositList){
                 employeePhoneDeposit.setStatus(EmployeePhoneDepositStatusEnum.未通过.name());
@@ -157,7 +159,13 @@ public class EmployeePhoneDepositService {
                     }
                 }
             }
-            cnJournalBankManager.synEmployeePhoneDeposit(employeePhoneDepositList);
+            List<KingdeeSynReturnDto> kingdeeSynReturnDtos  = cnJournalBankManager.synEmployeePhoneDeposit(employeePhoneDepositList);
+            for (KingdeeSynReturnDto kingdeeSynReturnDto:kingdeeSynReturnDtos){
+                EmployeePhoneDeposit employeePhoneDeposit = employeePhoneDepositMap.get(kingdeeSynReturnDto.getExtendId());
+                employeePhoneDeposit.setOutCode(kingdeeSynReturnDto.getBillNo());
+                employeePhoneDeposit.setCloudSynId(kingdeeSynReturnDto.getId());
+                employeePhoneDepositRepository.save(employeePhoneDeposit);
+            }
         }
     }
 
