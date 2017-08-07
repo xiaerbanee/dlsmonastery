@@ -135,7 +135,7 @@
   }
   .vodal-dialog {
     position: absolute;
-    top: 25%;
+    top: 12%;
     left: 0;
     right: 0;
     margin: auto;
