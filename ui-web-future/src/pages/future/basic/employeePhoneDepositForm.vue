@@ -13,7 +13,7 @@
           <el-input v-model.number="inputForm.amount"></el-input>
         </el-form-item>
         <el-form-item :label="$t('employeePhoneDepositForm.department')" prop="department">
-          <el-select v-model="inputForm.department"  clearable :placeholder="$t('employeePhoneDepositForm.inputKey')">
+          <el-select v-model="inputForm.department" clearable :placeholder="$t('employeePhoneDepositForm.inputKey')">
             <el-option v-for="item in inputForm.extra.departMentList" :key="item.fnumber" :label="item.ffullName" :value="item.fnumber"></el-option>
           </el-select>
         </el-form-item>

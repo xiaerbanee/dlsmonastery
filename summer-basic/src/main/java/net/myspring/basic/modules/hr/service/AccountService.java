@@ -113,10 +113,10 @@ public class AccountService {
     public Account save(AccountForm accountForm) {
         Account account;
         if(CollectionUtil.isEmpty(accountForm.getOfficeIdList())||accountForm.getOfficeIdList().size()==1){
-            accountForm.setOfficeIdList(Lists.newArrayList(accountForm.getOfficeId()));
+            accountForm.setOfficeIds(accountForm.getOfficeId());
         }
         if(CollectionUtil.isEmpty(accountForm.getPositionIdList())||accountForm.getPositionIdList().size()==1){
-            accountForm.setPermissionIdList(Lists.newArrayList(accountForm.getPositionId()));
+            accountForm.setPositionIds(accountForm.getPositionId());
         }
         accountForm.setOfficeIds(StringUtils.join(accountForm.getOfficeIdList(),CharConstant.COMMA));
         if (accountForm.isCreate()) {
