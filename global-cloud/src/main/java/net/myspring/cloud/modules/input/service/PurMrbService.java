@@ -5,6 +5,9 @@ import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
+import net.myspring.cloud.modules.kingdee.repository.BdDepartmentRepository;
+import net.myspring.cloud.modules.kingdee.repository.BdStockRepository;
+import net.myspring.cloud.modules.kingdee.repository.BdSupplierRepository;
 import net.myspring.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.PurMrbDto;
@@ -42,6 +45,12 @@ public class PurMrbService {
     private KingdeeManager kingdeeManager;
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
+    @Autowired
+    private BdSupplierRepository bdSupplierRepository;
+    @Autowired
+    private BdStockRepository bdStockRepository;
+    @Autowired
+    private BdDepartmentRepository bdDepartmentRepository;
 
     private KingdeeSynDto save(PurMrbDto purMrbDto, KingdeeBook kingdeeBook) {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
@@ -109,6 +118,9 @@ public class PurMrbService {
         PurMrbForm purMrbForm = new PurMrbForm();
         Map<String,Object> map = Maps.newHashMap();
         map.put("materialNameList",bdMaterialRepository.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList()));
+        map.put("supplierList", bdSupplierRepository.findAll());
+        map.put("stockList",bdStockRepository.findAll());
+        map.put("departmentList",bdDepartmentRepository.findAll());
         purMrbForm.setExtra(map);
         return purMrbForm;
     }

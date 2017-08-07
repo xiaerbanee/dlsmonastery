@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.*;
+import net.myspring.cloud.modules.kingdee.repository.BdDepartmentRepository;
 import net.myspring.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.StkMisDeliveryDto;
@@ -45,6 +46,8 @@ public class StkMisDeliveryService {
     private BdStockRepository bdStockRepository;
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
+    @Autowired
+    private BdDepartmentRepository bdDepartmentRepository;
 
     private KingdeeSynDto save(StkMisDeliveryDto stkMisDeliveryDto,KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
@@ -177,6 +180,7 @@ public class StkMisDeliveryService {
         map.put("materialNameList",materialList.stream().map(BdMaterial::getFName).collect(Collectors.toList()));
         map.put("materialNumberList",materialList.stream().map(BdMaterial::getFNumber).collect(Collectors.toList()));
         map.put("stkMisDeliveryTypeEnums",StkMisDeliveryTypeEnum.values());
+        map.put("departmentList",bdDepartmentRepository.findAll());
         stkMisDeliveryForm.setExtra(map);
         return stkMisDeliveryForm;
     }
