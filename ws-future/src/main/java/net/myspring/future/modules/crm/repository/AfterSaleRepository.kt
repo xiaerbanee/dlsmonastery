@@ -71,6 +71,7 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                 left join crm_product t6 on t5.product_id=t6.id
                 left join crm_depot t7 on t2.retail_shop_id=t7.id
                 left join crm_product t8 on t1.from_company_product_id=t8.id
+                left join hr_account t9 on t1.created_by = t9.id
              WHERE
                  t1.enabled=1
             """)
@@ -119,6 +120,9 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (StringUtils.isNotBlank(afterSaleQuery.badProductName)) {
 //            sb.append("""  and t3.name like concat('%',:badProductName,'%') """)
             sb.append("""  and t3.id =:badProductName """)/*modify*/
+        }
+        if (CollectionUtil.isNotEmpty(afterSaleQuery.createdByList)) {
+            sb.append("""  and ( t9.login_name in (:createdByList) )""")
         }
         if (afterSaleQuery.fromCompany) {
             sb.append("""  and t1.from_company_date is null  """)
