@@ -203,6 +203,7 @@ public class DepotShopService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"chainName","连锁体系"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"contator","联系人"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"mobilePhone","手机号码"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"address","门店地址"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"salePointType","门店属性"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"accountNameStr","绑定导购"));
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("门店信息",depotShopDtoList,simpleExcelColumnList);
