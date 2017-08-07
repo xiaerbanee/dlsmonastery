@@ -11,6 +11,7 @@ zuul:
   add-proxy-headers: true
   semaphore:
     max-semaphores: 2000
+  retryable: false
 
 ribbon:
   ReadTimeout: 1800000
