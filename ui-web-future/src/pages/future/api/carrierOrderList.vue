@@ -180,29 +180,29 @@
         this.inputForm=JSON.parse(JSON.stringify(row));
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
-            window.location.href='/api/ws/future/api/carrierOrder/export?'+qs.stringify(util.deleteExtra(this.formData))
+          window.location.href='/api/ws/future/api/carrierOrder/export?'+qs.stringify(util.deleteExtra(this.formData))
         }).catch(()=>{});
       },carrierShip(){
         this.$router.push({ name: 'carrierOrderShip'})
       },
       handleCommand(command) {
-          if(!this.formData.businessIdStr){
-            this.$message.error('没有输入订货单号，无法进行状态修改');
-          }else {
-            axios.get('/api/ws/future/api/carrierOrder/batchStatus',{params:{businessIdStr:this.formData.businessIdStr,status:command}}).then((response)=> {
-              this.$message(response.data.message);
-              this.pageRequest();
-            });
-          }
+        if(!this.formData.businessIdStr){
+          this.$message.error('没有输入订货单号，无法进行状态修改');
+        }else {
+          axios.get('/api/ws/future/api/carrierOrder/batchStatus',{params:{businessIdStr:this.formData.businessIdStr,status:command}}).then((response)=> {
+            this.$message(response.data.message);
+            this.pageRequest();
+          });
+        }
       },formSubmit(){
-            axios.post('/api/ws/future/api/carrierOrder/updateStatusAndRemarks', qs.stringify(this.inputForm)).then((response)=> {
-              this.$message(response.data.message);
-              this.detailVisible=false;
-              this.pageRequest();
-            })
+        axios.post('/api/ws/future/api/carrierOrder/updateStatusAndRemarks', qs.stringify(this.inputForm)).then((response)=> {
+          this.$message(response.data.message);
+          this.detailVisible=false;
+          this.pageRequest();
+        })
       }
     },created () {
-       this.pageHeight = 0.75*window.innerHeight;
+      this.pageHeight = 0.75*window.innerHeight;
       this.initPromise = axios.get('/api/ws/future/api/carrierOrder/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);

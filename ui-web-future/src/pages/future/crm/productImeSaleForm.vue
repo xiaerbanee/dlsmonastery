@@ -65,7 +65,7 @@
                   <template scope="scope" >
                     <div v-if="scope.row.editable">
                       <div v-if="scope.row.fromChain">
-                        <el-select v-model="scope.row.saleShopId"  filterable>
+                        <el-select v-model="scope.row.saleShopId" filterable>
                           <el-option v-for="item in scope.row.accessChainDepotList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                         </el-select>
                       </div>
@@ -158,7 +158,7 @@
                     productImeSaleCreatedDate : each.productImeSaleCreatedDate,
                     editable : each.editable,
                     fromChain : each.fromChain,
-                    saleShopId : null,
+                    saleShopId : each.saleShopId,
                     accessChainDepotList:each.accessChainDepotList
                   });
               }

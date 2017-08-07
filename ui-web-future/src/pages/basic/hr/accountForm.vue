@@ -98,6 +98,7 @@
             loginName: [{ required: true,validator: checkLoginName}],
             confirmPassword: [{ validator: validatePass }],
             officeId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage')}],
+            officeIdList: [{ required: true, message: this.$t('accountForm.prerequisiteMessage')}],
             positionId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage')}],
           }
         }
@@ -111,12 +112,14 @@
             var submitData = util.deleteExtra(this.inputForm);
             axios.post('/api/basic/hr/account/save',qs.stringify(submitData)).then((response)=> {
               this.$message(response.data.message);
-              this.submitDisabled = false;
-              if(!this.isCreate){
-                this.$router.push({name:'accountList',query:util.getQuery("accountList"), params:{_closeFrom:true}})
-              }else {
-                Object.assign(this.$data, this.getData());
-                this.initPage();
+              if(response.data.success){
+                this.submitDisabled = false;
+                if(!this.isCreate){
+                  this.$router.push({name:'accountList',query:util.getQuery("accountList"), params:{_closeFrom:true}})
+                }else {
+                  Object.assign(this.$data, this.getData());
+                  this.initPage();
+                }
               }
             }).catch( ()=> {
               that.submitDisabled = false;
@@ -131,7 +134,6 @@
           this.inputForm=response.data;
           axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
-            console.log(response.data)
           })
         });
       }

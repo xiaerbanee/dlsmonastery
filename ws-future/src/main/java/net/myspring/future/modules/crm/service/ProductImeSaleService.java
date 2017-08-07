@@ -261,6 +261,9 @@ public class ProductImeSaleService {
                                     depotDto.setId(depot.getId());
                                     depotDto.setName(depot.getName());
                                     productImeForSaleDto.getAccessChainDepotList().add(depotDto);
+                                    if(StringUtils.isBlank(productImeForSaleDto.getSaleShopId())){
+                                        productImeForSaleDto.setSaleShopId(depot.getId());
+                                    }
                                 }
                             }
                         }

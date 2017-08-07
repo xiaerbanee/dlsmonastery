@@ -89,6 +89,10 @@ public class DepotShopService {
     private RedisTemplate redisTemplate;
 
     public Page<DepotShopDto> findPage(Pageable pageable, DepotShopQuery depotShopQuery) {
+        if(StringUtils.isNotBlank(depotShopQuery.getOfficeId())){
+            List<String> childOffices = officeClient.getChildOfficeIds(depotShopQuery.getOfficeId());
+            depotShopQuery.setChildOfficeIds(childOffices);
+        }
         depotShopQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         if (StringUtils.isNotBlank(depotShopQuery.getOfficeId())) {
             depotShopQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(depotShopQuery.getOfficeId()));

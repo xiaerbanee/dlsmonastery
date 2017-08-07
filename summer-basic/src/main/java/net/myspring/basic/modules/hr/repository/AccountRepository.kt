@@ -72,6 +72,14 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
         and t.loginName in ?1
     """)
     fun findByLoginNameList(loginNames: MutableList<String>): MutableList<Account>
+
+    @Query("""
+        SELECT t
+        FROM  #{#entityName} t
+        WHERE t.enabled=1
+        and t.loginName like concat('%',?1,'%')
+    """)
+    fun findByLoginNameLike(loginName: String): MutableList<Account>
 }
 
 interface AccountRepositoryCustom{
