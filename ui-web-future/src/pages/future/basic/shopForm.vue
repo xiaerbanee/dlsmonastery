@@ -14,7 +14,7 @@
           <el-input v-model="inputForm.name" />
         </el-form-item>
             <el-form-item label="总店" prop="parentId" >
-              <depot-select v-model="inputForm.parentId" category="shop"></depot-select>
+              <depot-select v-model="inputForm.parentId" category="shop" :includeHidden="true"></depot-select>
             </el-form-item>
         <el-form-item label="机构" prop="officeId">
           <office-select v-model="inputForm.officeId"></office-select>
