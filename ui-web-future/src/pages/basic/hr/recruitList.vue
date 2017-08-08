@@ -139,9 +139,16 @@ import boolSelect from "components/common/bool-select"
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -325;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      var that = this;
+      that.pageHeight = 0.75*window.innerHeight;
+      this.initPromise = axios.get('/api/basic/hr/recruit/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+      });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      });
     }
   };
 </script>

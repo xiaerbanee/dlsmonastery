@@ -8,10 +8,9 @@ Page({
     formProperty: {},
     response: {},
     shops: [],
-    shopId: null,
-    shopName: null,
-    submitDisabled: false,
     saleShopId: null,
+    saleShopName: null,
+    submitDisabled: false,
   },
   onLoad: function (option) {
     var that = this;
@@ -52,7 +51,7 @@ Page({
       that.setData({ productImeSearchResult: {} })
     } else {
       wx.request({
-        url: $util.getUrl("ws/future/crm/productImeSale/checkForSale"),
+        url: $util.getUrl("ws/future/crm/productImeSale/checkForSaleBack"),
         data: that.data.formData,
         header: {
           Cookie: "JSESSIONID=" + app.globalData.sessionId
@@ -80,14 +79,17 @@ Page({
   bindSaleShop: function (e) {
     var that = this;
     that.setData({
-      shopId: that.data.shops[e.detail.value].id,
-      shopName: that.data.shops[e.detail.value].name,
-      saleShopId: that.data.shops[e.detail.value].id
+      saleShopId: that.data.shops[e.detail.value].id,
+      saleShopName: that.data.shops[e.detail.value].name,
     })
   },
   formSubmit: function (e) {
     var that = this;
     that.setData({ submitDisabled: true });
+    if (that.data.shops.length!=0&&!that.data.saleShopName){
+      that.setData({ submitDisabled: false,"response.error":"核销门店必填"});
+      return;
+    }
     if (that.data.productImeSearchResult.length != 0) {
       var productImeSaleDetailList = new Array();
       if (that.data.saleShopId) {
