@@ -26,4 +26,10 @@ public class BdAccountController {
         BdAccount bdAccount = bdAccountService.findByName(name);
         return bdAccount;
     }
+
+    @RequestMapping(value = "findNumberSubByFullName")
+    public String findNumberSubByName(String fullName){
+        String accountNumber = bdAccountService.findNumberSubByFullName(fullName);
+        return accountNumber;
+    }
 }

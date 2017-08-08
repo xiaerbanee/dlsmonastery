@@ -47,6 +47,7 @@
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
   var table = null;
+  var imeMap={};
   export default{
     data(){
       return{
@@ -82,10 +83,11 @@
                   var imeList = new Array();
                   if(query.length>=6) {
                     axios.get('/api/ws/future/crm/productIme/search?productIme='+query).then((response)=>{
-                      console.log(response.data)
+                      console.log(response.data);
                       if(response.data.length>0) {
                       for(var index in response.data) {
                         var ime = response.data[index].ime;
+                        imeMap[ime]=response.data[index].productName;
                         imeList.push(ime);
                         if(that.imes.indexOf(ime)<0) {
                           that.imes.push(ime);
@@ -99,7 +101,7 @@
                   }
                 }
               } , width:150},
-            {data:"toAreaProductName",strict:true, width:150},
+            {data:"toAreaProductName",strict:true,width:150},
             {data:"areaDepotName",type: "autocomplete",strict:true,
               tempShopNames: [],
               source: function (query, process) {
@@ -130,20 +132,36 @@
             {data:"toStoreType",type: "autocomplete",strict:true,width:100},
             {data:"memory",type: "autocomplete",strict:true,width:100},
             {data: "remarks",width:150}
-          ]
+          ],
+          afterChange: function (changes, source){
+            if (source !== 'loadData') {
+              for (var i = changes.length - 1; i >= 0; i--) {
+                var row = changes[i][0];
+                if (changes[i][1] === "toAreaProductIme") {
+                  var toAreaProductIme = changes[i][3];
+                  if(toAreaProductIme==="") {
+                    table.setDataAtCell(row,4,'');
+                  } else {
+                    table.setDataAtCell(row,4,imeMap[toAreaProductIme]);
+                  }
+                }
+              }
+            }
+          }
         },
       }
     }, mounted () {
       let categoryList=new Array();
-      categoryList.push("退机类型")
-      categoryList.push("内存")
-      categoryList.push("包装")
+      categoryList.push("退机类型");
+      categoryList.push("内存");
+      categoryList.push("包装");
+
       axios.get('/api/basic/sys/dictEnum/findByCategoryList',{params:{categoryList:categoryList}}).then((response)=> {
         this.settings.columns[6].source=util.getLabelList(response.data.PACKAGES_STATUS,'value');
         this.settings.columns[7].source=util.getLabelList(response.data.TOS_TORE_TYPE,'value');
         this.settings.columns[8].source=util.getLabelList(response.data.MEMORY,'value');
         this.inputForm.toStoreDate=util.currentDate();
-        table = new Handsontable(this.$refs["handsontable"], this.settings)
+        table = new Handsontable(this.$refs["handsontable"], this.settings);
       })
     },
     methods: {
@@ -179,7 +197,7 @@
           table.loadData(this.settings.data);
           this.message ="";
           if (response.data.message != "") {
-            this.message = response.data.message
+            this.message = response.data.message;
           }
         })
       }

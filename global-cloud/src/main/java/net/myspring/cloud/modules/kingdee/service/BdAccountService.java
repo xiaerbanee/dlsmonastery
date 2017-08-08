@@ -38,6 +38,14 @@ public class BdAccountService {
         return null;
     }
 
+    public String findNumberSubByFullName(String nameHtml){
+        if (StringUtils.isNotBlank(nameHtml)){
+            String name = HtmlUtils.htmlUnescape(nameHtml);
+            return bdAccountRepository.findByFullName(name).getFNumber().substring(0,4);
+        }
+        return null;
+    }
+
     public List<BdAccount> findAll(){
         return bdAccountRepository.findAll();
     }
