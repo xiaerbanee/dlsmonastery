@@ -22,7 +22,7 @@
           <el-form-item  :label="$t('recruitForm.name')" prop="name">
             <el-input v-model="inputForm.name"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('recruitForm.name')" prop="sex">
+          <el-form-item :label="$t('recruitForm.sex')" prop="sex">
             <el-radio-group v-model="inputForm.sex">
               <el-radio :label="$t('recruitForm.man')" value="男">{{$t('recruitForm.man')}}</el-radio>
               <el-radio :label="$t('recruitForm.women')" value="女">{{$t('recruitForm.women')}}</el-radio>
@@ -32,10 +32,12 @@
             <el-input v-model="inputForm.mobilePhone" @change="onChange"></el-input>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.applyPositionId')" prop="applyPositionName">
-            <el-input v-model="inputForm.applyPositionName"></el-input>
+            <position-select v-model="inputForm.applyPositionId"></position-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.applyFrom')" prop="applyFrom">
-            <el-input v-model="inputForm.applyFrom"></el-input>
+            <el-select v-model="inputForm.applyFrom">
+              <el-option v-for="item in options" :key="item" :label="item" :value="item"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.firstAppointDate')" prop="firstAppointDate">
             <date-time-picker v-model="inputForm.firstAppointDate"></date-time-picker>
@@ -177,19 +179,31 @@
   import dateTimePicker from "components/common/date-time-picker.vue"
   import accountSelect from 'components/basic/account-select'
   import districtSelect from 'components/general/district-select'
+  import positionSelect from 'components/basic/position-select'
 
   export default{
       components:{
           dateTimePicker,
           accountSelect,
-          districtSelect
+          districtSelect,
+          positionSelect
       },
       data(){
         return this.getData();
       },
       methods:{
         getData(){
+          var checkPhone=(rule,value,callback)=>{
+            if(value===''){
+              callback(new Error("必填信息"))
+            }else if(!(/^1[34578]\d{9}$/.test(value))){
+              callback(new Error("手机号码有误，请充填"))
+            }else{
+              callback();
+            }
+          }
           return{
+            options:[],
             isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
@@ -244,6 +258,7 @@
 
             },
             rules: {
+              mobilePhone:{request:true,validator:checkPhone,trigger:'blur'}
             },
           }
         },
@@ -253,18 +268,6 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              this.inputForm.birthday=util.formatLocalDate(this.inputForm.birthday);
-              this.inputForm.contactDate=util.formatLocalDateTime(this.inputForm.contactDate);
-              this.inputForm.firstAppointDate=util.formatLocalDateTime(this.inputForm.firstAppointDate);
-              this.inputForm.firstRealDate=util.formatLocalDateTime(this.inputForm.firstRealDate);
-              this.inputForm.secondAppointDate=util.formatLocalDateTime(this.inputForm.secondAppointDate);
-              this.inputForm.secondRealDate=util.formatLocalDateTime(this.inputForm.secondRealDate);
-              this.inputForm.physicalAppointDate=util.formatLocalDateTime(this.inputForm.physicalAppointDate);
-              this.inputForm.physicalRealDate=util.formatLocalDateTime(this.inputForm.physicalRealDate);
-              this.inputForm.auditAppointDate=util.formatLocalDateTime(this.inputForm.auditAppointDate);
-              this.inputForm.auditRealDate=util.formatLocalDateTime(this.inputForm.auditRealDate);
-              this.inputForm.entryAppointDate=util.formatLocalDateTime(this.inputForm.entryAppointDate);
-              this.inputForm.entryRealDate=util.formatLocalDateTime(this.inputForm.entryRealDate);
               axios.post('/api/basic/hr/recruit/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data, this.getData());
