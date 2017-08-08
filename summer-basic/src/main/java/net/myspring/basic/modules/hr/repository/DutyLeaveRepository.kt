@@ -7,6 +7,7 @@ import net.myspring.basic.modules.hr.dto.DutyLeaveDto
 import net.myspring.basic.modules.hr.web.query.DutyLeaveQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -55,16 +56,8 @@ interface DutyLeaveRepository : BaseRepository<DutyLeave, String>, DutyLeaveRepo
     """)
     fun findByDutyDate(employeeId: String, dutyDate: LocalDate): MutableList<DutyLeave>
 
-    @Query("""
-        SELECT
-            t1
-            FROM #{#entityName} t1
-            WHERE
-            t1.enabled=1
-            AND t1.dutyDate >= ?1 and t1.dutyDate <= ?2
-            and t1.status in ?3
-    """)
-    fun findByDateAndStatusList(dateStart: LocalDate, dateEnd: LocalDate, statusList: MutableList<String>): MutableList<DutyLeave>
+
+
 
     @Query("""
         SELECT
@@ -87,9 +80,41 @@ interface DutyLeaveRepositoryCustom{
     fun findPage(pageable: Pageable, dutyLeaveQuery: DutyLeaveQuery): Page<DutyLeaveDto>
 
     fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): MutableList<DutyDto>
+
+    fun findByDateAndStatusList(dateStart: LocalDate, dateEnd: LocalDate, statusList: MutableList<String>,officeId:String): MutableList<DutyLeave>
 }
 
 class DutyLeaveRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DutyLeaveRepositoryCustom{
+    override fun findByDateAndStatusList(dateStart: LocalDate, dateEnd: LocalDate, statusList: MutableList<String>, officeId: String): MutableList<DutyLeave> {
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("dateStart", dateStart)
+        paramMap.put("dateEnd", dateEnd)
+        paramMap.put("statusList", statusList)
+        paramMap.put("officeId", officeId)
+        var sb = StringBuilder()
+        sb.append("""
+          SELECT
+            t1.*
+            FROM hr_duty_leave t1 left join hr_employee t2 on t1.employee_id=t2.id
+            left join hr_account t3 on t2.account_id=t3.id
+            WHERE
+            t1.enabled=1
+            AND t1.duty_date >= :dateStart and t1.duty_date <=:dateEnd
+            and t1.status in (:statusList)
+        """)
+        if(StringUtils.isNotBlank(officeId)){
+            sb.append("""
+                and t3.office_id in (
+                    select office.id
+                    from sys_office office
+                    where office.enabled=1
+                    and (office.parent_ids like concat('%,',:officeId,',%') or office.id=:officeId )
+                )
+            """)
+        }
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(DutyLeave::class.java))
+    }
+
     override fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): MutableList<DutyDto> {
         var paramMap = HashMap<String, Any>()
         paramMap.put("leaderId", leaderId)

@@ -4,7 +4,9 @@
     <div >
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('demoPhoneForm.productType')" prop="demoPhoneTypeId">
-          <demo-phone-type v-model = "inputForm.demoPhoneTypeId"></demo-phone-type>
+          <el-select v-model="inputForm.demoPhoneTypeId" filterable clearable :placeholder="$t('demoPhoneForm.inputWord')">
+            <el-option v-for="item in inputForm.extra.demoPhoneTypes" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item :label="$t('demoPhoneForm.shopName')" prop="shopId">
           <depot-select v-model="inputForm.shopId" category="shop"></depot-select>

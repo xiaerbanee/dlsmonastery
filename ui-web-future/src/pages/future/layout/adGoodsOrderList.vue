@@ -79,7 +79,7 @@
         <el-table-column prop="shopAreaName" :label="$t('adGoodsOrderList.areaName')" ></el-table-column>
         <el-table-column prop="depotShopAreaType" :label="$t('adGoodsOrderList.areaType')" ></el-table-column>
         <el-table-column prop="shopName" column-key="shopId" :label="$t('adGoodsOrderList.shopName')"  width="150" sortable></el-table-column>
-        <el-table-column prop="amount" :label="$t('adGoodsOrderList.amount')"  sortable></el-table-column>
+        <el-table-column prop="amount" :label="$t('adGoodsOrderList.amount')"  sortable :formatter="moneyFormatter"></el-table-column>
         <el-table-column prop="expressOrderExpressCodes" :label="$t('adGoodsOrderList.expressCodes')" ></el-table-column>
         <el-table-column prop="remarks" :label="$t('adGoodsOrderList.remarks')"></el-table-column>
         <el-table-column prop="createdByName" column-key="createdBy" :label="$t('adGoodsOrderList.createdBy')" sortable></el-table-column>
@@ -180,6 +180,9 @@
         util.confirmBeforeExportData(this).then(() => {
           window.location.href='/api/ws/future/layout/adGoodsOrder/export?'+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
+      },
+      moneyFormatter(row,col){
+        return util.moneyFormatter(row,col)
       }
     },created () {
        this.pageHeight = 0.75*window.innerHeight;

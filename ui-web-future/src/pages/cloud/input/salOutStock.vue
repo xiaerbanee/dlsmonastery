@@ -4,7 +4,7 @@
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
         <el-form-item label="仓库"   prop="stockNumber">
-          <el-select v-model="formData.stockNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteStock" :loading="remoteLoading">
+          <el-select v-model="formData.stockNumber" filterable placeholder="请输入关键词" >
             <el-option v-for="item in stockList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
           </el-select>
         </el-form-item>
@@ -25,76 +25,60 @@
   var table = null;
   var outStockBillTypeEnum = null;
   export default {
-    data() {
-      return {
-        table:null,
-        stockList:{},
-        settings: {
-          rowHeaders:true,
-          autoColumnSize:true,
-          stretchH: 'all',
-          height: 650,
-          minSpareRows: 1,
-          colHeaders: ["货品编码","门店","货品","价格","数量","备注","类型"],
-          columns: [
-            {type:"text", allowEmpty: false, readOnly: true, strict: true},
-            {type: "autocomplete", allowEmpty: false, strict: true, customerNames:[],source:this.customerNames},
-            {type: "autocomplete", allowEmpty: true, strict: true,productNames:[],source:this.productNames},
-            {type: 'numeric',allowEmpty: false,format:"0,0.00"},
-            {type: "numeric", allowEmpty: false},
-            {type: "text", allowEmpty: true, strict: true }
-          ],
-          contextMenu: true,
-          afterChange: function (changes, source) {
-            if (source !== 'loadData') {
-              for (let i = changes.length - 1; i >= 0; i--) {
-                let row = changes[i][0];
-                let column = changes[i][1];
-                if(column === 2){
-                  let name = changes[i][3];
-                  if(util.isNotBlank(name)) {
-                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByName',{params:{name:name}}).then((response) =>{
-                      let material = response.data;
-                      table.setDataAtCell(row,0,material.fnumber);
-                    });
-                  } else {
-                    table.setDataAtCell(row,0,null);
+    data:function () {
+      return this.getData();
+    },
+    methods: {
+      getData() {
+        return {
+          stockList:{},
+          settings: {
+            rowHeaders:true,
+            autoColumnSize:true,
+            stretchH: 'all',
+            height: 650,
+            minSpareRows: 1,
+            colHeaders: ["货品编码","门店","货品","价格","数量","备注","类型"],
+            columns: [
+              {type:"text", allowEmpty: false, readOnly: true, strict: true},
+              {type: "autocomplete", allowEmpty: false, strict: true, customerNames:[],source:this.customerNames},
+              {type: "autocomplete", allowEmpty: true, strict: true,productNames:[],source:this.productNames},
+              {type: 'numeric',allowEmpty: false,format:"0,0.00"},
+              {type: "numeric", allowEmpty: false},
+              {type: "text", allowEmpty: true, strict: true }
+            ],
+            contextMenu: true,
+            afterChange: function (changes, source) {
+              if (source !== 'loadData') {
+                for (let i = changes.length - 1; i >= 0; i--) {
+                  let row = changes[i][0];
+                  let column = changes[i][1];
+                  if(column === 2){
+                    let name = changes[i][3];
+                    if(util.isNotBlank(name)) {
+                      axios.get('/api/global/cloud/kingdee/bdMaterial/findByName',{params:{name:name}}).then((response) =>{
+                        let material = response.data;
+                        table.setDataAtCell(row,0,material.fnumber);
+                      });
+                    } else {
+                      table.setDataAtCell(row,0,null);
+                    }
                   }
-                }
-                if (column === 1 && outStockBillTypeEnum !== null){
-                  table.setDataAtCell(row,6,outStockBillTypeEnum);
+                  if (column === 1 && outStockBillTypeEnum !== null){
+                    table.setDataAtCell(row,6,outStockBillTypeEnum);
+                  }
                 }
               }
             }
-          }
-        },
-        formData:{
-          billDate:new Date().toLocaleDateString(),
-          json:[],
-        },rules: {
-          stockNumber: [{ required: true, message: '必填项'}],
-          billDate: [{ required: true, message: '必填项'}],
-        },
-        submitDisabled:false,
-        remoteLoading:false
-      };
-    },
-    mounted() {
-      axios.get('/api/global/cloud/input/salOutStock/form').then((response)=>{
-        let extra = response.data.extra;
-        this.settings.columns[1].source = extra.bdCustomerNameList;
-        this.settings.columns[2].source = extra.bdMaterialNameList;
-        if(Object.prototype.toString.call(extra.outStockBillTypeEnums) === "[object String]"){
-          outStockBillTypeEnum = extra.outStockBillTypeEnums;
-          this.settings.columns.push({type: "autocomplete", allowEmpty: false, strict: true, readOnly: true});
-        }else {
-          this.settings.columns.push({type: "autocomplete", allowEmpty: false, strict: true,billType:[], source: this.billType});
-          this.settings.columns[6].source = extra.outStockBillTypeEnums;
-        }
-        table = new Handsontable(this.$refs["handsontable"], this.settings);
-      });
-    },
-    methods: {
+          },
+          formData:{
+          },rules: {
+            stockNumber: [{ required: true, message: '必填项'}],
+            billDate: [{ required: true, message: '必填项'}],
+          },
+          submitDisabled:false,
+        };
+      },
       formSubmit(){
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
@@ -109,13 +93,16 @@
             }
             this.formData.json = JSON.stringify(this.formData.json);
             this.formData.billDate = util.formatLocalDate(this.formData.billDate);
-            axios.post('/api/global/cloud/input/salOutStock/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
+            var submitData = util.deleteExtra(this.formData);
+            axios.post('/api/global/cloud/input/salOutStock/save', qs.stringify(submitData,{allowDots:true})).then((response)=> {
               if(response.data.success){
                 this.$message(response.data.message);
+                this.initPage();
+                Object.assign(this.$data,this.getData());
               }else{
                 this.$alert(response.data.message);
-                this.submitDisabled = false;
               }
+              this.submitDisabled = false;
             }).catch(function () {
               this.submitDisabled = false;
             });
@@ -124,17 +111,26 @@
           }
         })
       },
-      remoteStock(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/global/cloud/kingdee/bdStock/findByNameLike',{params:{name:query}}).then((response)=>{
-            this.stockList = response.data;
-            this.remoteLoading = false;
-          })
-        } else {
-          this.stockList = {};
-        }
+      initPage() {
+        table = new Handsontable(this.$refs["handsontable"], this.settings);
       },
-    }
+    },
+    created() {
+      axios.get('/api/global/cloud/input/salOutStock/form').then((response)=>{
+        this.formData = response.data;
+        let extra = response.data.extra;
+        this.settings.columns[1].source = extra.bdCustomerNameList;
+        this.settings.columns[2].source = extra.bdMaterialNameList;
+        if(Object.prototype.toString.call(extra.outStockBillTypeEnums) === "[object String]"){
+          outStockBillTypeEnum = extra.outStockBillTypeEnums;
+          this.settings.columns.push({type: "autocomplete", allowEmpty: false, strict: true, readOnly: true});
+        }else {
+          this.settings.columns.push({type: "autocomplete", allowEmpty: false, strict: true,billType:[], source: this.billType});
+          this.settings.columns[6].source = extra.outStockBillTypeEnums;
+        }
+        this.initPage();
+        this.stockList = extra.stockList;
+      });
+    },
   }
 </script>

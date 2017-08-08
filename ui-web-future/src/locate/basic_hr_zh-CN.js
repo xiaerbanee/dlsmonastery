@@ -1024,6 +1024,8 @@ export default {
     firstAppointDate: "初试时间",
     secondAppointDate: "复试时间",
     physicalAppointDate: "资审时间",
+    entryRealDate:"实际入职日期",
+    positionName:"岗位",
     add: "添加",
     batchEdit: "批量修改",
     filter: "过滤",

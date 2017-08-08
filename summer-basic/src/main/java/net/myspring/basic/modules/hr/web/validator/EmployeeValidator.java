@@ -20,5 +20,9 @@ public class EmployeeValidator implements Validator{
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "mobilePhone", "error.mobilePhone", "必填信息");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "idcard", "error.idcard", "必填信息");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "entryDate", "error.entryDate", "必填信息");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "accountForm.loginName", "error.loginName", "必填信息");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "accountForm.officeId", "error.officeId", "必填信息");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "accountForm.positionId", "error.positionId", "必填信息");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "accountForm.officeIdList", "error.officeIdList", "必填信息");
     }
 };

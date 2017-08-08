@@ -40,6 +40,7 @@ public class FutureCustomerService {
 
     public List<CustomerDto> getOppoCustomers(){
         List<CustomerDto> customerDtoList = futureCustomerRepository.findOppoCustomers();
+        cacheUtils.initCacheInput(customerDtoList);
         return customerDtoList;
     }
 

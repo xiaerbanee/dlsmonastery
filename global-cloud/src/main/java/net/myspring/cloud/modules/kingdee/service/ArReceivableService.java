@@ -24,4 +24,9 @@ public class ArReceivableService {
         List<ArReceivable> receivableList = arReceivableRepository.findTopOneBySourceBillNo(sourceBillNo);
         return receivableList.get(0);
     }
+
+    public List<ArReceivable> findBySourceBillNoList(List<String> sourceBillNoList){
+        List<ArReceivable> receivableList = arReceivableRepository.findBySourceBillNoList(sourceBillNoList);
+        return receivableList;
+    }
 }

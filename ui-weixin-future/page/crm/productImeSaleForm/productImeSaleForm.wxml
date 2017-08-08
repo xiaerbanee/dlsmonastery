@@ -22,8 +22,8 @@
           <view class="weui-label">核销门店</view>
         </view>
         <view class="weui-cell__bd">
-          <picker range="{{shops}}" range-key="name" value="{{shopId}}" bindchange="bindSaleShop">
-            <view class="weui-input">{{shopName?shopName:''}}</view>
+          <picker range="{{shops}}" range-key="name" value="{{saleShopId}}" bindchange="bindSaleShop">
+            <view class="weui-input">{{saleShopName?saleShopName:''}}</view>
           </picker>
         </view>
       </view>
@@ -109,12 +109,12 @@
     <view class="weui-panel__bd panel_bd">
       <block wx:for-items="{{productImeSearchResult}}" wx:for-item="item" wx:key="item.id">
         <navigator url="/page/crm/productImeDetail/productImeDetail?productImeId= {{item.id}}" class="weui-media-box weui-media-box_text">
-          <view class="weui-media-box__title weui-media-box__title_in-text">{{item.ime}}</view>
-          <view class="weui-media-box__desc item_style">产品名称：{{item.productName}} </view>
+          <view class="weui-media-box__title weui-media-box__title_in-text">{{item.ime?item.ime:""}}</view>
+          <view class="weui-media-box__desc item_style">产品名称：{{item.productName?item.productName:""}} </view>
           <view class="weui-media-box__desc item_style">核销门店：{{item.productImeSaleShopName?item.productImeSaleShopName:""}}</view>
           <view class="weui-media-box__desc item_style">工厂注册时间：{{item.retailDate?item.retailDate:""}}</view>
           <view class="weui-media-box__desc item_style">核销人：{{item.productImeSaleEmployeeName?item.productImeSaleEmployeeName:""}}</view>
-          <view class="weui-media-box__desc item_style">核销时间：{{item.productImeSaleCreatedDate}}</view>
+          <view class="weui-media-box__desc item_style">核销时间：{{item.productImeSaleCreatedDate?item.productImeSaleCreatedDate:""}}</view>
         </navigator>
       </block>
     </view>

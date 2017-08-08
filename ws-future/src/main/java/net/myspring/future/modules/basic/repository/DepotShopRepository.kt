@@ -46,38 +46,9 @@ interface DepotShopRepositoryCustom{
     fun findBaokaStoreReport(reportQuery: ReportQuery):MutableList<DepotReportDto>
     
     fun findDto(id:String):DepotShopDto
-
-    fun deleteDepotAccountByDepotId(depotId:String):Int
-
-    fun deleteDepotAccountByAccountId(accountId: String):Int
-
-    fun saveDepotAccount(depotAccountForm:DepotAccountForm):Int
-
-    fun findAccountIdsByDepotId(depotId: String):MutableList<String>
-
-    fun findDepotIdListByAccountId(accountId: String):MutableList<String>
-
 }
 
 class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DepotShopRepositoryCustom{
-    override fun deleteDepotAccountByAccountId(accountId: String): Int {
-        return namedParameterJdbcTemplate.update("""
-          DELETE FROM
-              crm_account_depot
-          where account_id=:accountId
-        """,Collections.singletonMap("accountId",accountId))
-    }
-
-    override fun findDepotIdListByAccountId(accountId: String): MutableList<String> {
-        return namedParameterJdbcTemplate.queryForList("""
-            SELECT
-                t1.depot_id
-            FROM
-                crm_account_depot t1
-            WHERE
-                t1.account_id = :accountId
-        """,Collections.singletonMap("accountId",accountId),String::class.java)
-    }
 
     override fun findFilter(depotShopQuery: DepotShopQuery): MutableList<DepotShopDto> {
         val sb = StringBuffer()
@@ -89,6 +60,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                 t1.office_id officeId,
                 t1.contator,
                 t1.mobile_phone mobilePhone,
+                t1.address address,
                 t2.*,
                 t3.name as 'pricesystemName',
                 t4.name as 'clientName',
@@ -186,10 +158,10 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findBaokaStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append("""   SELECT t6.id as depotId,t6.name as 'depotName', COUNT(t1.id) AS qty,t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type""")
+            sb.append("""   SELECT t6.id as depotId,t6.name as 'depotName',t6.town_id as 'townId', COUNT(t1.id) AS qty,t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type""")
         }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName',
+               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName',t6.town_id as 'townId',
                t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type
             """)
         }
@@ -259,10 +231,10 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append("""  SELECT t6.id as depotId,t6.name as depotName,COUNT(t1.id) AS qty ,t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type""")
+            sb.append("""  SELECT t6.id as depotId,t6.name as depotName,t6.town_id as 'townId',COUNT(t1.id) AS qty ,t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type""")
         }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName',t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type
+               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName',t6.town_id as 'townId',t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type
             """)
         }
         sb.append("""
@@ -337,10 +309,10 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findBaokaSaleReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append("""  SELECT t4.id as 'depotId',t4.name as 'depotName', COUNT(t1.id) AS qty,t7.name as 'chainName',t3.name as 'productTypeName',t4.office_id as 'officeId',t4.area_id as 'areaId',t4.area_type """)
+            sb.append("""  SELECT t4.id as 'depotId',t4.name as 'depotName', t4.town_id as 'townId',COUNT(t1.id) AS qty,t7.name as 'chainName',t3.name as 'productTypeName',t4.office_id as 'officeId',t4.area_id as 'areaId',t4.area_type """)
         }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t2.id as 'productId',t2.name as 'productName',t1.ime,t1.retail_date,t6.employee_id,t4.office_id as 'officeId',t4.area_id as 'areaId',
+               SELECT t2.id as 'productId',t2.name as 'productName',t1.ime,t1.retail_date,t6.employee_id,t4.office_id as 'officeId',t4.area_id as 'areaId',t4.town_id as 'townId',
                t6.created_date as 'saleDate',t4.id as 'depotId',t4.name as 'depotName',t3.name as 'productTypeName',t7.name as 'chainName',t4.area_type
             """)
         }
@@ -402,11 +374,11 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findSaleReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append("""  SELECT t5.id as 'depotId',t5.name as 'depotName', COUNT(t1.id) AS qty,t7.name as 'chainName',t4.name as 'productTypeName',t5.office_id as 'officeId',t5.area_id as 'areaId',t5.area_type""")
+            sb.append("""  SELECT t5.id as 'depotId',t5.name as 'depotName', COUNT(t1.id) AS qty,t7.name as 'chainName',t4.name as 'productTypeName',t5.town_id as 'townId',t5.office_id as 'officeId',t5.area_id as 'areaId',t5.area_type""")
         }else if(reportQuery.isDetail){
             sb.append("""
                SELECT t3.id as 'productId',t3.name as 'productName',t2.ime,t2.retail_date,t1.employee_id,t5.office_id as 'officeId',t5.area_id as 'areaId',
-               t1.created_date as 'saleDate',t5.id as 'depotId',t5.name as 'depotName',t7.name as 'chainName',t4.name as 'productTypeName',t5.area_type
+               t1.created_date as 'saleDate',t5.id as 'depotId',t5.name as 'depotName',t5.town_id as 'townId',t7.name as 'chainName',t4.name as 'productTypeName',t5.area_type
             """)
         }
         sb.append("""
@@ -550,40 +522,5 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(DepotShopDto::class.java))
         val count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
         return PageImpl(list,pageable,count)
-    }
-
-    override fun deleteDepotAccountByDepotId(depotId:String):Int{
-        return namedParameterJdbcTemplate.update("""
-          DELETE FROM
-              crm_account_depot
-          where depot_id=:depotId
-        """,Collections.singletonMap("depotId",depotId))
-    }
-
-    override fun findAccountIdsByDepotId(depotId: String):MutableList<String>{
-        return namedParameterJdbcTemplate.queryForList("""
-            SELECT
-                t1.account_id
-            FROM
-                crm_account_depot t1
-            WHERE
-                t1.depot_id = :depotId
-        """,Collections.singletonMap("depotId",depotId),String::class.java)
-    }
-    override fun saveDepotAccount(depotAccountForm:DepotAccountForm):Int{
-        val sb = StringBuilder();
-        sb.append("INSERT INTO crm_account_depot(account_id,depot_id) values")
-        if(StringUtils.isNotBlank(depotAccountForm.depotId)){
-            for(accountId in depotAccountForm.accountIds){
-                sb.append("("+accountId+","+depotAccountForm.depotId+"),")
-            }
-        }
-        if(StringUtils.isNotBlank(depotAccountForm.accountId)){
-            for(depotId in depotAccountForm.depotIdList){
-                sb.append("("+depotAccountForm.accountId+","+depotId+"),")
-            }
-        }
-        sb.deleteCharAt(sb.length -1)
-        return namedParameterJdbcTemplate.update(sb.toString(),HashMap<String,Any>())
     }
 }

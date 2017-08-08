@@ -4,6 +4,8 @@ import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
+import net.myspring.cloud.modules.kingdee.domain.ArReceivable;
+import net.myspring.cloud.modules.kingdee.service.ArReceivableService;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 金蝶同步
@@ -37,6 +40,8 @@ public class KingdeeSynService {
     private AccountKingdeeBookRepository accountKingdeeBookRepository;
     @Autowired
     private KingdeeManager kingdeeManager;
+    @Autowired
+    private ArReceivableService arReceivableService;
 
     public Page<KingdeeSyn> findPage(Pageable pageable, KingdeeSynQuery kingdeeSynQuery){
         KingdeeBook kingdeeBook = kingdeeBookRepository.findByCompanyName(RequestUtils.getCompanyName());
@@ -59,17 +64,19 @@ public class KingdeeSynService {
     }
 
     @Transactional
-    public void save(KingdeeSyn kingdeeSyn) {
+    public KingdeeSyn save(KingdeeSyn kingdeeSyn) {
         if(kingdeeSyn != null) {
-            kingdeeSynRepository.save(kingdeeSyn);
+            return kingdeeSynRepository.save(kingdeeSyn);
         }
+        return null;
     }
 
     @Transactional
-    public void save(List<KingdeeSyn> kingdeeSynList) {
+    public List<KingdeeSyn> save(List<KingdeeSyn> kingdeeSynList) {
         if(CollectionUtil.isNotEmpty(kingdeeSynList)) {
-            kingdeeSynRepository.save(kingdeeSynList);
+            return kingdeeSynRepository.save(kingdeeSynList);
         }
+        return null;
     }
 
     @Transactional
@@ -87,5 +94,29 @@ public class KingdeeSynService {
             }
         }
         return kingdeeSynDto;
+    }
+
+    @Transactional
+    public int flush(){
+        int count = 0;
+        //未下推的单据（销售出库+销售退货）
+        List<String> billNoList = kingdeeSynRepository.findByBillNoLikeAndNextBillNoIsNull("XS").stream().map(KingdeeSyn::getBillNo).collect(Collectors.toList());
+        if (CollectionUtil.isNotEmpty(billNoList)) {
+            List<ArReceivable> arReceivableList = arReceivableService.findBySourceBillNoList(billNoList);
+            if (CollectionUtil.isNotEmpty(arReceivableList)) {
+                List<String> sourceBillNoList = arReceivableList.stream().map(ArReceivable::getFSourceBillNo).collect(Collectors.toList());
+                List<KingdeeSyn> kingdeeSynList = kingdeeSynRepository.findByBillNoList(sourceBillNoList);
+                for (ArReceivable arReceivable : arReceivableList) {
+                    for (KingdeeSyn kingdeeSyn : kingdeeSynList) {
+                        if (arReceivable.getFSourceBillNo().equals(kingdeeSyn.getBillNo())) {
+                            kingdeeSyn.setNextBillNo(arReceivable.getFBillNo());
+                            kingdeeSynRepository.save(kingdeeSyn);
+                            count++;
+                        }
+                    }
+                }
+            }
+        }
+        return count;
     }
 }

@@ -41,8 +41,8 @@ public class StkTransferDirectController {
         KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
         if (accountKingdeeBook != null){
             KingdeeSynDto kingdeeSynDto = stkTransferDirectService.saveForWS(stkTransferDirectDto,kingdeeBook,accountKingdeeBook);
-            kingdeeSynService.save(BeanUtil.map(kingdeeSynDto, KingdeeSyn.class));
-            return BeanUtil.map(kingdeeSynDto,KingdeeSynReturnDto.class);
+            KingdeeSyn kingdeeSyn = kingdeeSynService.save(BeanUtil.map(kingdeeSynDto, KingdeeSyn.class));
+            return BeanUtil.map(kingdeeSyn,KingdeeSynReturnDto.class);
         }else{
             throw new ServiceException("您没有金蝶账号，不能开单");
         }

@@ -423,4 +423,22 @@ util.numTofixed = function(num) {
   }
   return num;
 }
+util.moneyFormatter = function(row,col){
+  let pro = col.property;
+  if(row[pro]){
+    let money = row[pro].toString();
+    let origin = money;
+    let reg = /(?=(?!(\b))(\d{3})+$)/g;
+    let dot = '';
+    if(/\./.test(origin)){
+      dot = origin.split('.')[1];
+      money = origin.split('.')[0];
+    }
+    money = money.replace(reg,',');
+    return /\./.test(origin)?money+'.'+dot:money;
+  }else{
+    return row[pro];
+  }
+
+}
 export default util;

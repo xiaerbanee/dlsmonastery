@@ -3,7 +3,6 @@ package net.myspring.future.modules.basic.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.OfficeUtil;
-import net.myspring.common.dto.NameValueDto;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.OutTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
@@ -13,13 +12,14 @@ import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.client.TownClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotShop;
-import net.myspring.future.modules.basic.domain.DepotStore;
-import net.myspring.future.modules.basic.dto.*;
+import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.dto.DepotReportDetailDto;
+import net.myspring.future.modules.basic.dto.DepotReportDto;
+import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
-import net.myspring.future.modules.basic.web.form.DepotAccountForm;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotShopForm;
 import net.myspring.future.modules.basic.web.form.DepotShopMergeForm;
@@ -40,8 +40,6 @@ import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
-import org.apache.commons.beanutils.BeanMap;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -203,6 +201,7 @@ public class DepotShopService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"chainName","连锁体系"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"contator","联系人"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"mobilePhone","手机号码"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"address","门店地址"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"salePointType","门店属性"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"accountNameStr","绑定导购"));
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("门店信息",depotShopDtoList,simpleExcelColumnList);
@@ -230,29 +229,6 @@ public class DepotShopService {
         map.put("list",depotReportList);
         map.put("sum",setPercentage(depotReportList));
         return map;
-    }
-
-    public List<String> findAccountIdsByDepotId(String depotId){
-        return depotShopRepository.findAccountIdsByDepotId(depotId);
-    }
-
-    public List<String> findDepotIdListByAccountId(String accountId){
-        return depotShopRepository.findDepotIdListByAccountId(accountId);
-    }
-
-    @Transactional
-    public void saveDepotAccount(DepotAccountForm depotAccountForm){
-        if(StringUtils.isNotBlank(depotAccountForm.getDepotId())){
-            depotShopRepository.deleteDepotAccountByDepotId(depotAccountForm.getDepotId());
-            if(CollectionUtil.isNotEmpty(depotAccountForm.getAccountIds())){
-                depotShopRepository.saveDepotAccount(depotAccountForm);
-            }
-        }else if(StringUtils.isNotBlank(depotAccountForm.getAccountId())){
-            depotShopRepository.deleteDepotAccountByAccountId(depotAccountForm.getAccountId());
-            if(CollectionUtil.isNotEmpty(depotAccountForm.getDepotIdList())){
-                depotShopRepository.saveDepotAccount(depotAccountForm);
-            }
-        }
     }
 
     @Transactional
