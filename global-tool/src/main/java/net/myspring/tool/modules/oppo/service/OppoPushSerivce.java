@@ -10,10 +10,10 @@ import net.myspring.tool.common.client.EmployeeClient;
 import net.myspring.tool.common.client.OfficeClient;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.utils.CacheUtils;
+import net.myspring.tool.modules.future.domain.Office;
 import net.myspring.tool.modules.future.dto.CustomerDto;
 import net.myspring.tool.modules.future.dto.DistrictDto;
 import net.myspring.tool.modules.future.dto.EmployeeDto;
-import net.myspring.tool.modules.future.dto.OfficeDto;
 import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.modules.oppo.dto.OppoPushDto;
 import net.myspring.tool.modules.oppo.repository.*;
@@ -82,11 +82,11 @@ public class OppoPushSerivce {
 
     @LocalDataSource
     @Transactional
-    public void pushToLocal(OppoPushDto oppoPushDto) {
+    public void pushToLocal(OppoPushDto oppoPushDto,String companyName) {
         areaDepotMap = oppoPushDto.getAreaDepotMap();
         customerDtoMap = oppoPushDto.getCustomerDtoMap();
         //上抛oppo门店数据,只上抛二代和渠道门店
-        pushOppoCustomers(oppoPushDto.getCustomerDtos(),oppoPushDto.getDate());
+        pushOppoCustomers(oppoPushDto.getCustomerDtos(),oppoPushDto.getDate(),companyName);
         //上抛运营商属性
         pushOppoCustomerOperatortype(oppoPushDto.getCustomerDtos(),oppoPushDto.getDate());
         //发货退货调拨数据上抛
@@ -98,7 +98,7 @@ public class OppoPushSerivce {
         //获取店核销总数据
         pushOppoCustomerSales(oppoPushDto.getOppoCustomerSales(),oppoPushDto.getDate());
         //门店销售明细数据
-        pushOppoCustomerSaleImes(oppoPushDto.getOppoCustomerSaleImeis(),oppoPushDto.getDate());
+        pushOppoCustomerSaleImes(oppoPushDto.getOppoCustomerSaleImeis(),oppoPushDto.getDate(),companyName);
         //门店销售数据汇总
         pushOppoCustomerSaleCounts(oppoPushDto.getOppoCustomerSaleCounts(),oppoPushDto.getDate());
         //门店售后退货汇总
@@ -111,7 +111,7 @@ public class OppoPushSerivce {
     //上抛oppo门店数据,只上抛二代和渠道门店
     @LocalDataSource
     @Transactional
-    public List<OppoCustomer> pushOppoCustomers(List<CustomerDto> customerDtoList,String date) {
+    public List<OppoCustomer> pushOppoCustomers(List<CustomerDto> customerDtoList,String date,String companyName) {
         String agentCode= CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
         List<OppoCustomer> oppoCustomers = Lists.newArrayList();
         Map<String, OppoCustomer> oppoCustomersMap = Maps.newHashMap();
@@ -120,10 +120,10 @@ public class OppoPushSerivce {
         for(DistrictDto districtDto:districtList){
             districtMap.put(districtDto.getId(),districtDto);
         }
-        List<OfficeDto> offices=officeClient.findAll();
-        Map<String,OfficeDto>  officeMap=Maps.newHashMap();
-        for(OfficeDto officeDto:offices){
-            officeMap.put(officeDto.getId(),officeDto);
+        List<Office> offices=officeClient.findAll(companyName);
+        Map<String,Office>  officeMap=Maps.newHashMap();
+        for(Office office:offices){
+            officeMap.put(office.getId(),office);
         }
         for(CustomerDto customerDto:customerDtoList){
             String depotId=getDepotId(customerDto);
@@ -352,14 +352,14 @@ public class OppoPushSerivce {
     //	门店销售明细数据
     @LocalDataSource
     @Transactional
-    public List<OppoCustomerSaleImei> pushOppoCustomerSaleImes(List<OppoCustomerSaleImei> oppoCustomerSaleImes,String date) {
+    public List<OppoCustomerSaleImei> pushOppoCustomerSaleImes(List<OppoCustomerSaleImei> oppoCustomerSaleImes,String date,String companyName) {
         List<DistrictDto>  districtList=districtClient.findDistrictList();
         Map<String,DistrictDto>  districtMap=Maps.newHashMap();
         for(DistrictDto districtDto:districtList){
             districtMap.put(districtDto.getId(),districtDto);
         }
         Map<String,EmployeeDto>  employeeMap=Maps.newHashMap();
-        List<EmployeeDto> employeeList=employeeClient.findAll();
+        List<EmployeeDto> employeeList=employeeClient.findAll(companyName);
         for(EmployeeDto employeeDto:employeeList){
             employeeMap.put(employeeDto.getId(),employeeDto);
         }

@@ -32,12 +32,12 @@
           <district-select v-model="inputForm.districtId"></district-select>
         </el-form-item>
         <el-form-item label="价格体系" prop="pricesystemId">
-          <el-select v-model="inputForm.pricesystemId" filterable>
+          <el-select v-model="inputForm.pricesystemId" filterable clearable>
             <el-option v-for="item in inputForm.extra.pricesystemList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="连锁体系" prop="chainId">
-          <el-select v-model="inputForm.chainId" filterable>
+          <el-select v-model="inputForm.chainId" filterable clearable>
             <el-option v-for="item in inputForm.extra.chainList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -47,7 +47,7 @@
           </el-col>
           <el-col :span="8">
         <el-form-item label="物料价格体系" prop="adPricesystemId">
-          <el-select v-model="inputForm.adPricesystemId" filterable>
+          <el-select v-model="inputForm.adPricesystemId" filterable clearable>
             <el-option v-for="item in inputForm.extra.adPricesystemList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
