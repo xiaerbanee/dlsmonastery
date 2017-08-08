@@ -31,10 +31,11 @@
             stretchH: 'all',
             height: 650,
             minSpareRows: 1,
-            colHeaders: ["客户", "用承担部门", "对方科目", "金额", "备注", '员工', "其他类", "费用类", '对方关联客户'],
+            colHeaders: ["客户", "用承担部门","对方科目编码(4)", "对方科目", "金额", "备注", '员工', "其他类", "费用类", '对方关联客户'],
             columns: [
               {type: "autocomplete", strict: true, allowEmpty: false, customerName:[],source: this.customerName},
               {type: "autocomplete", strict: true, allowEmpty: false, departmentName:[],source: this.departmentName},
+              {type: "text", strict: true, allowEmpty: false, readOnly:true},
               {type: "autocomplete", strict: true, allowEmpty: false, accountName:[],source: this.accountName},
               {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true},
               {type: "text", allowEmpty: true, strict: true},
@@ -46,34 +47,40 @@
             contextMenu: true,
             afterChange: function (changes, source) {
               if (source !== 'loadData') {
-                let data=table.getData();
-                for(let i=0;i<data.length; i++) {
-                  let otherTypeName = "";
-                  let accountNumber = "";
-                  if(data[i][2]) {
-                    accountNumber =data[i][2];
-                  }
-                  if(data[i][6]) {
-                    otherTypeName = data[i][6];
-                  }
-                  if(otherTypeName !== "" && accountNumber !== "" && otherTypeName!== '无'){
-                    axios.get('/api/global/cloud/kingdee/basAssistant/findNumberSubByName',{params:{name:otherTypeName}}).then((response) => {
-                      let number = response.data;
-                      if (accountNumber !== number){
-                        table.setDataAtCell(i, 6, '');
-                        let j = i=1;
-                        alert('第'+j+"行,其他类的编码前4位必须和对应科目的编码一致");
-                      }
-                    });
-                  }
-                }
+                var data = table.getData();
                 for (let i = changes.length - 1; i >= 0; i--) {
                   let row = changes[i][0];
                   let column = changes[i][1];
-                  if(column === 3 &&　changes[i][3] === 0) {
+                  if(column === 3) {
+                    let accountName = changes[i][3];
+                    axios.get('/api/global/cloud/kingdee/bdAccount/findNumberSubByFullName',{params:{fullName:accountName}}).then((response) => {
+                      table.setDataAtCell(row, 2, response.data);
+                    });
+                  }
+                  if(column === 4 &&　changes[i][4] === 0) {
                     let n = row +1;
                     alert('第'+n+"行，金额不能为零");
                     table.setDataAtCell(row, 3, '');
+                  }
+                }
+                for(let i=0;i<data.length; i++) {
+                  let otherTypeName = "";
+                  let accountNumberSub = "";
+                  if(data[i][2]) {
+                    accountNumberSub =data[i][2];
+                  }
+                  if(data[i][7]) {
+                    otherTypeName = data[i][7];
+                  }
+                  if(otherTypeName !== "" && accountNumberSub !== "" && otherTypeName!== '无'){
+                    axios.get('/api/global/cloud/kingdee/basAssistant/findNumberSubByName',{params:{name:otherTypeName}}).then((response) => {
+                      let number = response.data;
+                      if (accountNumberSub !== number){
+                        table.setDataAtCell(i, 7, '');
+                        let j = i=1;
+                        alert('第'+j+"行,其他类的编码前4位必须和对方科目编码前4位一致");
+                      }
+                    });
                   }
                 }
               }
@@ -127,11 +134,11 @@
         let extra = response.data.extra;
         this.settings.columns[0].source = extra.customerNameList;
         this.settings.columns[1].source = extra.departmentNameList;
-        this.settings.columns[2].source = extra.accountNameList;
-        this.settings.columns[5].source = extra.staffNameList;
-        this.settings.columns[6].source = extra.otherTypeNameList;
-        this.settings.columns[7].source = extra.expenseTypeNameList;
-        this.settings.columns[8].source = extra.customerNameList;
+        this.settings.columns[3].source = extra.accountFullNameList;
+        this.settings.columns[6].source = extra.staffNameList;
+        this.settings.columns[7].source = extra.otherTypeNameList;
+        this.settings.columns[8].source = extra.expenseTypeNameList;
+        this.settings.columns[9].source = extra.customerNameList;
         this.initPage();
       });
     },
