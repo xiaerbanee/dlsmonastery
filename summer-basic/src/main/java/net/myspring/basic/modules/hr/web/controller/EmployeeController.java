@@ -72,7 +72,7 @@ public class EmployeeController {
         Employee employee=employeeService.save(employeeForm);
         AccountForm accountForm=employeeForm.getAccountForm();
         accountForm.setEmployeeId(employee.getId());
-        accountService.save(accountForm);
+        restResponse.getExtra().put("accountId",accountService.save(accountForm).getId());
         return restResponse;
     }
 

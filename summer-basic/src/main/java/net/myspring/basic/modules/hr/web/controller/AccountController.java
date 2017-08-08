@@ -98,8 +98,9 @@ public class AccountController {
         if(bindingResult.hasErrors()){
             return new RestResponse(bindingResult,"保存失败", null);
         }
-        accountService.save(accountForm);
-        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        RestResponse restResponse=new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        restResponse.getExtra().put("accountId",accountService.save(accountForm).getId());
+        return restResponse;
     }
 
     @RequestMapping(value = "findOne")
