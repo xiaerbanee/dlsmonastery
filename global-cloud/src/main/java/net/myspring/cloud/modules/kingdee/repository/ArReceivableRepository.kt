@@ -10,7 +10,7 @@ import java.util.*
 @Component
 class ArReceivableRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
-    fun findBySourceBillNo(sourceBillNo: String): MutableList<ArReceivable>? {
+    fun findBySourceBillNoList(sourceBillNoList: List<String>): MutableList<ArReceivable>? {
         return namedParameterJdbcTemplate.query("""
             select
             t1.FBILLNO,
@@ -21,9 +21,8 @@ class ArReceivableRepository @Autowired constructor(val namedParameterJdbcTempla
             T_AR_RECEIVABLEENTRY t2
             where
             t1.fid=t2.FID
-            and t2.FSOURCEBILLNO = :sourceBillNo
-            order by t1.fid DESC
-        """,Collections.singletonMap("sourceBillNo",sourceBillNo), BeanPropertyRowMapper(ArReceivable::class.java))
+            and t2.FSOURCEBILLNO in (:sourceBillNoList)
+        """,Collections.singletonMap("sourceBillNoList",sourceBillNoList), BeanPropertyRowMapper(ArReceivable::class.java))
     }
 
     fun findTopOneBySourceBillNo(sourceBillNo: String): MutableList<ArReceivable>? {
