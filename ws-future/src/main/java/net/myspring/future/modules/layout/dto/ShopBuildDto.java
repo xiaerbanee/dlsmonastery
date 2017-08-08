@@ -289,7 +289,7 @@ public class ShopBuildDto extends DataDto<ShopBuild>{
     public String getExportAreaName(){
         if(StringUtils.isNotBlank(this.areaName)){
             if(this.areaName.contains("办事处")){
-                return this.areaName.replaceAll("办事处", RequestUtils.getCompanyName());
+                return this.areaName.replaceAll("办事处", RequestUtils.getCompanyName().equalsIgnoreCase(CompanyNameEnum.JXVIVO.name())?"JXvivo":RequestUtils.getCompanyName());
             }else{
                 return this.areaName;
             }

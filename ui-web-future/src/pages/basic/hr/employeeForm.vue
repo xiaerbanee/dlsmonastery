@@ -74,6 +74,9 @@
             <el-form-item :label="$t('employeeForm.office')" prop="officeId">
               <office-select v-model="accountForm.officeId"  :disabled="!isCreate&&!hasPermit"></office-select>
             </el-form-item>
+            <el-form-item label="绑定门店" prop="depotIdList">
+              <depot-select v-model="depotForm.depotIdList"></depot-select>
+            </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('employeeForm.leader')" prop="leaderId">
@@ -95,15 +98,18 @@
           </el-col>
         </el-row>
       </el-form>
+
     </div>
   </div>
 </template>
 <script>
+  import depotSelect from 'components/future/depot-select'
   import districtSelect from 'components/general/district-select'
   import accountSelect from 'components/basic/account-select'
   import officeSelect from 'components/basic/office-select'
   export default{
     components:{
+        depotSelect,
         districtSelect,
         accountSelect,
         officeSelect
@@ -136,6 +142,7 @@
           accountForm: {
             extra: {}
           },
+          depotForm:{depotIdList:{}},
           remoteLoading: false,
           employeeRules: {
             name: [{required: true, message: this.$t('employeeForm.prerequisiteMessage')}],
@@ -150,6 +157,9 @@
             positionId: [{required: true, message: this.$t('employeeForm.prerequisiteMessage')}],
             officeIdList:[{required:true,message:this.$t('employeeForm.prerequisiteMessage')}],
             leaderId:[{required:true,message:this.$t('employeeForm.prerequisiteMessage')}]
+          },
+          depotRules:{
+
           },
           loading: false
         };
