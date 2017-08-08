@@ -18,6 +18,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
+import java.util.*
 import javax.persistence.EntityManager
 
 /**
@@ -42,6 +43,17 @@ interface DemoPhoneTypeRepository : BaseRepository<DemoPhoneType,String>,DemoPho
     fun findAllEnabled(): MutableList<DemoPhoneType>
 
     @Query("""
+        SELECT
+            t1
+        FROM
+            #{#entityName} t1
+        WHERE
+            t1.enabled = 1
+        AND t1.name LIKE CONCAT('%' ,?1, '%')
+    """)
+    fun findByNameLike(name: String):MutableList<DemoPhoneType>
+
+    @Query("""
         SELECT t1
         FROM #{#entityName} t1
         where t1.enabled=1
@@ -56,27 +68,32 @@ interface DemoPhoneTypeRepository : BaseRepository<DemoPhoneType,String>,DemoPho
             #{#entityName} t1
         WHERE
             t1.enabled = 1
-        AND t1.name LIKE CONCAT('%' ,?1, '%')
-    """)
-    fun findByNameLike(name: String):MutableList<DemoPhoneType>
-
-    @Query("""
-        SELECT
-            t1
-        FROM
-            #{#entityName} t1
-        WHERE
-            t1.enabled = 1
     """)
     /*AND t1.apply_end_date > ?1*/
     fun findAllByApplyEndDate(applyEndDate: LocalDate): MutableList<DemoPhoneType>
 }
 
 interface DemoPhoneTypeRepositoryCustom{
+    fun findByApplyEndTime(date:LocalDate):MutableList<DemoPhoneTypeDto>
+
     fun findPage(pageable: Pageable, demoPhoneTypeQuery: DemoPhoneTypeQuery): Page<DemoPhoneTypeDto>
 }
 
 class DemoPhoneTypeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DemoPhoneTypeRepositoryCustom{
+
+    override fun findByApplyEndTime(date:LocalDate):MutableList<DemoPhoneTypeDto>{
+
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+	          t.*
+            FROM
+	          crm_demo_phone_type t
+            WHERE
+              t.enabled = 1
+            AND
+	          t.apply_end_date >= :date
+        """,Collections.singletonMap("date",date),BeanPropertyRowMapper(DemoPhoneTypeDto::class.java))
+    }
 
     override fun findPage(pageable: Pageable, demoPhoneTypeQuery: DemoPhoneTypeQuery): Page<DemoPhoneTypeDto> {
         val sb = StringBuilder("""

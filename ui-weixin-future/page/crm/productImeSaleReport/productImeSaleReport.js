@@ -68,6 +68,7 @@ Page({
         },
         data: $util.deleteExtra(that.data.formData),
         success: function (res) {
+          console.log(res.data)
           that.setData({ page: res.data.list, sum: res.data.sum });
           wx.hideToast();
         }
