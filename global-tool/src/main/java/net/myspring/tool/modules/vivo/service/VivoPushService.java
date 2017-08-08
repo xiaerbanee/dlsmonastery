@@ -66,9 +66,9 @@ public class VivoPushService {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Transactional
-    public void pushToLocal(PushToLocalDto pushToLocalDto){
+    public void pushToLocal(PushToLocalDto pushToLocalDto,String companyName){
         //同步机构数据
-        pushVivoZonesData();
+        pushVivoZonesData(companyName);
         //客户数据
         pushVivoPushSCustomersData(pushToLocalDto.getsCustomerDtoList(),pushToLocalDto.getDate());
         //库存汇总数据
@@ -88,8 +88,8 @@ public class VivoPushService {
 
 
     @Transactional
-    public  List<SZones> pushVivoZonesData(){
-        List<OfficeDto> officeDtoList = officeClient.findAll();
+    public  List<SZones> pushVivoZonesData(String companyName){
+        List<OfficeDto> officeDtoList = officeClient.findAllChildCount(companyName);
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
             String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
             for (OfficeDto officeDto : officeDtoList){
@@ -423,14 +423,14 @@ public class VivoPushService {
         return StringUtils.getFormatId(id,mainCode,"0000");
     }
 
-    public VivoPushDto getPushFactoryDate(String date) {
+    public VivoPushDto getPushFactoryDate(String date,String companyName) {
         String dateStart = date;
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<String> agentCodeList = Lists.newArrayList();
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
             agentCodeList.add(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0]);
         }else if (CompanyNameEnum.IDVIVO.name().equals(DbContextHolder.get().getCompanyName())){
-            agentCodeList = officeClient.findDistinctAgentCode();
+            agentCodeList = officeClient.findDistinctAgentCode(companyName);
         }else {
             return null;
         }
@@ -454,13 +454,13 @@ public class VivoPushService {
 
     @FactoryDataSource
     @Transactional
-    public void pushFactoryData(VivoPushDto vivoPushDto,String date){
+    public void pushFactoryData(VivoPushDto vivoPushDto,String date,String companyName){
         logger.info("开始上抛数据:"+LocalDateTime.now());
         List<String> agentCodeList = Lists.newArrayList();
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
             agentCodeList.add(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0]);
         }else if (CompanyNameEnum.IDVIVO.name().equals(DbContextHolder.get().getCompanyName())){
-            agentCodeList = officeClient.findDistinctAgentCode();
+            agentCodeList = officeClient.findDistinctAgentCode(companyName);
         }else {
             return;
         }

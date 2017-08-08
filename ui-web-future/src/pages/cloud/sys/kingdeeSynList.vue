@@ -44,6 +44,7 @@
         <el-table-column prop="extendType" label="单据分类" ></el-table-column>
         <el-table-column prop="formId" label="单据类型"></el-table-column>
         <el-table-column prop="billNo" label="单据编码"></el-table-column>
+        <el-table-column prop="nextBillNo" label="下推单据"></el-table-column>
         <el-table-column prop="createdDate" label="创建时间"></el-table-column>
         <el-table-column prop="success" label="同步成功">
           <template scope="scope">

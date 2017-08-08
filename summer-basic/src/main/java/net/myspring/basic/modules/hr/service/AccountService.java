@@ -5,7 +5,6 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.AccountPermission;
-import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.AccountDto;
 import net.myspring.basic.modules.hr.repository.AccountPermissionRepository;
 import net.myspring.basic.modules.hr.repository.AccountRepository;
@@ -136,11 +135,6 @@ public class AccountService {
             account = accountRepository.findOne(accountForm.getId());
             ReflectionUtil.copyProperties(accountForm,account);
             accountRepository.save(account);
-        }
-        if ("主账号".equals(accountForm.getType())) {
-            Employee employee=employeeRepository.findOne(accountForm.getEmployeeId());
-            employee.setAccountId(account.getId());
-            employeeRepository.save(employee);
         }
         return account;
     }
