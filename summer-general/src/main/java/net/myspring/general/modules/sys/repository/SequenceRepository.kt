@@ -6,6 +6,6 @@ import net.myspring.general.modules.sys.domain.Sequence
 
 interface SequenceRepository : BaseRepository<Sequence, String> {
 
-    fun findByKey(key :String): Sequence?
+    fun findBySeqName(seqName :String): Sequence?
 
 }

@@ -13,15 +13,15 @@ public class SequenceService {
     @Autowired
     private SequenceRepository sequenceRepository;
 
-    public synchronized Long nextVal(String key) {
-        Sequence sequence = sequenceRepository.findByKey(key);
+    public synchronized long nextVal(String seqName) {
+        Sequence sequence = sequenceRepository.findBySeqName(seqName);
         if(sequence!=null){
             sequence.setCurrentVal(sequence.getCurrentVal()+1);
             sequenceRepository.save(sequence);
             return sequence.getCurrentVal();
         }else{
             sequence = new Sequence();
-            sequence.setKey(key);
+            sequence.setSeqName(seqName);
             sequence.setCurrentVal(1L);
             sequenceRepository.save(sequence);
 

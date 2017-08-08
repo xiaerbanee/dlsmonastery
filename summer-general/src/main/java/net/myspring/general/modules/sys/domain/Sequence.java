@@ -10,15 +10,24 @@ import javax.persistence.Table;
 @Table(name="sys_sequence")
 public class Sequence extends DataEntity<Sequence> {
 
-    private String key;
+    private String seqName;
     private Long currentVal;
+    private Integer version = 0;
 
-    public String getKey() {
-        return key;
+    public Integer getVersion() {
+        return version;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public String getSeqName() {
+        return seqName;
+    }
+
+    public void setSeqName(String seqName) {
+        this.seqName = seqName;
     }
 
     public Long getCurrentVal() {

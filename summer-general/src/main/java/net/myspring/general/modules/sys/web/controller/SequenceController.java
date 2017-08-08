@@ -13,8 +13,8 @@ public class SequenceController {
     private SequenceService sequenceService;
 
     @RequestMapping(value = "nextVal")
-    public Long nextVal(String key){
-     return sequenceService.nextVal(key);
+    public long nextVal(String seqName){
+     return sequenceService.nextVal(seqName);
     }
 
 }
