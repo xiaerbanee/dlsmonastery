@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:dutyWorktime:edit'">{{$t('dutyWorktimeList.add')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'hr:dutyWorktime:view'">{{$t('dutyWorktimeList.filter')}}</el-button>
-        <el-button type="primary" @click="exportVisible = true" icon="upload" v-permit="'hr:dutyWorktime:edit'">{{$t('dutyWorktimeList.export')}}</el-button>
+        <el-button type="primary" @click="exportVisible = true" icon="upload" v-permit="'hr:dutyWorktime:export'">{{$t('dutyWorktimeList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('dutyWorktimeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -22,6 +22,9 @@
         <el-form :model="formData"  :label-width="formLabelWidth">
               <el-form-item :label="$t('dutyWorktimeList.yearMonth')">
                 <el-date-picker v-model="month" type="month" :placeholder="$t('dutyWorktimeList.selectMonth')"></el-date-picker>
+              </el-form-item>
+              <el-form-item :label="$t('employeeList.officeName')">
+                <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -41,13 +44,18 @@
   </div>
 </template>
 <script>
+  import officeSelect from 'components/basic/office-select'
   export default {
+    components:{
+      officeSelect
+    },
     data() {
       return {
         page:{},
         formData:{
           extra:{},
-          formatMonth:""
+          formatMonth:"",
+          officeId:""
         },
         month:"",
         searchText:"",
@@ -90,7 +98,7 @@
         this.exportVisible = false;
         this.formData.formatMonth = util.formatLocalMonth(this.month);
         util.confirmBeforeExportData(this).then(() => {
-          window.location.href="/api/basic/hr/dutyWorktime/export?month="+this.formData.formatMonth;
+          window.location.href="/api/basic/hr/dutyWorktime/export?month="+this.formData.formatMonth+"&officeId="+this.formData.officeId;
           this.pageRequest();
         }).catch(()=>{});
 			}

@@ -12,7 +12,6 @@ import net.myspring.basic.modules.hr.domain.*;
 import net.myspring.basic.modules.hr.dto.DutyWorktimeDto;
 import net.myspring.basic.modules.hr.dto.DutyWorktimeExportDto;
 import net.myspring.basic.modules.hr.repository.*;
-import net.myspring.basic.modules.hr.web.form.DutyWorktimeForm;
 import net.myspring.basic.modules.hr.web.query.DutyWorktimeQuery;
 import net.myspring.basic.modules.sys.client.FolderFileClient;
 import net.myspring.basic.modules.sys.domain.Office;
@@ -34,11 +33,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -79,7 +78,7 @@ public class DutyWorktimeService {
         return page;
     }
 
-    public List<DutyWorktimeExportDto> getDutyWorktimeExportDto(LocalDate dateStart, LocalDate dateEnd) {
+    public List<DutyWorktimeExportDto> getDutyWorktimeExportDto(LocalDate dateStart, LocalDate dateEnd,String officeId) {
         List<String> statusList = Lists.newArrayList();
         statusList.add(AuditTypeEnum.APPLY.getValue());
         statusList.add(AuditTypeEnum.PASS.getValue());
@@ -88,7 +87,7 @@ public class DutyWorktimeService {
         Set<String> employeeIdSet = Sets.newHashSet();
         //请假
         Map<String, List<String>> leaveMap = Maps.newHashMap();
-        List<DutyLeave> dutyLeaves = dutyLeaveRepository.findByDateAndStatusList(dateStart, dateEnd, statusList);
+        List<DutyLeave> dutyLeaves = dutyLeaveRepository.findByDateAndStatusList(dateStart, dateEnd, statusList,officeId);
         for (DutyLeave dutyLeave : dutyLeaves) {
             String key = dutyLeave.getEmployeeId() + CharConstant.ENTER + LocalDateUtils.format(dutyLeave.getDutyDate());
             if (!leaveMap.containsKey(key)) {
@@ -104,7 +103,7 @@ public class DutyWorktimeService {
         }
         //加班
         Map<String, List<String>> overtimeMap = Maps.newHashMap();
-        List<DutyOvertime> dutyOvertimes = dutyOvertimeRepository.findByDateAndStatusList(dateStart, dateEnd, statusList);
+        List<DutyOvertime> dutyOvertimes = dutyOvertimeRepository.findByDateAndStatusList(dateStart, dateEnd, statusList,officeId);
         for (DutyOvertime dutyOvertime : dutyOvertimes) {
             String key = dutyOvertime.getEmployeeId() + CharConstant.ENTER + LocalDateUtils.format(dutyOvertime.getDutyDate());
             if (!overtimeMap.containsKey(key)) {
@@ -123,7 +122,7 @@ public class DutyWorktimeService {
 
         //加班调休
         Map<String, List<String>> overtimeRestMap = Maps.newHashMap();
-        List<DutyRest> overtimeDutyRests = dutyRestRepository.findByTypeAndDutyDate(DutyRestTypeEnum.加班调休.name(), dateStart, dateEnd, statusList);
+        List<DutyRest> overtimeDutyRests = dutyRestRepository.findByTypeAndDutyDate(DutyRestTypeEnum.加班调休.name(), dateStart, dateEnd, statusList,officeId);
         for (DutyRest dutyRest : overtimeDutyRests) {
             String key = dutyRest.getEmployeeId() + CharConstant.ENTER + LocalDateUtils.format(dutyRest.getDutyDate());
             if (!overtimeRestMap.containsKey(key)) {
@@ -141,7 +140,7 @@ public class DutyWorktimeService {
         }
         //年假调休
         Map<String, List<String>> annualRestMap = Maps.newHashMap();
-        List<DutyRest> annualRests = dutyRestRepository.findByTypeAndDutyDate(DutyRestTypeEnum.年假调休.name(), dateStart, dateEnd, statusList);
+        List<DutyRest> annualRests = dutyRestRepository.findByTypeAndDutyDate(DutyRestTypeEnum.年假调休.name(), dateStart, dateEnd, statusList,officeId);
         for (DutyRest dutyRest : annualRests) {
             String key = dutyRest.getEmployeeId() + CharConstant.ENTER + LocalDateUtils.format(dutyRest.getDutyDate());
             if (!annualRestMap.containsKey(key)) {
@@ -159,7 +158,7 @@ public class DutyWorktimeService {
         }
         //免打卡
         Map<String, List<String>> freeMap = Maps.newHashMap();
-        List<DutyFree> dutyFrees = dutyFreeRepository.findByDateAndStatusList(dateStart, dateEnd, statusList);
+        List<DutyFree> dutyFrees = dutyFreeRepository.findByDateAndStatusList(dateStart, dateEnd, statusList,officeId);
         for (DutyFree dutyFree : dutyFrees) {
             String key = dutyFree.getEmployeeId() + CharConstant.ENTER + LocalDateUtils.format(dutyFree.getFreeDate());
             if (!freeMap.containsKey(key)) {
@@ -179,7 +178,7 @@ public class DutyWorktimeService {
         }
         //公休
         Map<String, List<String>> publicFreeMap = Maps.newHashMap();
-        List<DutyPublicFree> dutyPublicFrees = dutyPublicFreeRepository.findByDateAndStatusList(dateStart, dateEnd, statusList);
+        List<DutyPublicFree> dutyPublicFrees = dutyPublicFreeRepository.findByDateAndStatusList(dateStart, dateEnd, statusList,officeId);
         for (DutyPublicFree dutyPublicFree : dutyPublicFrees) {
             String key = dutyPublicFree.getEmployeeId() + CharConstant.ENTER + LocalDateUtils.format(dutyPublicFree.getFreeDate());
             if (!publicFreeMap.containsKey(key)) {
@@ -201,7 +200,7 @@ public class DutyWorktimeService {
 
         //出差
         Map<String, List<String>> tripMap = Maps.newHashMap();
-        List<DutyTrip> dutyTrips = dutyTripRepository.findByDateAndStatusList(dateStart, dateEnd, statusList);
+        List<DutyTrip> dutyTrips = dutyTripRepository.findByDateAndStatusList(dateStart, dateEnd, statusList,officeId);
         for (DutyTrip dutyTrip : dutyTrips) {
             List<LocalDate> dateList = LocalDateUtils.getDateList(dutyTrip.getDateStart(), dutyTrip.getDateEnd());
             for (LocalDate date : dateList) {
@@ -231,7 +230,7 @@ public class DutyWorktimeService {
         Map<String, String> workTimeLastMap = Maps.newHashMap();
         Map<String, List<String>> workTimeAm = Maps.newHashMap();
         Map<String, List<String>> workTimePm = Maps.newHashMap();
-        List<DutyWorktime> dutyWorktimes = dutyWorktimeRepository.findByDutyDate(dateStart, dateEnd);
+        List<DutyWorktime> dutyWorktimes = dutyWorktimeRepository.findByDutyDate(dateStart, dateEnd,officeId);
         for (DutyWorktime dutyWorktime : dutyWorktimes) {
             String key = dutyWorktime.getEmployeeId() + CharConstant.ENTER + LocalDateUtils.format(dutyWorktime.getDutyDate());
             String value = dutyWorktime.getType() + ":" + LocalTimeUtils.format(dutyWorktime.getDutyTime());
