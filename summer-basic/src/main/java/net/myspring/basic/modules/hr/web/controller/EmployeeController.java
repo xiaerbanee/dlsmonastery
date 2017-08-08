@@ -9,9 +9,9 @@ import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.service.AccountService;
 import net.myspring.basic.modules.hr.service.EmployeeService;
 import net.myspring.basic.modules.hr.service.PositionService;
-import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
+import net.myspring.basic.modules.hr.web.validator.AccountValidator;
 import net.myspring.basic.modules.hr.web.validator.EmployeeValidator;
 import net.myspring.basic.modules.sys.service.DictEnumService;
 import net.myspring.basic.modules.sys.service.OfficeService;
@@ -51,6 +51,8 @@ public class EmployeeController {
     private OfficeService officeService;
     @Autowired
     private EmployeeValidator employeeValidator;
+    @Autowired
+    private AccountValidator accountValidator;
 
     @RequestMapping(value = "delete")
     @PreAuthorize("hasPermission(null,'hr:employee:delete')")
@@ -71,9 +73,7 @@ public class EmployeeController {
             return new RestResponse("保存失败", ResponseCodeEnum.saved.name());
         }
         Employee employee=employeeService.save(employeeForm);
-        AccountForm accountForm=employeeForm.getAccountForm();
-        accountForm.setEmployeeId(employee.getId());
-        restResponse.getExtra().put("accountId",accountService.save(accountForm).getId());
+        restResponse.getExtra().put("accountId",employee.getAccountId());
         return restResponse;
     }
 
