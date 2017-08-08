@@ -4,7 +4,7 @@
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
         <el-form-item label="部门"   prop="departmentNumber">
-          <el-select v-model="formData.departmentNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteDepartment" :loading="remoteLoading">
+          <el-select v-model="formData.departmentNumber" filterable placeholder="请输入关键词">
             <el-option v-for="item in departmentList" :key="item.fnumber" :label="item.ffullName" :value="item.fnumber"></el-option>
           </el-select>
         </el-form-item>
@@ -24,68 +24,57 @@
   import Handsontable from 'handsontable/dist/handsontable.full.js';
   var table = null;
   export default {
-    data() {
-      return {
-        table:null,
-        departmentList:{},
-        settings: {
-          rowHeaders:true,
-          autoColumnSize:true,
-          stretchH: 'all',
-          height: 650,
-          minSpareRows: 1,
-          colHeaders: ["货品编码", "货品", "仓库", "数量", "类型", "备注"],
-          columns: [
-            {type: "autocomplete", strict: true, productNumber:[],source: this.productNumber},
-            {type: "autocomplete", allowEmpty: false, strict: true, productName:[],source: this.productName},
-            {type: "autocomplete", allowEmpty: false, strict: true, stockName:[],source: this.stockName},
-            {type: 'numeric',allowEmpty: false, strict: true},
-            {type: "autocomplete", allowEmpty: false, strict: true, types:[],source: this.types},
-            {type: "text", allowEmpty: true}
-          ],
-          contextMenu: true,
-          afterChange: function (changes, source) {
-            if (source !== 'loadData') {
-              for (let i = changes.length - 1; i >= 0; i--) {
-                let row = changes[i][0];
-                let column = changes[i][1];
-                if(column === 0){
-                  let productNumber = changes[i][3];
-                  if(util.isNotBlank(productNumber)){
-                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByNumber',{params:{number:productNumber}}).then((response) => {
-                      let material = response.data;
-                      table.setDataAtCell(row, 1, material.fname);
-                    });
-                  }else {
-                    table.setDataAtCell(row, 1, null);
+    data:function () {
+      return this.getData();
+    },
+    methods: {
+      getData() {
+        return {
+          departmentList:{},
+          settings: {
+            rowHeaders:true,
+            autoColumnSize:true,
+            stretchH: 'all',
+            height: 650,
+            minSpareRows: 1,
+            colHeaders: ["货品编码", "货品", "仓库", "数量", "类型", "备注"],
+            columns: [
+              {type: "autocomplete", strict: true, productNumber:[],source: this.productNumber},
+              {type: "autocomplete", allowEmpty: false, strict: true, productName:[],source: this.productName},
+              {type: "autocomplete", allowEmpty: false, strict: true, stockName:[],source: this.stockName},
+              {type: 'numeric',allowEmpty: false, strict: true},
+              {type: "autocomplete", allowEmpty: false, strict: true, types:[],source: this.types},
+              {type: "text", allowEmpty: true}
+            ],
+            contextMenu: true,
+            afterChange: function (changes, source) {
+              if (source !== 'loadData') {
+                for (let i = changes.length - 1; i >= 0; i--) {
+                  let row = changes[i][0];
+                  let column = changes[i][1];
+                  if(column === 0){
+                    let productNumber = changes[i][3];
+                    if(util.isNotBlank(productNumber)){
+                      axios.get('/api/global/cloud/kingdee/bdMaterial/findByNumber',{params:{number:productNumber}}).then((response) => {
+                        let material = response.data;
+                        table.setDataAtCell(row, 1, material.fname);
+                      });
+                    }else {
+                      table.setDataAtCell(row, 1, null);
+                    }
                   }
                 }
               }
             }
-          }
-        },
-        formData:{
-          billDate:new Date().toLocaleDateString(),
-          json:[],
-        },rules: {
-          departmentNumber: [{ required: true, message: '必填项'}],
-          billDate: [{ required: true, message: '必填项'}],
-        },
-        submitDisabled:false,
-        remoteLoading:false
-      };
-    },
-    mounted() {
-      axios.get('/api/global/cloud/input/stkMisDelivery/form').then((response)=>{
-        let extra = response.data.extra;
-        this.settings.columns[0].source = extra.materialNumberList;
-        this.settings.columns[1].source = extra.materialNameList;
-        this.settings.columns[2].source = extra.stockNameList;
-        this.settings.columns[4].source = extra.stkMisDeliveryTypeEnums;
-        table = new Handsontable(this.$refs["handsontable"], this.settings);
-      });
-    },
-    methods: {
+          },
+          formData:{
+          },rules: {
+            departmentNumber: [{ required: true, message: '必填项'}],
+            billDate: [{ required: true, message: '必填项'}],
+          },
+          submitDisabled:false,
+        };
+      },
       formSubmit(){
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
@@ -100,13 +89,16 @@
             }
             this.formData.json = JSON.stringify(this.formData.json);
             this.formData.billDate = util.formatLocalDate(this.formData.billDate);
-            axios.post('/api/global/cloud/input/stkMisDelivery/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
+            var submitData = util.deleteExtra(this.formData);
+            axios.post('/api/global/cloud/input/stkMisDelivery/save', qs.stringify(submitData,{allowDots:true})).then((response)=> {
               if(response.data.success){
                 this.$message(response.data.message);
+                this.initPage();
+                Object.assign(this.$data,this.getData());
               }else{
                 this.$alert(response.data.message);
-                this.submitDisabled = false;
               }
+              this.submitDisabled = false;
             }).catch(function () {
               this.submitDisabled = false;
             });
@@ -115,17 +107,21 @@
           }
         })
       },
-      remoteDepartment(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/global/cloud/kingdee/bdDepartment/findByNameLike',{params:{name:query}}).then((response)=>{
-            this.departmentList = response.data;
-            this.remoteLoading = false;
-          })
-        } else {
-          this.departmentList = {};
-        }
+      initPage() {
+        table = new Handsontable(this.$refs["handsontable"], this.settings);
       },
-    }
+    },
+    created() {
+      axios.get('/api/global/cloud/input/stkMisDelivery/form').then((response)=>{
+        this.formData = response.data;
+        let extra = response.data.extra;
+        this.settings.columns[0].source = extra.materialNumberList;
+        this.settings.columns[1].source = extra.materialNameList;
+        this.settings.columns[2].source = extra.stockNameList;
+        this.settings.columns[4].source = extra.stkMisDeliveryTypeEnums;
+        this.initPage();
+        this.departmentList = extra.departmentList;
+      });
+    },
   }
 </script>
