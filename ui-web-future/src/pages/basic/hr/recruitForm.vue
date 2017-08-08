@@ -17,7 +17,7 @@
       <div class="form input-form" style="margin-top: 20px" v-if="active==1">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px">
           <el-form-item  :label="$t('recruitForm.contactDate')" prop="contactDate">
-            <date-time-picker v-model="inputForm.contactDate"></date-time-picker>
+            <date-picker v-model="inputForm.contactDate"></date-picker>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.name')" prop="name">
             <el-input v-model="inputForm.name"></el-input>
@@ -29,21 +29,21 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.mobilePhone')" prop="mobilePhone">
-            <el-input v-model="inputForm.mobilePhone" @change="onChange"></el-input>
+            <el-input v-model="inputForm.mobilePhone"></el-input>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.applyPositionId')" prop="applyPositionName">
             <position-select v-model="inputForm.applyPositionId"></position-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.applyFrom')" prop="applyFrom">
-            <el-select v-model="inputForm.applyFrom">
+            <el-select v-model="inputForm.extra.applyFrom">
               <el-option v-for="item in options" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item  :label="$t('recruitForm.firstAppointDate')" prop="firstAppointDate">
-            <date-time-picker v-model="inputForm.firstAppointDate"></date-time-picker>
-          </el-form-item>
           <el-form-item :label="$t('recruitForm.contactById')" prop="contactById">
             <account-select  v-model="inputForm.contactById"></account-select>
+          </el-form-item>
+          <el-form-item  :label="$t('recruitForm.firstAppointDate')" prop="firstAppointDate">
+            <date-time-picker v-model="inputForm.firstAppointDate"></date-time-picker>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.remarks')" prop="remarks">
             <el-input v-model="inputForm.remarks"></el-input>
@@ -286,29 +286,20 @@
           if(this.active ==6){
             this.active = 1;
           }
-        },onChange(){
-          this.message="";
-          if(this.inputForm.mobilePhone.length>=11){
-            axios.get('/api/basic/hr/recruit/checkMobilePhone',{params:{mobilePhone:this.inputForm.mobilePhone}}).then((response)=>{
-              if(!response.data.success){
-                this.message=response.data.message;
-                this.submitDisabled = true;
-              }
-            })
-          }
-        }
-      },activated () {
-        if(!this.$route.query.headClick || !this.isInit) {
+        },
+        initPage(){
           axios.get('/api/basic/hr/recruit/getForm').then((response)=>{
-            this.formProperty=response.data;
+            console.log(response.data)
+            this.inputForm=response.data;
+            if(!this.isCreate){
+              axios.get('/api/basic/hr/recruit/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+                util.copyValue(response.data,this.inputForm);
+              })
+            }
           });
-          if(!this.isCreate){
-            axios.get('/api/basic/hr/recruit/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-              util.copyValue(response.data,this.inputForm);
-            })
-          }
         }
-        this.isInit = true;
+      },created () {
+          this.initPage();
       }
     }
 </script>

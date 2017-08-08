@@ -6,7 +6,7 @@
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:recruit:edit'">{{$t('recruitList.add')}}</el-button>
         <el-button type="primary" @click="batchEdit" icon="edit" v-permit="'hr:recruit:edit'">{{$t('recruitList.batchEdit')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:recruit:view'">{{$t('recruitList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible = false" :title="$t('recruitList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData" :label-width="formLabelWidth">
@@ -75,33 +75,39 @@
   </div>
 </template>
 <script>
+  import dateTimePicker from "components/common/date-time-picker"
 import boolSelect from "components/common/bool-select"
   export default {
   components:{
-    boolSelect
+    boolSelect,
+    dateTimePicker
   },
     data() {
       return {
+        searchText:"",
         pageLoading: false,
-        pageHeight:600,
         page:{},
         formData:{
-        },
-        submitData:{
+          extra:{}
         },
         formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         selects:new Array(),
-        pickerDateOption:util.pickerDateOption
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
         util.setQuery("recruitList",this.submitData);
-        util.copyValue(this.formData,this.submitData)
-        axios.get('/api/basic/hr/recruit?'+qs.stringify(this.submitData)).then((response) => {
+        axios.get('/api/basic/hr/recruit?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -139,9 +145,16 @@ import boolSelect from "components/common/bool-select"
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -325;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      var that = this;
+      that.pageHeight = 0.75*window.innerHeight;
+      this.initPromise = axios.get('/api/basic/hr/recruit/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+      });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      });
     }
   };
 </script>
