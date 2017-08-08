@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.web.controller;
 
 
 import com.google.common.collect.Lists;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.domain.Product;
@@ -67,5 +68,13 @@ public class PricesystemChangeController {
         return new RestResponse("审核成功",ResponseCodeEnum.audited.name());
     }
 
+    @RequestMapping(value = "delete")
+    public RestResponse delete(String id){
+        if(StringUtils.isBlank(id)){
+            throw new ServiceException("未选中一条记录");
+        }
+        pricesystemChangeService.delete(id);
+        return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
+    }
 
 }
