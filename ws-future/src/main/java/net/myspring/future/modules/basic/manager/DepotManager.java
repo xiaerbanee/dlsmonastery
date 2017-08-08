@@ -78,6 +78,36 @@ public class DepotManager {
         return false;
     }
 
+    public List<String> getFilterDepotIds(boolean checkChain,String accountId){
+        List<String> filterDepotIds = Lists.newArrayList();
+
+        List<String> depotIds = filterDepotIds(accountId);
+        if(CollectionUtil.isNotEmpty(depotIds)){
+            filterDepotIds.addAll(depotIds);
+        }
+
+        List<String> officeIds = RequestUtils.getOfficeIdList();
+        if(CollectionUtil.isNotEmpty(officeIds)){
+            List<String> depotIdsInOffice = CollectionUtil.extractToList(depotRepository.findByOfficeIdIn(officeIds),"id");
+            if(CollectionUtil.isNotEmpty(depotIdsInOffice)){
+                filterDepotIds.addAll(depotIdsInOffice);
+            }
+        }
+
+        if(checkChain){
+            List<String> chainIds = getChainIds(accountId);
+            if(CollectionUtil.isNotEmpty(chainIds)){
+                List<String> depotIdsByChain = CollectionUtil.extractToList(depotRepository.findByChainIdIn(chainIds),"id");
+                if(CollectionUtil.isNotEmpty(depotIdsByChain)){
+                    filterDepotIds.addAll(depotIdsByChain);
+                }
+            }
+        }
+
+        return filterDepotIds;
+
+    }
+
     private List<String> getChainIds(String accountId) {
         DepotQuery depotQuery=new DepotQuery();
         depotQuery.setDepotIdList(filterDepotIds(accountId));
