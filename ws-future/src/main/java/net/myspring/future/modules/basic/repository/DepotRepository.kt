@@ -118,7 +118,7 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         if (StringUtils.isNotBlank(depotQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
         }
-        if (depotQuery.includeHidden !=null && !depotQuery.includeHidden) {
+        if (depotQuery.includeHidden ==null || !depotQuery.includeHidden) {
             sb.append("""  and t1.is_hidden = 0 """)
         }
         if (CollectionUtil.isNotEmpty(depotQuery.depotIdList)) {
@@ -272,7 +272,7 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         if (StringUtils.isNotEmpty(depotShopQuery.name)) {
             sb.append("""  and (t1.name LIKE CONCAT('%',:name,'%') or t1.name_pinyin LIKE CONCAT('%',:name,'%')) """)
         }
-        if (depotShopQuery.includeHidden !=null && !depotShopQuery.includeHidden) {
+        if (depotShopQuery.includeHidden ==null || !depotShopQuery.includeHidden) {
             sb.append("""  and t1.is_hidden = 0 """)
         }
         if (CollectionUtil.isNotEmpty(depotShopQuery.depotIdList)) {
@@ -309,7 +309,7 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         if (StringUtils.isNotEmpty(depotStoreQuery.name)) {
             sb.append("""  and (t1.name LIKE CONCAT('%',:name,'%') or t1.name_pinyin LIKE CONCAT('%',:name,'%')) """)
         }
-        if (depotStoreQuery.includeHidden !=null && !depotStoreQuery.includeHidden) {
+        if (depotStoreQuery.includeHidden ==null || !depotStoreQuery.includeHidden) {
             sb.append("""  and t1.is_hidden = 0 """)
         }
         if (CollectionUtil.isNotEmpty(depotStoreQuery.depotIdList)) {
