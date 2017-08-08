@@ -12,7 +12,7 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('bankInForm.bankName')" prop="bankId">
-          <bank-select v-model="inputForm.bankId" includeCashIn=true ></bank-select>
+          <bank-select v-model="inputForm.bankId" :includeCash="true" ></bank-select>
         </el-form-item>
         <el-form-item :label="$t('bankInForm.transferType')" prop="transferType">
           <el-select v-model="inputForm.transferType"  clearable>

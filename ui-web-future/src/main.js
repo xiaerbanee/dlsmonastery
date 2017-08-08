@@ -19,6 +19,7 @@ import dateRangePicker from './components/common/date-range-picker.vue';
 import searchDialog from './components/common/search-dialog.vue';
 import imgPreviewer from './components/common/img-previewer.vue'
 import suAlert from './components/common/su-alert.vue';
+import suSelect from './components/common/su-select.vue';
 
 import App from './app.vue';
 import fullCalendar from 'vue-fullcalendar'
@@ -44,6 +45,7 @@ Vue.component('date-picker',datePicker);
 Vue.component('date-range-picker', dateRangePicker);
 Vue.component('search-dialog', searchDialog);
 Vue.component('su-alert', suAlert);
+Vue.component('su-select', suSelect);
 Vue.component('img-previewer',imgPreviewer);
 // progressBar
 const options = {

@@ -16,6 +16,7 @@ import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -28,10 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @RestController
@@ -105,7 +103,10 @@ public class DepotController {
     }
 
     @RequestMapping(value = "findByIds")
-    public List<DepotDto> findByListIds(@RequestParam("idStr") List<String> ids) {
+    public List<DepotDto> findByIds(@RequestParam("idStr") List<String> ids) {
+        if(CollectionUtil.isEmpty(ids)){
+            return new ArrayList<>();
+        }
         return depotService.findByIds(ids);
     }
 

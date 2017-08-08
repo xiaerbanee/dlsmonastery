@@ -2,7 +2,6 @@ package net.myspring.future.modules.basic.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Depot
-import net.myspring.future.modules.basic.domain.DepotShop
 import net.myspring.future.modules.basic.dto.CustomerDto
 import net.myspring.future.modules.basic.dto.DepotAccountDto
 import net.myspring.future.modules.basic.dto.DepotDto
@@ -92,6 +91,7 @@ interface DepotRepositoryCustom{
 }
 
 class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DepotRepositoryCustom{
+
     override fun findDepotList(depotQuery: DepotQuery): List<DepotDto> {
         val sb = StringBuffer()
         sb.append("""
@@ -117,6 +117,9 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         }
         if (StringUtils.isNotBlank(depotQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
+        if (depotQuery.includeHidden !=null && !depotQuery.includeHidden) {
+            sb.append("""  and t1.is_hidden = 0 """)
         }
         if (CollectionUtil.isNotEmpty(depotQuery.depotIdList)) {
             sb.append("""  and t1.id in (:depotIdList)""")
@@ -269,6 +272,9 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         if (StringUtils.isNotEmpty(depotShopQuery.name)) {
             sb.append("""  and (t1.name LIKE CONCAT('%',:name,'%') or t1.name_pinyin LIKE CONCAT('%',:name,'%')) """)
         }
+        if (depotShopQuery.includeHidden !=null && !depotShopQuery.includeHidden) {
+            sb.append("""  and t1.is_hidden = 0 """)
+        }
         if (CollectionUtil.isNotEmpty(depotShopQuery.depotIdList)) {
             sb.append("""  and t1.id in (:depotIdList)""")
         }
@@ -302,6 +308,9 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         }
         if (StringUtils.isNotEmpty(depotStoreQuery.name)) {
             sb.append("""  and (t1.name LIKE CONCAT('%',:name,'%') or t1.name_pinyin LIKE CONCAT('%',:name,'%')) """)
+        }
+        if (depotStoreQuery.includeHidden !=null && !depotStoreQuery.includeHidden) {
+            sb.append("""  and t1.is_hidden = 0 """)
         }
         if (CollectionUtil.isNotEmpty(depotStoreQuery.depotIdList)) {
             sb.append("""  and t1.id in (:depotIdList)""")

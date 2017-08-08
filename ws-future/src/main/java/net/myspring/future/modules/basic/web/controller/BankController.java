@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.web.controller;
 
 import com.google.common.collect.Lists;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -73,9 +75,16 @@ public class BankController {
     }
 
     @RequestMapping(value = "search")
-    public List<BankDto> search(String key) {
-        List<BankDto> bankDtoList =bankService.findByEnabledIsTrueAndNameContaining(key);
-        return bankDtoList;
+    public List<BankDto> search(String key, Boolean includeCash) {
+        List<BankDto> result = new ArrayList<>();
+        if(Boolean.TRUE.equals(includeCash)){
+            BankDto cashBankDto = new BankDto();
+            cashBankDto.setId("0");
+            cashBankDto.setName("现金");
+            result.add(cashBankDto);
+        }
+        result.addAll(bankService.findByEnabledIsTrueAndNameContaining(StringUtils.trimToEmpty(key)));
+        return result;
     }
 
     @RequestMapping(value = "getForm")
