@@ -81,7 +81,7 @@ public class OppoPushController {
         oppoPushDto.setOppoCustomerAfterSaleImeis(futureAfterSaleService.getFutureOppoCustomerAfterSaleImeis(date));
         oppoPushDto.setOppoCustomerDemoPhones(futureDemoPhoneService.getFutureOppoCustomerDemoPhone(date));
 
-        oppoPushSerivce.pushToLocal(oppoPushDto);
+        oppoPushSerivce.pushToLocal(oppoPushDto,companyName);
         logger.info("同步JXOPPO数据至本地成功:"+ LocalDateTime.now());
         return "OPPO同步成功";
     }

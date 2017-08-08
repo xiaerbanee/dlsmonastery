@@ -16,43 +16,37 @@
   import Handsontable from 'handsontable/dist/handsontable.full.js';
   var table = null;
   export default {
-    data() {
-      return {
-        table:null,
-        departmentList:{},
-        settings: {
-          rowHeaders:true,
-          autoColumnSize:true,
-          stretchH: 'all',
-          height: 650,
-          minSpareRows: 1,
-          colHeaders:["编码", "名称", "一级价","广告让利(返利1.5%输入1.5)","物料分组", "存货类别"],
-          columns: [
-            {type: 'text',allowEmpty: false,strict: true},
-            {type: "text", allowEmpty: false, strict: true },
-            {type: 'numeric',allowEmpty: false,format:"0,0.00"},
-            {type: "numeric", allowEmpty: false,format:"0,0.00"},
-            {type: "autocomplete", allowEmpty: false, strict: true, materialGroupNameList:[], source: this.materialGroupNameList},
-            {type: "autocomplete", allowEmpty: false, strict: true, materialCategoryNameList:[], source: this.materialCategoryNameList}
-          ],
-          contextMenu: true,
-        },
-        formData:{
-          json:[],
-        },rules: {},
-        submitDisabled:false,
-        remoteLoading:false
-      };
-    },
-    mounted() {
-      axios.get('/api/global/cloud/kingdee/bdMaterial/form').then((response)=>{
-        let extra = response.data.extra;
-        this.settings.columns[4].source = extra.materialGroupNameList;
-        this.settings.columns[5].source = extra.materialCategoryNameList;
-        table = new Handsontable(this.$refs["handsontable"], this.settings);
-      });
+    data:function () {
+      return this.getData();
     },
     methods: {
+      getData() {
+        return {
+          departmentList:{},
+          settings: {
+            rowHeaders:true,
+            autoColumnSize:true,
+            stretchH: 'all',
+            height: 650,
+            minSpareRows: 1,
+            colHeaders:["编码", "名称", "一级价","广告让利(返利1.5%输入1.5)","物料分组", "存货类别"],
+            columns: [
+              {type: 'text',allowEmpty: false,strict: true},
+              {type: "text", allowEmpty: false, strict: true },
+              {type: 'numeric',allowEmpty: false,format:"0,0.00"},
+              {type: "numeric", allowEmpty: false,format:"0,0.00"},
+              {type: "autocomplete", allowEmpty: false, strict: true, materialGroupNameList:[], source: this.materialGroupNameList},
+              {type: "autocomplete", allowEmpty: false, strict: true, materialCategoryNameList:[], source: this.materialCategoryNameList}
+            ],
+            contextMenu: true,
+          },
+          formData:{
+            json:[],
+          },rules: {},
+          submitDisabled:false,
+          remoteLoading:false
+        };
+      },
       formSubmit(){
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
@@ -69,10 +63,12 @@
             axios.post('/api/global/cloud/kingdee/bdMaterial/batchSave', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
               if(response.data.success){
                 this.$message(response.data.message);
+                this.initPage();
+                Object.assign(this.$data,this.getData());
               }else{
                 this.$alert(response.data.message);
-                this.submitDisabled = false;
               }
+              this.submitDisabled = false;
             }).catch(function () {
               this.submitDisabled = false;
             });
@@ -81,6 +77,17 @@
           }
         })
       },
-    }
+      initPage() {
+        table = new Handsontable(this.$refs["handsontable"], this.settings);
+      },
+    },
+    created() {
+      axios.get('/api/global/cloud/kingdee/bdMaterial/form').then((response)=>{
+        let extra = response.data.extra;
+        this.settings.columns[4].source = extra.materialGroupNameList;
+        this.settings.columns[5].source = extra.materialCategoryNameList;
+        this.initPage();
+      });
+    },
   }
 </script>

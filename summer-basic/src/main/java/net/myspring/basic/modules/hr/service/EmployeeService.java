@@ -3,9 +3,12 @@ package net.myspring.basic.modules.hr.service;
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.EmployeeStatusEnum;
 import net.myspring.basic.common.utils.CacheUtils;
+import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
+import net.myspring.basic.modules.hr.repository.AccountRepository;
 import net.myspring.basic.modules.hr.repository.EmployeeRepository;
+import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
@@ -16,6 +19,7 @@ import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +41,8 @@ public class EmployeeService {
     private CacheUtils cacheUtils;
     @Autowired
     private OfficeManager officeManager;
+    @Autowired
+    private AccountRepository accountRepository;
 
 
     public EmployeeDto findOne(String id){
@@ -75,17 +81,36 @@ public class EmployeeService {
     @Transactional
     public Employee save(EmployeeForm employeeForm) {
         Employee employee;
+        Account account;
+        AccountForm accountForm=employeeForm.getAccountForm();
+        if(CollectionUtil.isEmpty(accountForm.getOfficeIdList())||accountForm.getOfficeIdList().size()==1){
+            accountForm.setOfficeIds(accountForm.getOfficeId());
+        }
+        if(CollectionUtil.isEmpty(accountForm.getPositionIdList())||accountForm.getPositionIdList().size()==1){
+            accountForm.setPositionIds(accountForm.getPositionId());
+        }
         if(employeeForm.isCreate()) {
             employee=BeanUtil.map(employeeForm,Employee.class);
+            employeeRepository.save(employee);
+            accountForm.setPassword(StringUtils.getEncryptPassword("123456"));
+            account = BeanUtil.map(accountForm, Account.class);
+            account.setEmployeeId(employee.getId());
+            accountRepository.save(account);
         } else {
             employee = employeeRepository.findOne(employeeForm.getId());
             ReflectionUtil.copyProperties(employeeForm,employee);
+            account = accountRepository.findOne(accountForm.getId());
+            ReflectionUtil.copyProperties(accountForm,account);
+            employeeRepository.save(employee);
+            account.setEmployeeId(employee.getId());
+            accountRepository.save(account);
         }
         if(employeeForm.getLeaveDate()==null){
             employee.setStatus(EmployeeStatusEnum.在职.name());
         }else {
             employee.setStatus(EmployeeStatusEnum.离职.name());
         }
+        employee.setAccountId(account.getId());
         employeeRepository.save(employee);
         return employee;
     }

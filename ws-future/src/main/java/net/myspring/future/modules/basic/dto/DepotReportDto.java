@@ -1,7 +1,7 @@
 package net.myspring.future.modules.basic.dto;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDate;
@@ -29,6 +29,13 @@ public class DepotReportDto {
     @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
     private String areaName;
     private String areaType;
+    private String townId;
+    @CacheInput(inputKey = "towns",inputInstance = "townId",outputInstance = "cityName")
+    private String cityName;
+    @CacheInput(inputKey = "towns",inputInstance = "townId",outputInstance = "countyName")
+    private String countyName;
+    @CacheInput(inputKey = "towns",inputInstance = "townId",outputInstance = "townName")
+    private String townName;
 
     public String getAreaType() {
         return areaType;
@@ -185,6 +192,42 @@ public class DepotReportDto {
 
     public void setDepotId(String depotId) {
         this.depotId = depotId;
+    }
+
+    public String getTownId() {
+        return townId;
+    }
+
+    public void setTownId(String townId) {
+        this.townId = townId;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getCountyName() {
+        return countyName;
+    }
+
+    public void setCountyName(String countyName) {
+        this.countyName = countyName;
+    }
+
+    public String getTownName() {
+        return townName;
+    }
+
+    public void setTownName(String townName) {
+        this.townName = townName;
+    }
+
+    public String getProvinceName(){
+        return cityName+ CharConstant.UNDER_LINE+countyName+CharConstant.UNDER_LINE+townName;
     }
 
 }

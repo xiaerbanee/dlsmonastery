@@ -2,6 +2,7 @@ package net.myspring.basic.modules.sys.web.controller;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.basic.common.datasource.DbContextHolder;
 import net.myspring.basic.common.enums.JointTypeEnum;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
 import net.myspring.basic.common.utils.RequestUtils;
@@ -190,13 +191,15 @@ public class OfficeController {
     }
 
     @RequestMapping(value = "findAll")
-    public List<Office> findAll(){
+    public List<Office> findAll(String companyName){
+        DbContextHolder.get().setCompanyName(companyName);
         List<Office> officeList = officeService.findAll();
         return officeList;
     }
 
     @RequestMapping(value = "findAllChildCount")
-    public List<OfficeChildDto> findAllChildCount(){
+    public List<OfficeChildDto> findAllChildCount(String companyName){
+        DbContextHolder.get().setCompanyName(companyName);
         List<OfficeChildDto> officeList = officeService.findAllChildCount();
         return officeList;
     }
@@ -211,7 +214,8 @@ public class OfficeController {
     }
 
     @RequestMapping(value = "findDistinctAgentCode")
-    public List<String> findDistinctAgentCode(){
+    public List<String> findDistinctAgentCode(String companyName){
+        DbContextHolder.get().setCompanyName(companyName);
         return officeService.findDistinctAgentCode();
     }
 

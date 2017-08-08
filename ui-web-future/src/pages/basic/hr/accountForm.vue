@@ -31,6 +31,9 @@
             <el-form-item label="数据部门" prop="officeIdList">
               <office-select v-model="inputForm.officeIdList" :multiple="true"></office-select>
             </el-form-item>
+            <el-form-item label="绑定门店" prop="depotIdList">
+              <depot-select v-model="depotIdList" category="shop" :multiple="true"></depot-select>
+            </el-form-item>
             <el-form-item :label="$t('accountForm.position')" prop="positionId">
               <el-select v-model="inputForm.positionId"  filterable :placeholder="$t('accountForm.selectGroup')" :clearable=true :disabled="!isCreate&&!hasPermit">
                 <el-option v-for="position in inputForm.extra.positionDtoList" :key="position.id" :label="position.name" :value="position.id"></el-option>
@@ -49,8 +52,10 @@
   import employeeSelect from 'components/basic/employee-select'
   import accountSelect from 'components/basic/account-select'
   import officeSelect from 'components/basic/office-select'
+  import depotSelect from 'components/future/depot-select'
   export default{
       components:{
+          depotSelect,
           employeeSelect,
           accountSelect,
           officeSelect
@@ -90,6 +95,7 @@
           inputForm:{
             extra:{}
           },
+          depotIdList:[],
           confirmPassword:"",
           radio:'1',
           remoteLoading:false,
@@ -111,6 +117,7 @@
           if (valid) {
             var submitData = util.deleteExtra(this.inputForm);
             axios.post('/api/basic/hr/account/save',qs.stringify(submitData)).then((response)=> {
+            axios.post('/api/ws/future/basic/accountDepot/save', qs.stringify({accountId:response.data.extra.accountId,depotIdList:this.depotIdList}, {allowDots: true})).then((response)=> {
               this.$message(response.data.message);
               if(response.data.success){
                 this.submitDisabled = false;
@@ -121,6 +128,7 @@
                   this.initPage();
                 }
               }
+            })
             }).catch( ()=> {
               that.submitDisabled = false;
             });
@@ -130,10 +138,16 @@
         })
       },
       initPage(){
+        if(!this.isCreate){
+          axios.get('/api/ws/future/basic/accountDepot/findByAccountId',{params: {accountId:this.$route.query.id}}).then((response)=>{
+            this.depotIdList=response.data;
+          })
+        }
         axios.get('/api/basic/hr/account/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
           axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
+            this.inputForm.type="子账号";
           })
         });
       }
