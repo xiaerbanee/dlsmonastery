@@ -16,54 +16,46 @@
   import Handsontable from 'handsontable/dist/handsontable.full.js';
   var table = null;
   export default {
-    data() {
-      return {
-        table:null,
-        settings: {
-          rowHeaders:true,
-          autoColumnSize:true,
-          stretchH: 'all',
-          height: 650,
-          minSpareRows: 1,
-          colHeaders: ["往来单位", "我方银行账号", "业务日期", "退款金额", "结算方式", "备注"],
-          columns: [
-            {type: "autocomplete", strict: true, allowEmpty: false, customerName:[],source: this.customerName},
-            {type: "autocomplete", strict: true, allowEmpty: true, bankAcntName:[],source: this.bankAcntName},
-            {type: 'date',strict: true, allowEmpty: false,dateFormat:'YYYY-MM-DD',correctFormat: true},
-            {type: "numeric",strict: true,allowEmpty: false, format:"0,0.00"},
-            {type: "autocomplete",strict: true, allowEmpty: false, settleTypeName:[],source: this.settleTypeName},
-            {type: "text",strict: true, allowEmpty: false }
-          ],
-          contextMenu: true,
-          afterChange: function (changes, source) {
-            if (source !== 'loadData') {
-              for (let i = changes.length - 1; i >= 0; i--) {
-                let row = changes[i][0];
-                let column = changes[i][1];
-                if(column === 4 &&　changes[i][3] === '现金') {
-                  table.setDataAtCell(row, 1, '');
-                  table.setDataAtCell(row, 5, '批量开单');
+    data:function () {
+      return this.getData();
+    },
+    methods: {
+      getData() {
+        return {
+          settings: {
+            rowHeaders:true,
+            autoColumnSize:true,
+            stretchH: 'all',
+            height: 650,
+            minSpareRows: 1,
+            colHeaders: ["往来单位", "我方银行账号", "业务日期", "退款金额", "结算方式", "备注"],
+            columns: [
+              {type: "autocomplete", strict: true, allowEmpty: false, customerName:[],source: this.customerName},
+              {type: "autocomplete", strict: true, allowEmpty: true, bankAcntName:[],source: this.bankAcntName},
+              {type: 'date',strict: true, allowEmpty: false,dateFormat:'YYYY-MM-DD',correctFormat: true},
+              {type: "numeric",strict: true,allowEmpty: false, format:"0,0.00"},
+              {type: "autocomplete",strict: true, allowEmpty: false, settleTypeName:[],source: this.settleTypeName},
+              {type: "text",strict: true, allowEmpty: false }
+            ],
+            contextMenu: true,
+            afterChange: function (changes, source) {
+              if (source !== 'loadData') {
+                for (let i = changes.length - 1; i >= 0; i--) {
+                  let row = changes[i][0];
+                  let column = changes[i][1];
+                  if(column === 4) {
+                    table.setDataAtCell(row, 1, '');
+                    table.setDataAtCell(row, 5, '批量开单');
+                  }
                 }
               }
             }
-          }
-        },
-        formData:{
-          json:[],
-        },rules: {},
-        submitDisabled:false
-      };
-    },
-    mounted() {
-      axios.get('/api/global/cloud/input/arRefundBill/form').then((response)=>{
-        let extra = response.data.extra;
-        this.settings.columns[0].source = extra.customerNameList;
-        this.settings.columns[1].source = extra.banAcntNameList;
-        this.settings.columns[4].source = extra.settleTypeNameList;
-        table = new Handsontable(this.$refs["handsontable"], this.settings);
-      });
-    },
-    methods: {
+          },
+          formData:{
+          },rules: {},
+          submitDisabled:false
+        };
+      },
       formSubmit(){
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
@@ -80,10 +72,12 @@
             axios.post('/api/global/cloud/input/arRefundBill/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
               if(response.data.success){
                 this.$message(response.data.message);
+                this.initPage();
+                Object.assign(this.$data,this.getData());
               }else{
                 this.$alert(response.data.message);
-                this.submitDisabled = false;
               }
+              this.submitDisabled = false;
             }).catch(function () {
               this.submitDisabled = false;
             });
@@ -91,7 +85,20 @@
             this.submitDisabled = false;
           }
         })
-      }
-    }
+      },
+      initPage() {
+        table = new Handsontable(this.$refs["handsontable"], this.settings);
+      },
+    },
+    created() {
+      axios.get('/api/global/cloud/input/arRefundBill/form').then((response)=>{
+        this.formData = response.data;
+        let extra = response.data.extra;
+        this.settings.columns[0].source = extra.customerNameList;
+        this.settings.columns[1].source = extra.banAcntNameList;
+        this.settings.columns[4].source = extra.settleTypeNameList;
+        this.initPage();
+      });
+    },
   }
 </script>
