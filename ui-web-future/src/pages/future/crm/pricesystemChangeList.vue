@@ -52,6 +52,7 @@
           <template scope="scope">
             <div class="action" v-if="scope.row.status == '申请中'" v-permit="'crm:pricesystemChange:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'pass')">{{$t('pricesystemChangeList.pass')}}</el-button></div>
             <div class="action" v-if="scope.row.status == '申请中'" v-permit="'crm:pricesystemChange:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'notPass')">{{$t('pricesystemChangeList.noPass')}}</el-button></div>
+            <div class="action" v-if="scope.row.status == '申请中'" v-permit="'crm:pricesystemChange:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('pricesystemChangeList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -111,10 +112,19 @@
       },itemAdd(){
         this.$router.push({ name: 'pricesystemChangeForm'})
       },itemAction:function(id,action){
-        axios.get('/api/ws/future/crm/pricesystemChange/audit',{params:{id:id,pass:action=='pass'?true:false}}).then((response) =>{
-          this.$message(response.data.message);
-          this.pageRequest();
-        });
+        if(action=="delete") {
+          util.confirmBeforeDelRecord(this).then(() => {
+            axios.get('/api/ws/future/crm/pricesystemChange/delete', {params: {id: id}}).then((response) => {
+              this.$message(response.data.message);
+              this.pageRequest();
+            })
+          })
+        }else {
+          axios.get('/api/ws/future/crm/pricesystemChange/audit',{params:{id:id,pass:action=='pass'?true:false}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageRequest();
+          });
+        }
       },selectionChange(selection){
         this.selects=new Array();
         for(var key in selection){

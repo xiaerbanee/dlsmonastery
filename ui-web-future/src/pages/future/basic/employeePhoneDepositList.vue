@@ -55,7 +55,7 @@
         </el-table-column>
         <el-table-column  :label="$t('employeePhoneDepositList.operation')" width="140">
           <template scope="scope" >
-            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')" v-if="scope.row.isEdit">修改</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')" v-if="scope.row.edit">修改</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'删除')" v-if="!scope.row.locked">删除</el-button>
           </template>
         </el-table-column>
