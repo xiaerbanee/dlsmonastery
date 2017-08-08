@@ -22,8 +22,8 @@
           <view class="weui-label">核销门店</view>
         </view>
         <view class="weui-cell__bd">
-          <picker range="{{shops}}" range-key="name" value="{{shopId}}" bindchange="bindSaleShop">
-            <view class="weui-input">{{shopName?shopName:''}}</view>
+          <picker range="{{shops}}" range-key="name" value="{{saleShopId}}" bindchange="bindSaleShop">
+            <view class="weui-input">{{saleShopName?saleShopName:''}}</view>
           </picker>
         </view>
       </view>

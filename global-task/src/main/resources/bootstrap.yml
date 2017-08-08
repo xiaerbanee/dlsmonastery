@@ -2,7 +2,7 @@ spring:
   application:
     name: global-task
   profiles:
-    active: dev
+    active: cn-prod
   cloud:
     config:
       uri: http://localhost:9900

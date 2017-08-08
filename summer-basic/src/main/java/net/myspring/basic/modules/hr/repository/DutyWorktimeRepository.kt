@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.repository
 
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.Account
+import net.myspring.basic.modules.hr.domain.DutyPublicFree
 import net.myspring.basic.modules.hr.domain.DutyWorktime
 import net.myspring.basic.modules.hr.dto.DutyWorktimeDto
 import net.myspring.basic.modules.hr.web.query.DutyWorktimeQuery
@@ -35,17 +36,6 @@ interface DutyWorktimeRepository : BaseRepository<DutyWorktime,String>,DutyWorkt
         FROM #{#entityName} t1
         WHERE
         t1.enabled=1
-        AND t1.dutyDate >= :dateStart
-        and t1.dutyDate <= :dateEnd
-    """)
-    fun findByDutyDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): MutableList<DutyWorktime>
-
-    @Query("""
-        SELECT
-        t1
-        FROM #{#entityName} t1
-        WHERE
-        t1.enabled=1
         and t1.employeeId=:employeeId
         AND t1.dutyDate >= :dateStart
         and t1.dutyDate <= :dateEnd
@@ -60,8 +50,38 @@ interface DutyWorktimeRepositoryCustom{
     fun findByAccountIdAndDutyDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("accountIds") accountIds: MutableList<Long>): MutableList<DutyWorktime>
 
     fun findPage(pageable: Pageable, dutyWorktimeQuery: DutyWorktimeQuery): Page<DutyWorktimeDto>
+
+    fun findByDutyDate(dateStart: LocalDate,dateEnd: LocalDate,officeId:String): MutableList<DutyWorktime>
 }
 class DutyWorktimeRepositoryImpl  @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): DutyWorktimeRepositoryCustom{
+    override fun findByDutyDate(dateStart: LocalDate, dateEnd: LocalDate, officeId: String): MutableList<DutyWorktime> {
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("dateStart", dateStart)
+        paramMap.put("dateEnd", dateEnd)
+        paramMap.put("officeId", officeId)
+        var sb = StringBuilder()
+        sb.append("""
+          SELECT
+            t1.*
+            FROM hr_duty_worktime t1 left join hr_employee t2 on t1.employee_id=t2.id
+            left join hr_account t3 on t2.account_id=t3.id
+            WHERE
+            t1.enabled=1
+            AND t1.duty_date >= :dateStart and t1.duty_date <=:dateEnd
+        """)
+        if(StringUtils.isNotBlank(officeId)){
+            sb.append("""
+               and  t3.office_id in (
+                   select office.id
+                    from sys_office office
+                    where office.enabled=1
+                    and (office.parent_ids like concat('%,',:officeId,',%') or office.id=:officeId )
+                )
+            """)
+        }
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(DutyWorktime::class.java))
+    }
+
     override fun findPage(pageable: Pageable, dutyWorktimeQuery: DutyWorktimeQuery): Page<DutyWorktimeDto> {
         var sql = StringBuilder("""
                 select *

@@ -52,6 +52,8 @@ interface AfterSaleRepositoryCustom{
 
     fun findDtoByImeIn(imeList:MutableList<String>): MutableList<AfterSaleDto>
 
+    fun findDtoTypeByImeIn(imeList:MutableList<String>): MutableList<AfterSaleDto>
+
     fun findDtoByIds(ids: MutableList<String>): MutableList<AfterSaleDto>
 
 }
@@ -237,6 +239,19 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
              WHERE
                  t1.enabled=1
                 AND t2.ime in (:imeList)
+            """)
+        val paramMap = Maps.newHashMap<String, Any>();
+        paramMap.put("imeList" ,imeList);
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(AfterSaleDto::class.java));
+    }
+
+    override fun findDtoTypeByImeIn(imeList: MutableList<String>): MutableList<AfterSaleDto> {
+        val sb = StringBuilder()
+        sb.append("""
+             SELECT crm_product.name as 'toAreaProductName' FROM
+                crm_product left join crm_product_ime on crm_product_ime.product_id=crm_product.id
+            WHERE
+                crm_product_ime.ime in (:imeList)
             """)
         val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("imeList" ,imeList);
