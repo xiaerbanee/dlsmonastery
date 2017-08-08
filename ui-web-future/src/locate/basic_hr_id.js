@@ -1023,6 +1023,8 @@ export default {
     firstAppointDate: "初试时间",
     secondAppointDate: "复试时间",
     physicalAppointDate: "资审时间",
+    positionName:"posisi",
+    entryRealDate:"tanggal perjanjian",
     add: "tambah",
     batchEdit: "批量修改",
     filter: "saring",

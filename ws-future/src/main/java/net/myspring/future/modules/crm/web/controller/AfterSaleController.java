@@ -84,7 +84,7 @@ public class AfterSaleController {
                 if(!productImeMap.containsKey(ime)){
                     stringBuilder.append("串码" + ime + "在系统中不存在\n");
                 }else if(afterSaleMap.containsKey(ime)) {
-                    stringBuilder.append("串码" + ime + "已经做了售后单据\n");
+                    stringBuilder.append("串码" + ime + "已经做了售后单据\n");/*此处用来作提示信息*/
                 } else  {
                     list.add(productImeMap.get(ime));
                 }
@@ -93,6 +93,23 @@ public class AfterSaleController {
         Map<String,Object> map=Maps.newHashMap();
         map.put("list",list);
         map.put("message",stringBuilder);
+        return map;
+    }
+
+    @RequestMapping(value = "formDataType", method = RequestMethod.GET)
+    public Map<String, Object> formDataType(String imeStr) {
+        List<AfterSaleDto> list = Lists.newArrayList();
+        if(StringUtils.isNotBlank(imeStr)) {//判断imeStr是否为空
+            List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+            List<ProductImeDto> productImeList=productImeService.findByImeList(imeList);
+            Map<String,ProductImeDto> productImeMap=CollectionUtil.extractToMap(productImeList,"ime");
+            Map<String, AfterSaleDto> afterSaleMap = afterSaleService.findDtoTypeByImeList(imeList);
+            for(String ime:imeList){
+                    list.add(afterSaleMap.get(ime));
+            }
+        }
+        Map<String,Object> map=Maps.newHashMap();
+        map.put("list",list);
         return map;
     }
 

@@ -97,9 +97,11 @@ public class PricesystemChangeService {
                         throw new ServiceException("未找到该货品");
                     }
                     PricesystemDetail pricesystemDetail = pricesystemDetailRepository.findByPricesystemIdAndProductId(pricesystems.get(i-1).getId(),product.getId());
-                    BigDecimal oldPrice = BigDecimal.ZERO;
+                    BigDecimal oldPrice;
                     if(pricesystemDetail !=null&&pricesystemDetail.getPrice()!=null){
                         oldPrice = pricesystemDetail.getPrice();
+                    }else {
+                        oldPrice = null;
                     }
                     if(newPrice == null){
                         if(oldPrice != null){
@@ -111,7 +113,8 @@ public class PricesystemChangeService {
                             pricesystemChange.setOldPrice(oldPrice);
                             pricesystemChange.setRemarks(pricesystemChangeForm.getRemarks());
                             pricesystemChanges.add(pricesystemChange);
-
+                        }else{
+                            return;
                         }
                     }else if(newPrice.compareTo(oldPrice) !=0){
                         PricesystemChange pricesystemChange = new PricesystemChange();
@@ -163,6 +166,11 @@ public class PricesystemChangeService {
             pricesystemChange.setAuditDate(LocalDateTime.now());
             pricesystemChangeRepository.save(pricesystemChange);
         }
+    }
+
+    @Transactional
+    public void delete(String id){
+        pricesystemChangeRepository.logicDelete(id);
     }
 
 

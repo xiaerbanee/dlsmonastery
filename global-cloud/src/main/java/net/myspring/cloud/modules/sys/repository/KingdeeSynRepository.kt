@@ -27,6 +27,23 @@ interface  KingdeeSynRepository : BaseRepository<KingdeeSyn, String>,KingdeeSynR
         and t.extendType = :extendType
      """)
     fun findByExtendIdAndExtendType (@Param("extendId")extendId:String,@Param("extendType")extendType:String): MutableList<KingdeeSyn>?
+
+    @Query("""
+        SELECT t
+        FROM  #{#entityName} t
+        where t.enabled = 1
+        and t.billNo like concat(:billNo,'%')
+        and t.nextBillNo is null
+     """)
+    fun findByBillNoLikeAndNextBillNoIsNull (@Param("billNo")billNo:String): MutableList<KingdeeSyn>?
+
+    @Query("""
+        SELECT t
+        FROM  #{#entityName} t
+        where t.enabled = 1
+        and t.billNo in (:BillNoList)
+     """)
+    fun findByBillNoList (@Param("BillNoList")BillNoList:List<String>): MutableList<KingdeeSyn>?
 }
 
 interface KingdeeSynRepositoryCustom{

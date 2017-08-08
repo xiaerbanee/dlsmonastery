@@ -36,9 +36,10 @@ class DemoPhoneTypeOfficeRepositoryImpl @Autowired constructor(val namedParamete
             t1.*
         FROM
             crm_demo_phone_type_office t1
-        LEFT JOIN crm_depot depot ON t1.office_id = depot.area_id
-        LEFT JOIN crm_demo_phone t2 ON depot.id = t2.shop_id AND t1.demo_phone_type_id = t2.demo_phone_type_id
-        where 1=1
+        LEFT JOIN crm_depot depot ON t1.office_id = depot.area_id AND depot.enabled = 1
+        LEFT JOIN crm_demo_phone t2 ON depot.id = t2.shop_id AND t1.demo_phone_type_id = t2.demo_phone_type_id AND t2.enabled = 1
+        where
+            1 = 1
         """)
         if (StringUtils.isNotEmpty(demoPhoneTypeOfficeQuery.areaId)) {
             sb.append("""  and t1.office_id = :areaId """)

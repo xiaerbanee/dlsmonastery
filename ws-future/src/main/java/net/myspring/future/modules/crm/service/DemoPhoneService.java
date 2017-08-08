@@ -6,6 +6,7 @@ import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.manager.DepotManager;
+import net.myspring.future.modules.basic.repository.DemoPhoneTypeRepository;
 import net.myspring.future.modules.crm.domain.DemoPhone;
 import net.myspring.future.modules.crm.dto.DemoPhoneDto;
 import net.myspring.future.modules.crm.repository.DemoPhoneRepository;
@@ -40,6 +41,8 @@ public class DemoPhoneService {
     @Autowired
     private DemoPhoneRepository demoPhoneRepository;
     @Autowired
+    private DemoPhoneTypeRepository demoPhoneTypeRepository;
+    @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private DepotManager depotManager;
@@ -64,6 +67,11 @@ public class DemoPhoneService {
     @Transactional
     public void delete(String id) {
         demoPhoneRepository.logicDelete(id);
+    }
+
+    public DemoPhoneForm getForm(DemoPhoneForm demoPhoneForm){
+        demoPhoneForm.getExtra().put("demoPhoneTypes",demoPhoneTypeRepository.findByApplyEndTime(LocalDate.now()));
+        return demoPhoneForm;
     }
 
     @Transactional
