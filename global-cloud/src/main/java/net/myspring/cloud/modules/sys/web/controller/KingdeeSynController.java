@@ -7,6 +7,7 @@ import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.sys.service.KingdeeSynService;
 import net.myspring.cloud.modules.sys.web.query.KingdeeSynQuery;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.mapper.BeanUtil;
@@ -48,6 +49,7 @@ public class KingdeeSynController {
         return kingdeeSyn;
     }
 
+    //重新做单
     @RequestMapping(value = "syn")
     public RestResponse syn(String id){
         RestResponse restResponse;
@@ -58,6 +60,16 @@ public class KingdeeSynController {
             restResponse = new RestResponse("同步失败", null,false);
         }
         return restResponse;
+    }
+
+    @RequestMapping(value = "flush")
+    public RestResponse flush(){
+        try{
+            int count = kingdeeSynService.flush();
+            return new RestResponse("同步成功:"+count+"条", null,true);
+        }catch (Exception e){
+            throw new ServiceException("同步失败: "+ e.getMessage());
+        }
     }
 
     @RequestMapping(value = "findByExtendIdAndExtendType",method = RequestMethod.GET)

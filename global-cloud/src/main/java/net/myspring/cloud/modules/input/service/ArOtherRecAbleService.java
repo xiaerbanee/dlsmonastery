@@ -112,11 +112,11 @@ public class ArOtherRecAbleService {
         for (List<Object> row : data) {
             customerNameList.add(HandsontableUtils.getValue(row, 0));
             departmentNameList.add(HandsontableUtils.getValue(row, 1));
-            accountNameList.add(HandsontableUtils.getValue(row, 2));
-            empInfoNameList.add(HandsontableUtils.getValue(row, 5));
-            assistantNameList.add(HandsontableUtils.getValue(row, 6));
+            accountNameList.add(HandsontableUtils.getValue(row, 3));
+            empInfoNameList.add(HandsontableUtils.getValue(row, 6));
             assistantNameList.add(HandsontableUtils.getValue(row, 7));
-            customerNameList.add(HandsontableUtils.getValue(row, 8));
+            assistantNameList.add(HandsontableUtils.getValue(row, 8));
+            customerNameList.add(HandsontableUtils.getValue(row, 9));
         }
         Map<String, String> accountNameMap = bdAccountRepository.findByNameList(accountNameList).stream().collect(Collectors.toMap(BdAccount::getFName,BdAccount::getFNumber));
         Map<String, String> departmentNameMap = bdDepartmentRepository.findByNameList(departmentNameList).stream().collect(Collectors.toMap(BdDepartment::getFFullName,BdDepartment::getFNumber));
@@ -135,14 +135,14 @@ public class ArOtherRecAbleService {
         for (List<Object> row : data) {
             String customerName = HandsontableUtils.getValue(row,0);
             String departmentName = HandsontableUtils.getValue(row,1);
-            String accountName = HandsontableUtils.getValue(row,2);
-            String amountStr = HandsontableUtils.getValue(row,3);
+            String accountName = HandsontableUtils.getValue(row,3);
+            String amountStr = HandsontableUtils.getValue(row,4);
             BigDecimal amount = StringUtils.isEmpty(amountStr) ? BigDecimal.ZERO : new BigDecimal(amountStr);
-            String remarks = HandsontableUtils.getValue(row,4);
-            String empInfoName = HandsontableUtils.getValue(row,5);
-            String otherTypeName = HandsontableUtils.getValue(row,6);
-            String expenseTypeName = HandsontableUtils.getValue(row,7);
-            String customerForName = HandsontableUtils.getValue(row,8);
+            String remarks = HandsontableUtils.getValue(row,5);
+            String empInfoName = HandsontableUtils.getValue(row,6);
+            String otherTypeName = HandsontableUtils.getValue(row,7);
+            String expenseTypeName = HandsontableUtils.getValue(row,8);
+            String customerForName = HandsontableUtils.getValue(row,9);
 
             ArOtherRecAbleFEntityDto entityDto = new ArOtherRecAbleFEntityDto();
             entityDto.setEmpInfoNumber(empInfoNameMap.get(empInfoName));
@@ -192,7 +192,7 @@ public class ArOtherRecAbleService {
     public ArOtherRecAbleForm getForm(){
         ArOtherRecAbleForm arOtherRecAbleForm = new ArOtherRecAbleForm();
         Map<String,Object> map = Maps.newHashMap();
-        map.put("accountNameList",bdAccountRepository.findAll().stream().map(BdAccount::getFName).collect(Collectors.toList()));
+        map.put("accountFullNameList",bdAccountRepository.findAll().stream().map(BdAccount::getFFullName).collect(Collectors.toList()));
         map.put("staffNameList",hrEmpInfoRepository.findAll().stream().map(HrEmpInfo::getFName).collect(Collectors.toList()));
         map.put("departmentNameList",bdDepartmentRepository.findAll().stream().map(BdDepartment::getFFullName).collect(Collectors.toList()));
         map.put("otherTypeNameList",basAssistantRepository.findByType(BasAssistantTypeEnum.其他类.name()).stream().map(BasAssistant::getFDataValue).collect(Collectors.toList()));

@@ -52,6 +52,7 @@ class ProcessTypeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemp
             sys_process_type t1
                 WHERE
             t1.audit_file_type=1
+            and t1.enabled=1
             and (
         """)
         for ((index) in positionIdList.withIndex()) {

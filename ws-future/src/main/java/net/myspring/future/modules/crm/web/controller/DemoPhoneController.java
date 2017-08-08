@@ -58,7 +58,7 @@ public class DemoPhoneController {
 
     @RequestMapping(value = "getForm")
     public DemoPhoneForm getForm(DemoPhoneForm demoPhoneForm){
-        return demoPhoneForm;
+        return demoPhoneService.getForm(demoPhoneForm);
     }
 
     @RequestMapping(value = "delete")

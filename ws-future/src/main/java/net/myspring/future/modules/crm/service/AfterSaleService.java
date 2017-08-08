@@ -107,6 +107,18 @@ public class AfterSaleService {
         return map;
     }
 
+    public Map<String, AfterSaleDto> findDtoTypeByImeList(List<String> imeList) {
+        Map<String, AfterSaleDto> map = Maps.newHashMap();
+        List<AfterSaleDto> afterSales = afterSaleRepository.findDtoTypeByImeIn(imeList);
+        if(CollectionUtil.isNotEmpty(afterSales)){
+            Map<String,ProductIme> productImeMap=productImeRepository.findMap(CollectionUtil.extractToList(afterSales,"badProductImeId"));
+            for (AfterSaleDto afterSale : afterSales) {
+                map.put(productImeMap.get(afterSale.getBadProductImeId()).getIme(), afterSale);
+            }
+        }
+        return map;
+    }
+
     public Map<String, AfterSale> findByImeList(List<String> imeList) {
         Map<String, AfterSale> map = Maps.newHashMap();
         List<AfterSale> afterSales = afterSaleRepository.findByBadProductImeIn(imeList);
