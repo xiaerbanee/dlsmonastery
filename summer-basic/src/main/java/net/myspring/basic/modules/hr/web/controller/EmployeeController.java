@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.web.controller;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.basic.common.datasource.DbContextHolder;
 import net.myspring.basic.common.enums.EmployeeStatusEnum;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
@@ -128,7 +129,8 @@ public class EmployeeController {
     }
 
     @RequestMapping(value = "findAll")
-    public List<EmployeeDto> findAll() {
+    public List<EmployeeDto> findAll(String companyName) {
+        DbContextHolder.get().setCompanyName(companyName);
         List<EmployeeDto> employeeDtoList = employeeService.findAll();
         return employeeDtoList;
     }

@@ -58,7 +58,7 @@ public class VivoPushController {
             pushToLocalDto.setVivoCustomerSaleImeiDtoList(futureProductImeSaleService.getProductImeSaleData(date));
             pushToLocalDto.setsStoresList(futureCustomerService.findIDvivoStore());
         }
-        vivoPushService.pushToLocal(pushToLocalDto);
+        vivoPushService.pushToLocal(pushToLocalDto,companyName);
         logger.info("同步数据至中转库结束:"+ LocalDateTime.now());
         return "数据同步成功";
     }
@@ -69,8 +69,8 @@ public class VivoPushController {
         if (StringUtils.isBlank(RequestUtils.getCompanyName())){
             DbContextHolder.get().setCompanyName(companyName);
         }
-        VivoPushDto vivoPushDto = vivoPushService.getPushFactoryDate(date);
-        vivoPushService.pushFactoryData(vivoPushDto,date);
+        VivoPushDto vivoPushDto = vivoPushService.getPushFactoryDate(date,companyName);
+        vivoPushService.pushFactoryData(vivoPushDto,date,companyName);
         logger.info("上抛数据至工厂完成:"+LocalDateTime.now());
         return "数据上抛成功";
     }
