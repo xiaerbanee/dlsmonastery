@@ -75,7 +75,7 @@
               <office-select v-model="accountForm.officeId"  :disabled="!isCreate&&!hasPermit"></office-select>
             </el-form-item>
             <el-form-item label="绑定门店" prop="depotIdList">
-              <depot-select v-model="depotForm.depotIdList"></depot-select>
+              <depot-select v-model="depotIdList" category="shop" :multiple="true"></depot-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -142,7 +142,7 @@
           accountForm: {
             extra: {}
           },
-          depotForm:{depotIdList:{}},
+          depotIdList:[],
           remoteLoading: false,
           employeeRules: {
             name: [{required: true, message: this.$t('employeeForm.prerequisiteMessage')}],
@@ -180,17 +180,21 @@
                 this.employeeForm.sex=this.employeeForm.sex==1?"男":"女"
                 this.employeeForm.accountForm=util.deleteExtra(this.accountForm)
                 axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeForm, {allowDots: true})).then((response)=> {
-                  this.$message("员工"+response.data.message);
-                  if(!this.isCreate){
-                    this.submitDisabled = false;
-                    this.$router.push({name:'employeeList',query:util.getQuery("employeeList"), params:{_closeFrom:true}})
-                  } else {
-                    Object.assign(this.$data, this.getData());
-                    this.initPage();
-                  }
+                  axios.post('/api/ws/future/basic/accountDepot/save', qs.stringify({accountId:response.data.extra.accountId,depotIdList:this.depotIdList}, {allowDots: true})).then((response)=> {
+                    this.$message(response.data.message);
+                    if(!this.isCreate){
+                      this.submitDisabled = false;
+                      this.$router.push({name:'employeeList',query:util.getQuery("employeeList"), params:{_closeFrom:true}})
+                    } else {
+                      Object.assign(this.$data, this.getData());
+                      this.initPage();
+                    }
+                  })
                 }).catch( ()=> {
                   that.submitDisabled = false;
                 })
+              }else {
+                this.submitDisabled = false;
               }
             })
           }else{
@@ -205,6 +209,11 @@
             axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
               util.copyValue(response.data, this.employeeForm);
               this.employeeForm.sex = response.data.sex == "男" ? 1 : 0;
+              if(!this.isCreate){
+                axios.get('/api/ws/future/basic/accountDepot/findByAccountId',{params: {accountId:this.employeeForm.accountId}}).then((response)=>{
+                  this.depotIdList=response.data;
+                })
+              }
               axios.get('/api/basic/hr/account/findOne',{params: {id:this.employeeForm.accountId}}).then((response)=>{
                 util.copyValue(response.data, this.accountForm);
                 this.accountForm.type="主账号"

@@ -9,9 +9,41 @@
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible = false" :title="$t('recruitList.filter')" v-model="formVisible" size="tiny" class="search-form">
-        <el-form :model="formData">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
-            <el-col :span="24">
+            <el-col :span="12">
+              <el-form-item label="姓名">
+                <el-input v-model="formData.name"></el-input>
+              </el-form-item>
+              <el-form-item label="初试预约时间">
+                   <date-time-picker v-model="formData.firstRealDate"></date-time-picker>
+              </el-form-item>
+              <el-form-item label="复试预约时间">
+                <date-time-picker v-model="formData.secondRealDate"></date-time-picker>
+              </el-form-item>
+              <el-form-item label="资审时间">
+                <date-time-picker v-model="formData.physicalRealDate"></date-time-picker>
+              </el-form-item>
+              <el-form-item label="预约入职时间">
+                <date-time-picker v-model="formData.entryRealDate"></date-time-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="手机号码">
+                <el-input v-model="formData.mobilePhone"></el-input>
+              </el-form-item>
+              <el-form-item label="初试邀约人">
+                <el-input v-model="formData.mobilePhone"></el-input>
+              </el-form-item>
+              <el-form-item label="初试人">
+                <el-input v-model="formData.mobilePhone"></el-input>
+              </el-form-item>
+              <el-form-item label="复试人">
+                <el-input v-model="formData.mobilePhone"></el-input>
+              </el-form-item>
+              <el-form-item label="2个月是否在岗">
+                <bool-select v-model="formData.status"></bool-select>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -23,11 +55,14 @@
         <el-table-column type="selection" width="55" ></el-table-column>
         <el-table-column  prop="name"  :label="$t('recruitList.name')"></el-table-column>
         <el-table-column prop="sex" :label="$t('recruitList.sex')"></el-table-column>
-        <el-table-column prop="education" :label="$t('recruitList.education')"></el-table-column>
         <el-table-column prop="mobilePhone" :label="$t('recruitList.mobilePhone')"></el-table-column>
+        <el-table-column prop="applyPositionId" :label="$t('recruitList.positionName')"></el-table-column>
+        <el-table-column prop="education" :label="$t('recruitList.education')"></el-table-column>
         <el-table-column prop="firstAppointDate" :label="$t('recruitList.firstAppointDate')"></el-table-column>
         <el-table-column prop="secondAppointDate" :label="$t('recruitList.secondAppointDate')"></el-table-column>
         <el-table-column prop="physicalAppointDate" :label="$t('recruitList.physicalAppointDate')"></el-table-column>
+        <el-table-column prop="entryRealDate" :label="$t('recruitList.entryRealDate')"></el-table-column>
+        <el-table-column prop="remarks" :label="$t('recruitList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('expressOrderList.operation')" width="140">
           <template scope="scope">
             <div class="action"> <el-button size="small" @click.native="itemAction(scope.row.id,'修改')"  v-permit="'hr:recruit:edit'">修改</el-button> </div>
@@ -40,18 +75,19 @@
   </div>
 </template>
 <script>
-
+import boolSelect from "components/common/bool-select"
   export default {
+  components:{
+    boolSelect
+  },
     data() {
       return {
         pageLoading: false,
         pageHeight:600,
         page:{},
         formData:{
-        },submitData:{
-          page:0,
-          size:25,
-        },formLabel:{
+        },
+        submitData:{
         },
         formProperty:{},
         formLabelWidth: '120px',
