@@ -2,29 +2,18 @@ package net.myspring.future.modules.crm.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.StoreAllotIme
-import net.myspring.future.modules.crm.dto.StoreAllotDto
 import net.myspring.future.modules.crm.dto.StoreAllotImeDto
-import net.myspring.future.modules.crm.web.query.StoreAllotQuery
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
 
-//import kotlin.collections.HashMap
-
 
 interface StoreAllotImeRepository : BaseRepository<StoreAllotIme, String>, StoreAllotImeRepositoryCustom {
-
-    fun findByProductImeId(productImeId: String): MutableList<StoreAllotIme>
-
 }
 
 interface StoreAllotImeRepositoryCustom{
-
-    fun findPage(pageable: Pageable, storeAllotQuery: StoreAllotQuery): Page<StoreAllotDto>
 
     fun findByStoreAllotId(storeAllotId: String): MutableList<StoreAllotImeDto>
 
@@ -73,10 +62,5 @@ class StoreAllotImeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcT
             AND t1.product_ime_id = ime.id
           """, Collections.singletonMap("storeAllotId", storeAllotId), BeanPropertyRowMapper(StoreAllotImeDto::class.java))
     }
-
-    override fun findPage(pageable: Pageable, storeAllotQuery: StoreAllotQuery): Page<StoreAllotDto> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
 
 }

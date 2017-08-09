@@ -800,7 +800,7 @@ public class AdGoodsOrderService {
     private BigDecimal getYsAmount(List<AdGoodsOrderDetail> adGoodsOrderDetailList) {
         //统计应收运费 全部以A类物料运费为准
         Map<String, BigDecimal> ysMap = Maps.newHashMap();
-        AdPricesystem defaultAdPricesystem = adpricesystemRepository.findByEnabledIsTrueAndName( "A类物料运费");//TODO 默认的ADPriceSystem，应该写成constant或者在companyConfig中配置
+        AdPricesystem defaultAdPricesystem = adpricesystemRepository.findByEnabledIsTrueAndName( "A类物料运费");
         if (defaultAdPricesystem != null) {
             List<AdPricesystemDetail> adPricesystemDetails = adPricesystemDetailRepository.findByEnabledIsTrueAndAdPricesystemId(defaultAdPricesystem.getId());
             for (AdPricesystemDetail adPricesystemDetail : adPricesystemDetails) {

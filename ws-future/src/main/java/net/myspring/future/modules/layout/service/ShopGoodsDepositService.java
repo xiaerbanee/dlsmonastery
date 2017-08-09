@@ -48,9 +48,7 @@ public class ShopGoodsDepositService {
     private ArOtherRecAbleManager arOtherRecAbleManager;
 
     public Page<ShopGoodsDepositDto> findPage(Pageable pageable, ShopGoodsDepositQuery shopGoodsDepositQuery) {
-
         Page<ShopGoodsDepositDto> page = shopGoodsDepositRepository.findPage(pageable, shopGoodsDepositQuery);
-
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -123,7 +121,6 @@ public class ShopGoodsDepositService {
     }
 
     public ShopGoodsDepositDto findDto(String id) {
-
         ShopGoodsDepositDto shopGoodsDepositDto = shopGoodsDepositRepository.findDto(id);
         cacheUtils.initCacheInput(shopGoodsDepositDto);
         return shopGoodsDepositDto;
@@ -150,27 +147,24 @@ public class ShopGoodsDepositService {
         shopGoodsDeposit.setBillDate(LocalDateTime.now());
         shopGoodsDepositRepository.save(shopGoodsDeposit);
 
-        if(StringUtils.isBlank(shopGoodsDeposit.getOutCode())){
-            syn(shopGoodsDeposit);
-        }
+        syn(shopGoodsDeposit);
+
     }
 
-    @Transactional
     private void syn(ShopGoodsDeposit shopGoodsDeposit) {
-        //TODO 同步金蝶
-        if(StringUtils.isNotBlank(shopGoodsDeposit.getOutBillType()) && BillTypeEnum.手工日记账.name().equals(shopGoodsDeposit.getOutBillType())){
+
+        if(BillTypeEnum.手工日记账.name().equals(shopGoodsDeposit.getOutBillType())){
             KingdeeSynReturnDto kingdeeSynReturnDto = cnJournalBankManager.synForShopGoodsDeposit(shopGoodsDeposit,shopGoodsDeposit.getDepartMent());
             shopGoodsDeposit.setCloudSynId(kingdeeSynReturnDto.getId());
             shopGoodsDeposit.setOutCode(kingdeeSynReturnDto.getBillNo());
             shopGoodsDepositRepository.save(shopGoodsDeposit);
         }
-        if(StringUtils.isNotBlank(shopGoodsDeposit.getOutBillType()) && BillTypeEnum.其他应收单.name().equals(shopGoodsDeposit.getOutBillType())){
+        if(BillTypeEnum.其他应收单.name().equals(shopGoodsDeposit.getOutBillType())){
             KingdeeSynReturnDto kingdeeSynReturnDto = arOtherRecAbleManager.synForShopGoodsDeposit(shopGoodsDeposit);
             shopGoodsDeposit.setCloudSynId(kingdeeSynReturnDto.getId());
             shopGoodsDeposit.setOutCode(kingdeeSynReturnDto.getBillNo());
             shopGoodsDepositRepository.save(shopGoodsDeposit);
         }
-
     }
 
 }

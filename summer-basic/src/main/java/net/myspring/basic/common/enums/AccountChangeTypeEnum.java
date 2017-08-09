@@ -15,6 +15,7 @@ public enum AccountChangeTypeEnum {
     银行卡号,
     底薪,
     // 调职调岗
+    功能岗位,
     部门,
     岗位,
     上级,
