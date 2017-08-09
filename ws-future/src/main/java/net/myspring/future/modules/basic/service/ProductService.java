@@ -220,9 +220,9 @@ public class ProductService {
                         break;
                 }
             }
-            productList.add(product);
+            productRepository.save(product);
         }
-        productRepository.save(productList);
+        //productRepository.save(productList);
     }
 
     public ProductQuery getQuery(ProductQuery productQuery){
@@ -244,7 +244,7 @@ public class ProductService {
         Map<String,Product> productMapByOutId = CollectionUtil.extractToMap(products,"outId");
         Map<String,Product> productMapByName = CollectionUtil.extractToMap(products,"name");
         List<String> goodsOrderIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue());
-        List<Product> synProduct = Lists.newArrayList();
+        //List<Product> synProduct = Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(bdMaterials)){
             for(BdMaterial bdMaterial:bdMaterials){
                 Product product = productMapByOutId.get(bdMaterial.getFMasterId());
@@ -277,9 +277,9 @@ public class ProductService {
                 product.setOutGroupId(bdMaterial.getFMaterialGroup().toString());
                 product.setOutGroupName(bdMaterial.getFMaterialGroupName());
                 product.setCode(bdMaterial.getFNumber());
-                synProduct.add(product);
+                productRepository.save(product);
             }
-            productRepository.save(synProduct);
+            //productRepository.save(synProduct);
         }
         return newProductName;
     }

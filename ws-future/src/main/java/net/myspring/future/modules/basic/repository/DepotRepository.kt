@@ -66,6 +66,8 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
 interface DepotRepositoryCustom{
 
+    fun findIdsByChainIds(chainIdList:MutableList<String>): MutableList<String>
+
     fun findShopList(depotShopQuery: DepotQuery): MutableList<DepotDto>
 
     fun findStoreList(depotStoreQuery: DepotQuery): MutableList<DepotDto>
@@ -91,6 +93,17 @@ interface DepotRepositoryCustom{
 }
 
 class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DepotRepositoryCustom{
+
+    override fun findIdsByChainIds(chainIdList:MutableList<String>): MutableList<String>{
+        return namedParameterJdbcTemplate.queryForList("""
+        SELECT DISTINCT t.id
+        FROM
+	      crm_depot t
+        WHERE
+	      t.enabled = 1
+        AND t.chain_id in (:chainIdList)
+        """,Collections.singletonMap("chainIdList",chainIdList), String::class.java)
+    }
 
     override fun findDepotList(depotQuery: DepotQuery): List<DepotDto> {
         val sb = StringBuffer()
