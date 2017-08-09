@@ -20,6 +20,16 @@ export default {
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
   },
+  accountChangeBatchForm:{
+    accountChangeBatchForm:"员工批量调整",
+    exportTemplate:"导入模板",
+    downLoad:"下载",
+    exportData:"导入数据",
+    clickUpload:"点击上传",
+    remarks:"备注",
+    save:"保存",
+    prerequisiteMessage: "必填信息",
+  },
   accountChangeList: {
     accountChangeList: "员工调整",
     id: "编号",

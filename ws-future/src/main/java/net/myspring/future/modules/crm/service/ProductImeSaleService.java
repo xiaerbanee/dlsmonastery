@@ -261,7 +261,7 @@ public class ProductImeSaleService {
                                     depotDto.setId(depot.getId());
                                     depotDto.setName(depot.getName());
                                     productImeForSaleDto.getAccessChainDepotList().add(depotDto);
-                                    if(StringUtils.isBlank(productImeForSaleDto.getSaleShopId())){
+                                    if(StringUtils.isBlank(productImeForSaleDto.getSaleShopId())&&chainDepotList.size() == 1){
                                         productImeForSaleDto.setSaleShopId(depot.getId());
                                     }
                                 }
