@@ -19,6 +19,12 @@ public class DepotReportDto {
     private String employeeId;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "name")
     private String employeeName;
+    @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "accountId")
+    private String employeeAccountId;
+    @CacheInput(inputKey = "accounts",inputInstance = "employeeAccountId",outputInstance = "positionId")
+    private String employeePositionId;
+    @CacheInput(inputKey = "positions",inputInstance = "employeePositionId",outputInstance = "name")
+    private String employeePositionName;
     private String percent;
     private String productTypeName;
     private String chainName;
@@ -30,9 +36,13 @@ public class DepotReportDto {
     private String areaName;
     private String areaType;
     private String townId;
-    @CacheInput(inputKey = "towns",inputInstance = "townId",outputInstance = "cityName")
+    private String districtId;
+    private String districtName;
+    @CacheInput(inputKey = "districts",inputInstance = "districtId",outputInstance = "province")
+    private String provinceName;
+    @CacheInput(inputKey = "districts",inputInstance = "districtId",outputInstance = "city")
     private String cityName;
-    @CacheInput(inputKey = "towns",inputInstance = "townId",outputInstance = "countyName")
+    @CacheInput(inputKey = "districts",inputInstance = "districtId",outputInstance = "county")
     private String countyName;
     @CacheInput(inputKey = "towns",inputInstance = "townId",outputInstance = "townName")
     private String townName;
@@ -226,8 +236,51 @@ public class DepotReportDto {
         this.townName = townName;
     }
 
-    public String getProvinceName(){
-        return cityName+ CharConstant.UNDER_LINE+countyName+CharConstant.UNDER_LINE+townName;
+    public String getEmployeeAccountId() {
+        return employeeAccountId;
     }
 
+    public void setEmployeeAccountId(String employeeAccountId) {
+        this.employeeAccountId = employeeAccountId;
+    }
+
+    public String getEmployeePositionId() {
+        return employeePositionId;
+    }
+
+    public void setEmployeePositionId(String employeePositionId) {
+        this.employeePositionId = employeePositionId;
+    }
+
+    public String getEmployeePositionName() {
+        return employeePositionName;
+    }
+
+    public void setEmployeePositionName(String employeePositionName) {
+        this.employeePositionName = employeePositionName;
+    }
+
+    public String getDistrictId() {
+        return districtId;
+    }
+
+    public void setDistrictId(String districtId) {
+        this.districtId = districtId;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public String getDistrictName() {
+        return provinceName+CharConstant.COMMA+cityName+CharConstant.COMMA+countyName;
+    }
+
+    public void setDistrictName(String districtName) {
+        this.districtName = districtName;
+    }
 }
