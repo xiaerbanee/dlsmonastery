@@ -1,8 +1,10 @@
 package net.myspring.basic.modules.hr.service;
 
+import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.AccountChangeTypeEnum;
 import net.myspring.basic.common.enums.EmployeeStatusEnum;
 import net.myspring.basic.common.utils.CacheUtils;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.AccountChange;
 import net.myspring.basic.modules.hr.domain.Employee;
@@ -12,25 +14,40 @@ import net.myspring.basic.modules.hr.repository.AccountChangeRepository;
 import net.myspring.basic.modules.hr.repository.AccountRepository;
 import net.myspring.basic.modules.hr.repository.EmployeeRepository;
 import net.myspring.basic.modules.hr.repository.PositionRepository;
+import net.myspring.basic.modules.hr.web.form.AccountChangeBatchForm;
 import net.myspring.basic.modules.hr.web.form.AccountChangeForm;
 import net.myspring.basic.modules.hr.web.query.AccountChangeQuery;
 import net.myspring.basic.modules.sys.client.ActivitiClient;
+import net.myspring.basic.modules.sys.client.FolderFileClient;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.basic.modules.sys.repository.OfficeRepository;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.general.modules.sys.dto.FolderFileFeignDto;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelUtils;
+import net.myspring.util.excel.SimpleExcelBook;
+import net.myspring.util.excel.SimpleExcelColumn;
+import net.myspring.util.excel.SimpleExcelSheet;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import static net.myspring.util.excel.ExcelUtils.doRead;
 
 @Service
 @Transactional(readOnly = true)
@@ -52,6 +69,8 @@ public class AccountChangeService {
     private ActivitiClient activitiClient;
     @Autowired
     private OfficeManager officeManager;
+    @Autowired
+    private FolderFileClient folderFileClient;
 
 
     public AccountChange findOne(String id){
@@ -218,5 +237,40 @@ public class AccountChangeService {
     @Transactional
     public void logicDelete(String id){
         accountChangeRepository.logicDelete(id);
+    }
+
+    public SimpleExcelBook findSimpleExcelSheet()  {
+        Workbook workbook = new SXSSFWorkbook(10000);
+        List<SimpleExcelColumn> simpleExcelColumnList= Lists.newArrayList();
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"","登录名"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"","调整项"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"","调整后"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"","备注"));
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("员工调整批量修改导入模版",null,simpleExcelColumnList);
+        ExcelUtils.doWrite(workbook,simpleExcelSheet);
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"员工调整批量修改导入模版"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
+        return simpleExcelBook;
+    }
+
+    @Transactional
+    public void batchSave(String folderFileId){
+        FolderFileFeignDto folderFileFeignDto=folderFileClient.findById(folderFileId);
+        Workbook workbook= ExcelUtils.getWorkbook(new File(folderFileFeignDto.getUploadPath(RequestUtils.getCompanyName())));
+        List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"loginName","登录名"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"type","调整项"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"newValue","调整后"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"remarks","备注"));
+        if(workbook!=null){
+            List<AccountChangeBatchForm> list = doRead(workbook.getSheetAt(0), simpleExcelColumnList, AccountChangeBatchForm.class);
+            List<Account> accountList=accountRepository.findByLoginNameList(CollectionUtil.extractToList(list,"loginName"));
+            Map<String,Account> accountMap=CollectionUtil.extractToMap(accountList,"loginName");
+            for(AccountChangeBatchForm accountChangeBatchForm:list){
+                AccountChangeForm accountChangeForm= BeanUtil.map(accountChangeBatchForm,AccountChangeForm.class);
+                Account account = accountMap.get(accountChangeBatchForm.getLoginName());
+                accountChangeForm.setAccountId(account.getId());
+                save(accountChangeForm);
+            }
+        }
     }
 }

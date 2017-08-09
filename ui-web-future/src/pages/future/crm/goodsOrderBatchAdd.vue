@@ -42,8 +42,7 @@
               extra:{}
             },
             submitDisabled: false,
-              initPromise:{},
-
+            initPromise:{},
             settings: {
               colHeaders: [this.$t('goodsOrderBatchAdd.shopName'), this.$t('goodsOrderBatchAdd.carrierCodes'), this.$t('goodsOrderBatchAdd.receiveAddress'),
                 this.$t('goodsOrderBatchAdd.receiver'),this.$t('goodsOrderBatchAdd.tel'),this.$t('goodsOrderBatchAdd.remarks'),this.$t('goodsOrderBatchAdd.netType'),
@@ -62,7 +61,7 @@
                     if (this.tempShopNames.indexOf(query) >= 0) {
                       process(this.tempShopNames);
                     } else {
-                      let shopNames = new Array();
+                      let shopNames = [];
                       if (query.length >= 2) {
                         axios.get('/api/ws/future/basic/depot/shop?name=' + query).then((response) => {
                           if (response.data.length > 0) {
@@ -109,7 +108,7 @@
                     if (this.tempType.indexOf(query) >= 0) {
                       process(this.tempType);
                     } else {
-                      let types = new Array();
+                      let types = [];
                       if (query.length >= 2) {
                         axios.get('/api/ws/future/basic/product/searchByName?name=' + query).then((response) => {
                           if (response.data.length > 0) {
@@ -144,8 +143,9 @@
           }
         },
         formSubmit(){
+          this.submitDisabled = true;
           let list = table.getData();
-          this.formData.goodsOrderBatchAddDetailFormList = new Array();
+          this.formData.goodsOrderBatchAddDetailFormList = [];
           for(let item in list){
             if(!table.isEmptyRow(item)){
               let row = list[item];
@@ -166,6 +166,7 @@
             }
           axios.post('/api/ws/future/crm/goodsOrder/batchAdd', qs.stringify(util.deleteExtra(this.formData),{allowDots: true})).then((response)=>{
             this.$message(response.data.message);
+            this.submitDisabled = false;
             if(response.data.success) {
               Object.assign(this.$data, this.getData());
               this.initPage();
