@@ -25,7 +25,7 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('demoPhoneTypeList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="name" :label="$t('demoPhoneTypeList.name')" sortable ></el-table-column>
+        <el-table-column prop="name" :label="$t('demoPhoneTypeList.name')" sortable ></el-table-column>
         <el-table-column prop="limitQty" :label="$t('demoPhoneTypeList.limitQty')" sortable></el-table-column>
         <el-table-column prop="productTypeNames" :label="$t('demoPhoneTypeList.productTypeNames')"></el-table-column>
         <el-table-column prop="applyEndDate" :label="$t('demoPhoneTypeList.applyEndDate')" sortable></el-table-column>
@@ -43,7 +43,7 @@
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" :label="$t('demoPhoneTypeList.operation')" width="140">
+        <el-table-column :label="$t('demoPhoneTypeList.operation')" width="140">
           <template scope="scope">
             <el-button size="small" v-permit="'crm:demoPhoneType:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('demoPhoneTypeList.edit')}}</el-button>
             <el-button size="small" v-permit="'crm:demoPhoneType:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('demoPhoneTypeList.delete')}}</el-button>

@@ -30,8 +30,8 @@
             </el-form-item>
             <el-form-item :label="$t('employeeEditForm.sexLabel')" prop="sex">
               <el-radio-group v-model="employeeForm.sex">
-                <el-radio :label="1">{{$t('employeeEditForm.man')}}</el-radio>
-                <el-radio :label="0">{{$t('employeeEditForm.women')}}</el-radio>
+                <el-radio :label="$t('employeeEditForm.man')">{{$t('employeeEditForm.man')}}</el-radio>
+                <el-radio :label="$t('employeeEditForm.women')">{{$t('employeeEditForm.women')}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('employeeEditForm.birthday')" prop="birthday">
@@ -48,11 +48,12 @@
                 <el-option v-for="item in employeeForm.extra.educationList" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('employeeEditForm.image')" prop="image">
-              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/员工管理" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" >
-                <el-button size="small" type="primary">{{$t('employeeEditForm.clickUpload')}}</el-button>
-              </el-upload>
-            </el-form-item>
+            <!--<el-form-item :label="$t('employeeEditForm.image')" prop="image">-->
+              <!--<el-upload action="/api/general/sys/folderFile/upload?uploadPath=/员工管理" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">-->
+                <!--<el-button size="small" type="primary">{{$t('employeeEditForm.clickUpload')}}</el-button>-->
+                <!--<div slot="tip" class="el-upload__tip">{{$t('employeeEditForm.uploadImageSizeFor5000KB')}}</div>-->
+              <!--</el-upload>-->
+            <!--</el-form-item>-->
             <el-form-item>
               <el-button type="primary"  :disabled="submitDisabled" @click="formSubmit()">{{$t('employeeEditForm.save')}}</el-button>
             </el-form-item>
@@ -81,7 +82,6 @@
           }
         };
         return{
-          isInit:false,
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
           employeeForm:{
@@ -104,7 +104,6 @@
         form.validate((valid) => {
           if (valid) {
             this.employeeForm.image = util.getFolderFileIdStr(this.fileList);
-            this.employeeForm.sex=this.employeeForm.sex==1?"男":"女"
             this.employeeForm.accountForm=util.deleteExtra(this.accountForm)
             axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeForm, {allowDots: true})).then((response)=> {
               this.$message("员工"+response.data.message);
@@ -130,9 +129,10 @@
         axios.get('/api/basic/hr/account/getForm').then((response)=>{
           this.accountForm = response.data;
           axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            console.log("employee",response.data);
             util.copyValue(response.data, this.employeeForm);
-            this.employeeForm.sex = response.data.sex == "男" ? 1 : 0;
             axios.get('/api/basic/hr/account/findOne',{params: {id:this.employeeForm.accountId}}).then((response)=>{
+              console.log("account",response.data);
               util.copyValue(response.data, this.accountForm);
             })
             if(this.employeeForm.image !=null) {

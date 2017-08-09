@@ -14,7 +14,7 @@
         <el-button type="primary" @click="preLevel()" v-show="officeId !=formData.officeId&&officeIds.length">上一层</el-button>
         <el-button type="primary" @click="firstLevel()" v-show="officeIds.length">首层</el-button>
         <el-button type="primary" @click="detail()"v-show="nextIsShop&&'区域'==formData.sumType">明细</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-if="!nextIsShop&&'区域'==formData.sumType || '型号'==formData.sumType">过滤</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-if="!nextIsShop&&'区域'==formData.sumType || '型号'==formData.sumType">过滤</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
