@@ -157,8 +157,9 @@ public class EmployeeQuery extends BaseQuery {
     public LocalDate getRegularDateEnd() {
         if(StringUtils.isNotBlank(regularDate)) {
             return LocalDateUtils.parse(regularDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        }else {
+            return null;
         }
-        return getRegularDateEnd();
     }
 
     public String getPositionId() {
