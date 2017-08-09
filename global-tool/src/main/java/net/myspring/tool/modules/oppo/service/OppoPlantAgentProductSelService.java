@@ -1,14 +1,17 @@
 package net.myspring.tool.modules.oppo.service;
 
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
+import net.myspring.tool.common.utils.CacheUtils;
 import net.myspring.tool.modules.future.dto.ProductDto;
 import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
 import net.myspring.tool.modules.oppo.dto.OppoPlantAgentProductSelDto;
 import net.myspring.tool.modules.oppo.repository.OppoPlantAgentProductSelRepository;
 import net.myspring.tool.modules.oppo.web.query.OppoPlantAgentProductSelQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +31,20 @@ public class OppoPlantAgentProductSelService {
     private RedisTemplate redisTemplate;
     @Autowired
     private OppoPlantAgentProductSelRepository oppoPlantAgentProductSelRepository;
+    @Autowired
+    private CacheUtils cacheUtils;
 
-
-    public List<OppoPlantAgentProductSelDto> findAll(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
+    public List<OppoPlantAgentProductSelDto> findAll(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery,List<ProductDto> productDtoList){
+        List<String> productIdList = Lists.newArrayList();
+        if (CollectionUtil.isNotEmpty(productDtoList)){
+            for (ProductDto productDto : productDtoList){
+                productIdList.add(productDto.getId());
+            }
+        }
+        oppoPlantAgentProductSelQuery.setProductIdList(productIdList);
         oppoPlantAgentProductSelQuery.setItemNumberList(StringUtils.getSplitList(oppoPlantAgentProductSelQuery.getItemNumberStr(), CharConstant.ENTER));
         List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelRepository.findAll(oppoPlantAgentProductSelQuery);
+        cacheUtils.initCacheInput(oppoPlantAgentProductSelDtoList);
         return oppoPlantAgentProductSelDtoList;
     }
 
