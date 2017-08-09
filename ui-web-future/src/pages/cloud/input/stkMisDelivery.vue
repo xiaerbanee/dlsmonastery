@@ -94,7 +94,7 @@
               if(response.data.success){
                 this.$message(response.data.message);
                 this.initPage();
-                Object.assign(this.$data,this.getData());
+                this.formData = {};
               }else{
                 this.$alert(response.data.message);
               }
