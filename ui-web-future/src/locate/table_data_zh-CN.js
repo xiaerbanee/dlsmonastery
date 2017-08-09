@@ -146,6 +146,7 @@ export default {
       voucherDetail:"凭证详细",
       kingdeeSynList:'金蝶核对',
       kingdeeSynDetail:'金蝶核对详细',
+      kingdeeSynForNoPushList:'出库未下推单据',
       404: "404",
       companyConfigForm: "参数设置编辑",
       companyConfigList: "参数设置",
