@@ -175,6 +175,10 @@ public class AccountChangeService {
                 accountChange.setOldValue(LocalDateUtils.format(employee.getEntryDate()));
             }
             accountChange.setNewLabel(accountChangeForm.getNewValue());
+        }else if(accountChange.getType().equals(AccountChangeTypeEnum.功能岗位.name())){
+            accountChange.setOldLabel(LocalDateUtils.format(employee.getEntryDate()));
+            accountChange.setOldValue(LocalDateUtils.format(employee.getEntryDate()));
+            accountChange.setNewLabel(accountChangeForm.getNewValue());
         }
         accountChange.setProcessStatus("省公司人事审核");
         accountChangeRepository.save(accountChange);
