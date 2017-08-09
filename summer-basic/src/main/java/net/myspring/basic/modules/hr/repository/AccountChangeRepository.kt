@@ -88,6 +88,7 @@ class AccountChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
         var sb = StringBuilder();
         sb.append( """
             SELECT
+                t2.position_ids,
                 t2.id AS 'accountId',
                 t2.office_id,
                 t2.leader_id,

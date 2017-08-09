@@ -116,7 +116,7 @@ public class ProductImeController {
         reportQuery.getExtra().put("outTypeList",ProductImeStockReportOutTypeEnum.getList());
         reportQuery.getExtra().put("boolMap",BoolEnum.getMap());
         reportQuery.setSumType(ProductImeStockReportSumTypeEnum.区域.name());
-        CompanyConfigCacheDto  companyConfigCacheDto = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.PRODUCT_NAME.name());
+        CompanyConfigCacheDto  companyConfigCacheDto = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.COMPANY_NAME.name());
         if(companyConfigCacheDto != null && "WZOPPO".equals(companyConfigCacheDto.getValue())) {
             reportQuery.setOutType(ProductImeStockReportOutTypeEnum.核销.name());
         }else{

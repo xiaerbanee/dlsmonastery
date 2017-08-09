@@ -2,10 +2,11 @@ package net.myspring.basic.modules.hr.web.form;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.hr.domain.AccountChange;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.form.BaseForm;
-import net.myspring.basic.modules.hr.domain.Employee;
-import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -39,6 +40,37 @@ public class AccountChangeForm extends BaseForm<AccountChange> {
     private String positionName;
     @CacheInput(inputKey = "accounts",inputInstance = "leaderId",outputInstance = "loginName")
     private String leaderName;
+    private String positionIds;
+    private List<String> positionIdList=Lists.newArrayList();
+    @CacheInput(inputKey = "positions",inputInstance = "positionIdList",outputInstance = "name")
+    private List<String> positionNameList=Lists.newArrayList();
+
+    public String getPositionIds() {
+        return positionIds;
+    }
+
+    public void setPositionIds(String positionIds) {
+        this.positionIds = positionIds;
+    }
+
+    public List<String> getPositionIdList() {
+        if(CollectionUtil.isEmpty(positionIdList)&& StringUtils.isNotBlank(positionIds)){
+            this.positionIdList=StringUtils.getSplitList(positionIds, CharConstant.COMMA);
+        }
+        return positionIdList;
+    }
+
+    public void setPositionIdList(List<String> positionIdList) {
+        this.positionIdList = positionIdList;
+    }
+
+    public List<String> getPositionNameList() {
+        return positionNameList;
+    }
+
+    public void setPositionNameList(List<String> positionNameList) {
+        this.positionNameList = positionNameList;
+    }
 
     public String getMobilePhone() {
         return mobilePhone;

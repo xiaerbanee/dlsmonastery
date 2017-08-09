@@ -164,7 +164,7 @@ public class DepotShopController {
         reportQuery.getExtra().put("townTypeList",TownTypeEnum.getList());
         reportQuery.getExtra().put("outTypeList", OutTypeEnum.getList());
         reportQuery.getExtra().put("boolMap", BoolEnum.getMap());
-        CompanyConfigCacheDto companyConfigCacheDto = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.PRODUCT_NAME.name());
+        CompanyConfigCacheDto companyConfigCacheDto = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.COMPANY_NAME.name());
         if(companyConfigCacheDto != null && "WZOPPO".equals(companyConfigCacheDto.getValue())) {
             reportQuery.setOutType(ProductImeStockReportOutTypeEnum.核销.name());
         }else{

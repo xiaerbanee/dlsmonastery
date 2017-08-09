@@ -201,12 +201,14 @@ public class AccountChangeService {
             accountChange.setNewLabel(accountChangeForm.getNewValue());
         }else if(accountChange.getType().equals(AccountChangeTypeEnum.功能岗位.name())){
             List<String> positionIdList=StringUtils.getSplitList(account.getPositionIds(), CharConstant.COMMA);
-            List<Position> positionList=positionRepository.findByIdInAndEnabledIsTrue(positionIdList);
+            List<Position> positionList=positionRepository.findByIdInOrNameIn(positionIdList);
             accountChange.setOldValue(account.getPositionIds());
-            accountChange.setOldLabel(StringUtils.join(CollectionUtil.extractToList(positionList,"name")));
-            List<String> positionIds=StringUtils.getSplitList(accountChangeForm.getNewValue(), CharConstant.COMMA);
-            List<Position> positions=positionRepository.findByIdInAndEnabledIsTrue(positionIds);
-            accountChange.setNewLabel(StringUtils.join(CollectionUtil.extractToList(positions,"name")));
+            accountChange.setOldLabel(StringUtils.join(CollectionUtil.extractToList(positionList,"name"),CharConstant.COMMA));
+
+            List<String> list=StringUtils.getSplitList(accountChangeForm.getNewValue(), CharConstant.COMMA);
+            List<Position> positions=positionRepository.findByIdInOrNameIn(list);
+            accountChange.setNewValue(StringUtils.join(CollectionUtil.extractToList(positions,"id"),CharConstant.COMMA));
+            accountChange.setNewLabel(StringUtils.join(CollectionUtil.extractToList(positions,"name"),CharConstant.COMMA));
         }
         accountChange.setProcessStatus("省公司人事审核");
         accountChangeRepository.save(accountChange);
