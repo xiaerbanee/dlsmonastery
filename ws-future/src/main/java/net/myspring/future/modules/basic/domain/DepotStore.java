@@ -4,7 +4,7 @@ import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Created by liuj on 2017/5/12.
@@ -21,11 +21,11 @@ public class DepotStore extends DataEntity<DepotStore> {
     // 财务编号
     private String outId;
     //财务分组
-    private Long outGroupId;
+    private String  outGroupId;
     //财务分组名称
     private String outGroupName;
     //财务同步日期
-    private LocalDate outDate;
+    private LocalDateTime outDate;
     private String outCode;
     private String jointLevel;
 
@@ -77,14 +77,6 @@ public class DepotStore extends DataEntity<DepotStore> {
         this.outId = outId;
     }
 
-    public Long getOutGroupId() {
-        return outGroupId;
-    }
-
-    public void setOutGroupId(Long outGroupId) {
-        this.outGroupId = outGroupId;
-    }
-
     public String getOutGroupName() {
         return outGroupName;
     }
@@ -93,11 +85,19 @@ public class DepotStore extends DataEntity<DepotStore> {
         this.outGroupName = outGroupName;
     }
 
-    public LocalDate getOutDate() {
+    public String getOutGroupId() {
+        return outGroupId;
+    }
+
+    public void setOutGroupId(String outGroupId) {
+        this.outGroupId = outGroupId;
+    }
+
+    public LocalDateTime getOutDate() {
         return outDate;
     }
 
-    public void setOutDate(LocalDate outDate) {
+    public void setOutDate(LocalDateTime outDate) {
         this.outDate = outDate;
     }
 }

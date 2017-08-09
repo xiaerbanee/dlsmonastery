@@ -43,6 +43,7 @@
             if (valid) {
               axios.post('/api/global/cloud/sys/accountKingdeeBook/save',qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
+                Object.assign(this.$data, this.getData());
                 this.submitDisabled = false;
               }).catch(function () {
                 this.submitDisabled = false;
