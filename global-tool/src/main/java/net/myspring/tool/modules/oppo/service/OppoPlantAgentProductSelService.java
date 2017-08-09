@@ -2,15 +2,12 @@ package net.myspring.tool.modules.oppo.service;
 
 
 import com.google.common.collect.Maps;
-import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.modules.future.dto.ProductDto;
 import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
 import net.myspring.tool.modules.oppo.dto.OppoPlantAgentProductSelDto;
 import net.myspring.tool.modules.oppo.repository.OppoPlantAgentProductSelRepository;
-import net.myspring.tool.modules.oppo.web.form.OppoPlantAgentProductSelForm;
 import net.myspring.tool.modules.oppo.web.query.OppoPlantAgentProductSelQuery;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -37,12 +34,6 @@ public class OppoPlantAgentProductSelService {
         oppoPlantAgentProductSelQuery.setItemNumberList(StringUtils.getSplitList(oppoPlantAgentProductSelQuery.getItemNumberStr(), CharConstant.ENTER));
         List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelRepository.findAll(oppoPlantAgentProductSelQuery);
         return oppoPlantAgentProductSelDtoList;
-    }
-
-    public OppoPlantAgentProductSelForm getForm(OppoPlantAgentProductSelForm oppoPlantAgentProductSelForm){
-        String lxAgentCodes = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name()).getValue();
-        oppoPlantAgentProductSelForm.setLx(StringUtils.isNotBlank(lxAgentCodes));
-        return oppoPlantAgentProductSelForm;
     }
 
     @Transactional
