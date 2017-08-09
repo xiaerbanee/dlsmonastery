@@ -69,14 +69,6 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
         SELECT t
         FROM  #{#entityName} t
         WHERE t.enabled=1
-        and t.loginName in ?1
-    """)
-    fun findByLoginNameList(loginNames: MutableList<String>): MutableList<Account>
-
-    @Query("""
-        SELECT t
-        FROM  #{#entityName} t
-        WHERE t.enabled=1
         and t.loginName like concat('%',?1,'%')
     """)
     fun findByLoginNameLike(loginName: String): MutableList<Account>
@@ -94,9 +86,28 @@ interface AccountRepositoryCustom{
     fun findDto(id:String):AccountDto
 
     fun findDtoByIdList(idList:MutableList<String>):MutableList<AccountDto>
+
+    fun findByLoginNameList(loginNames: MutableList<String>,officeIds: MutableList<String>): MutableList<Account>
 }
 
 class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): AccountRepositoryCustom{
+    override fun findByLoginNameList(loginNames: MutableList<String>, officeIds: MutableList<String>): MutableList<Account> {
+        var sb = StringBuilder()
+        sb.append("""
+            SELECT t1.*
+            FROM  hr_account t1
+            WHERE t1.enabled=1
+            and t1.login_name in (:loginNames)
+        """)
+        if(CollectionUtil.isNotEmpty(officeIds)){
+            sb.append(" and t1.office_id in (:officeIds) ")
+        }
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("loginNames", loginNames)
+        paramMap.put("officeIds", officeIds)
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(Account::class.java))
+    }
+
     override fun findDtoByIdList(idList: MutableList<String>): MutableList<AccountDto> {
         var sb = StringBuilder()
         sb.append("""

@@ -227,7 +227,7 @@ public class AccountService {
     }
 
     public List<AccountDto> findByLoginNameList(List<String> loginNameList){
-        List<Account> accountList=accountRepository.findByLoginNameList(loginNameList);
+        List<Account> accountList=accountRepository.findByLoginNameList(loginNameList,RequestUtils.getOfficeIdList());
         List<AccountDto> accountDtoList=BeanUtil.map(accountList,AccountDto.class);
         return accountDtoList;
     }

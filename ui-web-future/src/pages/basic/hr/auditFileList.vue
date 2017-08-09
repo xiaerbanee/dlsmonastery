@@ -16,7 +16,7 @@
               </el-form-item>
               <el-form-item :label="$t('auditFileList.auditType')">
                 <el-select v-model="formData.auditType" filterable clearable :placeholder="$t('auditFileList.inputKey')">
-                  <el-option v-for="item in auditTypes" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in auditTypes" :key="item.id" :label="item.value" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('auditFileForm.processTypeName')" prop="processTypeName">
@@ -116,8 +116,8 @@
         initPromise:{},
         searchText:'',
         auditTypes:[
-          this.$t('auditFileList.all'),
-          this.$t('auditFileList.waitAudit')
+          {id:"1",value:this.$t('auditFileList.all')},
+          {id:"0",value:this.$t('auditFileList.waitAudit')}
         ],
         formLabelWidth: '25%',
         formVisible: false,

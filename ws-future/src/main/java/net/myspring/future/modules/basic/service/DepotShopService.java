@@ -92,9 +92,6 @@ public class DepotShopService {
             depotShopQuery.setChildOfficeIds(childOffices);
         }
         depotShopQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
-        if (StringUtils.isNotBlank(depotShopQuery.getOfficeId())) {
-            depotShopQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(depotShopQuery.getOfficeId()));
-        }
         Page<DepotShopDto> page = depotShopRepository.findPage(pageable, depotShopQuery);
         if (CollectionUtil.isNotEmpty(page.getContent())) {
             List<ShopDeposit> scbzjList = shopDepositRepository.findByTypeAndShopIdIn(ShopDepositTypeEnum.市场保证金.name(), CollectionUtil.extractToList(page.getContent(), "depotId"));
@@ -189,6 +186,11 @@ public class DepotShopService {
 
     public SimpleExcelBook findSimpleExcelSheet(DepotShopQuery depotShopQuery)  {
         Workbook workbook = new SXSSFWorkbook(10000);
+        if(StringUtils.isNotBlank(depotShopQuery.getOfficeId())){
+            List<String> childOffices = officeClient.getChildOfficeIds(depotShopQuery.getOfficeId());
+            depotShopQuery.setChildOfficeIds(childOffices);
+        }
+        depotShopQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         List<DepotShopDto> depotShopDtoList = depotShopRepository.findFilter(depotShopQuery);
         cacheUtils.initCacheInput(depotShopDtoList);
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();

@@ -65,7 +65,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
     @Query("""
         SELECT t
         FROM  #{#entityName} t
-        where t.parentIds like  concat('%',?1,'%')
+        where t.parentIds like  concat('%,',?1,',%')
         and t.enabled =1
      """)
     fun findByParentIdsLike(parentId: String): MutableList<Office>
