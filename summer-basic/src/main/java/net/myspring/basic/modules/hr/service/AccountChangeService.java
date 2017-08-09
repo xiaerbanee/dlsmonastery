@@ -266,7 +266,7 @@ public class AccountChangeService {
         StringBuilder sb=new StringBuilder();
         if(workbook!=null){
             List<AccountChangeBatchForm> list = doRead(workbook.getSheetAt(0), simpleExcelColumnList, AccountChangeBatchForm.class);
-            List<Account> accountList=accountRepository.findByLoginNameList(CollectionUtil.extractToList(list,"loginName"));
+            List<Account> accountList=accountRepository.findByLoginNameList(CollectionUtil.extractToList(list,"loginName"),RequestUtils.getOfficeIdList());
             Map<String,Account> accountMap=CollectionUtil.extractToMap(accountList,"loginName");
             List<String> typeList=AccountChangeTypeEnum.getList();
             for(AccountChangeBatchForm accountChangeBatchForm:list){
@@ -274,7 +274,7 @@ public class AccountChangeService {
                     sb.append(accountChangeBatchForm.getLoginName()+"调整项不正确\n");
                 }
                 if(!accountMap.containsKey(accountChangeBatchForm.getLoginName())){
-                    sb.append(accountChangeBatchForm.getLoginName()+"不存在\n");
+                    sb.append(accountChangeBatchForm.getLoginName()+"不存在或者不在你的管辖范围\n");
                 }
             }
             if(StringUtils.isBlank(sb.toString())){
