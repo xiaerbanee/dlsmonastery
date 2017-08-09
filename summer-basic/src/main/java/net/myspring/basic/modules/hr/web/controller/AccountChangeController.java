@@ -93,7 +93,6 @@ public class AccountChangeController {
 
     @RequestMapping(value = "import", method = RequestMethod.POST)
     public RestResponse importFile(@RequestParam(value = "folderFileId", required = true) String folderFileId) {
-        accountChangeService.batchSave(folderFileId);
-        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        return accountChangeService.batchSave(folderFileId);
     }
 }

@@ -23,6 +23,7 @@ import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.basic.modules.sys.repository.OfficeRepository;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.response.RestResponse;
 import net.myspring.general.modules.sys.dto.FolderFileFeignDto;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
@@ -253,7 +254,8 @@ public class AccountChangeService {
     }
 
     @Transactional
-    public void batchSave(String folderFileId){
+    public RestResponse batchSave(String folderFileId){
+        RestResponse restResponse=new RestResponse("保存成功",null);
         FolderFileFeignDto folderFileFeignDto=folderFileClient.findById(folderFileId);
         Workbook workbook= ExcelUtils.getWorkbook(new File(folderFileFeignDto.getUploadPath(RequestUtils.getCompanyName())));
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
@@ -261,16 +263,33 @@ public class AccountChangeService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"type","调整项"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"newValue","调整后"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"remarks","备注"));
+        StringBuilder sb=new StringBuilder();
         if(workbook!=null){
             List<AccountChangeBatchForm> list = doRead(workbook.getSheetAt(0), simpleExcelColumnList, AccountChangeBatchForm.class);
             List<Account> accountList=accountRepository.findByLoginNameList(CollectionUtil.extractToList(list,"loginName"));
             Map<String,Account> accountMap=CollectionUtil.extractToMap(accountList,"loginName");
+            List<String> typeList=AccountChangeTypeEnum.getList();
             for(AccountChangeBatchForm accountChangeBatchForm:list){
-                AccountChangeForm accountChangeForm= BeanUtil.map(accountChangeBatchForm,AccountChangeForm.class);
-                Account account = accountMap.get(accountChangeBatchForm.getLoginName());
-                accountChangeForm.setAccountId(account.getId());
-                save(accountChangeForm);
+                if(!typeList.contains(accountChangeBatchForm.getType())){
+                    sb.append(accountChangeBatchForm.getLoginName()+"调整项不正确\n");
+                }
+                if(!accountMap.containsKey(accountChangeBatchForm.getLoginName())){
+                    sb.append(accountChangeBatchForm.getLoginName()+"不存在\n");
+                }
             }
+            if(StringUtils.isBlank(sb.toString())){
+                for(AccountChangeBatchForm accountChangeBatchForm:list){
+                    AccountChangeForm accountChangeForm= BeanUtil.map(accountChangeBatchForm,AccountChangeForm.class);
+                    Account account = accountMap.get(accountChangeBatchForm.getLoginName());
+                    accountChangeForm.setAccountId(account.getId());
+                    save(accountChangeForm);
+                }
+            }else {
+                restResponse=new RestResponse(sb.toString(),null,false);
+            }
+        }else {
+            restResponse=new RestResponse("保存失败,导入Excel不能为空",null,false);
         }
+        return restResponse;
     }
 }
