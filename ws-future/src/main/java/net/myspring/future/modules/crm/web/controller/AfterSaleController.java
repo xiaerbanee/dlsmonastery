@@ -50,7 +50,7 @@ public class AfterSaleController {
     private AfterSaleRepository afterSaleRepository;
 
     @RequestMapping(method = RequestMethod.GET)
-    public Page<AfterSaleDto> list(Pageable pageable,AfterSaleQuery afterSaleQuery) {
+    public Page<AfterSaleDto> list(Pageable pageable,AfterSaleQuery afterSaleQuery) {/**/
         Page<AfterSaleDto> page = afterSaleService.findPage(pageable, afterSaleQuery);
         return page;
     }
