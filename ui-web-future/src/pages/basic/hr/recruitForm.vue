@@ -8,6 +8,7 @@
         <el-step :title="$t('recruitForm.retest')"></el-step>
         <el-step :title="$t('recruitForm.auditStatus')"></el-step>
         <el-step :title="$t('recruitForm.entryJob')"></el-step>
+        <el-step :title="$t('recruitForm.anaphaseTracking')"></el-step>
         <el-button  @click="next">{{$t('recruitForm.next')}}</el-button>
       </el-steps>
     </el-row>
@@ -35,18 +36,18 @@
             <position-select v-model="inputForm.applyPositionId"></position-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.applyFrom')" prop="applyFrom">
-            <el-select v-model="inputForm.extra.applyFrom">
+            <el-select v-model="inputForm.applyFrom">
               <el-option v-for="item in options" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item :label="$t('recruitForm.contactById')" prop="contactById">
-            <account-select  v-model="inputForm.contactById"></account-select>
+          <el-form-item :label="$t('recruitForm.contactById')" prop="registerBy">
+            <account-select  v-model="inputForm.registerBy"></account-select>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.firstAppointDate')" prop="firstAppointDate">
             <date-time-picker v-model="inputForm.firstAppointDate"></date-time-picker>
           </el-form-item>
-          <el-form-item :label="$t('recruitForm.remarks')" prop="remarks">
-            <el-input v-model="inputForm.remarks"></el-input>
+          <el-form-item :label="$t('recruitForm.remarks')" prop="registerRemarks">
+            <el-input v-model="inputForm.registerRemarks"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('recruitForm.save')}}</el-button>
@@ -57,8 +58,16 @@
       <!--初始开始-->
       <div style="margin-top: 20px"  v-if="active==2">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+          <el-row :gutter="20">
+            <el-col :span="10">
+              <el-form-item  :label="$t('recruitForm.firstAppointment')" prop="firstAppointment">
+                <bool-select v-model="inputForm.firstAppointment"></bool-select>
+              </el-form-item>
           <el-form-item :label="$t('recruitForm.firstRealDate')" prop="firstRealDate">
             <date-time-picker v-model="inputForm.firstRealDate"></date-time-picker>
+          </el-form-item>
+          <el-form-item :label="$t('recruitForm.firstAppointBy')"  prop="firstAppointBy">
+            <account-select v-model="inputForm.firstAppointBy"></account-select>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.workArea')" prop="workArea">
             <el-input v-model="inputForm.workArea"></el-input>
@@ -74,8 +83,10 @@
           <el-form-item :label="$t('recruitForm.birthday')" prop="birthday">
             <date-picker v-model="inputForm.birthday" ></date-picker>
           </el-form-item>
-          <el-form-item :label="$t('recruitForm.originSelectId')" prop="originSelectId">
-            <district-select v-model="inputForm.originSelectId"></district-select>
+            </el-col>
+            <el-col :span="10">
+          <el-form-item :label="$t('recruitForm.originId')" prop="originId">
+            <district-select v-model="inputForm.originId"></district-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.school')" prop="school">
             <el-input v-model="inputForm.school"></el-input>
@@ -88,32 +99,34 @@
               <el-option v-for="item in formProperty.educationsList"  :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item :label="$t('recruitForm.firstBy')"  prop="firstBy">
-            <account-select v-model="inputForm.firstBy"></account-select>
-          </el-form-item>
-          <el-form-item :label="$t('recruitForm.firstPoint')" prop="firstPoint">
-            <el-input v-model="inputForm.firstPoint"></el-input>
-          </el-form-item>
           <el-form-item :label="$t('recruitForm.firstComment')" prop="firstComment">
             <el-input v-model="inputForm.firstComment"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('recruitForm.secondAppointDate')" prop="secondAppointDate">
-            <date-time-picker v-model="inputForm.secondAppointDate"></date-time-picker>
+          <el-form-item :label="$t('recruitForm.experienceCompany')" prop="firstComment">
+            <el-input v-model="inputForm.experienceCompany"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('recruitForm.remarks')" prop="firstAppointRemarks">
+            <el-input v-model="inputForm.firstAppointRemarks"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('recruitForm.save')}}</el-button>
           </el-form-item>
+            </el-col>
+          </el-row>
         </el-form>
       </div>
       <!--初试结束-->
       <!--复试开始-->
       <div  style="margin-top: 20px"  v-if="active==3">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+          <el-form-item  :label="$t('recruitForm.secondAppointment')" prop="secondAppointment">
+            <bool-select v-model="inputForm.secondAppointment"></bool-select>
+          </el-form-item>
           <el-form-item  :label="$t('recruitForm.secondRealDate')" prop="secondRealDate">
             <date-time-picker v-model="inputForm.secondRealDate"></date-time-picker>
           </el-form-item>
-          <el-form-item  :label="$t('recruitForm.secondBy')" prop="secondBy">
-            <account-select v-model="inputForm.secondBy"></account-select>
+          <el-form-item  :label="$t('recruitForm.secondAppointBy')" prop="secondAppointBy">
+            <account-select v-model="inputForm.secondAppointBy"></account-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.secondComment')"  prop="secondComment">
             <el-input v-model="inputForm.secondComment"></el-input>
@@ -124,7 +137,7 @@
               <el-radio :label="0">{{$t('recruitForm.false')}}</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item :label="$t('recruitForm.storageRemarks')" prop="storageRemarks">
+          <el-form-item :label="$t('recruitForm.remarks')" prop="storageRemarks">
             <el-input v-model="inputForm.storageRemarks"></el-input>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.physicalAppointDate')" prop="physicalAppointDate">
@@ -139,17 +152,14 @@
       <!--资审开始-->
       <div  style="margin-top: 20px"  v-if="active==4">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-          <el-form-item :label="$t('recruitForm.physicalRealDate')" prop="physicalRealDate">
-            <date-time-picker v-model="inputForm.physicalRealDate"></date-time-picker>
+          <el-form-item :label="$t('recruitForm.auditRealDate')" prop="auditAppointDate">
+            <date-picker v-model="inputForm.auditRealDate"></date-picker>
           </el-form-item>
-          <el-form-item :label="$t('recruitForm.auditAppointDate')" prop="auditAppointDate">
-            <date-time-picker v-model="inputForm.auditAppointDate"></date-time-picker>
+          <el-form-item :label="$t('recruitForm.isExamination ')" prop="isExamination">
+            <bool-select v-model="inputForm.isExamination"></bool-select>
           </el-form-item>
-          <el-form-item  :label="$t('recruitForm.auditRealDate')" prop="auditRealDate">
-            <date-time-picker v-model="inputForm.auditRealDate"></date-time-picker>
-          </el-form-item>
-          <el-form-item :label="$t('recruitForm.entryAppointDate')" prop="entryAppointDate">
-            <date-time-picker v-model="inputForm.entryAppointDate"></date-time-picker>
+          <el-form-item :label="$t('recruitForm.remarks')" prop="auditAppointRemarks">
+            <el-input v-model="inputForm.auditAppointRemarks"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('recruitForm.save')}}</el-button>
@@ -163,8 +173,11 @@
           <el-form-item :label="$t('recruitForm.entryRealDate')" prop="entryRealDate">
             <date-time-picker v-model="inputForm.entryRealDate"></date-time-picker>
           </el-form-item>
-          <el-form-item :label="$t('recruitForm.idCard')"  prop="idcard">
-            <el-input v-model="inputForm.idcard"></el-input>
+          <el-form-item :label="$t('recruitForm.isPosition')"  prop="isPosition">
+            <bool-select v-model="inputForm.isPosition"></bool-select>
+          </el-form-item>
+          <el-form-item :label="$t('recruitForm.remarks')" prop="entryAppointRemarks">
+            <el-input v-model="inputForm.entryAppointRemarks"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('recruitForm.save')}}</el-button>
@@ -172,6 +185,21 @@
         </el-form>
       </div>
       <!--资审结束-->
+      <!--后期跟踪开始-->
+      <div style="margin-top: 20px" v-if="active==6">
+        <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+          <el-form-item :label="$t('recruitForm.twoMonth')"  prop="twoMonth" >
+            <bool-select v-model="inputForm.twoMonth"></bool-select>
+          </el-form-item>
+          <el-form-item :label="$t('recruitForm.remarks')"  prop="leaveJobRemarks" >
+            <el-input v-model="inputForm.leaveJobRemarks"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('recruitForm.save')}}</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <!--后期跟踪结束-->
     </el-row>
   </div>
 </template>
@@ -180,13 +208,14 @@
   import accountSelect from 'components/basic/account-select'
   import districtSelect from 'components/general/district-select'
   import positionSelect from 'components/basic/position-select'
-
+  import boolSelect from 'components/common/bool-select'
   export default{
       components:{
           dateTimePicker,
           accountSelect,
           districtSelect,
-          positionSelect
+          positionSelect,
+          boolSelect
       },
       data(){
         return this.getData();
@@ -203,7 +232,7 @@
             }
           }
           return{
-            options:[],
+            options:["智联","人才","51job","58同城","boss直聘","地宝网","店长直聘","公众号","海投网","拉勾网","中华英才网","应届生网","邮箱","校园","推荐","搜索"],
             isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
@@ -216,46 +245,6 @@
             marriageStatus:[this.$t('recruitForm.unmarriedAndChildless'),this.$t('recruitForm.marriedChildless'),this.$t('recruitForm.marriedAlready'),this.$t('recruitForm.other')],
             message:'',
             inputForm:{
-              id:this.$route.query.id,
-              contactDate:'',
-              name:'',
-              sex:'',
-              mobilePhone:'',
-              applyPositionName:'',
-              applyFrom:'',
-              firstAppointDate:'',
-              contactById:'',
-              remarks:'',
-
-              firstRealDate:'',
-              workArea:'',
-              workCategory:'',
-              marriageStatus:'',
-              birthday:'',
-              originSelectId:'',
-              school:'',
-              major:'',
-              education:'',
-              firstBy:'',
-              firstPoint:'',
-              firstComment:'',
-              secondAppointDate:'',
-
-              secondRealDate:'',
-              secondBy:'',
-              secondComment:'',
-              toStorage:'',
-              storageRemarks:'',
-              physicalAppointDate:'',
-
-              physicalRealDate:'',
-              auditAppointDate:'',
-              auditRealDate:'',
-              entryAppointDate:'',
-
-              entryRealDate:'',
-              idcard:''
-
             },
             rules: {
               mobilePhone:{request:true,validator:checkPhone,trigger:'blur'}
@@ -283,7 +272,7 @@
           })
         },next() {
           this.active = this.active+1;
-          if(this.active ==6){
+          if(this.active ==7){
             this.active = 1;
           }
         },
