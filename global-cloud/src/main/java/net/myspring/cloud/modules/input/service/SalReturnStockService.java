@@ -6,6 +6,7 @@ import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.enums.SalReturnStockBillTypeEnum;
+import net.myspring.cloud.modules.input.repository.SalReturnStockRepository;
 import net.myspring.cloud.modules.kingdee.repository.BdStockRepository;
 import net.myspring.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
@@ -58,6 +59,8 @@ public class SalReturnStockService {
     private BdMaterialRepository bdMaterialRepository;
     @Autowired
     private BdStockRepository bdStockRepository;
+    @Autowired
+    private SalReturnStockRepository salReturnStockRepository;
 
     private KingdeeSynExtendDto save(SalReturnStockDto salReturnStockDto, KingdeeBook kingdeeBook) {
         KingdeeSynExtendDto kingdeeSynExtendDto = new KingdeeSynExtendDto(
@@ -190,6 +193,10 @@ public class SalReturnStockService {
         map.put("stockList",bdStockRepository.findAll());
         salStockForm.setExtra(map);
         return salStockForm;
+    }
+
+    public List<String> findNoPushDown(){
+        return salReturnStockRepository.findNoPushDown();
     }
 
 }

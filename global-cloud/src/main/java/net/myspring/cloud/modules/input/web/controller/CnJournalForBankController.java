@@ -1,7 +1,6 @@
 package net.myspring.cloud.modules.input.web.controller;
 
 import net.myspring.cloud.common.utils.RequestUtils;
-import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
 import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.service.CnJournalForBankService;
@@ -45,8 +44,12 @@ public class CnJournalForBankController {
     @RequestMapping(value = "form")
     public CnJournalForBankForm form () {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
-        return cnJournalForBankService.getForm(kingdeeBook);
+        if (accountKingdeeBook != null) {
+            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
+            return cnJournalForBankService.getForm(kingdeeBook);
+        }else {
+            throw new ServiceException("您没有金蝶账号，不能开单");
+        }
     }
 
     @RequestMapping(value = "save")
@@ -54,8 +57,8 @@ public class CnJournalForBankController {
         try {
             RestResponse restResponse = new RestResponse("开单失败",null);
             AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
             if (accountKingdeeBook != null) {
+                KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
                 KingdeeSynDto kingdeeSynDto = cnJournalForBankService.save(cnJournalForBankForm, kingdeeBook, accountKingdeeBook);
                 kingdeeSynService.save(BeanUtil.map(kingdeeSynDto, KingdeeSyn.class));
                 if (kingdeeSynDto.getSuccess()) {
@@ -73,9 +76,9 @@ public class CnJournalForBankController {
     @RequestMapping(value = "saveForWS", method= RequestMethod.POST)
     public List<KingdeeSynReturnDto> saveForWS(@RequestBody List<CnJournalForBankDto> cnJournalForBankDtoList) {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
         List<KingdeeSyn> kingdeeSynList;
         if (accountKingdeeBook != null) {
+            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
             List<KingdeeSynDto> kingdeeSynDtoList = cnJournalForBankService.saveForWS (cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
             kingdeeSynList = kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
         }else {

@@ -18,6 +18,8 @@ import net.myspring.basic.modules.sys.client.ActivitiClient;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
 import net.myspring.basic.modules.sys.repository.OfficeRepository;
+import net.myspring.common.constant.CharConstant;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +105,8 @@ public class AccountChangeService {
                 employee.setEntryDate(LocalDateUtils.parse(accountChange.getNewValue()));
             }else if(accountChange.getType().equals(AccountChangeTypeEnum.底薪.name())){
                 employee.setSalary(new BigDecimal(accountChange.getNewValue()));
+            }else if(accountChange.getType().equals(AccountChangeTypeEnum.功能岗位.name())){
+                account.setPositionIds(accountChange.getNewValue());
             }
             accountRepository.save(account);
             employeeRepository.save(employee);
@@ -175,6 +179,14 @@ public class AccountChangeService {
                 accountChange.setOldValue(LocalDateUtils.format(employee.getEntryDate()));
             }
             accountChange.setNewLabel(accountChangeForm.getNewValue());
+        }else if(accountChange.getType().equals(AccountChangeTypeEnum.功能岗位.name())){
+            List<String> positionIdList=StringUtils.getSplitList(account.getPositionIds(), CharConstant.COMMA);
+            List<Position> positionList=positionRepository.findByIdInAndEnabledIsTrue(positionIdList);
+            accountChange.setOldValue(account.getPositionIds());
+            accountChange.setOldLabel(StringUtils.join(CollectionUtil.extractToList(positionList,"name")));
+            List<String> positionIds=StringUtils.getSplitList(accountChangeForm.getNewValue(), CharConstant.COMMA);
+            List<Position> positions=positionRepository.findByIdInAndEnabledIsTrue(positionIds);
+            accountChange.setNewLabel(StringUtils.join(CollectionUtil.extractToList(positions,"name")));
         }
         accountChange.setProcessStatus("省公司人事审核");
         accountChangeRepository.save(accountChange);

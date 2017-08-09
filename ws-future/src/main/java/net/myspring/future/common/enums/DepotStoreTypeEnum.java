@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Lenovo on 2017/5/17.
  */
 public enum DepotStoreTypeEnum {
-    好机库,坏机库,寄存机库,淘汰机库;
+    代理库,好机库,坏机库,寄存机库,淘汰机库;
 
     private static List<String> list= Lists.newArrayList();
 

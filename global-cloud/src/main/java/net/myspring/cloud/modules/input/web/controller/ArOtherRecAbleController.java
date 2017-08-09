@@ -1,6 +1,5 @@
 package net.myspring.cloud.modules.input.web.controller;
 
-import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.ArOtherRecAbleDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
@@ -52,8 +51,8 @@ public class ArOtherRecAbleController {
         StringBuilder message = new StringBuilder();
         try {
             AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
             if (accountKingdeeBook != null) {
+                KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
                 List<KingdeeSynDto> kingdeeSynDtoList = arOtherRecAbleService.save(arOtherRecAbleForm,kingdeeBook,accountKingdeeBook);
                 kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
                 for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
@@ -74,8 +73,8 @@ public class ArOtherRecAbleController {
     @RequestMapping(value = "saveForWS",method = RequestMethod.POST)
     public KingdeeSynReturnDto saveForWS(@RequestBody ArOtherRecAbleDto arOtherRecAbleDto) {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
         if(accountKingdeeBook != null) {
+            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
             KingdeeSynDto kingdeeSynDto = arOtherRecAbleService.saveForWS(arOtherRecAbleDto, kingdeeBook, accountKingdeeBook);
             KingdeeSyn kingdeeSyn = kingdeeSynService.save(BeanUtil.map(kingdeeSynDto, KingdeeSyn.class));
             return BeanUtil.map(kingdeeSyn, KingdeeSynReturnDto.class);

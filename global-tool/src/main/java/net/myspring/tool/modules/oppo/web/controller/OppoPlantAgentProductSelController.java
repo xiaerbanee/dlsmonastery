@@ -1,14 +1,13 @@
 package net.myspring.tool.modules.oppo.web.controller;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.tool.modules.future.dto.ProductDto;
 import net.myspring.tool.modules.future.service.FutureProductService;
 import net.myspring.tool.modules.oppo.dto.OppoPlantAgentProductSelDto;
 import net.myspring.tool.modules.oppo.service.OppoPlantAgentProductSelService;
-import net.myspring.tool.modules.oppo.web.form.OppoPlantAgentProductSelForm;
 import net.myspring.tool.modules.oppo.web.query.OppoPlantAgentProductSelQuery;
-import net.myspring.util.collection.CollectionUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,20 +25,17 @@ public class OppoPlantAgentProductSelController {
 
     @RequestMapping(value = "findAll")
     public List<OppoPlantAgentProductSelDto> findAll(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
-        List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelService.findAll(oppoPlantAgentProductSelQuery);
+        List<ProductDto> productDtoList = Lists.newArrayList();
+        if (StringUtils.isNotBlank(oppoPlantAgentProductSelQuery.getProductName())){
+            productDtoList = futureProductService.findByNameLike(oppoPlantAgentProductSelQuery.getProductName());
+        }
+        List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelService.findAll(oppoPlantAgentProductSelQuery,productDtoList);
         return oppoPlantAgentProductSelDtoList;
     }
 
     @RequestMapping(value = "getQuery")
     public OppoPlantAgentProductSelQuery getQuery(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
         return oppoPlantAgentProductSelQuery;
-    }
-
-    @RequestMapping(value = "getForm")
-    public OppoPlantAgentProductSelForm getForm(OppoPlantAgentProductSelForm oppoPlantAgentProductSelForm){
-        oppoPlantAgentProductSelForm = oppoPlantAgentProductSelService.getForm(oppoPlantAgentProductSelForm);
-        oppoPlantAgentProductSelForm.getExtra().put("productNames", CollectionUtil.extractToList(futureProductService.findHasImeProduct(),"name"));
-        return oppoPlantAgentProductSelForm;
     }
 
     @RequestMapping(value = "save")
@@ -49,6 +45,12 @@ public class OppoPlantAgentProductSelController {
             oppoPlantAgentProductSelService.save(productDtoList,data);
         }
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "findByProductName")
+    public List<ProductDto> findByProductName(String name){
+        List<ProductDto> productDtoList = futureProductService.findByNameLike(name);
+        return productDtoList;
     }
 
 }

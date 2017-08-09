@@ -87,7 +87,7 @@ interface AccountRepositoryCustom{
 
     fun findPage(pageable: Pageable, accountQuery: AccountQuery): Page<AccountDto>
 
-    fun findByFilter(accountQuery: AccountQuery): MutableList<Account>
+    fun findByFilter(accountQuery: AccountQuery): MutableList<AccountDto>
 
     fun findByAccessLoginNameList(loginNameList:MutableList<String>,date:LocalDate): MutableList<Account>
 
@@ -164,57 +164,46 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(Account::class.java))
     }
 
-    override fun findByFilter(accountQuery: AccountQuery): MutableList<Account> {
+    override fun findByFilter(accountQuery: AccountQuery): MutableList<AccountDto> {
         var sb = StringBuilder()
         sb.append("""
             SELECT
-            t1.*
+            t1.*,t2.name as employeeName,t3.name as positionName,office.name as officeName,leader.login_name as leaderName,
+            t2.entry_date,t2.leave_date,t2.regular_date,t2.status as employeeStatus
             FROM
-            hr_account t1
+            hr_account t1 left join hr_employee t2 on t1.employee_id=t2.id
+            left join hr_position t3 on t1.position_id=t3.id
+            left join sys_office office on t1.office_id=office.id
+            left join hr_account leader on t1.leader_id=leader.id
             WHERE
             t1.enabled=1
         """)
         if (accountQuery.loginName != null) {
             sb.append(" AND t1.login_name LIKE CONCAT('%',:loginName,'%') ")
         }
-        if(CollectionUtil.isNotEmpty(accountQuery.officeIdList)) {
-            sb.append(" and t1.office_id  IN (:officeIdList)");
-        }
         if (accountQuery.officeId != null) {
-            sb.append(" AND t1.office_id = :officeId ")
+            sb.append(" and t1.office_id in (select t1.id from sys_office t1 where t1.enabled=1 and (t1.parent_ids like concat('%,',:officeId,',%') or t1.id=:officeId))");
         }
-        if (accountQuery.officeName != null) {
-            sb.append("""
-                and t1.office_id in(
-                select t2.id
-                from sys_office t2
-                where t2.name = :officeName
-            )
-            """)
+        if (CollectionUtil.isNotEmpty(accountQuery.officeIdList)) {
+            sb.append(" AND t1.office_id in ( :officeIdList) ")
         }
         if (accountQuery.positionId != null) {
-            sb.append(" and t1.position_id =:positionId ")
+            sb.append("""
+                and t1.position_id =:positionId
+            """)
         }
         if (accountQuery.employeeName != null) {
             sb.append("""
-                and t1.employee_id in(
-                select t4.id
-                from hr_employee t4
-                where t4.name LIKE CONCAT('%',:employeeName,'%')
-                )
+                and t2.name LIKE CONCAT('%',:employeeName,'%')
             """)
         }
 
         if (accountQuery.leaderName != null) {
             sb.append("""
-                AND t1.leader_id in (
-                select t1.id
-                from hr_account t1
-                where t1.login_name LIKE CONCAT('%',:leaderName,'%')
-                )
+                AND leader.login_name LIKE CONCAT('%',:leaderName,'%')
             """)
         }
-        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(accountQuery),BeanPropertyRowMapper(Account::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(accountQuery),BeanPropertyRowMapper(AccountDto::class.java))
     }
 
     override fun findPage(pageable: Pageable, accountQuery: AccountQuery): Page<AccountDto> {
@@ -235,7 +224,7 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             sb.append(" AND t1.login_name LIKE CONCAT('%',:loginName,'%') ")
         }
         if (accountQuery.officeId != null) {
-            sb.append(" AND t1.office_id = :officeId ")
+            sb.append(" and t1.office_id in (select t1.id from sys_office t1 where t1.enabled=1 and (t1.parent_ids like concat('%,',:officeId,',%') or t1.id=:officeId))");
         }
         if (CollectionUtil.isNotEmpty(accountQuery.officeIdList)) {
             sb.append(" AND t1.office_id in ( :officeIdList) ")
