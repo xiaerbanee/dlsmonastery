@@ -100,6 +100,7 @@ public class EmployeeService {
             employee = employeeRepository.findOne(employeeForm.getId());
             ReflectionUtil.copyProperties(employeeForm,employee);
             account = accountRepository.findOne(accountForm.getId());
+            accountForm.setPassword(account.getPassword());
             ReflectionUtil.copyProperties(accountForm,account);
             employeeRepository.save(employee);
             account.setEmployeeId(employee.getId());

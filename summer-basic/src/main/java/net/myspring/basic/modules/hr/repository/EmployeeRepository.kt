@@ -143,19 +143,19 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
             sb.append(" and employee.mobile_phone like CONCAT('%',:mobilePhone,'%')");
         }
         if(employeeQuery.entryDateStart!=null) {
-            sb.append(" AND employee.entry_date > :entryDateStart");
+            sb.append(" AND employee.entry_date >= :entryDateStart");
         }
         if(employeeQuery.entryDateEnd!=null) {
             sb.append(" AND employee.entry_date < :entryDateEnd");
         }
         if(employeeQuery.regularDateStart!=null) {
-            sb.append(" AND employee.regular_date > :regularDateStart");
+            sb.append(" AND employee.regular_date >= :regularDateStart");
         }
         if(employeeQuery.regularDateEnd!=null) {
             sb.append(" AND employee.regular_date < :regularDateEnd");
         }
         if(employeeQuery.leaveDateStart!=null) {
-            sb.append(" AND employee.leave_date > :leaveDateStart");
+            sb.append(" AND employee.leave_date >= :leaveDateStart");
         }
         if(employeeQuery.leaveDateEnd!=null) {
             sb.append(" AND employee.leave_date < :leaveDateEnd");

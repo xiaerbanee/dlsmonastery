@@ -123,24 +123,27 @@
           this.$alert(this.$t('productImeUploadForm.formInvalid'), this.$t('productImeUploadForm.notify'));
           return;
         }
-
+        this.submitDisabled = true;
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             let submitData = util.deleteExtra(this.inputForm);
             axios.post('/api/ws/future/crm/productImeUpload/upload', qs.stringify(submitData)).then((response) => {
               this.$message(response.data.message);
-            if (response.data.success) {
-              if (!this.isCreate) {
-                this.$router.push({name: 'productImeUploadList', query: util.getQuery("productImeUploadList"), params:{_closeFrom:true}})
-              } else {
-                Object.assign(this.$data, this.getData());
-                this.initPage();
-              }
-            }
-          }).catch(() => {
               this.submitDisabled = false;
-          });
+              if (response.data.success) {
+                if (!this.isCreate) {
+                  this.$router.push({name: 'productImeUploadList', query: util.getQuery("productImeUploadList"), params:{_closeFrom:true}});
+                } else {
+                  Object.assign(this.$data, this.getData());
+                  this.initPage();
+                }
+              }
+            }).catch(() => {
+                this.submitDisabled = false;
+            });
+          }else{
+            this.submitDisabled = false;
           }
         }
       );
