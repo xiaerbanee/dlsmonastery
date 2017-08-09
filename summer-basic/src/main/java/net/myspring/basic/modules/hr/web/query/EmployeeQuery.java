@@ -23,8 +23,6 @@ public class EmployeeQuery extends BaseQuery {
     private String positionId;
     private String leaderName;
     private String officeId;
-    private String dutyDateStart;
-    private String dutyDateEnd;
     private String leaveDateMonth;
     private String areaId;
 
@@ -159,9 +157,8 @@ public class EmployeeQuery extends BaseQuery {
     public LocalDate getRegularDateEnd() {
         if(StringUtils.isNotBlank(regularDate)) {
             return LocalDateUtils.parse(regularDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
-        } else {
-            return null;
         }
+        return getRegularDateEnd();
     }
 
     public String getPositionId() {
@@ -186,22 +183,5 @@ public class EmployeeQuery extends BaseQuery {
 
     public void setOfficeId(String officeId) {
         this.officeId = officeId;
-    }
-
-
-    public String getDutyDateStart() {
-        return dutyDateStart;
-    }
-
-    public void setDutyDateStart(String dutyDateStart) {
-        this.dutyDateStart = dutyDateStart;
-    }
-
-    public String getDutyDateEnd() {
-        return dutyDateEnd;
-    }
-
-    public void setDutyDateEnd(String dutyDateEnd) {
-        this.dutyDateEnd = dutyDateEnd;
     }
 }

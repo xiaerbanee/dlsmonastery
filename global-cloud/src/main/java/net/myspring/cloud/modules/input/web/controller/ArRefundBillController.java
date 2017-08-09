@@ -10,7 +10,6 @@ import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeSynService;
-import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.mapper.BeanUtil;
@@ -47,10 +46,10 @@ public class ArRefundBillController {
         StringBuilder message = new StringBuilder();
         try {
             AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
-            List<KingdeeSynDto> kingdeeSynDtoList = arRefundBillService.save(arRefundBillForm,kingdeeBook,accountKingdeeBook);
-            kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
             if (accountKingdeeBook != null) {
+                KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
+                List<KingdeeSynDto> kingdeeSynDtoList = arRefundBillService.save(arRefundBillForm,kingdeeBook,accountKingdeeBook);
+                kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
                 for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
                     if (kingdeeSynDto.getSuccess()) {
                         message.append(kingdeeSynDto.getBillNo()+",");

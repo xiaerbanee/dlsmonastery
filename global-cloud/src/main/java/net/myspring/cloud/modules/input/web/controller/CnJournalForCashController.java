@@ -38,8 +38,12 @@ public class CnJournalForCashController {
     @RequestMapping(value = "form")
     public CnJournalForCashForm form () {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
-        return cnJournalForCashService.getForm(kingdeeBook);
+        if (accountKingdeeBook != null) {
+            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
+            return cnJournalForCashService.getForm(kingdeeBook);
+        }else {
+            throw new ServiceException("您没有金蝶账号，不能开单");
+        }
     }
 
     @RequestMapping(value = "save")
@@ -47,8 +51,8 @@ public class CnJournalForCashController {
         try {
             RestResponse restResponse = new RestResponse("开单失败",null);
             AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
             if (accountKingdeeBook != null) {
+                KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
                 KingdeeSynDto kingdeeSynDto = cnJournalForCashService.save(cnJournalForCashForm, kingdeeBook, accountKingdeeBook);
                 kingdeeSynService.save(BeanUtil.map(kingdeeSynDto, KingdeeSyn.class));
                 if (kingdeeSynDto.getSuccess()) {

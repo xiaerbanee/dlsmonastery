@@ -52,8 +52,8 @@ public class StkMisDeliveryController {
         StringBuilder message = new StringBuilder();
         try {
             AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
             if (accountKingdeeBook != null) {
+                KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
                 List<KingdeeSynDto> kingdeeSynDtoList = stkMisDeliveryService.save(stkMisDeliveryForm, kingdeeBook, accountKingdeeBook);
                 kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
                 for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
@@ -74,9 +74,9 @@ public class StkMisDeliveryController {
     @RequestMapping(value = "saveForWS",method = RequestMethod.POST)
     public KingdeeSynReturnDto saveForWS(@RequestBody StkMisDeliveryDto stkMisDeliveryDto) {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
         KingdeeSyn kingdeeSyn;
         if (accountKingdeeBook != null) {
+            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
             KingdeeSynDto kingdeeSynDto = stkMisDeliveryService.saveForWS(stkMisDeliveryDto, kingdeeBook, accountKingdeeBook);
             kingdeeSyn = kingdeeSynService.save(BeanUtil.map(kingdeeSynDto, KingdeeSyn.class));
         }else {

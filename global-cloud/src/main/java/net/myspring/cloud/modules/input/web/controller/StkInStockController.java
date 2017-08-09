@@ -13,6 +13,7 @@ import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeSynService;
 import net.myspring.cloud.modules.sys.service.ProductService;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.mapper.BeanUtil;
@@ -42,16 +43,19 @@ public class StkInStockController {
 
     @RequestMapping(value = "form")
     public StkInStockForm form (StkInStockForm stkInStockForm) {
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
-        if (!KingdeeNameEnum.JXDJ.name().equals(kingdeeBook.getName())){
-            String returnOutId = productService.findReturnOutIdByCompanyName();
-            ProductDto productDto = productService.findByOutIdAndCompanyName(returnOutId);
-            String type = productDto==null?"":productDto.getName();
-            stkInStockForm.getTypeList().add(type);
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(), RequestUtils.getCompanyName());
+        if (accountKingdeeBook != null) {
+            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
+            if (!KingdeeNameEnum.JXDJ.name().equals(kingdeeBook.getName())) {
+                String returnOutId = productService.findReturnOutIdByCompanyName();
+                ProductDto productDto = productService.findByOutIdAndCompanyName(returnOutId);
+                String type = productDto == null ? "" : productDto.getName();
+                stkInStockForm.getTypeList().add(type);
+            }
+            return stkInStockService.getForm(stkInStockForm,kingdeeBook);
+        }else {
+            throw new ServiceException("您没有金蝶账号，不能开单");
         }
-        stkInStockForm = stkInStockService.getForm(stkInStockForm,kingdeeBook);
-        return stkInStockForm;
     }
 
     @RequestMapping(value = "save")
@@ -60,8 +64,8 @@ public class StkInStockController {
         StringBuilder message = new StringBuilder();
         try {
             AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
             if (accountKingdeeBook != null) {
+                KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
                 List<KingdeeSynDto> kingdeeSynDtoList = stkInStockService.save(stkInStockForm, kingdeeBook, accountKingdeeBook);
                 kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
                 for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
