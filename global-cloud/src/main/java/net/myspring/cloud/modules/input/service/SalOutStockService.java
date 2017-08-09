@@ -6,7 +6,7 @@ import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.enums.SalOutStockBillTypeEnum;
-import net.myspring.cloud.modules.kingdee.domain.BdStock;
+import net.myspring.cloud.modules.input.repository.SalOutStockRepository;
 import net.myspring.cloud.modules.kingdee.repository.BdStockRepository;
 import net.myspring.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 销售入库单
+ * 销售出库单
  * Created by liuj on 2017/5/11.
  */
 @Service
@@ -57,6 +57,8 @@ public class SalOutStockService {
     private BdMaterialRepository bdMaterialRepository;
     @Autowired
     private BdStockRepository bdStockRepository;
+    @Autowired
+    private SalOutStockRepository salOutStockRepository;
 
     private KingdeeSynExtendDto save(SalOutStockDto salOutStockDto,KingdeeBook kingdeeBook) {
         KingdeeSynExtendDto kingdeeSynExtendDto = new KingdeeSynExtendDto(
@@ -188,6 +190,10 @@ public class SalOutStockService {
         map.put("stockList",bdStockRepository.findAll());
         salStockForm.setExtra(map);
         return salStockForm;
+    }
+
+    public List<String> findNoPushDown(){
+        return salOutStockRepository.findNoPushDown();
     }
 
 }
