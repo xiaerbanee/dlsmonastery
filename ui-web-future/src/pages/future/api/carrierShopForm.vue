@@ -3,13 +3,13 @@
     <head-tab active="carrierShopForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-        <el-form-item :label="$t('carrierShopForm.name')" prop="category">
+        <el-form-item :label="$t('carrierShopForm.name')" prop="name">
           <el-input v-model="inputForm.name"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('carrierShopForm.code')" prop="sort">
+        <el-form-item :label="$t('carrierShopForm.code')" prop="code">
           <el-input v-model.number="inputForm.code"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('carrierShopForm.type')" prop="value">
+        <el-form-item :label="$t('carrierShopForm.type')" prop="type">
           <el-select v-model="inputForm.type" clearable filterable :placeholder="$t('carrierShopForm.selectGroup')">
             <el-option v-for="type in inputForm.extra.typeList" :key="type" :label="type" :value="type"></el-option>
           </el-select>
@@ -42,7 +42,8 @@
             extra:{}
           },
           rules: {
-            name: [{ required: true, message: this.$t('carrierShopForm.prerequisiteMessage'),trigger:"blur"}],
+            name: [{ required: true, message: this.$t('carrierShopForm.prerequisiteMessage')}],
+            type: [{ required: true, message: this.$t('carrierShopForm.prerequisiteMessage')}],
           }
         }
       },
