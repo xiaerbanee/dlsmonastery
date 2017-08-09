@@ -51,10 +51,11 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('afterSaleList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="businessId" :label="$t('afterSaleList.bill')" sortable></el-table-column>
+      <!--  <el-table-column fixed prop="businessId" :label="$t('afterSaleList.bill')" sortable></el-table-column>-->
         <el-table-column prop="badProductIme" :label="$t('afterSaleList.badProductIme')"></el-table-column>
         <el-table-column prop="badProductName" :label="$t('afterSaleList.badProductName')" ></el-table-column>
         <el-table-column prop="toAreaProductIme" :label="$t('afterSaleList.toAreaProductIme')"></el-table-column>
+        <el-table-column prop="toAreaProductName" :label="$t('afterSaleList.toAreaProductName')"></el-table-column><!--modify-->
         <el-table-column prop="areaDepotName" :label="$t('afterSaleList.areaDepot')"></el-table-column>
         <el-table-column prop="packageStatus" :label="$t('afterSaleList.package')" ></el-table-column>
         <el-table-column prop="memory" :label="$t('afterSaleList.memory')" ></el-table-column>

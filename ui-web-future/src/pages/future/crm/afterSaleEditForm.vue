@@ -39,6 +39,7 @@
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
   var table = null;
+  var imeMap={};
   export default{
     data(){
       return{
@@ -77,6 +78,7 @@
                       if(response.data.length>0) {
                         for(var index in response.data) {
                           var ime = response.data[index].ime;
+                          imeMap[ime]=response.data[index].productName;
                           imeList.push(ime);
                           if(that.imes.indexOf(ime)<0) {
                             that.imes.push(ime);
@@ -151,7 +153,22 @@
               width:150
             },
             {data: "toStoreRemarks",width:150}
-          ]
+          ],
+          afterChange: function (changes, source){
+            if (source !== 'loadData') {
+              for (var i = changes.length - 1; i >= 0; i--) {
+                var row = changes[i][0];
+                if (changes[i][1] === "toAreaProductIme") {
+                  var toAreaProductIme = changes[i][3];
+                  if(toAreaProductIme==="") {
+                    table.setDataAtCell(row,4,'');
+                  } else {
+                    table.setDataAtCell(row,4,imeMap[toAreaProductIme]);
+                  }
+                }
+              }
+            }
+          }
         },
       }
     }, mounted () {
