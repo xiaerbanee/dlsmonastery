@@ -1,7 +1,11 @@
 package net.myspring.cloud.modules.kingdee.domain;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+/**
+ *仓库表
+ * Created by lihx on 2017/4/11.
+ */
 public class BdStock {
     //对应业务系统的outId
     private String FStockId;
@@ -10,10 +14,10 @@ public class BdStock {
     //
     private String FName;
     //分组
-    private Long FGroup;
+    private String FGroup;
     private String FGroupName;
     //修改时间
-    private LocalDate FModifyDate;
+    private LocalDateTime FModifyDate;
     //审核状态
     private String FDocumentStatus;
     //禁用状态
@@ -43,12 +47,20 @@ public class BdStock {
         this.FName = FName;
     }
 
-    public Long getFGroup() {
+    public String getFGroup() {
         return FGroup;
     }
 
-    public void setFGroup(Long FGroup) {
+    public void setFGroup(String FGroup) {
         this.FGroup = FGroup;
+    }
+
+    public LocalDateTime getFModifyDate() {
+        return FModifyDate;
+    }
+
+    public void setFModifyDate(LocalDateTime FModifyDate) {
+        this.FModifyDate = FModifyDate;
     }
 
     public String getFGroupName() {
@@ -57,14 +69,6 @@ public class BdStock {
 
     public void setFGroupName(String FGroupName) {
         this.FGroupName = FGroupName;
-    }
-
-    public LocalDate getFModifyDate() {
-        return FModifyDate;
-    }
-
-    public void setFModifyDate(LocalDate FModifyDate) {
-        this.FModifyDate = FModifyDate;
     }
 
     public String getFDocumentStatus() {

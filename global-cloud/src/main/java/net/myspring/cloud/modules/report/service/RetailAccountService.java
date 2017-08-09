@@ -9,8 +9,6 @@ import net.myspring.cloud.common.enums.*;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.cloud.modules.kingdee.repository.BdDepartmentRepository;
 import net.myspring.cloud.modules.kingdee.repository.GlcxViewRepository;
-import net.myspring.cloud.modules.kingdee.repository.SalOutStockRepository;
-import net.myspring.cloud.modules.kingdee.repository.SalReturnStockRepository;
 import net.myspring.cloud.modules.report.dto.RetailAccountDto;
 import net.myspring.cloud.modules.report.manager.RetailAccountManager;
 import net.myspring.cloud.modules.report.repository.RetailAccountRepository;
@@ -27,9 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static net.myspring.cloud.common.constant.KingdeeConstant.DOUBLE_ZERO;
-import static net.myspring.cloud.common.constant.KingdeeConstant.TOTAL_DEPARTMENT;
 
 /**
  * 零售费用报表
