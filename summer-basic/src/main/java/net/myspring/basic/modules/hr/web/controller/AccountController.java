@@ -6,11 +6,12 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.dto.AccountDto;
-import net.myspring.basic.modules.hr.dto.AccountMessageDto;
+import net.myspring.basic.modules.hr.dto.AuditFileDto;
 import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.service.*;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
+import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
 import net.myspring.basic.modules.hr.web.validator.AccountValidator;
 import net.myspring.basic.modules.sys.dto.AccountCommonDto;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
@@ -32,6 +33,7 @@ import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -75,6 +77,8 @@ public class AccountController {
     private OfficeService officeService;
     @Autowired
     private AccountValidator accountValidator;
+    @Autowired
+    private AuditFileService auditFileService;
 
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'hr:account:view')")
@@ -197,9 +201,9 @@ public class AccountController {
         cacheUtils.initCacheInput(accountDto);
         LocalDateTime lastMonth = LocalDateTime.now().minusMonths(1);
         List<DutyDto> dutyList = dutyService.findByAuditable(accountDto.getId(), AuditTypeEnum.APPLY.getValue(), lastMonth);
-        List<AccountMessageDto> accountMessages = accountMessageService.findByAccount(accountDto.getId(), lastMonth);
+        Page<AuditFileDto> page = auditFileService.findPage(new PageRequest(0,10),new AuditFileQuery());
         map.put("dutySize", dutyList.size());
-        map.put("accountMessageSize", accountMessages.size());
+        map.put("auditFileSize", page.getTotalElements());
         //显示剩余的加班调休时间和年假时间
         String employeeId = RequestUtils.getEmployeeId();
         map.put("annualHour", dutyAnnualService.getAvailableHour(employeeId));
