@@ -2,6 +2,7 @@
   <div>
     <head-tab active="accountChangeBatchForm"></head-tab>
     <div>
+      <el-alert  :title="errorMesssage" type="error" style="margin-bottom: 20px" closable  v-if="errorMesssage!==''"></el-alert>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row :gutter="24">
           <el-col :span="6">
@@ -37,10 +38,10 @@
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
           fileList:[],
+          errorMesssage:"",
           inputForm:{
           },
           rules: {
-            folderFileId: [{ required: true, message: this.$t('accountChangeBatchForm.prerequisiteMessage')}],
           },
         }
       },
@@ -52,8 +53,12 @@
           if (valid) {
             this.inputForm.folderFileId = util.getFolderFileIdStr(this.fileList);
             axios.post('/api/basic/hr/accountChange/import', qs.stringify(this.inputForm)).then((response)=> {
-              if(response.data.message){
+              if(response.data.success){
                 this.$message(response.data.message);
+              }else{
+                this.submitDisabled = false;
+                this.errorMesssage=response.data.message;
+                return;
               }
               if(!this.isCreate) {
                 this.submitDisabled = false;
