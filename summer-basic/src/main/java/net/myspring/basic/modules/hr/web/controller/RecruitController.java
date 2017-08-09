@@ -4,6 +4,7 @@ import net.myspring.basic.modules.hr.dto.RecruitDto;
 import net.myspring.basic.modules.hr.service.RecruitService;
 import net.myspring.basic.modules.hr.web.form.RecruitForm;
 import net.myspring.basic.modules.hr.web.query.RecruitQuery;
+import net.myspring.common.enums.DictEnumCategoryEnum;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,7 @@ public class RecruitController {
 
     @RequestMapping(value = "getForm")
     public RecruitForm findForm(RecruitForm recruitForm){
+        recruitForm.getExtra().put("educationsList", DictEnumCategoryEnum.EDUCATION.getValue());
         return recruitForm;
     }
 

@@ -1,21 +1,8 @@
 package net.myspring.future.modules.basic.web.query;
 
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.Lists;
-import net.myspring.common.dto.NameValueDto;
 import net.myspring.future.common.query.BaseQuery;
-import net.myspring.future.modules.basic.domain.AdPricesystem;
-import net.myspring.future.modules.basic.domain.Chain;
-import net.myspring.future.modules.basic.domain.ExpressCompany;
-import net.myspring.future.modules.basic.domain.Pricesystem;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
 
-/**
- * Created by lihx on 2017/4/18.
- */
 public class DepotQuery extends BaseQuery {
     private String name;
     private String areaId;
@@ -30,6 +17,15 @@ public class DepotQuery extends BaseQuery {
     private Boolean outIdIsNull;
 
     private String shipType;
+    private Boolean includeHidden;
+
+    public Boolean getIncludeHidden() {
+        return includeHidden;
+    }
+
+    public void setIncludeHidden(Boolean includeHidden) {
+        this.includeHidden = includeHidden;
+    }
 
     public String getOfficeId() {
         return officeId;

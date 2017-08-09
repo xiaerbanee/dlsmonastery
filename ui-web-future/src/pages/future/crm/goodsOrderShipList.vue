@@ -39,7 +39,7 @@
                 <el-input v-model="formData.shopName" :placeholder="$t('goodsOrderShipList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShipList.store')" >
-                <depot-select v-model="formData.storeIdList" multiple category="store" @afterInit="setSearchText"></depot-select>
+                <depot-select v-model="formData.storeIdList" :multiple="true" category="store" @afterInit="setSearchText"></depot-select>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShipList.createdBy')">
                 <account-select v-model="formData.createdBy" @afterInit="setSearchText" ></account-select>

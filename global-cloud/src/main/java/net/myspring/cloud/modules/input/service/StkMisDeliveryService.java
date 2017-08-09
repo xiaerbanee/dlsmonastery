@@ -135,15 +135,15 @@ public class StkMisDeliveryService {
         String json = HtmlUtils.htmlUnescape(stkMisDeliveryForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
         List<String> stockNameList = Lists.newArrayList();
+        List<String> materialNameList = Lists.newArrayList();
         for (List<Object> row : data) {
+            materialNameList.add(HandsontableUtils.getValue(row, 1));
             stockNameList.add(HandsontableUtils.getValue(row, 2));
         }
-        Map<String, String> stockNumMap = Maps.newHashMap();
-        for (BdStock bdstock : bdStockRepository.findByNameList(stockNameList)) {
-            stockNumMap.put(bdstock.getFName(), bdstock.getFNumber());
-        }
+        Map<String, String> stockNameNumMap = bdStockRepository.findByNameList(stockNameList).stream().collect(Collectors.toMap(BdStock::getFName,BdStock::getFNumber));
+        Map<String, String> materialNameNumMap = bdMaterialRepository.findByNameList(materialNameList).stream().collect(Collectors.toMap(BdMaterial::getFName,BdMaterial::getFNumber));
         for (List<Object> row : data) {
-            String materialNumber = HandsontableUtils.getValue(row, 0);
+            String materialName = HandsontableUtils.getValue(row, 1);
             String stockName = HandsontableUtils.getValue(row, 2);
             Integer qty = Integer.valueOf(HandsontableUtils.getValue(row, 3));
             String type = HandsontableUtils.getValue(row, 4);
@@ -153,11 +153,11 @@ public class StkMisDeliveryService {
             misDelivery.setCreator(accountKingdeeBook.getUsername());
             misDelivery.setDate(billDate);
             misDelivery.setFDeptIdNumber(departmentNumber);
-            String billKey = materialNumber + CharConstant.COMMA + stockName + CharConstant.COMMA + qty + CharConstant.COMMA + remarks + CharConstant.COMMA + type;
+            String billKey = materialName + CharConstant.COMMA + stockName + CharConstant.COMMA + qty + CharConstant.COMMA + remarks + CharConstant.COMMA + type;
             if (!misDeliveryMap.containsKey(billKey)) {
                 StkMisDeliveryFEntityDto misDeliveryFEntityDto = new StkMisDeliveryFEntityDto();
-                misDeliveryFEntityDto.setMaterialNumber(materialNumber);
-                misDeliveryFEntityDto.setStockNumber(stockNumMap.get(stockName));
+                misDeliveryFEntityDto.setMaterialNumber(materialNameNumMap.get(materialName));
+                misDeliveryFEntityDto.setStockNumber(stockNameNumMap.get(stockName));
                 misDeliveryFEntityDto.setQty(qty);
                 misDeliveryFEntityDto.setFEntryNote(remarks);
                 misDelivery.setMisDeliveryType(type);

@@ -133,7 +133,6 @@ export default {
     },getAccount(){
       axios.get('/api/basic/hr/account/home').then((response) =>{
           this.account=response.data.account;
-          console.log(response.data.account);
           this.labelData=response.data;
       })
     },synFlush(){

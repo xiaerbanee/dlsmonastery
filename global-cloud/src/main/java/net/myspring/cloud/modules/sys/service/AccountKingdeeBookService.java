@@ -11,6 +11,7 @@ import net.myspring.cloud.modules.sys.repository.AccountKingdeeBookRepository;
 import net.myspring.cloud.modules.sys.repository.KingdeeBookRepository;
 import net.myspring.cloud.modules.sys.web.form.AccountKingdeeBookForm;
 import net.myspring.cloud.modules.sys.web.query.AccountKingdeeBookQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -70,11 +71,11 @@ public class AccountKingdeeBookService {
             AccountKingdeeBookQuery accountKingdeeBookQuery = new AccountKingdeeBookQuery();
             accountKingdeeBookQuery.setAccountId(accountId);
             accountKingdeeBookQuery.setCompanyName(RequestUtils.getCompanyName());
-            AccountKingdeeBook accountKingdeeBook =  accountKingdeeBookRepository.findFilter(accountKingdeeBookQuery).get(0);
-            if (accountKingdeeBook != null) {
-                accountKingdeeBook.setPassword(null);
+            List<AccountKingdeeBook> accountKingdeeBookList =  accountKingdeeBookRepository.findFilter(accountKingdeeBookQuery);
+            if (CollectionUtil.isNotEmpty(accountKingdeeBookList)) {
+                accountKingdeeBookList.get(0).setPassword(null);
+                return accountKingdeeBookList.get(0);
             }
-            return accountKingdeeBook;
         }
         return null;
     }

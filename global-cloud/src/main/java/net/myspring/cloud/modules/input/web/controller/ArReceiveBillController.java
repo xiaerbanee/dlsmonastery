@@ -54,10 +54,10 @@ public class ArReceiveBillController {
         StringBuilder message = new StringBuilder();
         try {
             AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
-            List<KingdeeSynDto> kingdeeSynDtoList = arReceiveBillService.save(arReceiveBillForm, kingdeeBook, accountKingdeeBook);
-            kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
             if (accountKingdeeBook != null) {
+                KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
+                List<KingdeeSynDto> kingdeeSynDtoList = arReceiveBillService.save(arReceiveBillForm, kingdeeBook, accountKingdeeBook);
+                kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
                 for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
                     if (kingdeeSynDto.getSuccess()) {
                         message.append(kingdeeSynDto.getBillNo()+",");
@@ -76,9 +76,9 @@ public class ArReceiveBillController {
     @RequestMapping(value = "saveForWS",method = RequestMethod.POST)
     public List<KingdeeSynReturnDto> saveForShopDeposit(@RequestBody List<ArReceiveBillDto> arReceiveBillDtoList) {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-        KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
         List<KingdeeSyn> kingdeeSynList;
         if(accountKingdeeBook != null) {
+            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
             List<KingdeeSynDto> kingdeeSynDtoList = arReceiveBillService.saveForWS(arReceiveBillDtoList, kingdeeBook, accountKingdeeBook);
             kingdeeSynList = kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
         }else {

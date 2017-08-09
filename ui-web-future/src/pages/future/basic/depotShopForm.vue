@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="10">
             <el-form-item label="选择门店" prop="depotId" >
-              <depot-select v-model="inputForm.depotId" category="shop"></depot-select>
+              <depot-select v-model="inputForm.depotId" category="shop" :includeHidden="true"></depot-select>
             </el-form-item>
             <el-form-item label="开业时间" prop="enableDate">
               <date-picker v-model="inputForm.enableDate"></date-picker>
