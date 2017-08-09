@@ -72,14 +72,9 @@
               <td class="td">{{$t('home.waitDuty')}}</td>
               <td  class="td">{{$t('home.youHave')}}<router-link  :to="{ name: 'dutyTaskList'}"><span style="color:red">{{labelData.dutySize}}</span></router-link>{{$t('home.dutySize')}}</td>
             </tr>
-
             <tr>
-              <td class="td">{{$t('home.waitAccountTask')}}</td>
-              <td  class="td">{{$t('home.youHave')}}<router-link :to="{ name: 'accountTaskList'}"><span style="color:red">{{labelData.accountTaskSize}}</span></router-link>{{$t('home.accountTaskSize')}}</td>
-            </tr>
-            <tr>
-              <td class="td">{{$t('home.waitReadMessage')}}</td>
-              <td  class="td">{{$t('home.youHave')}}<span style="color:red">{{labelData.accountMessageSize}}</span>{{$t('home.accountMessageSize')}}</td>
+              <td class="td">文件审批</td>
+              <td  class="td">您有<router-link  :to="{ name: 'auditFileList'}"><span style="color:red">{{labelData.auditFileSize}}</span></router-link>条待批考勤数据</td>
             </tr>
             </tbody>
           </table>

@@ -91,7 +91,7 @@ public class AuditFileQuery extends BaseQuery {
     }
 
     public List<String> getPositionIdList() {
-        if(StringUtils.isBlank(getAuditType())||!"全部".equals(getAuditType())) {
+        if(StringUtils.isBlank(auditType)||!"全部".equals(auditType)) {
             this.positionIdList= RequestUtils.getPositionIdList();
         }else {
             positionIdList=Lists.newArrayList();
