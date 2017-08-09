@@ -154,6 +154,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             WHERE
                  t1.enabled = 1
                 and t3.depot_shop_id=t6.id
+                and t3.depot_store_id is null
     """)
         if (productImeReportQuery.date != null) {
             sb.append("""
@@ -222,6 +223,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                     WHERE
                     t1.enabled = 1
                     and t6.depot_shop_id=t7.id
+                    and t6.depot_store_id is null
     """)
         if (productImeReportQuery.scoreType != null) {
             sb.append("""  and t5.score_type =:scoreType """)
@@ -294,6 +296,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
              t1.enabled = 1
             and t1.is_back=0
             and t2.depot_shop_id=t6.id
+              and t2.depot_store_id is null
     """)
         if (productImeSaleReportQuery.dateStart != null) {
             sb.append(""" and t1.created_date>=:dateStart """)
@@ -352,6 +355,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             crm_depot_shop t5
             where t1.enabled=1
             and t2.depot_shop_id=t5.id
+            and t2.depot_store_id is null
     """)
         if (productImeSaleReportQuery.dateStart != null) {
             sb.append(""" and t1.retail_date>=:dateStart """)
