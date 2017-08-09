@@ -43,8 +43,8 @@ public class PurMrbController {
         RestResponse restResponse = new RestResponse("开单失败",null);
         try {
             AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
             if (accountKingdeeBook != null) {
+                KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
                 KingdeeSynDto kingdeeSynDto = purMrbService.save(cnJournalForCashForm, kingdeeBook, accountKingdeeBook);
                 kingdeeSynService.save(BeanUtil.map(kingdeeSynDto, KingdeeSyn.class));
                 if (kingdeeSynDto.getSuccess()) {

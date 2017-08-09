@@ -3,16 +3,13 @@ package net.myspring.cloud.modules.input.web.controller;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.service.ApPayBillService;
-import net.myspring.cloud.modules.input.service.ArOtherRecAbleService;
 import net.myspring.cloud.modules.input.web.form.ApPayBillForm;
-import net.myspring.cloud.modules.input.web.form.ArOtherRecAbleForm;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeSynService;
-import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.mapper.BeanUtil;
@@ -49,8 +46,8 @@ public class ApPayBillController {
         StringBuilder message = new StringBuilder();
         try {
             AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountIdAndCompanyName(RequestUtils.getAccountId(),RequestUtils.getCompanyName());
-            KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
             if (accountKingdeeBook != null) {
+                KingdeeBook kingdeeBook = kingdeeBookService.findOne(accountKingdeeBook.getKingdeeBookId());
                 List<KingdeeSynDto> kingdeeSynDtoList = apPayBillService.save(apPayBillForm, kingdeeBook, accountKingdeeBook);
                 kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
                 for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
