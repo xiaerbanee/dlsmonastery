@@ -17,8 +17,18 @@ export default {
     isPass: "apakah sudah diapprove",
     selectDateRange: "选择日期范围",
     selectGroup: "请选择分组",
-    prerequisiteMessage: "必填信息",
+    prerequisiteMessage: "Informasi yang diperlukan",
     inputLegalValue: "silahkan masukkan angka yang valid"
+  },
+  accountChangeBatchForm:{
+    accountChangeBatchForm:"员工批量调整",
+    exportTemplate: "ekspor template",
+    downLoad: "unduh",
+    exportData: "ekspor data",
+    clickUpload: "klik unduh",
+    remarks:"keterangan / komen",
+    save:"simpan",
+    prerequisiteMessage: "Informasi yang diperlukan",
   },
   accountChangeList: {
     accountChangeList: "员工调整",
