@@ -72,6 +72,11 @@ public class KingdeeSynController {
         }
     }
 
+    @RequestMapping(value = "noPush")
+    public List<KingdeeSyn> noPush(){
+        return  kingdeeSynService.findNoPushDown();
+    }
+
     @RequestMapping(value = "findByExtendIdAndExtendType",method = RequestMethod.GET)
     public List<KingdeeSynReturnDto> findByExtendIdAndExtendType(String extendId, String extendType){
         List<KingdeeSyn> kingdeeSynList = kingdeeSynService.findByExtendIdAndExtendType(extendId,extendType);

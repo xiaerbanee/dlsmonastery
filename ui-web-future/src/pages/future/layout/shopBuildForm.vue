@@ -51,10 +51,14 @@
                 <div slot="tip" class="el-upload__tip">{{$t('shopBuildForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
             </el-form-item>
-            <el-form-item :label="$t('shopBuildForm.confirmPhoto')" prop="confirmPhoto">
+            <el-form-item :label="$t('shopBuildForm.confirmPhoto')" prop="confirmPhoto" v-if="processStatus === '产品经理待确认'">
               <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange3" :on-remove="handleRemove3" :on-preview="handlePreview3" :file-list="fileList3" list-type="picture">
                 <el-button size="small" type="primary">{{$t('shopBuildForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('shopBuildForm.uploadImageSizeFor5000KB')}}</div>
+              </el-upload>
+            </el-form-item>
+            <el-form-item :label="$t('shopBuildDetail.confirmPhoto')" prop="confirmPhoto" v-if="processStatus != '产品经理待确认'">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-preview="handlePreview3" :file-list="fileList3" list-type="picture">
               </el-upload>
             </el-form-item>
             <el-form-item>

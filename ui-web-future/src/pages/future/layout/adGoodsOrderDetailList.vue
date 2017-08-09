@@ -21,7 +21,7 @@
                 <date-range-picker v-model="formData.adGoodsOrderBillDateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderDetailList.processStatus')">
-                <el-select v-model="formData.adGoodsOrderProcessStatus" clearable filterable>
+                <el-select v-model="formData.adGoodsOrderProcessStatus" multiple clearable filterable>
                   <el-option v-for="item in formData.extra.statusList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
@@ -29,7 +29,7 @@
                 <el-input v-model="formData.adGoodsOrderRemarks" :placeholder="$t('adGoodsOrderDetailList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderDetailList.productId')">
-                <product-select v-model = "formData.productId"></product-select>
+                <el-input v-model="formData.productName" :placeholder="$t('adGoodsOrderDetailList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -87,13 +87,11 @@
 <script>
   import accountSelect from 'components/basic/account-select';
   import depotSelect from 'components/future/depot-select';
-  import productSelect from 'components/future/product-select'
 
   export default {
     components:{
       accountSelect,
       depotSelect,
-      productSelect,
     },
     data() {
       return {
@@ -122,7 +120,7 @@
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
         util.setQuery("adGoodsOrderDetailList",submitData);
-        axios.get('/api/ws/future/layout/adGoodsOrderDetail', {params:submitData}).then((response) => {
+        axios.get('/api/ws/future/layout/adGoodsOrderDetail?'+qs.stringify(submitData)).then((response) => {
           this.getTotalQty(response.data.content);
           this.page = response.data;
           this.pageLoading = false;

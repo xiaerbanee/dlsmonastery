@@ -9,6 +9,7 @@ const voucherForm  = r => require.ensure([], () => r(require('pages/cloud/sys/vo
 const voucherDetail  = r => require.ensure([], () => r(require('pages/cloud/sys/voucherDetail.vue')));
 const kingdeeSynList  = r => require.ensure([], () => r(require('pages/cloud/sys/kingdeeSynList.vue')));
 const kingdeeSynDetail  = r => require.ensure([], () => r(require('pages/cloud/sys/kingdeeSynDetail.vue')));
+const kingdeeSynForNoPushList  = r => require.ensure([], () => r(require('pages/cloud/sys/kingdeeSynForNoPushList.vue')));
 
 let routes = [
   {path: '/cloud/sys/kingdeeBookList',component: kingdeeBookList,name: 'kingdeeBookList'},
@@ -22,6 +23,7 @@ let routes = [
   {path: '/cloud/sys/voucherDetail',component: voucherDetail,name: 'voucherDetail',meta:{menu:"voucherList"}},
   {path: '/cloud/sys/kingdeeSynList',component: kingdeeSynList,name: 'kingdeeSynList'},
   {path: '/cloud/sys/kingdeeSynDetail',component: kingdeeSynDetail,name: 'kingdeeSynDetail',meta:{menu:"kingdeeSynList"}},
+  {path: '/cloud/sys/kingdeeSynForNoPushList',component: kingdeeSynForNoPushList,name: 'kingdeeSynForNoPushList'},
 ];
 
 export default routes;

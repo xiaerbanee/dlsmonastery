@@ -1,5 +1,6 @@
 package net.myspring.future.modules.layout.web.query;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.text.StringUtils;
@@ -15,9 +16,9 @@ public class AdGoodsOrderDetailQuery extends BaseQuery {
     private String adGoodsOrderIdStr;
     private String adGoodsOrderCreatedDateRange;
     private String adGoodsOrderBillDateRange;
-    private String adGoodsOrderProcessStatus;
+    private List<String> adGoodsOrderProcessStatus = Lists.newArrayList();
     private String adGoodsOrderRemarks;
-    private String productId;
+    private String productName;
     private String adGoodsOrderStoreId;
     private String adGoodsOrderShopId;
     private String adGoodsOrderShopAreaId;
@@ -48,11 +49,11 @@ public class AdGoodsOrderDetailQuery extends BaseQuery {
         this.adGoodsOrderBillDateRange = adGoodsOrderBillDateRange;
     }
 
-    public String getAdGoodsOrderProcessStatus() {
+    public List<String> getAdGoodsOrderProcessStatus() {
         return adGoodsOrderProcessStatus;
     }
 
-    public void setAdGoodsOrderProcessStatus(String adGoodsOrderProcessStatus) {
+    public void setAdGoodsOrderProcessStatus(List<String> adGoodsOrderProcessStatus) {
         this.adGoodsOrderProcessStatus = adGoodsOrderProcessStatus;
     }
 
@@ -64,12 +65,12 @@ public class AdGoodsOrderDetailQuery extends BaseQuery {
         this.adGoodsOrderRemarks = adGoodsOrderRemarks;
     }
 
-    public String getProductId() {
-        return productId;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setProductId(String productId) {
-        this.productId = productId;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public String getAdGoodsOrderStoreId() {
