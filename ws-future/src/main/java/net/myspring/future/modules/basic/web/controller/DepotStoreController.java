@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.enums.*;
+import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.RequestUtils;
@@ -48,12 +49,6 @@ public class DepotStoreController {
     private DictMapClient dictMapClient;
     @Autowired
     private DictEnumClient dictEnumClient;
-    @Autowired
-    private PricesystemService pricesystemService;
-    @Autowired
-    private AdPricesystemService adPricesystemService;
-    @Autowired
-    private ChainService chainService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DepotStoreDto> list(Pageable pageable, DepotStoreQuery depotStoreQuery){
@@ -71,29 +66,19 @@ public class DepotStoreController {
     public DepotStoreForm getForm(DepotStoreForm depotStoreForm){
         depotStoreForm.getExtra().put("depotStoreTypeList",DepotStoreTypeEnum.getList());
         depotStoreForm.getExtra().put("jointLevelList", JointLevelEnum.getList());
-        depotStoreForm.getExtra().put("areaList", dictMapClient.findByCategory(DictMapCategoryEnum.门店_地区属性.name()));
-        depotStoreForm.getExtra().put("channelList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_渠道类型.name())));
-        depotStoreForm.getExtra().put("chainList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_连锁属性.name())));
-        depotStoreForm.getExtra().put("salePointList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_售点类型.name())));
-        depotStoreForm.getExtra().put("turnoverList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_营业额分类.name())));
-        depotStoreForm.getExtra().put("shopAreaList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_店面尺寸.name())));
-        depotStoreForm.getExtra().put("carrierList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_运营商属性.name())));
-        depotStoreForm.getExtra().put("businessCenterList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_核心商圈.name())));
-        depotStoreForm.getExtra().put("specialityStoreList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_体验店类型.name())));
-        depotStoreForm.getExtra().put("shopMonthTotalList",dictEnumClient.findByCategory((DictEnumCategoryEnum.SHOP_MONTH_TOTAL.name())));
         return depotStoreForm;
     }
 
     @RequestMapping(value = "save")
     public RestResponse save(DepotStoreForm depotStoreForm){
         depotStoreService.save(depotStoreForm);
-        return new RestResponse("保存成功",null);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "delete")
     public RestResponse delete(DepotStoreForm depotStoreForm){
         depotStoreService.logicDelete(depotStoreForm.getId());
-        return new RestResponse("删除成功",null);
+        return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "storeReport")

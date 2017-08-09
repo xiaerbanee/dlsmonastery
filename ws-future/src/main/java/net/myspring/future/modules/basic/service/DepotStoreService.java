@@ -7,11 +7,13 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
+import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.dto.DepotReportDto;
 import net.myspring.future.modules.basic.dto.DepotStoreDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
+import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.web.form.DepotStoreForm;
@@ -52,6 +54,8 @@ public class DepotStoreService {
     private OfficeClient officeClient;
     @Autowired
     private CloudClient cloudClient;
+    @Autowired
+    private ClientRepository clientRepository;
 
     public Page<DepotStoreDto> findPage(Pageable pageable, DepotStoreQuery depotStoreQuery){
         depotStoreQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
@@ -78,21 +82,30 @@ public class DepotStoreService {
     @Transactional
     public DepotStore save(DepotStoreForm depotStoreForm) {
         DepotStore depotStore;
-        //保存depot
-        Depot depot = BeanUtil.map(depotStoreForm.getDepotForm(), Depot.class);
-        depot.setNamePinyin(StringUtils.getFirstSpell(depot.getName()));
-        depotRepository.save(depot);
-        //保存depotStore
+        //保存仓库
         if(depotStoreForm.isCreate()) {
-            depotStoreForm.setDepotId(depot.getId());
+            depotStoreForm.setDepotId(depotStoreForm.getDepotId());
             depotStore = BeanUtil.map(depotStoreForm,DepotStore.class);
             depotStoreRepository.save(depotStore);
         } else {
             depotStore = depotStoreRepository.findOne(depotStoreForm.getId());
             ReflectionUtil.copyProperties(depotStoreForm,depotStore);
-            depotStore.setDepotId(depot.getId());
+            depotStore.setDepotId(depotStoreForm.getDepotId());
             depotStoreRepository.save(depotStore);
         }
+        //保存门店
+        Depot depot = depotRepository.findOne(depotStoreForm.getDepotId());
+        depot.setDepotStoreId(depotStore.getId());
+        depot.setPopShop(depotStoreForm.getPopShop());
+        depotRepository.save(depot);
+
+        Client client = clientRepository.findOne(depot.getClientId());
+        depotStore.setOutId(client.getOutId());
+        depotStore.setOutCode(client.getOutCode());
+        depotStore.setOutDate(client.getOutDate());
+        depotStore.setOutGroupId(client.getOutGroupId());
+        depotStore.setOutGroupName(client.getOutGroupName());
+        depotStoreRepository.save(depotStore);
         return depotStore;
     }
 
@@ -237,6 +250,11 @@ public class DepotStoreService {
 
     @Transactional
     public void logicDelete(String id) {
+        DepotStore depotStore = depotStoreRepository.findOne(id);
+        Depot depot = depotRepository.findOne(depotStore.getDepotId());
+        depot.setDepotStoreId(null);
+        depot.setPopShop(null);
+        depotRepository.save(depot);
         depotStoreRepository.logicDelete(id);
     }
 
