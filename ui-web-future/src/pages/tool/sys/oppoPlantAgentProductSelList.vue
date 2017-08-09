@@ -53,24 +53,48 @@
     data(){
       return this.getData()
     },mounted() {
-      axios.get('/api/global/tool/factory/oppo/oppoPlantAgentProductSel/getForm').then((response) => {
-        this.inputForm = response.data;
-        if(this.inputForm.lx){
-          this.settings.colHeaders.push("LX对应货品");
-          this.settings.columns.push({data:'lxProductName',type: "autocomplete",allowEmpty: true,strict: true,productNames:[],source:this.productNames})
-          this.settings.colHeaders.push("货品型号");
-          this.settings.columns.push({data:'typeName',strict: true,readOnly: true});
-          this.settings.columns[6].source = this.inputForm.extra.productNames;
-          this.settings.columns[7].source = this.inputForm.extra.productNames;
-        }else{
-          this.settings.colHeaders.push("货品型号");
-          this.settings.columns.push({data:'typeName',strict: true,readOnly: true});
-          this.settings.columns[6].source = this.inputForm.extra.productNames;
+      console.log("companyName:"+this.companyName)
+      if (this.companyName == "JXOPPO"){
+        this.settings.colHeaders.push("LX对应货品");
+        this.settings.columns.push(
+          {
+            data:'lxProductName',
+            type: "autocomplete",
+            allowEmpty: true,
+            strict: true,
+            width:200,
+            tempLxProductNames:[],
+            source: function (query, process) {
+              var that = this;
+              if (that.tempLxProductNames.indexOf(query) >= 0) {
+                process(that.tempLxProductNames);
+              } else {
+                var productNames = new Array();
+                if (query.length >= 2) {
+                  axios.get('/api/global/tool/factory/oppo/oppoPlantAgentProductSel/findByProductName?name=' + query).then((response) => {
+                    if (response.data.length > 0) {
+                      for (var index in response.data) {
+                        var productName = response.data[index].name;
+                        productNames.push(productName);
+                        if (that.tempLxProductNames.indexOf(productName) < 0) {
+                          that.tempLxProductNames.push(productName);
+                        }
+                      }
+                    }
+                    process(productNames);
+                  });
+                } else {
+                  process(productNames);
+                }
+              }
+            }
+          })
         }
+        this.settings.colHeaders.push("货品型号");
+        this.settings.columns.push({data:'typeName',strict: true,readOnly: true,width:100});
         //Handsontable初始化操作
         this.search();
         table = new Handsontable(this.$refs["handsontable"], this.settings);
-      });
     },methods: {
       setSearchText() {
         this.$nextTick(function () {
@@ -78,6 +102,7 @@
         })
       },getData() {
         return {
+          companyName:JSON.parse(window.localStorage.getItem("account")).companyName,
           formData:{
           },
           inputForm:{
@@ -94,13 +119,43 @@
             startCols: 5,
             colHeaders: ['ID', '颜色Id', '颜色', '类型', '物料描述', '物料编码', 'TD对应货品'],
             columns: [
-              {data:'id',strict: true,readOnly: true},
-              {data:'colorId',strict: true,readOnly: true},
-              {data:'colorName',strict: true,readOnly: true},
-              {data:'brandType',strict: true,readOnly: true},
-              {data:'itemDesc',strict: true,readOnly: true},
-              {data:'itemNumber',strict: true,readOnly: true},
-              {data:'productName',type: "autocomplete",allowEmpty: true,productNames:[],source:this.productNames}
+              {data:'id',strict: true,readOnly: true,width:50},
+              {data:'colorId',strict: true,readOnly: true,width:50},
+              {data:'colorName',strict: true,readOnly: true,width:50},
+              {data:'brandType',strict: true,readOnly: true,width:50},
+              {data:'itemDesc',strict: true,readOnly: true,width:200},
+              {data:'itemNumber',strict: true,readOnly: true,width:50},
+              {
+                data:'productName',
+                type: "autocomplete",
+                allowEmpty: true,
+                width:200,
+                tempProductNames:[],
+                source: function (query, process) {
+                  var that = this;
+                  if (that.tempProductNames.indexOf(query) >= 0) {
+                    process(that.tempProductNames);
+                  } else {
+                    var productNames = new Array();
+                    if (query.length >= 2) {
+                      axios.get('/api/global/tool/factory/oppo/oppoPlantAgentProductSel/findByProductName?name=' + query).then((response) => {
+                        if (response.data.length > 0) {
+                          for (var index in response.data) {
+                            var productName = response.data[index].name;
+                            productNames.push(productName);
+                            if (that.tempProductNames.indexOf(productName) < 0) {
+                              that.tempProductNames.push(productName);
+                            }
+                          }
+                        }
+                        process(productNames);
+                      });
+                    } else {
+                      process(productNames);
+                    }
+                  }
+                }
+              }
             ],
             contextMenu: true,
           },
@@ -122,7 +177,7 @@
               if (!table.isEmptyRow(item)) {
                 let row = list[item];
                 let createForm = {};
-                if(this.inputForm.lx){
+                if(this.companyName == "JXOPPO"){
                   createForm.id = row[0];
                   createForm.productName = row[6];
                   createForm.lxProductName = row[7];
@@ -133,7 +188,6 @@
                 tableData.push(createForm);
               }
             }
-            console.log(tableData.length);
             this.inputForm.dataList = JSON.stringify(tableData);
             axios.post('/api/global/tool/factory/oppo/oppoPlantAgentProductSel/save', qs.stringify({data: this.inputForm.dataList}, {allowDots: true})).then((response) => {
               this.$message(response.data.message);
