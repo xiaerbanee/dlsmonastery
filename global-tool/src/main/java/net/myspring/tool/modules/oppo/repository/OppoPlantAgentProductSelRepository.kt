@@ -44,11 +44,7 @@ class OppoPlantAgentProductSelRepositoryImpl @Autowired constructor(val namedPar
 
     override fun findAll(oppoPlantAgentProductSelQuery: OppoPlantAgentProductSelQuery): MutableList<OppoPlantAgentProductSelDto> {
         var sb = StringBuilder("""
-            SELECT t1.*,t2.name AS "productName",t3.name AS "lxProductName"
-            FROM oppo_plant_agent_product_sel t1
-            LEFT JOIN crm_product t2 ON t1.product_id = t2.id
-            LEFT JOIN crm_product t3 ON t1.lx_product_id = t3.id
-            WHERE 1=1
+            SELECT t1.* FROM oppo_plant_agent_product_sel t1 WHERE 1=1
         """)
         if(CollectionUtils.isNotEmpty(oppoPlantAgentProductSelQuery.itemNumberList)){
             sb.append(""" AND item_number IN (:itemNumberList)""")
@@ -56,8 +52,8 @@ class OppoPlantAgentProductSelRepositoryImpl @Autowired constructor(val namedPar
         if(StringUtils.isNotBlank(oppoPlantAgentProductSelQuery.itemDesc)){
             sb.append(""" AND item_desc LIKE CONCAT('%',:itemDesc,'%')""")
         }
-        if(StringUtils.isNotBlank(oppoPlantAgentProductSelQuery.productName)){
-            sb.append(""" AND (t2.name LIKE CONCAT('%',:productName,'%') OR t3.name LIKE CONCAT('%',:productName,'%'))""")
+        if(CollectionUtils.isNotEmpty(oppoPlantAgentProductSelQuery.productIdList)){
+            sb.append(""" AND (t1.product_id in (:productIdList) OR t1.lx_product_id in (:productIdList))""")
         }
         return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(oppoPlantAgentProductSelQuery),BeanPropertyRowMapper(OppoPlantAgentProductSelDto::class.java));
     }
