@@ -302,7 +302,7 @@ public class ProductImeService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "officeName", "机构"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotName", "门店名称"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaType", "区域类型"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "provinceName", "地区名称"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "districtName", "地区名称"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "chainName", "连锁体系"));
         if ("按数量".equals(reportQuery.getExportType())) {
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productTypeName", "产品型号"));
@@ -313,6 +313,7 @@ public class ProductImeService {
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productName", "产品名称"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "ime", "串码"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employeeName", "核销人"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employeePositionName", "岗位"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "saleDate", "核销时间"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "retailDate", "工厂注册时间"));
         } else if ("按合计".equals(reportQuery.getExportType())) {
@@ -353,6 +354,8 @@ public class ProductImeService {
             depotReportDto.getExtra().put("sum", totalSum);
             depotReportList.add(depotReportDto);
         }
+        cacheUtils.initCacheInput(depotReportList);
+        cacheUtils.initCacheInput(depotReportList);
         cacheUtils.initCacheInput(depotReportList);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("销售报表" + reportQuery.getExportType(), depotReportList, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook,simpleExcelSheet);
