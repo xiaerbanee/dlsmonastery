@@ -16,6 +16,7 @@ public class OppoPlantAgentProductSelQuery extends BaseQuery {
     private String productName;
     private String itemNumberStr;
     private List<String> itemNumberList = Lists.newArrayList();
+    private List<String> productIdList = Lists.newArrayList();
 
     public String getItemDesc() {
         return itemDesc;
@@ -47,5 +48,13 @@ public class OppoPlantAgentProductSelQuery extends BaseQuery {
 
     public void setItemNumberList(List<String> itemNumberList) {
         this.itemNumberList = itemNumberList;
+    }
+
+    public List<String> getProductIdList() {
+        return productIdList;
+    }
+
+    public void setProductIdList(List<String> productIdList) {
+        this.productIdList = productIdList;
     }
 }

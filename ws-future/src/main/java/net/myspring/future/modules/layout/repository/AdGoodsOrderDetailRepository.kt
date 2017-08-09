@@ -85,14 +85,14 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
         if (adGoodsOrderDetailQuery.adGoodsOrderBillDateEnd != null) {
             sb.append("""  and t2.bill_date < :adGoodsOrderBillDateEnd """)
         }
-        if (StringUtils.isNotBlank(adGoodsOrderDetailQuery.adGoodsOrderProcessStatus)) {
-            sb.append("""  and t2.process_status = :adGoodsOrderProcessStatus """)
+        if (CollectionUtil.isNotEmpty(adGoodsOrderDetailQuery.adGoodsOrderProcessStatus)) {
+            sb.append("""  and t2.process_status in (:adGoodsOrderProcessStatus) """)
         }
         if (StringUtils.isNotBlank(adGoodsOrderDetailQuery.adGoodsOrderRemarks)) {
             sb.append("""  and t2.remarks LIKE CONCAT('%', :adGoodsOrderRemarks,'%')   """)
         }
-        if (StringUtils.isNotBlank(adGoodsOrderDetailQuery.productId)) {
-            sb.append("""  and t1.product_id = :productId """)
+        if (StringUtils.isNotBlank(adGoodsOrderDetailQuery.productName)) {
+            sb.append("""  and t3.name LIKE CONCAT('%', :productName,'%') """)
         }
         if (StringUtils.isNotBlank(adGoodsOrderDetailQuery.adGoodsOrderStoreId)) {
             sb.append("""  and t2.store_id = :adGoodsOrderStoreId """)

@@ -36,6 +36,8 @@ interface PositionRepository : BaseRepository<Position,String>,PositionRepositor
 
     fun findByIdInAndEnabledIsTrue(id: MutableList<String>): MutableList<Position>
 
+    fun findByNameInAndEnabledIsTrue(id: MutableList<String>): MutableList<Position>
+
     fun findByEnabledIsTrue(): MutableList<Position>
 }
 interface PositionRepositoryCustom{

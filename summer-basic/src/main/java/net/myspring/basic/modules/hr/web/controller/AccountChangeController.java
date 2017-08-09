@@ -1,24 +1,27 @@
 package net.myspring.basic.modules.hr.web.controller;
 
 import net.myspring.basic.common.enums.AccountChangeTypeEnum;
-import net.myspring.basic.modules.hr.domain.AccountChange;
 import net.myspring.basic.modules.hr.dto.AccountChangeDto;
 import net.myspring.basic.modules.hr.service.AccountChangeService;
-import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.AccountChangeForm;
 import net.myspring.basic.modules.hr.web.query.AccountChangeQuery;
+import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.excel.ExcelView;
+import net.myspring.util.excel.SimpleExcelBook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping(value = "hr/accountChange")
@@ -79,5 +82,17 @@ public class AccountChangeController {
     public RestResponse delete(String id){
         accountChangeService.logicDelete(id);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
+    }
+
+    @RequestMapping(value = "import/template", method = RequestMethod.GET)
+    public ModelAndView impotTemplate() throws IOException {
+        SimpleExcelBook simpleExcelSheet = accountChangeService.findSimpleExcelSheet();
+        ExcelView excelView = new ExcelView();
+        return new ModelAndView(excelView, "simpleExcelBook", simpleExcelSheet);
+    }
+
+    @RequestMapping(value = "import", method = RequestMethod.POST)
+    public RestResponse importFile(@RequestParam(value = "folderFileId", required = true) String folderFileId) {
+        return accountChangeService.batchSave(folderFileId);
     }
 }

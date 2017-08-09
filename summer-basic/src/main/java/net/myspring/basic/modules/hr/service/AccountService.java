@@ -103,9 +103,8 @@ public class AccountService {
     }
 
     public List<AccountDto> findByFilter(AccountQuery accountQuery) {
-        List<Account> accountList = accountRepository.findByFilter(accountQuery);
-        List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
-        cacheUtils.initCacheInput(accountList);
+        List<AccountDto> accountDtoList =accountRepository.findByFilter(accountQuery);
+        cacheUtils.initCacheInput(accountDtoList);
         return accountDtoList;
     }
     @Transactional
@@ -176,8 +175,7 @@ public class AccountService {
 
     public SimpleExcelBook findSimpleExcelSheet(AccountQuery accountQuery) throws IOException {
         Workbook workbook = new SXSSFWorkbook(10000);
-        List<Account> accountList = accountRepository.findByFilter(accountQuery);
-        List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
+        List<AccountDto> accountDtoList = accountRepository.findByFilter(accountQuery);
         cacheUtils.initCacheInput(accountDtoList);
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "type", "类型"));

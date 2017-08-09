@@ -1,5 +1,6 @@
 package net.myspring.tool.modules.oppo.web.controller;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.tool.modules.future.dto.ProductDto;
@@ -24,7 +25,11 @@ public class OppoPlantAgentProductSelController {
 
     @RequestMapping(value = "findAll")
     public List<OppoPlantAgentProductSelDto> findAll(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
-        List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelService.findAll(oppoPlantAgentProductSelQuery);
+        List<ProductDto> productDtoList = Lists.newArrayList();
+        if (StringUtils.isNotBlank(oppoPlantAgentProductSelQuery.getProductName())){
+            productDtoList = futureProductService.findByNameLike(oppoPlantAgentProductSelQuery.getProductName());
+        }
+        List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelService.findAll(oppoPlantAgentProductSelQuery,productDtoList);
         return oppoPlantAgentProductSelDtoList;
     }
 

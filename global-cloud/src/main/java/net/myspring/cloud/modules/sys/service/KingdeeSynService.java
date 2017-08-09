@@ -1,9 +1,12 @@
 package net.myspring.cloud.modules.sys.service;
 
+import com.google.common.collect.Lists;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
+import net.myspring.cloud.modules.input.service.SalOutStockService;
+import net.myspring.cloud.modules.input.service.SalReturnStockService;
 import net.myspring.cloud.modules.kingdee.domain.ArReceivable;
 import net.myspring.cloud.modules.kingdee.service.ArReceivableService;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
@@ -42,6 +45,10 @@ public class KingdeeSynService {
     private KingdeeManager kingdeeManager;
     @Autowired
     private ArReceivableService arReceivableService;
+    @Autowired
+    private SalOutStockService salOutStockService;
+    @Autowired
+    private SalReturnStockService salReturnStockService;
 
     public Page<KingdeeSyn> findPage(Pageable pageable, KingdeeSynQuery kingdeeSynQuery){
         KingdeeBook kingdeeBook = kingdeeBookRepository.findByCompanyName(RequestUtils.getCompanyName());
@@ -118,5 +125,12 @@ public class KingdeeSynService {
             }
         }
         return count;
+    }
+
+    public List<KingdeeSyn> findNoPushDown(){
+        List<String> list = Lists.newArrayList();
+        list.addAll(salOutStockService.findNoPushDown());
+        list.addAll(salReturnStockService.findNoPushDown());
+        return kingdeeSynRepository.findByBillNoList(list);
     }
 }
