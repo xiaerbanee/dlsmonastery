@@ -47,7 +47,7 @@ public class PositionService {
     }
 
     public List<PositionDto> findByIds(List<String> ids){
-        List<Position> positionList = positionRepository.findByIdInAndEnabledIsTrue(ids);
+        List<Position> positionList = positionRepository.findByIdInOrNameIn(ids);
         List<PositionDto> positionDtoList=BeanUtil.map(positionList,PositionDto.class);
         return positionDtoList;
     }

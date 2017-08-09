@@ -33,6 +33,11 @@
               <el-form-item  v-if="inputForm.type=='上级'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
                 <account-select  :disabled="isDetail=='detail'||isAudit=='audit'" v-model="inputForm.newValue"></account-select>
               </el-form-item>
+              <el-form-item  v-if="inputForm.type=='功能岗位'" :label="$t('accountChangeForm.newValue')"  prop="positionIdList">
+                <el-select :disabled="isDetail=='detail'||isAudit=='audit'" v-model="positionIdList" filterable :multiple="true" :placeholder="$t('accountChangeForm.inputWord')" >
+                  <el-option v-for="item in inputForm.extra.positionList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
+              </el-form-item>
               <el-form-item v-if="inputForm.type=='转正'||inputForm.type=='入职'||inputForm.type=='离职'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
                 <date-picker  :disabled="isDetail=='detail'||isAudit=='audit'" v-model="inputForm.newValue"></date-picker>
               </el-form-item>
@@ -60,6 +65,7 @@
 <script>
   import accountSelect from 'components/basic/account-select'
   import officeSelect from 'components/basic/office-select'
+  import util from "../../../utils/util";
   export default{
       components:{
           accountSelect,
@@ -78,6 +84,7 @@
           submitDisabled:false,
           accounts:[],
           offices:[],
+          positionIdList:[],
           inputForm:{
               extra:[],
           },
@@ -88,7 +95,6 @@
             remarks: [{ required: true, message: this.$t('accountChangeForm.prerequisiteMessage')}],
           },
           remoteLoading:false,
-
         }
       },
       formSubmit(){
@@ -97,6 +103,9 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
+            if(this.inputForm.type == "功能岗位"){
+              this.inputForm.newValue=this.positionIdList.join();
+            }
             axios.post('/api/basic/hr/accountChange/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
@@ -128,11 +137,11 @@
         var type=this.inputForm.type;
         axios.get('/api/basic/hr/accountChange/findData',{params: {type:type,accountId:accountId,id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
-          console.log("response.data")
-          console.log(response.data)
           if(response.data.accountId!=null){
             this.accounts=new Array({id:response.data.accountId,loginName:response.data.accountName})
           }
+          this.positionIdList=response.data.positionIdList
+          console.log(response.data)
           this.getOldValue();
         })
       },getOldValue(){
@@ -160,18 +169,17 @@
           this.inputForm.oldValue = this.inputForm.entryDate;
         }else if(this.inputForm.type == "离职"){
           this.inputForm.oldValue = this.inputForm.leaveDate;
+        }else if(this.inputForm.type == "功能岗位"){
+          this.inputForm.oldValue = this.inputForm.positionNameList.join();
         }else {
           this.inputForm.oldValue = "";
         }
       }
     },created () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-        this.inputForm.type=this.$route.query.type;
-        this.inputForm.id=this.$route.query.id;
-        this.getAccount(this.$route.query.accountId);
-      }
-      this.isInit = true;
+      Object.assign(this.$data, this.getData());
+      this.inputForm.type=this.$route.query.type;
+      this.inputForm.id=this.$route.query.id;
+      this.getAccount(this.$route.query.accountId);
     }
   }
 </script>

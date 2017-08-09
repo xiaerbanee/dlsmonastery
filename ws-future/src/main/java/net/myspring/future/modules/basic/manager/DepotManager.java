@@ -97,7 +97,7 @@ public class DepotManager {
         if(checkChain){
             List<String> chainIds = getChainIds(accountId);
             if(CollectionUtil.isNotEmpty(chainIds)){
-                List<String> depotIdsByChain = CollectionUtil.extractToList(depotRepository.findByChainIdIn(chainIds),"id");
+                List<String> depotIdsByChain = CollectionUtil.extractToList(depotRepository.findByEnabledIsTrueAndChainIdIn(chainIds),"id");
                 if(CollectionUtil.isNotEmpty(depotIdsByChain)){
                     filterDepotIds.addAll(depotIdsByChain);
                 }

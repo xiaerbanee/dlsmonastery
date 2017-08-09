@@ -45,7 +45,7 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     fun findByChainId(chainId: String): MutableList<Depot>
 
-    fun findByChainIdIn(chainIdList:MutableList<String>): MutableList<Depot>
+    fun findByEnabledIsTrueAndChainIdIn(chainIdList:MutableList<String>): MutableList<Depot>
 
     fun findByClientId(clientId: String): MutableList<Depot>
 
@@ -172,6 +172,8 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
                 crm_depot depot
             where
                 depot.enabled=1
+            and
+                depot.chain_id is NOT NULL
         """)
         if(CollectionUtil.isNotEmpty(depotQuery.depotIdList)){
             sb.append("""  and depot.id in (:depotIdList) """)

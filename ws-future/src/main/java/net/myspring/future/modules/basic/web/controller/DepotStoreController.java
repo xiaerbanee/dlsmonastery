@@ -3,16 +3,18 @@ package net.myspring.future.modules.basic.web.controller;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
-import net.myspring.common.enums.*;
+import net.myspring.common.enums.BoolEnum;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.enums.JointLevelEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.*;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.DictEnumClient;
 import net.myspring.future.modules.basic.client.DictMapClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.dto.DepotStoreDto;
-import net.myspring.future.modules.basic.service.*;
+import net.myspring.future.modules.basic.service.DepotService;
+import net.myspring.future.modules.basic.service.DepotStoreService;
 import net.myspring.future.modules.basic.web.form.DepotStoreForm;
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
@@ -119,7 +121,7 @@ public class DepotStoreController {
         reportQuery.getExtra().put("typeList", ReportTypeEnum.getList());
         reportQuery.getExtra().put("outTypeList", OutTypeEnum.getList());
         reportQuery.getExtra().put("boolMap", BoolEnum.getMap());
-        CompanyConfigCacheDto companyConfigCacheDto = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.PRODUCT_NAME.name());
+        CompanyConfigCacheDto companyConfigCacheDto = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.COMPANY_NAME.name());
         if (companyConfigCacheDto != null && "WZOPPO".equals(companyConfigCacheDto.getValue())) {
             reportQuery.setOutType(ProductImeStockReportOutTypeEnum.核销.name());
         } else {

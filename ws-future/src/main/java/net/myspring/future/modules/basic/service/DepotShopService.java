@@ -92,9 +92,6 @@ public class DepotShopService {
             depotShopQuery.setChildOfficeIds(childOffices);
         }
         depotShopQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
-        if (StringUtils.isNotBlank(depotShopQuery.getOfficeId())) {
-            depotShopQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(depotShopQuery.getOfficeId()));
-        }
         Page<DepotShopDto> page = depotShopRepository.findPage(pageable, depotShopQuery);
         if (CollectionUtil.isNotEmpty(page.getContent())) {
             List<ShopDeposit> scbzjList = shopDepositRepository.findByTypeAndShopIdIn(ShopDepositTypeEnum.市场保证金.name(), CollectionUtil.extractToList(page.getContent(), "depotId"));
@@ -102,8 +99,8 @@ public class DepotShopService {
             Map<String, ShopDepositDto> xxbzjMap = CollectionUtil.extractToMap(BeanUtil.map(xxbzjList,ShopDepositDto.class), "shopId");
             Map<String, ShopDepositDto> scbzjMap = CollectionUtil.extractToMap(BeanUtil.map(scbzjList,ShopDepositDto.class), "shopId");
             for (DepotShopDto depotShopDto : page.getContent()) {
-                depotShopDto.getDepositMap().put("xxbzj", xxbzjMap.get(depotShopDto.getId()) == null ? BigDecimal.ZERO : xxbzjMap.get(depotShopDto.getId()).getAmount());
-                depotShopDto.getDepositMap().put("scbzj", scbzjMap.get(depotShopDto.getId()) == null ? BigDecimal.ZERO : scbzjMap.get(depotShopDto.getId()).getAmount());
+                depotShopDto.getDepositMap().put("xxbzj", xxbzjMap.get(depotShopDto.getId()) == null ? BigDecimal.ZERO : xxbzjMap.get(depotShopDto.getId()).getLeftAmount());
+                depotShopDto.getDepositMap().put("scbzj", scbzjMap.get(depotShopDto.getId()) == null ? BigDecimal.ZERO : scbzjMap.get(depotShopDto.getId()).getLeftAmount());
             }
             cacheUtils.initCacheInput(page.getContent());
         }
@@ -189,6 +186,11 @@ public class DepotShopService {
 
     public SimpleExcelBook findSimpleExcelSheet(DepotShopQuery depotShopQuery)  {
         Workbook workbook = new SXSSFWorkbook(10000);
+        if(StringUtils.isNotBlank(depotShopQuery.getOfficeId())){
+            List<String> childOffices = officeClient.getChildOfficeIds(depotShopQuery.getOfficeId());
+            depotShopQuery.setChildOfficeIds(childOffices);
+        }
+        depotShopQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         List<DepotShopDto> depotShopDtoList = depotShopRepository.findFilter(depotShopQuery);
         cacheUtils.initCacheInput(depotShopDtoList);
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();

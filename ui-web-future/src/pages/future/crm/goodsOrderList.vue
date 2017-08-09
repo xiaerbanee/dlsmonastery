@@ -181,7 +181,7 @@
        return row.enabled && (row.status==='待开单' || (row.status==='待发货' && util.isPermit('crm:goodsOrder:bill')));
     },
     tableRowClassName(row, index) {
-      if ( row.status==='待开单' && row.shopShouldGetAfterBill<= 0 && _.trim(row.shopCode) !== '') {
+      if ( row.status==='待开单' && row.shopShouldGetAfterBill<= 0) {
         return "danger-row";
       }else{
         return "";

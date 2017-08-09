@@ -34,8 +34,6 @@ interface PositionRepository : BaseRepository<Position,String>,PositionRepositor
     @CachePut(key="#p0.id")
     fun save(position: Position): Position
 
-    fun findByIdInAndEnabledIsTrue(id: MutableList<String>): MutableList<Position>
-
     fun findByNameInAndEnabledIsTrue(id: MutableList<String>): MutableList<Position>
 
     fun findByEnabledIsTrue(): MutableList<Position>
@@ -44,8 +42,17 @@ interface PositionRepositoryCustom{
     fun findByNameLike(@Param("name") name: String): MutableList<Position>
 
     fun findPage(pageable: Pageable, positionQuery: PositionQuery): Page<PositionDto>
+
+    fun findByIdInOrNameIn(list: MutableList<String>): MutableList<Position>
 }
 class PositionRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): PositionRepositoryCustom{
+    override fun findByIdInOrNameIn(list: MutableList<String>): MutableList<Position> {
+        var sb = StringBuilder("select t1.* from hr_position t1 where t1.enabled=1 and (t1.id in (:list) or t1.name in (:list))");
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("list", list)
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(Position::class.java));
+    }
+
     override fun findPage(pageable: Pageable, positionQuery: PositionQuery): Page<PositionDto> {
         var sb = StringBuilder("select t1.* ,t2.name as roleName from hr_position t1 left join sys_role t2 on t1.role_id=t2.id and t2.enabled=1 where t1.enabled=1 ");
         if(StringUtils.isNotBlank(positionQuery.name)) {
