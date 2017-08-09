@@ -5,6 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus"  v-permit="'hr:accountChange:edit'">{{$t('accountChangeList.add')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search" >{{$t('accountChangeList.filter')}}</el-button>
+        <el-button type="primary" @click="batchAdd" icon="plus"    v-permit="'hr:accountChange:edit'">批量调整</el-button>
         <el-button type="primary" @click="batchPass" icon="check"    v-permit="'hr:accountChange:audit'">批量通过</el-button>
         <el-button type="primary" @click="batchNoPass" icon="close"    v-permit="'hr:accountChange:audit'">批量打回</el-button>
         <span v-html="searchText"></span>
@@ -123,6 +124,8 @@
         for (let each of selection) {
           this.selects.push(each.id);
         }
+      },batchAdd(){
+        this.$router.push({ name: 'accountChangeBatchForm'})
       },batchPass(){
         if(!this.selects || this.selects.length < 1){
           this.$message("请选择审批记录");
