@@ -5,11 +5,13 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.tool.common.client.DistrictClient;
 import net.myspring.tool.common.client.EmployeeClient;
 import net.myspring.tool.common.client.OfficeClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
+import net.myspring.tool.common.enums.AgentCodeEnum;
 import net.myspring.tool.common.utils.CacheUtils;
 import net.myspring.tool.modules.future.domain.Office;
 import net.myspring.tool.modules.future.dto.CustomerDto;
@@ -19,6 +21,7 @@ import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.modules.oppo.dto.OppoPushDto;
 import net.myspring.tool.modules.oppo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.text.MD5Utils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;
@@ -79,6 +82,22 @@ public class OppoPushSerivce {
 
     private Map<String,String> areaDepotMap=Maps.newHashMap();
     private Map<String,CustomerDto> customerDtoMap=Maps.newHashMap();
+
+    public String getCompanyName(String key,String ...args){
+        StringBuffer params=new StringBuffer("");
+        for(String arg:args){
+            params=params.append(arg);
+        }
+        String jxoppoKey= MD5Utils.encode(AgentCodeEnum.M13AMB.name() + params);
+        String wzoppoKey=MD5Utils.encode(AgentCodeEnum.M03FMB.name() + params);
+        if(jxoppoKey.equals(key)){
+            return CompanyNameEnum.JXOPPO.name();
+        }else if(wzoppoKey.equals(key)){
+            return CompanyNameEnum.WZOPPO.name();
+        }else{
+            return null;
+        }
+    }
 
 
     @LocalDataSource
@@ -565,10 +584,10 @@ public class OppoPushSerivce {
 
 
     @LocalDataSource
-    public List<OppoCustomer>  getOppoCustomersByDate(String createdDate){
+    public List<OppoCustomer>  getOppoCustomersByDate(String createdDate,String companyName){
         String dateStart=LocalDateUtils.format(LocalDateUtils.parse(createdDate));
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(createdDate).plusDays(1));
-        List<OppoCustomer> oppoCustomers=oppoCustomerRepository.findByDate(dateStart,dateEnd);
+        List<OppoCustomer> oppoCustomers=oppoCustomerRepository.findByDate(companyName,dateStart,dateEnd);
         return oppoCustomers;
     }
 
@@ -576,56 +595,65 @@ public class OppoPushSerivce {
     public List<OppoCustomerOperatortype>  getOppoCustomerOperatortypesByDate(String createdDate){
         String dateStart=LocalDateUtils.format(LocalDateUtils.parse(createdDate));
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(createdDate).plusDays(1));
-        List<OppoCustomerOperatortype> oppoCustomerOperatortypes=oppoCustomerOperatortypeRepository.findByDate(dateStart,dateEnd);
+        String companyName = DbContextHolder.get().getCompanyName();
+        List<OppoCustomerOperatortype> oppoCustomerOperatortypes=oppoCustomerOperatortypeRepository.findByDate(companyName,dateStart,dateEnd);
         return oppoCustomerOperatortypes;
     }
 
     @LocalDataSource
     public List<OppoCustomerAllot>  getOppoCustomerAllotsByDate(String dateStart,String dateEnd){
-        List<OppoCustomerAllot> oppoCustomerAllots=oppoCustomerAllotRepository.findByDate(dateStart,dateEnd);
+        String companyName = DbContextHolder.get().getCompanyName();
+        List<OppoCustomerAllot> oppoCustomerAllots=oppoCustomerAllotRepository.findByDate(companyName,dateStart,dateEnd);
         return oppoCustomerAllots;
     }
 
 
     @LocalDataSource
     public List<OppoCustomerStock>  getOppoCustomerStocksByDate(String dateStart,String dateEnd){
-        List<OppoCustomerStock> oppoCustomerStocks=oppoCustomerStockRepository.findByDate(dateStart,dateEnd);
+        String companyName = DbContextHolder.get().getCompanyName();
+        List<OppoCustomerStock> oppoCustomerStocks=oppoCustomerStockRepository.findByDate(companyName,dateStart,dateEnd);
         return oppoCustomerStocks;
     }
 
     @LocalDataSource
     public List<OppoCustomerImeiStock>  getOppoCustomerImeiStocksByDate(String dateStart,String dateEnd){
-        List<OppoCustomerImeiStock> oppoCustomerImeiStocks=oppoCustomerImeiStockRepository.findByDate(dateStart,dateEnd);
+        String companyName = DbContextHolder.get().getCompanyName();
+        List<OppoCustomerImeiStock> oppoCustomerImeiStocks=oppoCustomerImeiStockRepository.findByDate(companyName,dateStart,dateEnd);
         return oppoCustomerImeiStocks;
     }
 
     @LocalDataSource
     public List<OppoCustomerSale>  getOppoCustomerSalesByDate(String dateStart,String dateEnd){
-        List<OppoCustomerSale> oppoCustomerSales=oppoCustomerSaleRepository.findByDate(dateStart,dateEnd);
+        String companyName = DbContextHolder.get().getCompanyName();
+        List<OppoCustomerSale> oppoCustomerSales=oppoCustomerSaleRepository.findByDate(companyName,dateStart,dateEnd);
         return oppoCustomerSales;
     }
 
     @LocalDataSource
     public List<OppoCustomerSaleImei>  getOppoCustomerSaleImeisByDate(String dateStart,String dateEnd){
-        List<OppoCustomerSaleImei> oppoCustomerSaleImeis=oppoCustomerSaleImeiRepository.findByDate(dateStart,dateEnd);
+        String companyName = DbContextHolder.get().getCompanyName();
+        List<OppoCustomerSaleImei> oppoCustomerSaleImeis=oppoCustomerSaleImeiRepository.findByDate(companyName,dateStart,dateEnd);
         return oppoCustomerSaleImeis;
     }
 
     @LocalDataSource
     public List<OppoCustomerSaleCount>  getOppoCustomerSaleCountsByDate(String dateStart,String dateEnd){
-        List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoCustomerSaleCountRepository.findByDate(dateStart,dateEnd);
+        String companyName = DbContextHolder.get().getCompanyName();
+        List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoCustomerSaleCountRepository.findByDate(companyName,dateStart,dateEnd);
         return oppoCustomerSaleCounts;
     }
 
     @LocalDataSource
     public List<OppoCustomerAfterSaleImei>  getOppoCustomerAfterSaleImeisByDate(String dateStart,String dateEnd){
-        List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=oppoCustomerAfterSaleImeiRepository.findByDate(dateStart,dateEnd);
+        String companyName = DbContextHolder.get().getCompanyName();
+        List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=oppoCustomerAfterSaleImeiRepository.findByDate(companyName,dateStart,dateEnd);
         return oppoCustomerAfterSaleImeis;
     }
 
     @LocalDataSource
     public List<OppoCustomerDemoPhone>  getOppoCustomerDemoPhonesByDate(String dateStart,String dateEnd){
-        List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoCustomerDemoPhoneRepository.findByDate(dateStart,dateEnd);
+        String companyName = DbContextHolder.get().getCompanyName();
+        List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoCustomerDemoPhoneRepository.findByDate(companyName,dateStart,dateEnd);
         return oppoCustomerDemoPhones;
     }
 }

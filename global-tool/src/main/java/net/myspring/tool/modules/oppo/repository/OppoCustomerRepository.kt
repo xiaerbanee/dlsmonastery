@@ -12,17 +12,21 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 interface OppoCustomerRepository : BaseRepository<OppoCustomer, String>, OppoCustomerRepositoryCustom {
 }
 interface OppoCustomerRepositoryCustom{
-    fun findByDate(dateStart:String,dateEnd:String):MutableList<OppoCustomer>
+    fun findByDate(companyName: String,dateStart:String,dateEnd:String):MutableList<OppoCustomer>
     fun deleteByCompanyNameAndDate(companyName:String,dateStart: String,dateEnd: String):Int
 }
 class OppoCustomerRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : OppoCustomerRepositoryCustom{
 
-    override fun findByDate(dateStart:String, dateEnd:String): MutableList<OppoCustomer> {
+    override fun findByDate(companyName: String,dateStart:String, dateEnd:String): MutableList<OppoCustomer> {
         val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("dateStart",dateStart);
         paramMap.put("dateEnd",dateEnd);
+        paramMap.put("companyName",companyName);
         return namedParameterJdbcTemplate.query("""
-            select *  from oppo_push_customer where created_date >=:dateStart and created_date<:dateEnd
+            select *  from oppo_push_customer
+            where created_date >=:dateStart
+              and created_date<:dateEnd
+              and company_name = :companyName
          """,paramMap,BeanPropertyRowMapper(OppoCustomer::class.java))
     }
 
