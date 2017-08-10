@@ -39,9 +39,9 @@
         <el-table-column prop="employeeName" :label="$t('accountList.employeeName')"></el-table-column>
         <el-table-column prop="leaderName" sortable :label="$t('accountList.leader')" width="120"></el-table-column>
         <el-table-column prop="officeName" :label="$t('accountList.officeName')"></el-table-column>
-        <el-table-column prop="positionName" :label="$t('accountList.positionName')"></el-table-column>
         <el-table-column prop="dataScopeOfficeName" label="数据部门"></el-table-column>
-        <el-table-column prop="positionNameList" label="功能岗位"></el-table-column>
+        <el-table-column prop="positionName" :label="$t('accountList.positionName')"></el-table-column>
+        <el-table-column prop="positionNames" label="功能岗位"></el-table-column>
         <el-table-column prop="employeeStatus" :label="$t('accountList.employeeStatus')"></el-table-column>
         <el-table-column fixed="right" :label="$t('accountList.operation')" width="140">
           <template scope="scope">

@@ -11,6 +11,7 @@ import net.myspring.basic.modules.hr.repository.AccountRepository;
 import net.myspring.basic.modules.hr.repository.EmployeeRepository;
 import net.myspring.basic.modules.hr.repository.PositionRepository;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
+import net.myspring.basic.modules.hr.web.form.AccountPositionForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
@@ -110,12 +111,6 @@ public class AccountService {
     @Transactional
     public Account save(AccountForm accountForm) {
         Account account;
-        if(CollectionUtil.isEmpty(accountForm.getOfficeIdList())||accountForm.getOfficeIdList().size()==1){
-            accountForm.setOfficeIds(accountForm.getOfficeId());
-        }
-        if(CollectionUtil.isEmpty(accountForm.getPositionIdList())||accountForm.getPositionIdList().size()==1){
-            accountForm.setPositionIds(accountForm.getPositionId());
-        }
         accountForm.setOfficeIds(StringUtils.join(accountForm.getOfficeIdList(),CharConstant.COMMA));
         if (accountForm.isCreate()) {
             if (StringUtils.isNotBlank(accountForm.getPassword())) {
@@ -124,6 +119,7 @@ public class AccountService {
                 accountForm.setPassword(StringUtils.getEncryptPassword("123456"));
             }
             account = BeanUtil.map(accountForm, Account.class);
+            account.setPositionIds(CharConstant.COMMA+accountForm.getPositionId()+CharConstant.COMMA);
             accountRepository.save(account);
         } else {
             if (StringUtils.isNotBlank(accountForm.getPassword())) {
@@ -132,11 +128,35 @@ public class AccountService {
                 accountForm.setPassword(accountRepository.findOne(accountForm.getId()).getPassword());
             }
             account = accountRepository.findOne(accountForm.getId());
+            String positionIds=account.getPositionIds();
+            String positionId=account.getPositionId();
+            List<String> positionIdList=StringUtils.getSplitList(account.getPositionIds(),CharConstant.COMMA);
             ReflectionUtil.copyProperties(accountForm,account);
+            if(positionIdList.size()==1){
+                account.setPositionIds(CharConstant.COMMA+accountForm.getPositionId()+CharConstant.COMMA);
+            }else if(!positionIdList.contains(account.getPositionId())){
+                account.setPositionIds(positionIds+CharConstant.COMMA+account.getPositionId()+CharConstant.COMMA);
+            }else if(positionIdList.contains(account.getPositionId())){
+                account.setPositionIds(positionIds.replace(","+positionId+",",","+accountForm.getPositionId()+","));
+            }
             accountRepository.save(account);
         }
         return account;
     }
+
+    @Transactional
+    public Account saveAccountPosition(AccountPositionForm accountPositionForm) {
+        Account account=accountRepository.findOne(accountPositionForm.getId());
+        if(CollectionUtil.isNotEmpty(accountPositionForm.getPositionIdList())){
+            if(accountPositionForm.getPositionIdList().size()==1){
+                account.setPositionId(accountPositionForm.getPositionIdList().get(0));
+            }
+            account.setPositionIds(StringUtils.join(accountPositionForm.getPositionIdList(),CharConstant.COMMA));
+        }
+        accountRepository.save(account);
+        return account;
+    }
+
     @Transactional
     public void logicDelete(String id) {
         accountRepository.logicDelete(id);

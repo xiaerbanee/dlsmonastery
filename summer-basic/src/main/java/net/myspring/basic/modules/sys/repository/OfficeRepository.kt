@@ -100,6 +100,8 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
 
     fun findByEnabledIsTrueAndType(type:String):MutableList<Office>
 
+    fun findByEnabledIsTrue():MutableList<Office>
+
     @Query("""
         SELECT t
         FROM  #{#entityName} t
@@ -130,6 +132,14 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
         FROM  #{#entityName} t
      """)
     fun findDistinctAgentCode():MutableList<String>
+
+    @Query("""
+        SELECT t
+        FROM  #{#entityName} t
+        WHERE t.enabled=1
+        and (t.id=?1 or t.name=?1 )
+    """)
+    fun findByIdOrName(param:String):Office
 }
 
 interface OfficeRepositoryCustom {

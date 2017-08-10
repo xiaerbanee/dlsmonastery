@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.repository
 
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.Account
+import net.myspring.basic.modules.hr.domain.Position
 import net.myspring.basic.modules.hr.dto.AccountDto
 import net.myspring.basic.modules.hr.web.query.AccountQuery
 import net.myspring.cloud.modules.kingdee.domain.StkInventory
@@ -72,6 +73,14 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
         and t.loginName like concat('%',?1,'%')
     """)
     fun findByLoginNameLike(loginName: String): MutableList<Account>
+
+    @Query("""
+        SELECT t
+        FROM  #{#entityName} t
+        WHERE t.enabled=1
+        and (t.id=?1 or t.loginName=?1 )
+    """)
+    fun findByIdOrName(param: String): Account
 }
 
 interface AccountRepositoryCustom{
