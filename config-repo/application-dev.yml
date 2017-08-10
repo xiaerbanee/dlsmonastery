@@ -39,7 +39,7 @@ spring:
       WZOPPO:
         url: jdbc:mysql://168.192.1.243:3346/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
-        assword: bbk@123456
+        password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
     summer-basic:
       JXOPPO:
@@ -65,7 +65,7 @@ spring:
       WZOPPO:
         url: jdbc:mysql://168.192.1.243:3346/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
-        assword: bbk@123456
+        password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
     summer-general:
       JXOPPO:
@@ -91,7 +91,7 @@ spring:
       WZOPPO:
         url: jdbc:mysql://168.192.1.243:3346/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
-        assword: bbk@123456
+        password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
     kingdee:
       JXOPPO:
