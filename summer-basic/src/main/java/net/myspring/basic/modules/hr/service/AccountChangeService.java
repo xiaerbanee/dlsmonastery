@@ -3,6 +3,7 @@ package net.myspring.basic.modules.hr.service;
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.enums.AccountChangeTypeEnum;
 import net.myspring.basic.common.enums.EmployeeStatusEnum;
+import net.myspring.basic.common.enums.JointTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.Account;
@@ -44,7 +45,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 import static net.myspring.util.excel.ExcelUtils.doRead;
@@ -138,6 +138,27 @@ public class AccountChangeService {
     public AccountChange save(AccountChangeForm accountChangeForm) {
         Account account=accountRepository.findOne(accountChangeForm.getAccountId());
         Employee employee=employeeRepository.findOne(account.getEmployeeId());
+        Office office=officeRepository.findOne(account.getOfficeId());
+        Office area=officeRepository.findOne(office.getAreaId());
+        boolean pass=false;
+        if((accountChangeForm.getType().equals(AccountChangeTypeEnum.离职.toString())&&employee.getLeaveDate()==null)|| JointTypeEnum.代理.name().equals(area.getJointType())){
+            pass=true;
+        }
+        AccountChange accountChange=getAccountChange(accountChangeForm,account,employee);
+        save(accountChange,pass);
+        return accountChange;
+    }
+
+    @Transactional
+    public AccountChange save(AccountChange accountChange,boolean pass) {
+        accountChangeRepository.save(accountChange);
+        if(pass){
+            audit(accountChange.getId(),true,null);
+        }
+        return accountChange;
+    }
+
+    private AccountChange getAccountChange(AccountChangeForm accountChangeForm,Account account,Employee employee){
         AccountChange accountChange=new AccountChange();
         accountChange.setAccountId(accountChangeForm.getAccountId());
         accountChange.setNewValue(accountChangeForm.getNewValue());
@@ -210,10 +231,6 @@ public class AccountChangeService {
             accountChange.setNewLabel(StringUtils.join(CollectionUtil.extractToList(positions,"name"),CharConstant.COMMA));
         }
         accountChange.setProcessStatus("省公司人事审核");
-        accountChangeRepository.save(accountChange);
-        if(accountChange.getType().equals(AccountChangeTypeEnum.离职.toString())&&employee.getLeaveDate()==null){
-            audit(accountChange.getId(),true,null);
-        }
         return accountChange;
     }
 
@@ -236,6 +253,7 @@ public class AccountChangeService {
     public void pass(String id,boolean pass){
         audit(id,pass,"审核");
     }
+
     @Transactional
     public void logicDelete(String id){
         accountChangeRepository.logicDelete(id);
@@ -279,6 +297,9 @@ public class AccountChangeService {
                 }
             }
             if(StringUtils.isBlank(sb.toString())){
+                Map<String,Employee> employeeMap=employeeRepository.findMap(CollectionUtil.extractToList(accountList,"employeeId"));
+                Map<String,Office> officeMap=officeRepository.findMap(CollectionUtil.extractToList(accountList,"officeId"));
+                Map<String,Office> areaMap=officeRepository.findMap(CollectionUtil.extractToList(officeMap.values(),"areaId"));
                 for(AccountChangeBatchForm accountChangeBatchForm:list){
                     AccountChangeForm accountChangeForm= BeanUtil.map(accountChangeBatchForm,AccountChangeForm.class);
                     Account account = accountMap.get(accountChangeBatchForm.getLoginName());
@@ -287,8 +308,16 @@ public class AccountChangeService {
                         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
                         accountChangeForm.setNewValue(sdf.format(date));
                     }
+                    Employee employee=employeeMap.get(account.getEmployeeId());
                     accountChangeForm.setAccountId(account.getId());
-                    save(accountChangeForm);
+                    Office office=officeMap.get(account.getOfficeId());
+                    Office area=areaMap.get(office.getAreaId());
+                    boolean pass=false;
+                    if((accountChangeForm.getType().equals(AccountChangeTypeEnum.离职.toString())&&employee.getLeaveDate()==null)|| JointTypeEnum.代理.name().equals(area.getJointType())){
+                        pass=true;
+                    }
+                    AccountChange accountChange=getAccountChange(accountChangeForm,account,employee);
+                    save(accountChange,pass);
                 }
             }else {
                 restResponse=new RestResponse(sb.toString(),null,false);
