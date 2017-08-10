@@ -115,6 +115,8 @@ INSERT INTO crm_simple_process_step (
     t2.name in ('AdGoodsOrder','BankIn') and t2.enabled = 1 order by t1.sort
 );
 
+INSERT INTO `crm_simple_process` (`id`, `simple_process_type_id`, `current_process_status`, `current_position_id`, `remarks`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`, `version`, `locked`, `enabled`) VALUES ('1', '83', '已通过', NULL, '', '15026', '2016-08-22 12:47:54', '15026', '2016-08-22 12:47:54', '0', '0', '1');
+
   INSERT INTO crm_simple_process (
   SELECT
     process_instance_id,
