@@ -5,6 +5,8 @@ import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
+import net.myspring.cloud.common.enums.KingdeeNameEnum;
+import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.common.enums.SettleTypeEnum;
 import net.myspring.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.ArReceiveBillDto;
@@ -79,9 +81,27 @@ public class ArReceiveBillService {
         Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
         if(isLogin) {
             if (CollectionUtil.isNotEmpty(arReceiveBillDtoList)) {
-                for (ArReceiveBillDto arReceiveBillDto : arReceiveBillDtoList) {
-                    KingdeeSynDto kingdeeSynDto = save(arReceiveBillDto,kingdeeBook);
-                    kingdeeSynDtoList.add(kingdeeSynDto);
+                if (KingdeeNameEnum.WZOPPO.name().equals(RequestUtils.getCompanyName())) {
+                    for (ArReceiveBillDto arReceiveBillDto : arReceiveBillDtoList) {
+                        KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
+                                arReceiveBillDto.getExtendId(),
+                                arReceiveBillDto.getExtendType(),
+                                KingdeeFormIdEnum.AR_RECEIVEBILL.name(),
+                                arReceiveBillDto.getJson(),
+                                kingdeeBook);
+                        //温州不自动审核
+                        kingdeeSynDto.setAutoAudit(false);
+                        kingdeeSynDto = kingdeeManager.save(kingdeeSynDto);
+                        if (!kingdeeSynDto.getSuccess()){
+                            throw new ServiceException("收款单失败："+kingdeeSynDto.getResult());
+                        }
+                        kingdeeSynDtoList.add(kingdeeSynDto);
+                    }
+                }else {
+                    for (ArReceiveBillDto arReceiveBillDto : arReceiveBillDtoList) {
+                        KingdeeSynDto kingdeeSynDto = save(arReceiveBillDto, kingdeeBook);
+                        kingdeeSynDtoList.add(kingdeeSynDto);
+                    }
                 }
             }
         }else{
@@ -170,7 +190,6 @@ public class ArReceiveBillService {
         kingdeeSynDtoList.addAll(save(cashBillList,kingdeeBook,accountKingdeeBook));
         return kingdeeSynDtoList;
     }
-
 
     @Transactional
     public List<KingdeeSynDto> saveForWS(List<ArReceiveBillDto> arReceiveBillDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){

@@ -58,6 +58,9 @@
               <el-form-item :label="$t('productImeList.createdDate')">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
+              <el-form-item :label="$t('productImeList.saleDate')">
+                <date-range-picker v-model="formData.saleDateRange"></date-range-picker>
+              </el-form-item>
               <el-form-item :label="$t('productImeList.createTimeBtw')">
                 <date-range-picker v-model="formData.createdTimeRange" ></date-range-picker>
               </el-form-item>

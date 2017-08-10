@@ -20,6 +20,7 @@ public class OppoPlantProductItemelectronSel extends IdEntity<OppoPlantProductIt
     private String areac;
     private String imeib;
     private String dlsProductId;
+    private String companyName;
 
     public LocalDateTime getCreatedTime() {
         return createdTime;
@@ -99,5 +100,13 @@ public class OppoPlantProductItemelectronSel extends IdEntity<OppoPlantProductIt
 
     public void setDlsProductId(String dlsProductId) {
         this.dlsProductId = dlsProductId;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 }

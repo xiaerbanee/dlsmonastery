@@ -17,6 +17,7 @@ public class OppoPlantProductSel extends IdEntity<OppoPlantProductSel> {
     private String shortCut;
     private String typeId;
     private String typeName;
+    private String companyName;
 
     public String getColorId() {
         return colorId;
@@ -80,5 +81,13 @@ public class OppoPlantProductSel extends IdEntity<OppoPlantProductSel> {
 
     public void setTypeName(String typeName) {
         this.typeName = typeName;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 }

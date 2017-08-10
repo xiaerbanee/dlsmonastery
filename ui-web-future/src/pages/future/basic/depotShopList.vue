@@ -5,6 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAddDepot" icon="plus" v-permit="'crm:depotShop:basicEdit'">添加</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:depotShop:view'">过滤或导出</el-button>
+        <el-button type="primary" @click="itemBindAccount" icon="share" v-permit="'crm:depotShop:basicEdit'">账户绑定</el-button>
         <el-button type="primary" @click="itemMerge" icon="setting" v-permit="'crm:depotShop:businessEdit'">门店合并</el-button>
         <span v-html="searchText"></span>
       </el-row>

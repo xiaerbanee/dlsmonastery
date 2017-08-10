@@ -3,6 +3,7 @@ package net.myspring.tool.modules.oppo.service;
 import com.google.common.collect.Lists;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.utils.CacheUtils;
+import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.oppo.dto.OppoPlantSendImeiPpselDto;
 import net.myspring.tool.modules.oppo.repository.OppoPlantSendImeiPpselRepository;
 import net.myspring.util.excel.ExcelUtils;
@@ -30,10 +31,11 @@ public class OppoPlantSendImeiPpselService {
 
     @Transactional(readOnly = true)
     public SimpleExcelBook export(String date){
+        String companyName = RequestUtils.getCompanyName();
         Workbook workbook = new SXSSFWorkbook();
         LocalDate dateTimeStart = LocalDateUtils.parse(date);
         LocalDate dateTimeEnd = LocalDateUtils.parse(date).plusDays(1);
-        List<OppoPlantSendImeiPpselDto> oppoPlantSendImeiPpselDtoList = oppoPlantSendImeiPpselRepository.findListByCreatedDate(dateTimeStart,dateTimeEnd);
+        List<OppoPlantSendImeiPpselDto> oppoPlantSendImeiPpselDtoList = oppoPlantSendImeiPpselRepository.findListByCompanyNameAndCreatedDate(companyName,dateTimeStart,dateTimeEnd);
         cacheUtils.initCacheInput(oppoPlantSendImeiPpselDtoList);
 
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();

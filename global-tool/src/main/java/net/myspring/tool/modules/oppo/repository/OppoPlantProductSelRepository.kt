@@ -12,8 +12,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall
 
 interface OppoPlantProductSelRepository : BaseRepository<OppoPlantProductSel, String>, OppoPlantProductSelRepositoryCustom {
 
-    @Query("select t from #{#entityName}  t where t.colorId in (?1)")
-    fun findColorIds(colorIds:MutableList<String>): MutableList<OppoPlantProductSel>
+    @Query("select t from #{#entityName}  t where t.colorId in (?1) and t.companyName = ?2 ")
+    fun findColorIds(colorIds:MutableList<String>,companyName:String): MutableList<OppoPlantProductSel>
 
 }
 interface OppoPlantProductSelRepositoryCustom{
