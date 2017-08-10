@@ -4,7 +4,6 @@
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
-        <el-button type="primary" @click="flush()" icon="update">刷新</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
@@ -45,8 +44,8 @@
         <el-table-column prop="extendType" label="单据分类" ></el-table-column>
         <el-table-column prop="formId" label="单据类型"></el-table-column>
         <el-table-column prop="billNo" label="单据编码"></el-table-column>
-        <el-table-column prop="nextBillNo" label="下推单据"></el-table-column>
         <el-table-column prop="createdDate" label="创建时间"></el-table-column>
+        <el-table-column prop="createdByName" label="创建人"></el-table-column>
         <el-table-column prop="success" label="同步成功">
           <template scope="scope">
             <el-tag :type="scope.row.success === true ? 'success' : 'danger'" >{{scope.row.success | bool2str}}</el-tag>
@@ -131,16 +130,7 @@
             this.pageRequest();
           });
         }
-      },flush:function(){
-        axios.get('/api/global/cloud/sys/kingdeeSyn/flush').then((response) => {
-          if(response.data.success){
-            this.$message(response.data.message);
-            this.pageRequest();
-          }else{
-            this.$alert(response.data.message);
-          }
-        });
-      }
+      },
     },created () {
       let that = this;
       that.pageHeight = 0.75*window.innerHeight;

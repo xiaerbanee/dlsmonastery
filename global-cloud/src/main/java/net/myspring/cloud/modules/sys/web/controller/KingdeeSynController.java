@@ -1,7 +1,6 @@
 package net.myspring.cloud.modules.sys.web.controller;
 
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
-import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
@@ -31,8 +30,8 @@ public class KingdeeSynController {
     private KingdeeSynService kingdeeSynService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public Page<KingdeeSyn> list(Pageable pageable, KingdeeSynQuery kingdeeSynQuery){
-        Page<KingdeeSyn> page = kingdeeSynService.findPage(pageable,kingdeeSynQuery);
+    public Page<KingdeeSynDto> list(Pageable pageable, KingdeeSynQuery kingdeeSynQuery){
+        Page<KingdeeSynDto> page = kingdeeSynService.findPage(pageable,kingdeeSynQuery);
         return page;
     }
 
