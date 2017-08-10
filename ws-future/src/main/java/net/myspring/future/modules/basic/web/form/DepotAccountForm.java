@@ -12,7 +12,7 @@ import java.util.List;
 public class DepotAccountForm extends BaseForm<DepotShop>{
 
     private String depotId;
-    private List<String> accountIds = Lists.newArrayList();
+    private List<String> accountIdList= Lists.newArrayList();
     private String accountId;
     private List<String> depotIdList=Lists.newArrayList();
 
@@ -40,11 +40,11 @@ public class DepotAccountForm extends BaseForm<DepotShop>{
         this.depotId = depotId;
     }
 
-    public List<String> getAccountIds() {
-        return accountIds;
+    public List<String> getAccountIdList() {
+        return accountIdList;
     }
 
-    public void setAccountIds(List<String> accountIds) {
-        this.accountIds = accountIds;
+    public void setAccountIdList(List<String> accountIdList) {
+        this.accountIdList = accountIdList;
     }
 }

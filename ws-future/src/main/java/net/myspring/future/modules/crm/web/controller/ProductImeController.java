@@ -115,6 +115,7 @@ public class ProductImeController {
         reportQuery.getExtra().put("areaList",officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         reportQuery.getExtra().put("outTypeList",ProductImeStockReportOutTypeEnum.getList());
         reportQuery.getExtra().put("boolMap",BoolEnum.getMap());
+        reportQuery.getExtra().put("netTypeList", NetTypeEnum.getList());
         reportQuery.setSumType(ProductImeStockReportSumTypeEnum.区域.name());
         CompanyConfigCacheDto  companyConfigCacheDto = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.COMPANY_NAME.name());
         if(companyConfigCacheDto != null && "WZOPPO".equals(companyConfigCacheDto.getValue())) {

@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.form.BaseForm;
 import net.myspring.general.modules.sys.domain.ProcessType;
-import net.myspring.general.modules.sys.dto.ProcessFlowDto;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 
@@ -22,7 +21,7 @@ public class ProcessTypeForm extends BaseForm<ProcessType> {
     private Boolean auditFileType;
     private List<String> viewPositionIdList=Lists.newArrayList();
     private List<String> createPositionIdList=Lists.newArrayList();
-    private List<ProcessFlowDto> processFlowList = Lists.newArrayList();
+    private List<ProcessFlowForm> processFlowList = Lists.newArrayList();
 
     public List<String> getViewPositionIdList() {
         if(CollectionUtil.isEmpty(viewPositionIdList)&&StringUtils.isNotBlank(viewPositionIds)){
@@ -86,11 +85,11 @@ public class ProcessTypeForm extends BaseForm<ProcessType> {
         this.auditFileType = auditFileType;
     }
 
-    public List<ProcessFlowDto> getProcessFlowList() {
+    public List<ProcessFlowForm> getProcessFlowList() {
         return processFlowList;
     }
 
-    public void setProcessFlowList(List<ProcessFlowDto> processFlowList) {
+    public void setProcessFlowList(List<ProcessFlowForm> processFlowList) {
         this.processFlowList = processFlowList;
     }
 }

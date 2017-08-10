@@ -21,8 +21,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall
  */
 interface OppoPlantAgentProductSelRepository : BaseRepository<OppoPlantAgentProductSel, String>, OppoPlantAgentProductSelRepositoryCustom {
 
-    @Query("select  t from #{#entityName}  t where t.itemNumber in (?1)")
-    fun findItemNumbers(itemNumbers:MutableList<String>): MutableList<OppoPlantAgentProductSel>
+    @Query("select  t from #{#entityName}  t where t.itemNumber in (?1) and t.companyName = ?2 ")
+    fun findItemNumbers(itemNumbers:MutableList<String>,companyName:String): MutableList<OppoPlantAgentProductSel>
 
     @Query("select t from #{#entityName}  t  where t.productId is not null or t.lxProductId is not null")
     fun findAllByProductId(): MutableList<OppoPlantAgentProductSel>
@@ -54,6 +54,9 @@ class OppoPlantAgentProductSelRepositoryImpl @Autowired constructor(val namedPar
         }
         if(CollectionUtils.isNotEmpty(oppoPlantAgentProductSelQuery.productIdList)){
             sb.append(""" AND (t1.product_id in (:productIdList) OR t1.lx_product_id in (:productIdList))""")
+        }
+        if (StringUtils.isNotBlank(oppoPlantAgentProductSelQuery.companyName)){
+            sb.append(""" AND t1.company_name = :companyName """)
         }
         return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(oppoPlantAgentProductSelQuery),BeanPropertyRowMapper(OppoPlantAgentProductSelDto::class.java));
     }

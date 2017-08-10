@@ -28,6 +28,11 @@
         <el-table-column prop="code" label="code" ></el-table-column>
         <el-table-column prop="menuCategoryName" :label="$t('menuList.menuCategoryName')" ></el-table-column>
         <el-table-column prop="sort" :label="$t('menuList.sort')" ></el-table-column>
+        <el-table-column prop="visible" :label="$t('menuList.visible')" width="100">
+          <template scope="scope">
+            <el-tag :type="scope.row.visible ? 'primary' : 'danger'">{{scope.row.visible | bool2str}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="locked" :label="$t('menuList.locked')" width="100">
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>

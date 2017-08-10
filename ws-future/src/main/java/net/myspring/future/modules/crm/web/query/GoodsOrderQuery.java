@@ -1,5 +1,6 @@
 package net.myspring.future.modules.crm.web.query;
 
+import com.google.common.collect.Lists;
 import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.time.LocalDateTimeUtils;
 
@@ -51,6 +52,16 @@ public class GoodsOrderQuery extends BaseQuery {
     private String status;
     private List<String> statusList;
     private String remarks;
+
+    private List<String> productIds = Lists.newArrayList();
+
+    public List<String> getProductIds() {
+        return productIds;
+    }
+
+    public void setProductIds(List<String> productIds) {
+        this.productIds = productIds;
+    }
 
     public Boolean getLxMallOrder() {
         return lxMallOrder;

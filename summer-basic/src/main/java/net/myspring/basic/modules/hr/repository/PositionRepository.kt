@@ -14,6 +14,7 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
@@ -37,6 +38,14 @@ interface PositionRepository : BaseRepository<Position,String>,PositionRepositor
     fun findByNameInAndEnabledIsTrue(id: MutableList<String>): MutableList<Position>
 
     fun findByEnabledIsTrue(): MutableList<Position>
+
+    @Query("""
+        SELECT t
+        FROM  #{#entityName} t
+        WHERE t.enabled=1
+        and (t.id=?1 or t.name=?1 )
+    """)
+    fun findByIdOrName(param: String): Position
 }
 interface PositionRepositoryCustom{
     fun findByNameLike(@Param("name") name: String): MutableList<Position>

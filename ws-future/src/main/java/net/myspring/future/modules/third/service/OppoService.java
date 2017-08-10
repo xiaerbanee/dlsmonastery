@@ -158,9 +158,11 @@ public class OppoService {
                 productIme.setRetailDate(productItemelectronSelMap.get(productIme.getIme()).getDateTime());
             }
         }
-        logger.info("localProductImeList=="+localProductImeList.toString());
         if(CollectionUtil.isNotEmpty(localProductImeList)){
             productImeRepository.save(localProductImeList);
+        }
+        if (productImes.size() == 0 && localProductImeList.size() == 0){
+            return "串码已同步";
         }
         return "串码同步成功，同步"+productImes.size()+"条串码,同步"+localProductImeList.size()+"条电子保卡";
     }

@@ -250,4 +250,11 @@ public class AccountDto extends DataDto<Account> {
         this.employeeStatus = employeeStatus;
     }
 
+    public String getPositionNames(){
+        if(CollectionUtil.isNotEmpty(positionNameList)){
+            return StringUtils.join(positionNameList,CharConstant.COMMA);
+        }
+        return "";
+    }
+
 }

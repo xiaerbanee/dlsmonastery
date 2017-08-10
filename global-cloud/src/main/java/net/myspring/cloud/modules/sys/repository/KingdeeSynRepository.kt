@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.sys.repository
 
 import net.myspring.cloud.common.repository.BaseRepository
+import net.myspring.cloud.modules.input.dto.KingdeeSynDto
 import net.myspring.cloud.modules.sys.domain.KingdeeSyn
 import net.myspring.cloud.modules.sys.web.query.KingdeeSynQuery
 import net.myspring.util.repository.MySQLDialect
@@ -47,11 +48,11 @@ interface  KingdeeSynRepository : BaseRepository<KingdeeSyn, String>,KingdeeSynR
 }
 
 interface KingdeeSynRepositoryCustom{
-    fun findPage(pageable: Pageable, kingdeeSynQuery: KingdeeSynQuery): Page<KingdeeSyn>?
+    fun findPage(pageable: Pageable, kingdeeSynQuery: KingdeeSynQuery): Page<KingdeeSynDto>?
 }
 
 class KingdeeSynRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): KingdeeSynRepositoryCustom{
-    override fun findPage(pageable: Pageable, kingdeeSynQuery: KingdeeSynQuery): Page<KingdeeSyn>? {
+    override fun findPage(pageable: Pageable, kingdeeSynQuery: KingdeeSynQuery): Page<KingdeeSynDto>? {
         var sb = StringBuilder("select * from sys_kingdee_syn where enabled=1 ");
         if(kingdeeSynQuery.createdDate != null){
             sb.append(" and date(created_date) = :createdDate ");
@@ -76,7 +77,7 @@ class KingdeeSynRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
-        var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(kingdeeSynQuery), BeanPropertyRowMapper(KingdeeSyn::class.java));
+        var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(kingdeeSynQuery), BeanPropertyRowMapper(KingdeeSynDto::class.java));
         var count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(kingdeeSynQuery),Long::class.java);
         return PageImpl(list,pageable,count);
     }

@@ -16,6 +16,7 @@ public class OppoCustomerOperatortype  extends IdEntity<OppoCustomerOperatortype
     private String customerid;
     private String customername;
     private String operatortype;
+    private String companyName;
     @JsonIgnore
     private LocalDate createdDate;
 
@@ -46,6 +47,14 @@ public class OppoCustomerOperatortype  extends IdEntity<OppoCustomerOperatortype
 
     public void setOperatortype(String operatortype) {
         this.operatortype = operatortype;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public LocalDate getCreatedDate() {

@@ -10,6 +10,7 @@ import net.myspring.basic.modules.hr.dto.AuditFileDto;
 import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.service.*;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
+import net.myspring.basic.modules.hr.web.form.AccountPositionForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
 import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
 import net.myspring.basic.modules.hr.web.validator.AccountValidator;
@@ -105,6 +106,12 @@ public class AccountController {
         RestResponse restResponse=new RestResponse("保存成功", ResponseCodeEnum.saved.name());
         restResponse.getExtra().put("accountId",accountService.save(accountForm).getId());
         return restResponse;
+    }
+
+    @RequestMapping(value = "saveAccountPosition")
+    public RestResponse saveAccountPosition(AccountPositionForm accountPositionForm) {
+        accountService.saveAccountPosition(accountPositionForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "findOne")
