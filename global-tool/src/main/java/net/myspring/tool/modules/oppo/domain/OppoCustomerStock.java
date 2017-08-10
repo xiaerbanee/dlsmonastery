@@ -14,6 +14,7 @@ public class OppoCustomerStock extends IdEntity<OppoCustomerStock>{
     private LocalDateTime date;
     private Integer qty;
     private String productcode;
+    private String companyName;
     @JsonIgnore
     private LocalDate createdDate;
 
@@ -52,6 +53,14 @@ public class OppoCustomerStock extends IdEntity<OppoCustomerStock>{
 
     public void setQty(Integer qty) {
         this.qty = qty;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public LocalDate getCreatedDate() {

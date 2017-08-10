@@ -22,6 +22,7 @@ public class OppoCustomerSaleImei extends IdEntity<OppoCustomerSaleImei>{
     private String agentname;
     private String province;
     private String city;
+    private String companyName;
     @JsonIgnore
     private LocalDate createdDate;
 
@@ -124,6 +125,14 @@ public class OppoCustomerSaleImei extends IdEntity<OppoCustomerSaleImei>{
 
     public void setShopname(String shopname) {
         this.shopname = shopname;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public LocalDate getCreatedDate() {
