@@ -160,11 +160,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append("""
                 AND (
                     t1.retail_date IS NULL
-                    OR t1.retail_date >:date
-                )
-                AND (
-                    t2.id IS NULL
-                    OR t2.created_date > :date
+                    OR t1.retail_date >= :date
                 )
                 AND t1.created_date < :date
             """)
