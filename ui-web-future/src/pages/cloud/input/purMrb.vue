@@ -88,7 +88,6 @@
               if(response.data.success){
                 this.$message(response.data.message);
                 this.initPage();
-                this.formData = {};
               }else{
                 this.$alert(response.data.message);
               }
