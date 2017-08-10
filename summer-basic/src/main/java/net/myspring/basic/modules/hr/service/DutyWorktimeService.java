@@ -280,6 +280,7 @@ public class DutyWorktimeService {
         Map<String, Employee> employeeMap = employeeRepository.findMap(employeeIdSet);
         Map<String, Account> accountMap = accountRepository.findMap(CollectionUtil.extractToList(employeeMap.values(), "accountId"));
         Map<String, Office> officeMap = officeRepository.findMap(CollectionUtil.extractToList(accountMap.values(), "officeId"));
+        Map<String, Office> parentOfficeMap = officeRepository.findMap(CollectionUtil.extractToList(officeMap.values(), "parentId"));
         for (String employeeId : employeeIdSet) {
             for (LocalDate date : LocalDateUtils.getDateList(dateStart, dateEnd)) {
                 String key = employeeId + CharConstant.ENTER + LocalDateUtils.format(date);
@@ -292,7 +293,9 @@ public class DutyWorktimeService {
                 DutyWorktimeExportDto dutyWorktime = new DutyWorktimeExportDto();
                 dutyWorktime.setEmployeeId(employeeId);
                 dutyWorktime.setEmployeeName(employee.getName());
-                dutyWorktime.setOfficeName(office.getName());
+                Office parent=parentOfficeMap.get(office.getParentId());
+                dutyWorktime.setParentOfficeName(parent==null?"":parent.getName());
+                dutyWorktime.setOfficeName(office==null?"":office.getName());
                 dutyWorktime.setDutyDate(date);
                 dutyWorktime.setWorktimes(workTimeMap.get(key));
                 dutyWorktime.setLeaves(leaveMap.get(key));
@@ -439,6 +442,7 @@ public class DutyWorktimeService {
         List<List<SimpleExcelColumn>> excelColumnList = Lists.newArrayList();
         Map<String, CellStyle> cellStyleMap = ExcelUtils.getCellStyleMap(workbook);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
+        simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()), "上级部门"));
         simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()), "部门"));
         simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()), "姓名"));
         simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()), "打卡日期"));
@@ -458,6 +462,7 @@ public class DutyWorktimeService {
         for (DutyWorktimeExportDto dutyWorktimeExportDto : dutyWorktimeExporeList) {
             simpleExcelColumnList = Lists.newArrayList();
             CellStyle cellStyle = cellStyleMap.get(dutyWorktimeExportDto.getStyle());
+            simpleExcelColumnList.add(new SimpleExcelColumn(cellStyle, dutyWorktimeExportDto.getParentOfficeName()));
             simpleExcelColumnList.add(new SimpleExcelColumn(cellStyle, dutyWorktimeExportDto.getOfficeName()));
             simpleExcelColumnList.add(new SimpleExcelColumn(cellStyle, dutyWorktimeExportDto.getEmployeeName()));
             simpleExcelColumnList.add(new SimpleExcelColumn(cellStyle, LocalDateUtils.format(dutyWorktimeExportDto.getDutyDate())));

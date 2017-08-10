@@ -1,8 +1,10 @@
 package net.myspring.basic.modules.hr.web.form;
 
+import java.util.Date;
+
 public class AccountChangeBatchForm {
     private String loginName;
-    private String newValue;
+    private Object newValue;
     private String type;
     private String remarks;
 
@@ -14,11 +16,11 @@ public class AccountChangeBatchForm {
         this.loginName = loginName;
     }
 
-    public String getNewValue() {
+    public Object getNewValue() {
         return newValue;
     }
 
-    public void setNewValue(String newValue) {
+    public void setNewValue(Object newValue) {
         this.newValue = newValue;
     }
 
