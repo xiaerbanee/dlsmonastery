@@ -5,6 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="share">{{$t('reportScoreOfficeList.officeRank')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search">{{$t('reportScoreOfficeList.filter')}}</el-button>
+        <el-button type="primary" @click="exportData" icon="upload">{{$t('reportScoreOfficeList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('reportScoreOfficeList.filter')"  v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
@@ -26,8 +27,8 @@
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('expressOrderList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="scoreDate" :label="$t('reportScoreOfficeList.scoreDate')" sortable></el-table-column>
-        <el-table-column prop="officeName" :label="$t('reportScoreOfficeList.officeName')"  width="200"></el-table-column>
         <el-table-column prop="areaName" :label="$t('reportScoreOfficeList.areaName')"  width="180"></el-table-column>
+        <el-table-column prop="officeName" :label="$t('reportScoreOfficeList.officeName')"  width="200"></el-table-column>
         <el-table-column prop="score" :label="$t('reportScoreOfficeList.score')"></el-table-column>
         <el-table-column prop="monthScore" :label="$t('reportScoreOfficeList.monthScore')"></el-table-column>
         <el-table-column prop="dateRank" :label="$t('reportScoreOfficeList.dateRank')"></el-table-column>
@@ -93,6 +94,10 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'reportScoreAreaList'});
+      },exportData(){
+        util.confirmBeforeAction(this, "最多导出50000条记录，确认导出?").then(() => {
+          window.location.href='/api/ws/future/crm/reportScoreOffice/export?'+qs.stringify(util.deleteExtra(this.formData));
+        }).catch(()=>{});
       }
     },created () {
       const that = this;
