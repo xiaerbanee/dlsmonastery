@@ -21,7 +21,7 @@ interface OppoPlantSendImeiPpselRepository : BaseRepository<OppoPlantSendImeiPps
 
 }
 interface OppoPlantSendImeiPpselRepositoryCustom{
-    fun findSynList(dateStart:String,dateEnd:String,agentCodes:MutableList<String>): MutableList<OppoPlantSendImeiPpselDto>
+    fun findSynList(dateStart:String,dateEnd:String,agentCodes:MutableList<String>,companyName:String): MutableList<OppoPlantSendImeiPpselDto>
     fun plantSendImeiPPSel(companyId: String,  password: String, dateTime: String): MutableList<OppoPlantSendImeiPpsel>
     fun findListByCompanyNameAndCreatedDate(companyName: String,dateTimeStart: LocalDate,dateTimeEnd: LocalDate):MutableList<OppoPlantSendImeiPpselDto>
 }
@@ -30,12 +30,12 @@ interface OppoPlantSendImeiPpselRepositoryCustom{
 @Component
 class OppoPlantSendImeiPpselRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate,val jdbcTemplate: JdbcTemplate) :OppoPlantSendImeiPpselRepositoryCustom {
 
-    override fun findSynList(dateStart:String, dateEnd:String, agentCodes:MutableList<String>): MutableList<OppoPlantSendImeiPpselDto> {
+    override fun findSynList(dateStart:String, dateEnd:String, agentCodes:MutableList<String>,companyName: String): MutableList<OppoPlantSendImeiPpselDto> {
         val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("dateStart",dateStart);
         paramMap.put("dateEnd",dateEnd);
         paramMap.put("agentCodes",agentCodes);
-
+        paramMap.put("companyName",companyName);
         return namedParameterJdbcTemplate.query("""
          select
             t.*, g.color_id as colorId,
@@ -46,8 +46,10 @@ class OppoPlantSendImeiPpselRepositoryImpl @Autowired constructor(val namedParam
             oppo_plant_agent_product_sel g
         where
             t.dls_product_id = g.item_number
-         and t.created_time>=:dateStart
-         and t.created_time<=:dateEnd
+        and t.created_time>=:dateStart
+        and t.created_time<=:dateEnd
+        and t.company_name = :companyName
+        and g.company_name = :companyName
         and t.company_id in (:agentCodes)
             """,paramMap,BeanPropertyRowMapper(OppoPlantSendImeiPpselDto::class.java));
     }
