@@ -31,6 +31,11 @@ spring:
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
+      WZOPPO:
+        url: jdbc:mysql://168.192.1.243:3346/summer_wzoppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
     summer-basic:
       JXOPPO:
         url: jdbc:mysql://168.192.1.17:3326/summer_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
@@ -44,6 +49,11 @@ spring:
         driver-class-name: com.mysql.jdbc.Driver
       JXDJ:
         url: jdbc:mysql://168.192.1.17:3316/summer_future?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
+      WZOPPO:
+        url: jdbc:mysql://168.192.1.243:3346/summer_wzoppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
@@ -63,6 +73,11 @@ spring:
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
+      WZOPPO:
+        url: jdbc:mysql://168.192.1.243:3346/summer_wzoppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
     kingdee:
       JXOPPO:
         url: jdbc:sqlserver://168.192.1.13:1433;DatabaseName=AIS2017040100OPPO
@@ -79,8 +94,18 @@ spring:
         username: sa
         password: bbk@123456
         driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      WZOPPO:
+        url: jdbc:sqlserver://168.192.1.16:1433;DatabaseName=AIS20170401WZOPPO
+        username: sa
+        password: bbk@123456
+        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     factory:
       JXOPPO:
+        url: jdbc:jtds:sqlserver://121.10.21.123:1439/plantesaleweb
+        username: Agent
+        password: gz86!*%
+        driver-class-name: net.sourceforge.jtds.jdbc.Driver
+      WZOPPO:
         url: jdbc:jtds:sqlserver://121.10.21.123:1439/plantesaleweb
         username: Agent
         password: gz86!*%
@@ -117,6 +142,13 @@ spring:
       database: 2
       max-idle: 100
       max-total: 200
+    WZOPPO:
+      host: localhost
+      password:
+      port: 6379
+      database: 3
+      max-idle: 100
+      max-total: 200
     oauth2:
       host: localhost
       password:
@@ -124,4 +156,4 @@ spring:
       database: 15
       max-idle: 100
       max-total: 200
-companyNames: JXOPPO,JXVIVO,JXDJ
+companyNames: JXOPPO,JXVIVO,WZOPPO,JXDJ
