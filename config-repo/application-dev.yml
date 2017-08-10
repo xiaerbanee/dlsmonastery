@@ -36,6 +36,11 @@ spring:
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
+      WZOPPO:
+        url: jdbc:mysql://168.192.1.243:3346/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        assword: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
     summer-basic:
       JXOPPO:
         url: jdbc:mysql://168.192.1.17:3326/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
@@ -57,6 +62,11 @@ spring:
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
+      WZOPPO:
+        url: jdbc:mysql://168.192.1.243:3346/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        assword: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
     summer-general:
       JXOPPO:
         url: jdbc:mysql://168.192.1.17:3326/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
@@ -75,6 +85,11 @@ spring:
         driver-class-name: com.mysql.jdbc.Driver
       JXVIVO:
         url: jdbc:mysql://168.192.1.243:3336/db_vivo_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        assword: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
+      WZOPPO:
+        url: jdbc:mysql://168.192.1.243:3346/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         assword: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
@@ -101,6 +116,11 @@ spring:
         driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     factory:
       JXOPPO:
+        url: jdbc:jtds:sqlserver://121.10.21.123:1439/plantesaleweb
+        username: Agent
+        password: gz86!*%
+        driver-class-name: net.sourceforge.jtds.jdbc.Driver
+      WZOPPO:
         url: jdbc:jtds:sqlserver://121.10.21.123:1439/plantesaleweb
         username: Agent
         password: gz86!*%
@@ -149,6 +169,13 @@ spring:
       database: 3
       max-idle: 100
       max-total: 200
+    WZOPPO:
+      host: localhost
+      password:
+      port: 6379
+      database: 4
+      max-idle: 100
+      max-total: 200
     oauth2:
       host: localhost
       password:
@@ -156,4 +183,4 @@ spring:
       database: 15
       max-idle: 100
       max-total: 200
-companyNames: JXOPPO,JXVIVO,JXDJ,IDVIVO
+companyNames: JXOPPO,JXVIVO,WZOPPO,JXDJ,IDVIVO
