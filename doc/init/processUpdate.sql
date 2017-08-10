@@ -68,6 +68,13 @@ CREATE TABLE `crm_tmp_20170727` (
 );
 
 
+ALTER TABLE crm_ad_goods_order
+  ADD COLUMN simple_process_id bigint(20) NULL AFTER process_instance_id;
+
+ALTER TABLE crm_bank_in
+  ADD COLUMN simple_process_id bigint(20) NULL AFTER process_instance_id;
+
+
 INSERT INTO crm_simple_process_type (
   SELECT
     t1.id,
@@ -195,12 +202,6 @@ INSERT INTO crm_tmp_20170727 (
 );
 
 update crm_simple_process_detail t1 set remarks = (select t2.remarks from crm_tmp_20170727 t2 where t1.ID = t2.id );
-
-ALTER TABLE crm_ad_goods_order
-  ADD COLUMN simple_process_id bigint(20) NULL AFTER process_instance_id;
-
-ALTER TABLE crm_bank_in
-  ADD COLUMN simple_process_id bigint(20) NULL AFTER process_instance_id;
 
 update crm_ad_goods_order set simple_process_id = process_instance_id;
 update crm_bank_in set simple_process_id = process_instance_id;
