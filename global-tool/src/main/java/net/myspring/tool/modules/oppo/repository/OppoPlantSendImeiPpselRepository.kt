@@ -16,14 +16,14 @@ import java.time.LocalDate;
 
 interface OppoPlantSendImeiPpselRepository : BaseRepository<OppoPlantSendImeiPpsel, String>, OppoPlantSendImeiPpselRepositoryCustom {
 
-    @Query("select  t from #{#entityName}  t where t.imei in (?1)")
-    fun findByimeis(imeis:MutableList<String>):MutableList<OppoPlantSendImeiPpsel>
+    @Query("select  t from #{#entityName}  t where t.imei in (?1) and t.companyName = ?2 ")
+    fun findByimeis(imeis:MutableList<String>,companyName:String):MutableList<OppoPlantSendImeiPpsel>
 
 }
 interface OppoPlantSendImeiPpselRepositoryCustom{
     fun findSynList(dateStart:String,dateEnd:String,agentCodes:MutableList<String>): MutableList<OppoPlantSendImeiPpselDto>
     fun plantSendImeiPPSel(companyId: String,  password: String, dateTime: String): MutableList<OppoPlantSendImeiPpsel>
-    fun findListByCreatedDate(dateTimeStart: LocalDate,dateTimeEnd: LocalDate):MutableList<OppoPlantSendImeiPpselDto>
+    fun findListByCompanyNameAndCreatedDate(companyName: String,dateTimeStart: LocalDate,dateTimeEnd: LocalDate):MutableList<OppoPlantSendImeiPpselDto>
 }
 
 
@@ -61,10 +61,11 @@ class OppoPlantSendImeiPpselRepositoryImpl @Autowired constructor(val namedParam
         return simpleJdbcCall.withProcedureName("plantSendImeiPPSel").returningResultSet("returnValue",BeanPropertyRowMapper(OppoPlantSendImeiPpsel::class.java)).execute(paramMap).get("returnValue") as MutableList<OppoPlantSendImeiPpsel>
     }
 
-    override fun findListByCreatedDate(dateTimeStart: LocalDate, dateTimeEnd: LocalDate): MutableList<OppoPlantSendImeiPpselDto> {
-        val map = Maps.newHashMap<String,LocalDate>();
+    override fun findListByCompanyNameAndCreatedDate(companyName:String,dateTimeStart: LocalDate, dateTimeEnd: LocalDate): MutableList<OppoPlantSendImeiPpselDto> {
+        val map = Maps.newHashMap<String,Any>();
         map.put("dateTimeStart",dateTimeStart)
         map.put("dateTimeEnd",dateTimeEnd)
+        map.put("companyName",companyName)
         return namedParameterJdbcTemplate.query("""
             SELECT im.*, agent.product_id,agent.lx_product_id
             FROM
@@ -74,6 +75,8 @@ class OppoPlantSendImeiPpselRepositoryImpl @Autowired constructor(val namedParam
                 im.dls_product_id = agent.item_number
                 AND im.created_time >= :dateTimeStart
                 AND im.created_time < :dateTimeEnd
+                AND im.company_name = :companyName
+                AND agent.company_name = :companyName
             """,map,BeanPropertyRowMapper(OppoPlantSendImeiPpselDto::class.java))
     }
 }

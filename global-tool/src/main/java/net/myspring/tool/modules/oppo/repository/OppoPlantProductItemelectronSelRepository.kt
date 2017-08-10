@@ -20,8 +20,8 @@ import java.time.LocalDate;
  */
 interface OppoPlantProductItemelectronSelRepository : BaseRepository<OppoPlantProductItemelectronSel, String>, OppoPlantProductItemelectronSelRepositoryCustom {
 
-    @Query("select  t from #{#entityName}  t where t.productNo in (?1)")
-    fun findProductNos(productNos: MutableList<String>): MutableList<OppoPlantProductItemelectronSel>
+    @Query("select  t from #{#entityName}  t where t.productNo in (?1) and t.companyName = ?2 ")
+    fun findProductNos(productNos: MutableList<String>,companyName:String): MutableList<OppoPlantProductItemelectronSel>
 
 }
 

@@ -2,6 +2,7 @@ package net.myspring.tool.modules.oppo.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.modules.oppo.domain.*;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -82,6 +84,11 @@ public class OppoPullService {
     @LocalDataSource
     @Transactional
     public void pullPlantProductSels(List<OppoPlantProductSel> oppoPlantProductSels) {
+        if (StringUtils.isBlank(DbContextHolder.get().getCompanyName())){
+            logger.info("未设置公司名称"+ LocalDateTime.now());
+            return;
+        }
+        String companyName = DbContextHolder.get().getCompanyName();
         logger.info("开始同步颜色编码");
         for(OppoPlantProductSel oppoPlantProductSel:oppoPlantProductSels){
             oppoPlantProductSel.setColorId(oppoPlantProductSel.getColorId().trim());
@@ -95,13 +102,14 @@ public class OppoPullService {
                 }
             }
             List<String> localColorIds=Lists.newArrayList();
-            List<OppoPlantProductSel> plantProductSels =oppoPlantProductSelRepository.findColorIds(colorIds);
+            List<OppoPlantProductSel> plantProductSels =oppoPlantProductSelRepository.findColorIds(colorIds,companyName);
             if(CollectionUtil.isNotEmpty(plantProductSels)){
                 localColorIds=CollectionUtil.extractToList(plantProductSels,"colorId");
             }
             for (OppoPlantProductSel oppoPlantProductSel : oppoPlantProductSels) {
                 if (CollectionUtil.isEmpty(localColorIds)||!localColorIds.contains(oppoPlantProductSel.getColorId().trim())) {
                     oppoPlantProductSel.setColorId(oppoPlantProductSel.getColorId().trim());
+                    oppoPlantProductSel.setCompanyName(companyName);
                     list.add(oppoPlantProductSel);
                 }
             }
@@ -116,6 +124,11 @@ public class OppoPullService {
     @LocalDataSource
     @Transactional
     public void pullPlantAgentProductSels(List<OppoPlantAgentProductSel> oppoPlantAgentProductSels) {
+        String companyName = DbContextHolder.get().getCompanyName();
+        if (StringUtils.isBlank(companyName)){
+            logger.info("未设置公司名称"+LocalDateTime.now());
+            return;
+        }
         logger.info("开始物料编码");
         List<OppoPlantAgentProductSel> list = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(oppoPlantAgentProductSels)) {
@@ -123,13 +136,14 @@ public class OppoPullService {
             List<String> localItemNumbers=Lists.newArrayList();
             List<OppoPlantAgentProductSel> plantAgentProductSels=Lists.newArrayList();
             for(List<String> stringList:CollectionUtil.splitList(itemNumbers,500)){
-                plantAgentProductSels.addAll(oppoPlantAgentProductSelRepository.findItemNumbers(stringList));
+                plantAgentProductSels.addAll(oppoPlantAgentProductSelRepository.findItemNumbers(stringList,companyName));
             }
             if(CollectionUtil.isNotEmpty(plantAgentProductSels)){
                 localItemNumbers=CollectionUtil.extractToList(plantAgentProductSels, "itemNumber");
             }
             for (OppoPlantAgentProductSel oppoPlantAgentProductSel : oppoPlantAgentProductSels) {
                 if (!localItemNumbers.contains(oppoPlantAgentProductSel.getItemNumber())) {
+                    oppoPlantAgentProductSel.setCompanyName(companyName);
                     list.add(oppoPlantAgentProductSel);
                 }
             }
@@ -144,6 +158,11 @@ public class OppoPullService {
     @LocalDataSource
     @Transactional
     public void pullPlantSendImeiPpsels(Map<String,List<OppoPlantSendImeiPpsel>> oppoPlantSendImeiPpselMap) {
+        String companyName = DbContextHolder.get().getCompanyName();
+        if (StringUtils.isBlank(companyName)){
+            logger.info("未设置的当前公司"+LocalDateTime.now());
+            return;
+        }
         logger.info("发货串码开始同步");
         List<String> imeiList=Lists.newArrayList();
         for (String agentCode : oppoPlantSendImeiPpselMap.keySet()) {
@@ -158,7 +177,7 @@ public class OppoPullService {
         List<OppoPlantSendImeiPpsel> localPlantSendImeiPpsels=Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(imeiList)){
             for(List<String> imeis:CollectionUtil.splitList(imeiList,1000)){
-                localPlantSendImeiPpsels.addAll(oppoPlantSendImeiPpselRepository.findByimeis(imeis));
+                localPlantSendImeiPpsels.addAll(oppoPlantSendImeiPpselRepository.findByimeis(imeis,companyName));
             }
         }
         List<String> localImeis=Lists.newArrayList();
@@ -171,6 +190,7 @@ public class OppoPullService {
             if (CollectionUtil.isNotEmpty(oppoPlantSendImeiPpsels)) {
                 for(OppoPlantSendImeiPpsel plantSendImeiPpsel:oppoPlantSendImeiPpsels){
                    if(!localImeis.contains(plantSendImeiPpsel.getImei())){
+                       plantSendImeiPpsel.setCompanyName(companyName);
                        saveOppoPlantSendImeiPpselList.add(plantSendImeiPpsel);
                    }
                 }
@@ -186,6 +206,11 @@ public class OppoPullService {
     @LocalDataSource
     @Transactional
     public void pullPlantProductItemelectronSels(List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels) {
+        String companyName = DbContextHolder.get().getCompanyName();
+        if (StringUtils.isBlank(companyName)){
+            logger.info("未设置当前公司名称"+LocalDateTime.now());
+            return;
+        }
         logger.info("开始同步电子保卡");
         List<OppoPlantProductItemelectronSel> list = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(oppoPlantProductItemelectronSels)) {
@@ -194,7 +219,7 @@ public class OppoPullService {
             List<OppoPlantProductItemelectronSel> plantProductItemelectronSels=Lists.newArrayList();
             if(CollectionUtil.isNotEmpty(productNoList)){
                 for(List<String> productNos:CollectionUtil.splitList(productNoList,1000)){
-                    plantProductItemelectronSels.addAll(oppoPlantProductItemelectronSelRepository.findProductNos(productNos));
+                    plantProductItemelectronSels.addAll(oppoPlantProductItemelectronSelRepository.findProductNos(productNos,companyName));
                 }
             }
             if(CollectionUtil.isNotEmpty(plantProductItemelectronSels)){
@@ -203,6 +228,7 @@ public class OppoPullService {
             for (OppoPlantProductItemelectronSel oppoPlantProductItemelectronSel : oppoPlantProductItemelectronSels) {
                 if (!localProductNos.contains(oppoPlantProductItemelectronSel.getProductNo())) {
                     oppoPlantProductItemelectronSel.setProductNo(oppoPlantProductItemelectronSel.getProductNo().trim());
+                    oppoPlantProductItemelectronSel.setCompanyName(companyName);
                     list.add(oppoPlantProductItemelectronSel);
                 }
             }
