@@ -22,6 +22,7 @@ public class ProductImeQuery extends BaseQuery{
     private String retailDateRange;
     private String createdTimeRange;
     private String inputType;
+    private String saleDateRange;
 
     public String getImeOrMeids() {
         return imeOrMeids;
@@ -53,6 +54,14 @@ public class ProductImeQuery extends BaseQuery{
 
     public void setCreatedTimeRange(String createdTimeRange) {
         this.createdTimeRange = createdTimeRange;
+    }
+
+    public String getSaleDateRange() {
+        return saleDateRange;
+    }
+
+    public void setSaleDateRange(String saleDateRange) {
+        this.saleDateRange = saleDateRange;
     }
 
     public String getIme() {
@@ -166,6 +175,22 @@ public class ProductImeQuery extends BaseQuery{
     public LocalDate getCreatedTimeEnd() {
         if(StringUtils.isNotBlank(createdTimeRange)) {
             return LocalDateUtils.parse(createdTimeRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDate getSaleDateStart() {
+        if (StringUtils.isNotBlank(saleDateRange)) {
+            return LocalDateUtils.parse(saleDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDate getSaleDateEnd() {
+        if (StringUtils.isNotBlank(saleDateRange)) {
+            return LocalDateUtils.parse(saleDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else {
             return null;
         }
