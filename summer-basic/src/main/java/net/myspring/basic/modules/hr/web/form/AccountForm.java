@@ -40,9 +40,6 @@ public class AccountForm extends BaseForm<Account> {
     private List<String> officeListName=Lists.newArrayList();
 
     public String getPositionIds() {
-        if(CollectionUtil.isNotEmpty(positionIdList)){
-            this.positionIds=StringUtils.join(positionIdList,CharConstant.COMMA);
-        }
         return positionIds;
     }
 
@@ -62,9 +59,6 @@ public class AccountForm extends BaseForm<Account> {
     }
 
     public String getOfficeIds() {
-        if(CollectionUtil.isNotEmpty(officeIdList)){
-            this.officeIds=StringUtils.join(officeIdList,CharConstant.COMMA);
-        }
         return officeIds;
     }
 

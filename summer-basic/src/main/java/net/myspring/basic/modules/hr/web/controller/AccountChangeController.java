@@ -72,7 +72,7 @@ public class AccountChangeController {
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
     @PreAuthorize("hasPermission(null,'hr:accountChange:edit')")
-    public RestResponse save( AccountChangeForm accountChangeForm) {
+    public RestResponse save( AccountChangeForm accountChangeForm) throws Exception {
         accountChangeService.save(accountChangeForm);
         return new RestResponse("员工信息调整成功",null);
     }

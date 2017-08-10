@@ -9,6 +9,7 @@ import net.myspring.general.modules.sys.dto.ProcessFlowDto;
 import net.myspring.general.modules.sys.dto.ProcessTypeDto;
 import net.myspring.general.modules.sys.repository.ProcessFlowRepository;
 import net.myspring.general.modules.sys.repository.ProcessTypeRepository;
+import net.myspring.general.modules.sys.web.form.ProcessFlowForm;
 import net.myspring.general.modules.sys.web.form.ProcessTypeForm;
 import net.myspring.general.modules.sys.web.query.ProcessTypeQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -69,7 +70,7 @@ public class ProcessTypeService {
     }
 
     public void save(ProcessTypeForm processTypeForm) {
-        for(ProcessFlowDto processFlow:processTypeForm.getProcessFlowList()){
+        for(ProcessFlowForm processFlow:processTypeForm.getProcessFlowList()){
             if(!processTypeForm.getCreatePositionIds().contains(processFlow.getPositionId())){
                 processTypeForm.setCreatePositionIds(processTypeForm.getCreatePositionIds()+ processFlow.getPositionId()+CharConstant.COMMA);
             }
@@ -79,8 +80,8 @@ public class ProcessTypeService {
         }
         if (processTypeForm.isCreate()) {
             for (int i = processTypeForm.getProcessFlowList().size() - 1; i >= 0; i--) {
-                ProcessFlowDto processFlowDto = processTypeForm.getProcessFlowList().get(i);
-                if (StringUtils.isBlank(processFlowDto.getName())) {
+                ProcessFlowForm processFlow = processTypeForm.getProcessFlowList().get(i);
+                if (StringUtils.isBlank(processFlow.getName())) {
                     processTypeForm.getProcessFlowList().remove(i);
                 }
             }
@@ -89,8 +90,8 @@ public class ProcessTypeService {
             }
             ProcessType processType = BeanUtil.map(processTypeForm, ProcessType.class);
             processTypeRepository.save(processType);
-            for (ProcessFlowDto processFlowDto : processTypeForm.getProcessFlowList()) {
-                processFlowDto.setProcessTypeId(processType.getId());
+            for (ProcessFlowForm processFlow : processTypeForm.getProcessFlowList()) {
+                processFlow.setProcessTypeId(processType.getId());
             }
             processFlowRepository.save(BeanUtil.map(processTypeForm.getProcessFlowList(), ProcessFlow.class));
             // 部署流程

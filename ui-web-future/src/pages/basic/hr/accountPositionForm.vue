@@ -35,7 +35,8 @@
           submitDisabled: false,
           inputForm: {
             id: this.$route.query.id,
-            extra: {}
+            loginName:"",
+            positionIdList:[],
           },
           rules: {
             roleIdList: [{required: true, message: this.$t('positionForm.prerequisiteMessage')}],
@@ -48,7 +49,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/basic/hr/account/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
+            axios.post('/api/basic/hr/account/saveAccountPosition',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
               this.submitDisabled = false;
               this.$router.push({name:'accountList',query:util.getQuery("accountList"), params:{_closeFrom:true}})
@@ -61,11 +62,8 @@
         })
       },
       initPage() {
-        axios.get('/api/basic/hr/account/getForm').then((response)=>{
-          this.inputForm=response.data;
-          axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-          })
+        axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          util.copyValue(response.data,this.inputForm);
         })
       }
     },created () {
