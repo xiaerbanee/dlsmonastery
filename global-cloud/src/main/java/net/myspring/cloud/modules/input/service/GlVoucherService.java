@@ -1,33 +1,20 @@
 package net.myspring.cloud.modules.input.service;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
-import net.myspring.common.utils.HandsontableUtils;
+import net.myspring.cloud.common.enums.VoucherFlexEnum;
 import net.myspring.cloud.modules.input.dto.GlVoucherDto;
-import net.myspring.cloud.modules.input.dto.GlVoucherFEntityDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
-import net.myspring.cloud.modules.kingdee.domain.BdFlexItemGroup;
-import net.myspring.cloud.modules.kingdee.domain.BdFlexItemProperty;
-import net.myspring.cloud.modules.kingdee.domain.GlVoucher;
-import net.myspring.cloud.modules.kingdee.repository.GlVoucherRepository;
+import net.myspring.cloud.modules.kingdee.domain.*;
+import net.myspring.cloud.modules.kingdee.repository.*;
 import net.myspring.cloud.modules.sys.domain.*;
-import net.myspring.cloud.modules.sys.web.form.VoucherForm;
-import net.myspring.common.constant.CharConstant;
-import net.myspring.common.dto.NameValueDto;
 import net.myspring.common.exception.ServiceException;
-import net.myspring.util.json.ObjectMapperUtils;
-import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.util.HtmlUtils;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,6 +31,24 @@ public class GlVoucherService {
     private KingdeeManager kingdeeManager;
     @Autowired
     private GlVoucherRepository glVoucherRepository;
+    @Autowired
+    private BdAccountRepository bdAccountRepository;
+    @Autowired
+    private BasAssistantRepository basAssistantRepository;
+    @Autowired
+    private BdCustomerRepository bdCustomerRepository;
+    @Autowired
+    private BdSupplierRepository bdSupplierRepository;
+    @Autowired
+    private BdDepartmentRepository bdDepartmentRepository;
+    @Autowired
+    private CnBankAcntRepository cnBankAcntRepository;
+    @Autowired
+    private HrEmpInfoRepository hrEmpInfoRepository;
+    @Autowired
+    private FaAssetTypeRepository faAssetTypeRepository;
+    @Autowired
+    private BdExpenseRepository bdExpenseRepository;
 
     public GlVoucher findByBillNo(String billNo){
         return glVoucherRepository.findByBillNo(billNo);
@@ -75,61 +80,33 @@ public class GlVoucherService {
         return kingdeeSynDto;
     }
 
-    @Transactional
-    public KingdeeSynDto save(VoucherForm voucherForm,List<BdFlexItemGroup> bdFlexItemGroupList,List<BdFlexItemProperty> bdFlexItemPropertyList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        LocalDate date = voucherForm.getFdate();
-        String json = HtmlUtils.htmlUnescape(voucherForm.getJson());
-        List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
-        Map<String,BdFlexItemProperty> bdFlexItemPropertyNameMap = bdFlexItemPropertyList.stream().collect(Collectors.toMap(BdFlexItemProperty::getFName, BdFlexItemProperty->BdFlexItemProperty));
-        List<GlVoucherFEntityDto> glVoucherFEntityDtoList = Lists.newArrayList();
-        for (List<Object> row : data){
-            String explanation = HandsontableUtils.getValue(row,0);
-            String accountNumberName = HandsontableUtils.getValue(row,1);
-            String debitStr = HandsontableUtils.getValue(row,row.size()-2);
-            String creditStr = HandsontableUtils.getValue(row,row.size()-1);
-            List<String> headers = getFlexItemGroupAllName(bdFlexItemGroupList);
-            //核算维度明细
-            List<NameValueDto> nameValueDtoList = Lists.newArrayList();
-            for (int i=2; i<row.size()-2; i++){
-                String numberValue = HandsontableUtils.getValue(row,i);
-                String header = headers.get(i-2);
-                if (StringUtils.isNotBlank(numberValue)){
-                    NameValueDto nameValue = new NameValueDto();
-                    String name = "FDetailID__"+bdFlexItemPropertyNameMap.get(header).getFFlexNumber();
-                    nameValue.setName(name);
-                    nameValue.setValue(numberValue.split(CharConstant.SLASH_LINE)[0]);//科目编码
-                    nameValueDtoList.add(nameValue);
-                }
+    //根据名称获取需要向金蝶接口插入的Number
+    public Map<String, Map<String, String>> getFlexNameMap(List<String> flexItemNameList) {
+        Map<String, Map<String, String>> result = Maps.newHashMap();
+
+        result.put(VoucherFlexEnum.科目.name(), bdAccountRepository.findAll().stream().collect(Collectors.toMap(BdAccount::getFName,BdAccount::getFNumber)));
+        for (String flexItemName : flexItemNameList) {
+            if (VoucherFlexEnum.供应商.name().equals(flexItemName)){
+                result.put(VoucherFlexEnum.供应商.name(), bdSupplierRepository.findAll().stream().collect(Collectors.toMap(BdSupplier::getFName,BdSupplier::getFNumber)));
+            }else if(VoucherFlexEnum.部门.name().equals(flexItemName)){
+                result.put(VoucherFlexEnum.部门.name(), bdDepartmentRepository.findAll().stream().collect(Collectors.toMap(BdDepartment::getFFullName,BdDepartment::getFNumber)));
+            }else if(VoucherFlexEnum.客户.name().equals(flexItemName)){
+                result.put(VoucherFlexEnum.客户.name(), bdCustomerRepository.findAll().stream().collect(Collectors.toMap(BdCustomer::getFName,BdCustomer::getFNumber)));
+            }else if(VoucherFlexEnum.其他类.name().equals(flexItemName)){
+                result.put(VoucherFlexEnum.其他类.name(), basAssistantRepository.findByType("其他类").stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber)));
+            }else if(VoucherFlexEnum.费用类.name().equals(flexItemName)){
+                result.put(VoucherFlexEnum.费用类.name(), basAssistantRepository.findByType("费用类").stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber)));
+            }else if(VoucherFlexEnum.员工.name().equals(flexItemName)){
+                result.put(VoucherFlexEnum.员工.name(), hrEmpInfoRepository.findAll().stream().collect(Collectors.toMap(HrEmpInfo::getFName,HrEmpInfo::getFNumber)));
+            }else if(VoucherFlexEnum.银行账号.name().equals(flexItemName)){
+                result.put(VoucherFlexEnum.银行账号.name(), cnBankAcntRepository.findAll().stream().collect(Collectors.toMap(CnBankAcnt::getFName,CnBankAcnt::getFNumber)));
+            }else if(VoucherFlexEnum.资产类别.name().equals(flexItemName)){
+                result.put(VoucherFlexEnum.资产类别.name(), faAssetTypeRepository.findAll().stream().collect(Collectors.toMap(FaAssetType::getFName,FaAssetType::getFNumber)));
+            }else if(VoucherFlexEnum.费用项目.name().equals(flexItemName)){
+                result.put(VoucherFlexEnum.费用项目.name(), bdExpenseRepository.findAll().stream().collect(Collectors.toMap(BdExpense::getFName,BdExpense::getFNumber)));
             }
-            GlVoucherFEntityDto entityDto = new GlVoucherFEntityDto();
-            entityDto.setExplanation(explanation);
-            entityDto.setAccountNumber(accountNumberName.split(CharConstant.SLASH_LINE)[0]);
-            if (StringUtils.isNoneEmpty(debitStr)){
-                entityDto.setDebit(new BigDecimal(debitStr));
-            }else {
-                entityDto.setCredit(new BigDecimal(creditStr));
-            }
-            entityDto.setNameValueDtoList(nameValueDtoList);
-            glVoucherFEntityDtoList.add(entityDto);
         }
-        GlVoucherDto glVoucherDto = new GlVoucherDto();
-        glVoucherDto.setCreator(accountKingdeeBook.getUsername());
-        glVoucherDto.setDate(date);
-        glVoucherDto.setExtendType(ExtendTypeEnum.凭证_K3.name());
-        glVoucherDto.setGlVoucherFEntityDtoList(glVoucherFEntityDtoList);
-        return save(glVoucherDto,kingdeeBook,accountKingdeeBook);
+        return result;
     }
 
-    //核算维度组--所有不重复的核算名称
-    public List<String> getFlexItemGroupAllName(List<BdFlexItemGroup> bdFlexItemGroupList) {
-        List<String> list = Lists.newLinkedList();
-        for (BdFlexItemGroup flexItemGroup : bdFlexItemGroupList) {
-            for (String name : flexItemGroup.getFNames()) {
-                if (!list.contains(name)) {
-                    list.add(name);
-                }
-            }
-        }
-        return list;
-    }
 }

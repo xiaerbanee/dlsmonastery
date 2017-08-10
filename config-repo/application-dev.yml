@@ -114,6 +114,11 @@ spring:
         username: sa
         password: bbk@123456
         driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      WZOPPO:
+        url: jdbc:sqlserver://168.192.1.16:1433;DatabaseName=AISWZTEST
+        username: sa
+        password: bbk@123456
+        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     factory:
       JXOPPO:
         url: jdbc:jtds:sqlserver://121.10.21.123:1439/plantesaleweb
