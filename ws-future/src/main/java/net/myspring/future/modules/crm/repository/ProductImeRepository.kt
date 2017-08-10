@@ -313,6 +313,9 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (StringUtils.isNotBlank(productImeSaleReportQuery.areaType)) {
             sb.append(""" and t6.area_type=:areaType """)
         }
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.netType)) {
+            sb.append(""" and t4.net_type = :netType """)
+        }
         if (CollectionUtil.isNotEmpty(productImeSaleReportQuery.productTypeIdList)) {
             sb.append(""" and t5.id in (:productTypeIdList) """)
         }
@@ -371,6 +374,9 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         }
         if (StringUtils.isNotBlank(productImeSaleReportQuery.areaType)) {
             sb.append(""" and t5.area_type=:areaType """)
+        }
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.netType)) {
+            sb.append(""" and t3.net_type = :netType """)
         }
         if (CollectionUtil.isNotEmpty(productImeSaleReportQuery.productTypeIdList)) {
             sb.append(""" and t4.id in (:productTypeIdList) """)

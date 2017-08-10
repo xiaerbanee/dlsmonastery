@@ -52,6 +52,11 @@
               <el-form-item label="货品">
                 <product-type-select v-model="formData.productTypeIdList"  @afterInit="setSearchText" multiple class="fixedHeight"></product-type-select>
               </el-form-item>
+              <el-form-item label="运营商">
+                <el-select v-model="formData.netType" clearable filterable placeholder="请选择">
+                  <el-option v-for="item in formData.extra.netTypeList" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>

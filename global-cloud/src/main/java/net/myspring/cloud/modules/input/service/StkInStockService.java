@@ -156,6 +156,7 @@ public class StkInStockService {
         kingdeeSynDtoList.add(save(stkInStockDto, kingdeeBook,accountKingdeeBook));
         if (CollectionUtil.isNotEmpty(purMrbFEntryDtoList)) {
             PurMrbDto purMrbDto = new PurMrbDto();
+            purMrbDto.setExtendType(ExtendTypeEnum.采购退料_K3.name());
             purMrbDto.setCreator(accountKingdeeBook.getUsername());
             purMrbDto.setDate(billDate);
             purMrbDto.setSupplierNumber(supplierNumber);
