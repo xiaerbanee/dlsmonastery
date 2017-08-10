@@ -13,17 +13,21 @@ interface OppoCustomerSaleCountRepository : BaseRepository<OppoCustomerSaleCount
 
 }
 interface OppoCustomerSaleCountRepositoryCustom{
-    fun findByDate(dateStart:String,dateEnd:String):MutableList<OppoCustomerSaleCount>
+    fun findByDate(companyName:String,dateStart:String,dateEnd:String):MutableList<OppoCustomerSaleCount>
     fun deleteByCompanyNameAndDate(companyName:String,dateStart: String,dateEnd: String):Int
 }
 class OppoCustomerSaleCountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : OppoCustomerSaleCountRepositoryCustom{
 
-    override fun findByDate(dateStart:String, dateEnd:String): MutableList<OppoCustomerSaleCount> {
+    override fun findByDate(companyName:String,dateStart:String, dateEnd:String): MutableList<OppoCustomerSaleCount> {
         val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("dateStart",dateStart);
         paramMap.put("dateEnd",dateEnd);
+        paramMap.put("companyName",companyName);
         return namedParameterJdbcTemplate.query("""
-            select *  from oppo_push_customer_sale_count where sale_time >=:dateStart and sale_time <:dateEnd
+            select *  from oppo_push_customer_sale_count
+            where sale_time >=:dateStart
+              and sale_time < :dateEnd
+              and company_name = :companyName
          """,paramMap,BeanPropertyRowMapper(OppoCustomerSaleCount::class.java));
     }
 
