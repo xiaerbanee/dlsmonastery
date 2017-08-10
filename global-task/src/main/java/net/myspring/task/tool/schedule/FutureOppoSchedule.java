@@ -27,13 +27,24 @@ public class FutureOppoSchedule {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Scheduled(cron = "0 30 2-18 * * ?")
+    @Scheduled(cron = "0 20 2-18 * * ?")
     public void pullJxoppoFactoryData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXOPPO.name())) {
             logger.info("同步串码数据开始");
             String date=LocalDateUtils.format(LocalDate.now());
             futureOppoClient.pullFactoryData(CompanyNameEnum.JXOPPO.name(),date);
+            logger.info("同步串码数据结束");
+        }
+    }
+
+    @Scheduled(cron = "0 40 2-18 * * ?")
+    public void pullWzoppoFactoryData(){
+        List<String> companyNameList = Arrays.asList(companyNames);
+        if(companyNameList.contains(CompanyNameEnum.WZOPPO.name())) {
+            logger.info("同步串码数据开始");
+            String date=LocalDateUtils.format(LocalDate.now());
+            futureOppoClient.pullFactoryData(CompanyNameEnum.WZOPPO.name(),date);
             logger.info("同步串码数据结束");
         }
     }
