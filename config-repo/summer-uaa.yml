@@ -6,7 +6,6 @@ management:
   security:
     enabled: false
 server:
-  port: 1100
   # Use different context-path to avoid session cookie overlapping
   context-path: /uaa
 
