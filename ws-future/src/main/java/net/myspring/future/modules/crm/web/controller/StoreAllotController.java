@@ -69,9 +69,13 @@ public class StoreAllotController {
     @RequestMapping(value = "getForm")
     @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public StoreAllotForm getForm(StoreAllotForm storeAllotForm) {
-        storeAllotForm.getExtra().put("allotTypeList",StoreAllotTypeEnum.getList());
+        boolean showAllotType = storeAllotService.getShowAllotType();
+        if(showAllotType){
+            storeAllotForm.getExtra().put("allotTypeList",StoreAllotTypeEnum.getList());
+        }else{
+            storeAllotForm.getExtra().put("allotTypeList",StoreAllotTypeEnum.普通调拨.name());
+        }
         storeAllotForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
-        storeAllotForm.getExtra().put("showAllotType", storeAllotService.getShowAllotType());
         return storeAllotForm;
     }
 
