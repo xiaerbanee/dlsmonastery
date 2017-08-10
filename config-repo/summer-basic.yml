@@ -1,5 +1,4 @@
 server:
-  port: 1400
   tomcat:
         max:
           http:
