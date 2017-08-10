@@ -149,7 +149,7 @@ public class ExcelUtils {
                     if (columnIndex != null) {
                         Cell cell = row.getCell(columnIndex);
                         Object value = getCellValue(cell);
-                        ReflectionUtil.setFieldValue(instance, fieldName, value);
+                        ReflectionUtil.setProperty(instance, fieldName, value);
                     }
                 }
                 list.add(instance);

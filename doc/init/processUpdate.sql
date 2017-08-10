@@ -68,6 +68,13 @@ CREATE TABLE `crm_tmp_20170727` (
 );
 
 
+ALTER TABLE crm_ad_goods_order
+  ADD COLUMN simple_process_id bigint(20) NULL AFTER process_instance_id;
+
+ALTER TABLE crm_bank_in
+  ADD COLUMN simple_process_id bigint(20) NULL AFTER process_instance_id;
+
+
 INSERT INTO crm_simple_process_type (
   SELECT
     t1.id,
@@ -107,6 +114,8 @@ INSERT INTO crm_simple_process_step (
   WHERE
     t2.name in ('AdGoodsOrder','BankIn') and t2.enabled = 1 order by t1.sort
 );
+
+INSERT INTO `crm_simple_process` (`id`, `simple_process_type_id`, `current_process_status`, `current_position_id`, `remarks`, `created_by`, `created_date`, `last_modified_by`, `last_modified_date`, `version`, `locked`, `enabled`) VALUES ('1', '83', '已通过', NULL, '', '15026', '2016-08-22 12:47:54', '15026', '2016-08-22 12:47:54', '0', '0', '1');
 
   INSERT INTO crm_simple_process (
   SELECT
@@ -195,12 +204,6 @@ INSERT INTO crm_tmp_20170727 (
 );
 
 update crm_simple_process_detail t1 set remarks = (select t2.remarks from crm_tmp_20170727 t2 where t1.ID = t2.id );
-
-ALTER TABLE crm_ad_goods_order
-  ADD COLUMN simple_process_id bigint(20) NULL AFTER process_instance_id;
-
-ALTER TABLE crm_bank_in
-  ADD COLUMN simple_process_id bigint(20) NULL AFTER process_instance_id;
 
 update crm_ad_goods_order set simple_process_id = process_instance_id;
 update crm_bank_in set simple_process_id = process_instance_id;

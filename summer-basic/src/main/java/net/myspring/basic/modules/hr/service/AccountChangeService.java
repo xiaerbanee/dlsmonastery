@@ -43,10 +43,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
 
 import static net.myspring.util.excel.ExcelUtils.doRead;
 
@@ -273,7 +272,7 @@ public class AccountChangeService {
             List<String> typeList=AccountChangeTypeEnum.getList();
             for(AccountChangeBatchForm accountChangeBatchForm:list){
                 if(!typeList.contains(accountChangeBatchForm.getType())){
-                    sb.append(accountChangeBatchForm.getLoginName()+"调整项不正确\n");
+                    sb.append(accountChangeBatchForm.getLoginName()+accountChangeBatchForm.getType()+"调整项不正确\n");
                 }
                 if(!accountMap.containsKey(accountChangeBatchForm.getLoginName())){
                     sb.append(accountChangeBatchForm.getLoginName()+"不存在或者不在你的管辖范围\n");
@@ -283,6 +282,11 @@ public class AccountChangeService {
                 for(AccountChangeBatchForm accountChangeBatchForm:list){
                     AccountChangeForm accountChangeForm= BeanUtil.map(accountChangeBatchForm,AccountChangeForm.class);
                     Account account = accountMap.get(accountChangeBatchForm.getLoginName());
+                    if(accountChangeBatchForm.getNewValue() instanceof Date){
+                        Date date= (Date) (accountChangeBatchForm.getNewValue());
+                        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+                        accountChangeForm.setNewValue(sdf.format(date));
+                    }
                     accountChangeForm.setAccountId(account.getId());
                     save(accountChangeForm);
                 }
