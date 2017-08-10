@@ -13,6 +13,7 @@ public class OppoCustomerSale extends IdEntity<OppoCustomerSale>{
     private String customerid;
     private LocalDateTime date;
     private Long totalSaleQty;
+    private String companyName;
     @JsonIgnore
     private LocalDate createdDate;
     @JsonIgnore
@@ -41,6 +42,14 @@ public class OppoCustomerSale extends IdEntity<OppoCustomerSale>{
 
     public void setTotalSaleQty(Long totalSaleQty) {
         this.totalSaleQty = totalSaleQty;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public LocalDate getCreatedDate() {

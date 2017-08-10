@@ -352,6 +352,7 @@ export default {
     name: "菜单名称",
     category: "分类",
     menuCategoryName: "分组",
+    visible:'是否显示',
     sort: "排序",
     href: "链接",
     mobile: "手机菜单",

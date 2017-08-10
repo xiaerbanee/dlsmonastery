@@ -7,10 +7,12 @@ import net.myspring.future.modules.crm.domain.ReportScoreOffice;
 import net.myspring.future.modules.crm.dto.ReportScoreOfficeDto;
 import net.myspring.future.modules.crm.service.ReportScoreOfficeService;
 import net.myspring.future.modules.crm.web.query.ReportScoreOfficeQuery;
+import net.myspring.util.excel.ExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -34,5 +36,10 @@ public class ReportScoreOfficeController {
     public ReportScoreOfficeQuery getQuery(ReportScoreOfficeQuery reportScoreOfficeQuery){
         reportScoreOfficeQuery.getExtra().put("areaList", officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         return reportScoreOfficeQuery;
+    }
+
+    @RequestMapping(value = "export")
+    public ModelAndView export(ReportScoreOfficeQuery reportScoreOfficeQuery) {
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", reportScoreOfficeService.export(reportScoreOfficeQuery));
     }
 }

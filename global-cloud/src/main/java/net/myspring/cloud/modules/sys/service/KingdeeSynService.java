@@ -2,6 +2,7 @@ package net.myspring.cloud.modules.sys.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
+import net.myspring.cloud.common.utils.CacheUtils;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
@@ -49,11 +50,14 @@ public class KingdeeSynService {
     private SalOutStockService salOutStockService;
     @Autowired
     private SalReturnStockService salReturnStockService;
+    @Autowired
+    private CacheUtils cacheUtils;
 
-    public Page<KingdeeSyn> findPage(Pageable pageable, KingdeeSynQuery kingdeeSynQuery){
+    public Page<KingdeeSynDto> findPage(Pageable pageable, KingdeeSynQuery kingdeeSynQuery){
         KingdeeBook kingdeeBook = kingdeeBookRepository.findByCompanyName(RequestUtils.getCompanyName());
         kingdeeSynQuery.setKingdeeBookId(kingdeeBook.getId());
-        Page<KingdeeSyn> page = kingdeeSynRepository.findPage(pageable,kingdeeSynQuery);
+        Page<KingdeeSynDto> page = kingdeeSynRepository.findPage(pageable,kingdeeSynQuery);
+        cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 

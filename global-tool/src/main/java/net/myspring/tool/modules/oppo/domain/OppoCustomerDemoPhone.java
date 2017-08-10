@@ -17,6 +17,7 @@ public class OppoCustomerDemoPhone  extends IdEntity<OppoCustomerDemoPhone> {
     private LocalDateTime date;
     private String productCode;
     private String Imei;
+    private String companyName;
     @JsonIgnore
     private LocalDate createdDate;
 
@@ -55,6 +56,14 @@ public class OppoCustomerDemoPhone  extends IdEntity<OppoCustomerDemoPhone> {
 
     public void setProductCode(String productCode) {
         this.productCode = productCode;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public LocalDate getCreatedDate() {

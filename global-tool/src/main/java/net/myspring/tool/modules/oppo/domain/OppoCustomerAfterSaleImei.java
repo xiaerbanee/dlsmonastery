@@ -18,6 +18,7 @@ public class OppoCustomerAfterSaleImei   extends IdEntity<OppoCustomerAfterSaleI
     private String productCode;
     private String imei;
     private String transType;
+    private String companyName;
     @JsonIgnore
     private LocalDate createdDate;
 
@@ -64,6 +65,14 @@ public class OppoCustomerAfterSaleImei   extends IdEntity<OppoCustomerAfterSaleI
 
     public void setTransType(String transType) {
         this.transType = transType;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public LocalDate getCreatedDate() {
