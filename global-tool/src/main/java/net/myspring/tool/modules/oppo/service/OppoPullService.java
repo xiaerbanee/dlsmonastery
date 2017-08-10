@@ -243,8 +243,9 @@ public class OppoPullService {
     public  List<OppoPlantSendImeiPpselDto>  getSendImeList(String date, String agentCode) {
         String dateStart =date;
         String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
+        String companyName = DbContextHolder.get().getCompanyName();
         List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);
-        List<OppoPlantSendImeiPpselDto> oppoPlantSendImeiPpselDtos = oppoPlantSendImeiPpselRepository.findSynList(dateStart, dateEnd, mainCodes);
+        List<OppoPlantSendImeiPpselDto> oppoPlantSendImeiPpselDtos = oppoPlantSendImeiPpselRepository.findSynList(dateStart, dateEnd, mainCodes, companyName);
         return oppoPlantSendImeiPpselDtos;
     }
 
@@ -253,7 +254,8 @@ public class OppoPullService {
         String dateStart =date;
         String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);
-        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoPlantProductItemelectronSelRepository.findSynList(dateStart, dateEnd, mainCodes);
+        String companyName = DbContextHolder.get().getCompanyName();
+        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoPlantProductItemelectronSelRepository.findSynList(dateStart, dateEnd, mainCodes, companyName);
         return oppoPlantProductItemelectronSels;
     }
  }
