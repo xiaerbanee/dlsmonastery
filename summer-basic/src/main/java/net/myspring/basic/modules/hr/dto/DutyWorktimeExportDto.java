@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 public class DutyWorktimeExportDto {
@@ -38,6 +37,15 @@ public class DutyWorktimeExportDto {
     private String employeeId;
     private String employeeName;
     private String officeName;
+    private String parentOfficeName;
+
+    public String getParentOfficeName() {
+        return parentOfficeName;
+    }
+
+    public void setParentOfficeName(String parentOfficeName) {
+        this.parentOfficeName = parentOfficeName;
+    }
 
     public String getEmployeeName() {
         return employeeName;

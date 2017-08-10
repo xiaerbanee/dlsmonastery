@@ -591,6 +591,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 			product.product_type_id,
 			depot.office_id depotOfficeId,
 			depot.area_id depotAreaId,
+            depot.area_type depotAreaType,
 			t1.*
 		FROM
 			crm_product_ime t1
@@ -621,6 +622,12 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         }
         if (productImeQuery.createdDateEnd != null) {
             sb.append("""  AND t1.created_date < :createdDateEnd """)
+        }
+        if (productImeQuery.saleDateStart != null) {
+            sb.append(""" AND sale.created_date >= :saleDateStart """)
+        }
+        if (productImeQuery.saleDateEnd != null) {
+            sb.append(""" AND sale.created_date < :saleDateEnd""")
         }
         if (productImeQuery.retailDateStart != null) {
             sb.append("""  AND t1.retail_date >= :retailDateStart  """)

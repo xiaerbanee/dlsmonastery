@@ -5,20 +5,16 @@ import com.google.common.collect.Maps;
 import net.myspring.cloud.common.enums.VoucherFlexEnum;
 import net.myspring.cloud.common.enums.VoucherStatusEnum;
 import net.myspring.cloud.common.utils.RequestUtils;
-import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
-import net.myspring.cloud.modules.input.service.GlVoucherService;
 import net.myspring.cloud.modules.kingdee.domain.*;
 import net.myspring.cloud.modules.kingdee.service.*;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
-import net.myspring.cloud.modules.sys.domain.Voucher;
 import net.myspring.cloud.modules.sys.dto.VoucherDto;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.cloud.modules.sys.service.VoucherService;
 import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
-import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
@@ -66,6 +62,10 @@ public class VoucherController {
     private BdFlexItemGroupService bdFlexItemGroupService;
     @Autowired
     private BdFlexItemPropertyService bdFlexItemPropertyService;
+    @Autowired
+    private FaAssetTypeService faAssetTypeService;
+    @Autowired
+    private BdExpenseService bdExpenseService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<VoucherDto> page(Pageable pageable, VoucherQuery voucherQuery){
@@ -93,12 +93,12 @@ public class VoucherController {
         voucherDto.setBdFlexItemPropertyList(bdFlexItemPropertyService.findAll());
         List<String> flexItemNameList = voucherService.getHeaders(voucherDto.getBdFlexItemGroupList());
         map.put("headerList", flexItemNameList);
-        map.put("accountNumberNameToFlexGroupNamesMap",voucherService.accountNumberNameToFlexGroupNamesMap(voucherDto.getBdAccountList(),voucherDto.getBdFlexItemGroupList()));
-        List<String> accountNumberNameList = Lists.newArrayList();
+        map.put("accountNameToFlexGroupNamesMap",voucherService.accountNameToFlexGroupNamesMap(voucherDto.getBdAccountList(),voucherDto.getBdFlexItemGroupList()));
+        List<String> accountNameList = Lists.newArrayList();
         for (BdAccount bdAccount :  bdAccountService.findAll()){
-            accountNumberNameList.add(bdAccount.getFNumber()+CharConstant.SLASH_LINE+bdAccount.getFName());
+            accountNameList.add(bdAccount.getFName());
         }
-        map.put("accountNumberNameList",accountNumberNameList);
+        map.put("accountNameList",accountNameList);
         if (voucherDto.getId() != null){
             map.put("data",voucherService.initData(voucherDto));
         }else {
@@ -106,47 +106,59 @@ public class VoucherController {
         }
         for (String flexItemName : flexItemNameList) {
             if (VoucherFlexEnum.供应商.name().equals(flexItemName)){
-                List<String> supplierNumberNameList = Lists.newArrayList();
+                List<String> supplierNameList = Lists.newArrayList();
                 for (BdSupplier bdSupplier :  bdSupplierService.findAll()){
-                    supplierNumberNameList.add(bdSupplier.getFNumber()+CharConstant.SLASH_LINE+bdSupplier.getFName());
+                    supplierNameList.add(bdSupplier.getFName());
                 }
-                map.put("supplierNumberNameList",supplierNumberNameList);
+                map.put("supplierNameList",supplierNameList);
             }else if(VoucherFlexEnum.部门.name().equals(flexItemName)){
-                List<String> departmentNumberNameList = Lists.newArrayList();
+                List<String> departmentNameList = Lists.newArrayList();
                 for (BdDepartment bdDepartment :  bdDepartmentService.findAll()){
-                    departmentNumberNameList.add(bdDepartment.getFNumber()+CharConstant.SLASH_LINE+bdDepartment.getFFullName());
+                    departmentNameList.add(bdDepartment.getFFullName());
                 }
-                map.put("departmentNumberNameList",departmentNumberNameList);
+                map.put("departmentNameList",departmentNameList);
             }else if(VoucherFlexEnum.客户.name().equals(flexItemName)){
-                List<String> customerNumberNameList = Lists.newArrayList();
+                List<String> customerNameList = Lists.newArrayList();
                 for (BdCustomer bdCustomer :  bdCustomerService.findAll()){
-                    customerNumberNameList.add(bdCustomer.getFNumber()+CharConstant.SLASH_LINE+bdCustomer.getFName());
+                    customerNameList.add(bdCustomer.getFName());
                 }
-                map.put("customerNumberNameList",customerNumberNameList);
+                map.put("customerNameList",customerNameList);
             }else if(VoucherFlexEnum.其他类.name().equals(flexItemName)){
-                List<String> otherTypeNumberNameList = Lists.newArrayList();
+                List<String> otherTypeNameList = Lists.newArrayList();
                 for (BasAssistant basAssistant :  basAssistantService.findByType("其他类")){
-                    otherTypeNumberNameList.add(basAssistant.getFNumber()+CharConstant.SLASH_LINE+basAssistant.getFDataValue());
+                    otherTypeNameList.add(basAssistant.getFDataValue());
                 }
-                map.put("otherTypeNumberNameList",otherTypeNumberNameList);
+                map.put("otherTypeNameList",otherTypeNameList);
             }else if(VoucherFlexEnum.费用类.name().equals(flexItemName)){
-                List<String> expenseTypeNumberNameList = Lists.newArrayList();
+                List<String> expenseTypeNameList = Lists.newArrayList();
                 for (BasAssistant basAssistant :  basAssistantService.findByType("费用类")){
-                    expenseTypeNumberNameList.add(basAssistant.getFNumber()+CharConstant.SLASH_LINE+basAssistant.getFDataValue());
+                    expenseTypeNameList.add(basAssistant.getFDataValue());
                 }
-                map.put("expenseTypeNumberNameList",expenseTypeNumberNameList);
+                map.put("expenseTypeNameList",expenseTypeNameList);
             }else if(VoucherFlexEnum.员工.name().equals(flexItemName)){
-                List<String> empInfoNumberNameList = Lists.newArrayList();
+                List<String> empInfoNameList = Lists.newArrayList();
                 for (HrEmpInfo hrEmpInfo :  hrEmpInfoService.findAll()){
-                    empInfoNumberNameList.add(hrEmpInfo.getFNumber()+CharConstant.SLASH_LINE+hrEmpInfo.getFName());
+                    empInfoNameList.add(hrEmpInfo.getFName());
                 }
-                map.put("empInfoNumberNameList",empInfoNumberNameList);
+                map.put("empInfoNameList",empInfoNameList);
             }else if(VoucherFlexEnum.银行账号.name().equals(flexItemName)){
-                List<String> bankAcntNumberNameList = Lists.newArrayList();
+                List<String> bankAcntNameList = Lists.newArrayList();
                 for (CnBankAcnt cnBankAcnt :  cnBankAcntService.findAll()){
-                    bankAcntNumberNameList.add(cnBankAcnt.getFNumber()+CharConstant.SLASH_LINE+cnBankAcnt.getFName());
+                    bankAcntNameList.add(cnBankAcnt.getFName());
                 }
-                map.put("bankAcntNumberNameList",bankAcntNumberNameList);
+                map.put("bankAcntNameList",bankAcntNameList);
+            }else if(VoucherFlexEnum.资产类别.name().equals(flexItemName)){
+                List<String> assetTypeNameList = Lists.newArrayList();
+                for (FaAssetType hrEmpInfo :  faAssetTypeService.findAll()){
+                    assetTypeNameList.add(hrEmpInfo.getFName());
+                }
+                map.put("assetTypeNameList",assetTypeNameList);
+            }else if(VoucherFlexEnum.费用项目.name().equals(flexItemName)){
+                List<String> expenseNameList = Lists.newArrayList();
+                for (BdExpense cnBankAcnt :  bdExpenseService.findAll()){
+                    expenseNameList.add(cnBankAcnt.getFName());
+                }
+                map.put("expenseNameList",expenseNameList);
             }
         }
         voucherForm.setExtra(map);
@@ -231,4 +243,6 @@ public class VoucherController {
         }
         return new RestResponse("删除成功",null,true);
     }
+
+
 }

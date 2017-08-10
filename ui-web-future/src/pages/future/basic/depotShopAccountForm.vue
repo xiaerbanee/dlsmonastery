@@ -8,8 +8,8 @@
             <el-form-item label="选择门店" prop="depotId">
               <depot-select v-model="inputForm.depotId" category="shop" @input="shopSelectd"></depot-select>
             </el-form-item>
-            <el-form-item label="账户绑定" prop="accountIds" >
-              <account-select v-model="inputForm.accountIds" multiple="multiple"></account-select>
+            <el-form-item label="账户绑定" prop="accountIdList" >
+              <account-select v-model="inputForm.accountIdList" multiple="multiple"></account-select>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled"  @click="formSubmit()">保存</el-button>
@@ -54,7 +54,7 @@
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/ws/future/basic/depotShop/saveDepotAccount', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
+            axios.post('/api/ws/future/basic/accountDepot/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               if(response.data.success) {
                   this.$router.push({name: 'depotShopList', query: util.getQuery("depotShopList"), params:{_closeFrom:true}});
@@ -69,17 +69,21 @@
       },shopSelectd(){
           this.inputForm.accountId=null;
           this.inputForm.depotIdList=new Array();
-          axios.get('/api/ws/future/basic/depotShop/findAccountIdsByDepotId',{params: {depotId:this.inputForm.depotId}}).then((response)=> {
-            this.inputForm.accountIds = response.data;
-          });
+          if(this.inputForm.depotId){
+            axios.get('/api/ws/future/basic/accountDepot/findByDepotId',{params: {depotId:this.inputForm.depotId}}).then((response)=> {
+              this.inputForm.accountIdList = response.data;
+            });
+          }
       },accountSelectd(){
         this.inputForm.depotId=null;
-        this.inputForm.accountIds=new Array();
-        axios.get('/api/ws/future/basic/depotShop/findDepotIdsByAccountId',{params: {accountId:this.inputForm.accountId}}).then((response)=> {
-          this.inputForm.depotIdList = response.data;
-        });
+        this.inputForm.accountIdList=new Array();
+        if(this.inputForm.accountId){
+          axios.get('/api/ws/future/basic/accountDepot/findByAccountId',{params: {accountId:this.inputForm.accountId}}).then((response)=> {
+            this.inputForm.depotIdList = response.data;
+          });
+        }
       },initPage(){
-        axios.get('/api/ws/future/basic/depotShop/getAccountForm').then((response)=>{
+        axios.get('/api/ws/future/basic/accountDepot/getForm').then((response)=>{
           this.inputForm = response.data;
         });
       }

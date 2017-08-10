@@ -40,19 +40,19 @@
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
         <el-table-column fixed prop="id" :label="$t('accountChangeList.id')" sortable></el-table-column>
         <el-table-column  prop="areaName" :label="$t('accountChangeList.areaName')" sortable></el-table-column>
-        <el-table-column  prop="accountName" :label="$t('accountChangeList.applyAccount')" sortable></el-table-column>
-        <el-table-column  prop="createdDate" :label="$t('accountChangeList.applyDate')" sortable></el-table-column>
+        <el-table-column  prop="createdByName" label="创建人" sortable ></el-table-column>
+        <el-table-column  prop="createdDate" label="创建时间" sortable ></el-table-column>
+        <el-table-column  prop="accountName" label="调整账户" sortable></el-table-column>
         <el-table-column  prop="type" :label="$t('accountChangeList.type')" sortable></el-table-column>
         <el-table-column  prop="oldLabel" :label="$t('accountChangeList.oldValue')" sortable></el-table-column>
         <el-table-column  prop="newLabel" :label="$t('accountChangeList.newValue')" sortable></el-table-column>
-        <el-table-column  prop="processStatus" :label="$t('accountChangeList.processStatus')" sortable ></el-table-column>
-        <el-table-column  prop="createdByName" label="创建人" sortable ></el-table-column>
         <el-table-column  prop="remarks" :label="$t('accountChangeList.remarks')" sortable ></el-table-column>
+        <el-table-column  prop="processStatus" :label="$t('accountChangeList.processStatus')" sortable ></el-table-column>
         <el-table-column :label="$t('accountChangeList.operation')" width="140">
           <template scope="scope">
             <el-button size="small" @click.native="itemAction(scope.row.id,'detail')" v-permit="'hr:accountChange:view'" >详细</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:accountChange:delete'" v-if="scope.row.processStatus !== '已通过' &&scope.row.processStatus !== '未通过'">删除</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'audit')" v-permit="'hr:accountChange:audit'" v-if="scope.row.processStatus !== '已通过' &&scope.row.processStatus !== '未通过'">审核</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:accountChange:delete'" v-if="scope.row.processStatus !== '已通过' &&scope.row.processStatus !== '未通过'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
