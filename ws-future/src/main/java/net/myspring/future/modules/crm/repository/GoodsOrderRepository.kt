@@ -147,7 +147,6 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
               depotShop.area_type shopDepotShopAreaType,
               t1.*
             FROM crm_goods_order t1
-                      LEFT JOIN crm_goods_order_detail detail ON detail.goods_order_id = t1.id
                       LEFT JOIN crm_express_order t2 ON t1.express_order_id = t2.id
                       LEFT JOIN crm_depot shop ON t1.shop_id = shop.id
                       LEFT JOIN crm_depot_shop depotShop ON shop.depot_shop_id = depotShop.id
@@ -227,9 +226,6 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         }
         if (goodsOrderQuery.lxMallOrder != null && !goodsOrderQuery.lxMallOrder) {
             sb.append(" and t1.lx_mall_order = 0  ")
-        }
-        if (CollectionUtil.isNotEmpty(goodsOrderQuery.productIds)) {
-            sb.append(" and detail.product_id in (:productIds)")
         }
         if (CollectionUtil.isNotEmpty(goodsOrderQuery.officeIdList)) {
             sb.append(" and shop.office_id in (:officeIdList)")

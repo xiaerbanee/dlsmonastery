@@ -114,7 +114,7 @@ public class OppoPullService {
                 }
             }
             if (CollectionUtil.isNotEmpty(list)) {
-                oppoPlantProductSelRepository.save(list).toString();
+                oppoPlantProductSelRepository.save(list);
             }
             logger.info("颜色编码同步成功");
         }

@@ -11,17 +11,21 @@ interface OppoCustomerOperatortypeRepository : BaseRepository<OppoCustomerOperat
 
 }
 interface OppoCustomerOperatortypeRepositoryCustom{
-    fun findByDate(dateStart:String,dateEnd:String):MutableList<OppoCustomerOperatortype>
+    fun findByDate(companyName: String,dateStart:String,dateEnd:String):MutableList<OppoCustomerOperatortype>
     fun deleteByCompanyNameAndDate(companyName:String,dateStart: String,dateEnd: String):Int
 }
 class OppoCustomerOperatortypeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : OppoCustomerOperatortypeRepositoryCustom{
 
-    override fun findByDate(dateStart:String, dateEnd:String): MutableList<OppoCustomerOperatortype> {
+    override fun findByDate(companyName: String,dateStart:String, dateEnd:String): MutableList<OppoCustomerOperatortype> {
         val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("dateStart",dateStart);
         paramMap.put("dateEnd",dateEnd);
+        paramMap.put("companyName",companyName);
         return namedParameterJdbcTemplate.query("""
-            select *  from oppo_push_customer_operator_type where created_date >=:dateStart and created_date<:dateEnd
+            select *  from oppo_push_customer_operator_type
+            where created_date >=:dateStart
+              and created_date < :dateEnd
+              and company_name = :companyName
          """,paramMap, BeanPropertyRowMapper(OppoCustomerOperatortype::class.java));
     }
 

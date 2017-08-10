@@ -89,20 +89,21 @@ public class OppoPushController {
     //代理商经销商基础数据上抛
     @RequestMapping(value = "pullCustomers", method = RequestMethod.GET)
     public OppoResponseMessage pullOppoCustomers(String key, String createdDate) throws IOException {
-        if (StringUtils.isBlank(DbContextHolder.get().getCompanyName())){
-            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
-        }
-        String agentCode= CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
-        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
-        String localKey = MD5Utils.encode(factoryAgentName + createdDate);
         OppoResponseMessage responseMessage = new OppoResponseMessage();
-        if (!localKey.equals(key)) {
-            responseMessage.setMessage("密钥不正确");
-            responseMessage.setResult("false");
-        } else {
-            List<OppoCustomer> oppoCustomers = oppoPushSerivce.getOppoCustomersByDate(createdDate);
+        String companyName = oppoPushSerivce.getCompanyName(key,createdDate);
+        if (CompanyNameEnum.JXOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
+            List<OppoCustomer> oppoCustomers = oppoPushSerivce.getOppoCustomersByDate(createdDate,companyName);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomers));
             responseMessage.setResult("success");
+        }else if (CompanyNameEnum.WZOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.WZOPPO.name());
+            List<OppoCustomer> oppoCustomers = oppoPushSerivce.getOppoCustomersByDate(createdDate,companyName);
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomers));
+            responseMessage.setResult("success");
+        }else {
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
         }
         return responseMessage;
     }
@@ -110,44 +111,47 @@ public class OppoPushController {
     //运营商属性上抛
     @RequestMapping(value = "pullCustomerOperatortype", method = RequestMethod.GET)
     public OppoResponseMessage pullOppoCustomerOperatortype(String key, String createdDate) {
-        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
-            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
-        }
-        String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
-        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
-        String localKey = MD5Utils.encode(factoryAgentName + createdDate);
         OppoResponseMessage responseMessage = new OppoResponseMessage();
-        if (!localKey.equals(key)) {
-            responseMessage.setMessage("密钥不正确");
-            responseMessage.setResult("false");
-        } else {
+        String companyName = oppoPushSerivce.getCompanyName(key,createdDate);
+        if (CompanyNameEnum.JXOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
             List<OppoCustomerOperatortype> oppoCustomerOperatortypes = oppoPushSerivce.getOppoCustomerOperatortypesByDate(createdDate);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerOperatortypes));
             responseMessage.setResult("success");
+        }else if (CompanyNameEnum.WZOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.WZOPPO.name());
+            List<OppoCustomerOperatortype> oppoCustomerOperatortypes = oppoPushSerivce.getOppoCustomerOperatortypesByDate(createdDate);
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerOperatortypes));
+            responseMessage.setResult("success");
+        }else {
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
         }
-        logger.info("responseMessage=="+responseMessage.toString());
         return responseMessage;
     }
 
     //发货退货调拨数据上抛
     @RequestMapping(value ="pullCustomerAllot", method = RequestMethod.GET)
     public OppoResponseMessage pullOppoCustomersAllot(String key, String dateStart, String dateEnd) {
-        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
+        OppoResponseMessage responseMessage = new OppoResponseMessage();
+        String companyName = oppoPushSerivce.getCompanyName(key,dateStart,dateEnd);
+        if (CompanyNameEnum.JXOPPO.name().equals(companyName)){
             DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
-        }
-        String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
-        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
-        String localKey=MD5Utils.encode(factoryAgentName+dateStart+dateEnd);
-        OppoResponseMessage responseMessage=new OppoResponseMessage();
-        if(!localKey.equals(key)){
-            responseMessage.setMessage("密钥不正确");
-            responseMessage.setResult("false");
-        }else{
+            String dateStartTime = LocalDateUtils.format(LocalDateUtils.parse(dateStart));
+            String dateEndTime = LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
+            List<OppoCustomerAllot> oppoCustomerAllots = oppoPushSerivce.getOppoCustomerAllotsByDate(dateStartTime,dateEndTime);
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerAllots));
+            responseMessage.setResult("success");
+        }else if (CompanyNameEnum.WZOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.WZOPPO.name());
             String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
             String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
             List<OppoCustomerAllot> oppoCustomerAllots=oppoPushSerivce.getOppoCustomerAllotsByDate(dateStartTime,dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerAllots));
             responseMessage.setResult("success");
+        }else {
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
         }
         return responseMessage;
     }
@@ -155,47 +159,51 @@ public class OppoPushController {
     //库存数据上抛
     @RequestMapping(value ="pullCustomerStock", method = RequestMethod.GET)
     public OppoResponseMessage pullCustomerStock(String key,String createdDate)  {
-        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
+        OppoResponseMessage responseMessage = new OppoResponseMessage();
+        String companyName = oppoPushSerivce.getCompanyName(key,createdDate);
+        if (CompanyNameEnum.JXOPPO.name().equals(companyName)){
             DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
-        }
-        String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
-        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
-        String localKey=MD5Utils.encode(factoryAgentName+createdDate);
-        OppoResponseMessage responseMessage=new OppoResponseMessage();
-        if(!localKey.equals(key)){
-            responseMessage.setMessage("密钥不正确");
-            responseMessage.setResult("false");
-        }else{
-            logger.info("库存上抛开始："+new Date());
-            String dateStart= LocalDateUtils.format(LocalDateUtils.parse(createdDate));
-            String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(createdDate).plusDays(1));
-            List<OppoCustomerStock> oppoCustomerStocks=oppoPushSerivce.getOppoCustomerStocksByDate(dateStart,dateEnd);
+            String dateStart = LocalDateUtils.format(LocalDateUtils.parse(createdDate));
+            String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(createdDate).plusDays(1));
+            List<OppoCustomerStock> oppoCustomerStocks = oppoPushSerivce.getOppoCustomerStocksByDate(dateStart,dateEnd);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerStocks));
             responseMessage.setResult("success");
+        }else if (CompanyNameEnum.WZOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.WZOPPO.name());
+            String dateStart = LocalDateUtils.format(LocalDateUtils.parse(createdDate));
+            String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(createdDate).plusDays(1));
+            List<OppoCustomerStock> oppoCustomerStocks = oppoPushSerivce.getOppoCustomerStocksByDate(dateStart,dateEnd);
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerStocks));
+            responseMessage.setResult("success");
+        }else {
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
         }
-        logger.info("库存上抛结束："+new Date());
         return responseMessage;
     }
 
     //门店条码调拨明细上抛
     @RequestMapping(value ="pullCustomerImeStock", method = RequestMethod.GET)
     public OppoResponseMessage pullCustomerImeStock(String key,String dateStart,String dateEnd)  {
-        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
+        OppoResponseMessage responseMessage = new OppoResponseMessage();
+        String companyName = oppoPushSerivce.getCompanyName(key,dateStart,dateEnd);
+        if (CompanyNameEnum.JXOPPO.name().equals(companyName)){
             DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
-        }
-        String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
-        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
-        String localKey=MD5Utils.encode(factoryAgentName+dateStart+dateEnd);
-        OppoResponseMessage responseMessage=new OppoResponseMessage();
-        if(!localKey.equals(key)){
-            responseMessage.setMessage("密钥不正确");
-            responseMessage.setResult("false");
-        }else{
-            String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
-            String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
-            List<OppoCustomerImeiStock> oppoCustomerImeiStocks=oppoPushSerivce.getOppoCustomerImeiStocksByDate(dateStartTime,dateEndTime);
+            String dateStartTime = LocalDateUtils.format(LocalDateUtils.parse(dateStart));
+            String dateEndTime = LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
+            List<OppoCustomerImeiStock> oppoCustomerImeiStocks = oppoPushSerivce.getOppoCustomerImeiStocksByDate(dateStartTime,dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerImeiStocks));
             responseMessage.setResult("success");
+        }else if (CompanyNameEnum.WZOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.WZOPPO.name());
+            String dateStartTime = LocalDateUtils.format(LocalDateUtils.parse(dateStart));
+            String dateEndTime = LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
+            List<OppoCustomerImeiStock> oppoCustomerImeiStocks = oppoPushSerivce.getOppoCustomerImeiStocksByDate(dateStartTime,dateEndTime);
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerImeiStocks));
+            responseMessage.setResult("success");
+        }else {
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
         }
         return responseMessage;
     }
@@ -203,22 +211,25 @@ public class OppoPushController {
     //店总数据上抛
     @RequestMapping(value ="pullCustomerSale", method = RequestMethod.GET)
     public OppoResponseMessage pullCustomerSale(String key,String dateStart,String dateEnd) {
-        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
-            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
-        }
-        String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
-        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
-        String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
         OppoResponseMessage responseMessage = new OppoResponseMessage();
-        if (!localKey.equals(key)) {
-            responseMessage.setMessage("密钥不正确");
-            responseMessage.setResult("false");
-        } else {
+        String companyName = oppoPushSerivce.getCompanyName(key,dateStart,dateEnd);
+        if (CompanyNameEnum.JXOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
             String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
             String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
             List<OppoCustomerSale> oppoCustomerSales = oppoPushSerivce.getOppoCustomerSalesByDate(dateStartTime, dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerSales));
             responseMessage.setResult("success");
+        }else if (CompanyNameEnum.WZOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.WZOPPO.name());
+            String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
+            String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
+            List<OppoCustomerSale> oppoCustomerSales = oppoPushSerivce.getOppoCustomerSalesByDate(dateStartTime, dateEndTime);
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerSales));
+            responseMessage.setResult("success");
+        }else {
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
         }
         return responseMessage;
     }
@@ -226,22 +237,25 @@ public class OppoPushController {
     //门店销售明细
     @RequestMapping(value ="pullCustomerSaleIme", method = RequestMethod.GET)
     public OppoResponseMessage pullCustomerSaleIme(String key,String dateStart,String dateEnd)  {
-        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
+        OppoResponseMessage responseMessage = new OppoResponseMessage();
+        String companyName = oppoPushSerivce.getCompanyName(key,dateStart,dateEnd);
+        if (CompanyNameEnum.JXOPPO.name().equals(companyName)){
             DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
-        }
-        String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
-        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
-        String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
-        OppoResponseMessage responseMessage=new OppoResponseMessage();
-        if(!localKey.equals(key)){
-            responseMessage.setMessage("密钥不正确");
-            responseMessage.setResult("false");
-        }else{
             String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
             String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
             List<OppoCustomerSaleImei> oppoCustomerSaleImes=oppoPushSerivce.getOppoCustomerSaleImeisByDate(dateStartTime,dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerSaleImes));
             responseMessage.setResult("success");
+        }else if (CompanyNameEnum.WZOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.WZOPPO.name());
+            String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
+            String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
+            List<OppoCustomerSaleImei> oppoCustomerSaleImes=oppoPushSerivce.getOppoCustomerSaleImeisByDate(dateStartTime,dateEndTime);
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerSaleImes));
+            responseMessage.setResult("success");
+        }else {
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
         }
         return responseMessage;
     }
@@ -249,24 +263,25 @@ public class OppoPushController {
     //门店销售数据汇总
     @RequestMapping(value ="pullCustomerSaleCount", method = RequestMethod.GET)
     public OppoResponseMessage pullCustomerSaleCount(String key,String dateStart,String dateEnd)  {
-        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
+        OppoResponseMessage responseMessage = new OppoResponseMessage();
+        String companyName = oppoPushSerivce.getCompanyName(key,dateStart,dateEnd);
+        if (CompanyNameEnum.JXOPPO.name().equals(companyName)){
             DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
-        }
-        String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
-        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
-        String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
-        OppoResponseMessage responseMessage=new OppoResponseMessage();
-        if(!localKey.equals(key)){
-            responseMessage.setMessage("密钥不正确");
-            responseMessage.setResult("false");
-        }else{
-            logger.info("门店销售数据汇总上抛开始");
             String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
             String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
             List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoPushSerivce.getOppoCustomerSaleCountsByDate(dateStartTime,dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerSaleCounts));
             responseMessage.setResult("success");
-            logger.info("门店销售数据汇总上抛结束");
+        }else if (CompanyNameEnum.WZOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.WZOPPO.name());
+            String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
+            String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
+            List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoPushSerivce.getOppoCustomerSaleCountsByDate(dateStartTime,dateEndTime);
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerSaleCounts));
+            responseMessage.setResult("success");
+        }else {
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
         }
         return responseMessage;
     }
@@ -274,24 +289,25 @@ public class OppoPushController {
     //门店售后零售退货条码数据
     @RequestMapping(value ="pullCustomerAfterSaleIme", method = RequestMethod.GET)
     public OppoResponseMessage pullCustomerAfterSaleIme(String key,String dateStart,String dateEnd)  {
-        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
+        OppoResponseMessage responseMessage = new OppoResponseMessage();
+        String companyName = oppoPushSerivce.getCompanyName(key,dateStart,dateEnd);
+        if (CompanyNameEnum.JXOPPO.name().equals(companyName)){
             DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
-        }
-        String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
-        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
-        String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
-        OppoResponseMessage responseMessage=new OppoResponseMessage();
-        if(!localKey.equals(key)){
-            responseMessage.setMessage("密钥不正确");
-            responseMessage.setResult("false");
-        }else{
-            logger.info("门店店售后退货条码数据上抛开始");
             String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
             String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
             List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=oppoPushSerivce.getOppoCustomerAfterSaleImeisByDate(dateStartTime,dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerAfterSaleImeis));
             responseMessage.setResult("success");
-            logger.info("门店店售后退货条码数据上抛结束");
+        }else if (CompanyNameEnum.WZOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.WZOPPO.name());
+            String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
+            String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
+            List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=oppoPushSerivce.getOppoCustomerAfterSaleImeisByDate(dateStartTime,dateEndTime);
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerAfterSaleImeis));
+            responseMessage.setResult("success");
+        }else {
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
         }
         return responseMessage;
     }
@@ -299,22 +315,25 @@ public class OppoPushController {
     //演示机条码数据
     @RequestMapping(value ="pullCustomerDemoPhone", method = RequestMethod.GET)
     public OppoResponseMessage pullCustomerDemoPhone(String key,String dateStart,String dateEnd)  {
-        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
+        OppoResponseMessage responseMessage = new OppoResponseMessage();
+        String companyName = oppoPushSerivce.getCompanyName(key,dateStart,dateEnd);
+        if (CompanyNameEnum.JXOPPO.name().equals(companyName)){
             DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
-        }
-        String agentCode=CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
-        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
-        String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
-        OppoResponseMessage responseMessage=new OppoResponseMessage();
-        if(!localKey.equals(key)){
-            responseMessage.setMessage("密钥不正确");
-            responseMessage.setResult("false");
-        }else{
             String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
             String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
             List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoPushSerivce.getOppoCustomerDemoPhonesByDate(dateStartTime,dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerDemoPhones));
             responseMessage.setResult("success");
+        }else if (CompanyNameEnum.WZOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.WZOPPO.name());
+            String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
+            String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
+            List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoPushSerivce.getOppoCustomerDemoPhonesByDate(dateStartTime,dateEndTime);
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerDemoPhones));
+            responseMessage.setResult("success");
+        }else {
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
         }
         return responseMessage;
     }

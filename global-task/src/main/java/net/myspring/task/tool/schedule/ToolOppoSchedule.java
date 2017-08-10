@@ -36,7 +36,7 @@ public class ToolOppoSchedule {
         }
     }
 
-//    @Scheduled(cron = "0 30 2-18 * * ?")
+    @Scheduled(cron = "0 30 2-18 * * ?")
     public void pullWzoppoData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.WZOPPO.name())) {
@@ -58,7 +58,7 @@ public class ToolOppoSchedule {
         }
     }
 
-//    @Scheduled(cron = "0 20 20,21,22 * * ?")
+    @Scheduled(cron = "0 20 20,21,22 * * ?")
     public void pushWzoppoToLocal(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.WZOPPO.name())) {
