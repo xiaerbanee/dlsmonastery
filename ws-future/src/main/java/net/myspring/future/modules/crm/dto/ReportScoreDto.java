@@ -2,7 +2,6 @@ package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.ReportScore;
-import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -138,5 +137,19 @@ public class ReportScoreDto extends DataDto<ReportScore> {
 
     public void setMonthSaleMoney(BigDecimal monthSaleMoney) {
         this.monthSaleMoney = monthSaleMoney;
+    }
+
+    public String getCardQtyStr() {
+        return cardQty + "/" + saleQty;
+    }
+
+
+    public String getMonthCardQtyStr() {
+        return monthCardQty + "/" + monthSaleQty;
+    }
+
+    public int getCardQtyDiff() {
+        Integer diff = cardQty-saleQty;
+        return Math.abs(diff);
     }
 }

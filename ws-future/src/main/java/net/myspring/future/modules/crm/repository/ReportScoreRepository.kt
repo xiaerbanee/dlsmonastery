@@ -50,6 +50,7 @@ class ReportScoreRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
                         crm_depot_shop t5
                         where t1.enabled=1
                         and t2.depot_shop_id=t5.id
+                        and t2.depot_store_id is null
                         and t4.score_type=1
                         and t1.retail_date>=:retailDateStart
                         and t1.retail_date<:retailDateEnd
