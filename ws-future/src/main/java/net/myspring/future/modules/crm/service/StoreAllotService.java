@@ -387,7 +387,7 @@ public class StoreAllotService {
         }
     }
 
-    public Boolean getShowAllotType() {
+    public boolean getShowAllotType() {
         return getMergeStoreIds() != null;
     }
 

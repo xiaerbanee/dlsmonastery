@@ -21,14 +21,14 @@
           <el-button type="primary" @click="search()">{{$t('reportScoreList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('reportScoreList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('reportScoreList.loading')" @sort-change="sortChange" stripe border :row-class-name="tableRowClassName">
         <el-table-column fixed prop="scoreDate" :label="$t('reportScoreList.scoreDate')" sortable></el-table-column>
         <el-table-column prop="companyScore" :label="$t('reportScoreList.companyScore')"></el-table-column>
         <el-table-column prop="companyMonthScore" :label="$t('reportScoreList.companyMonthScore')"></el-table-column>
         <el-table-column prop="score" :label="$t('reportScoreList.score')"></el-table-column>
         <el-table-column prop="monthScore"  :label="$t('reportScoreList.monthScore')"></el-table-column>
-        <el-table-column prop="cardQty" :label="$t('reportScoreList.cardQty')"></el-table-column>
-        <el-table-column prop="monthCardQty" :label="$t('reportScoreList.monthCardQty')"></el-table-column>
+        <el-table-column prop="cardQtyStr" :label="$t('reportScoreList.cardQty')"></el-table-column>
+        <el-table-column prop="monthCardQtyStr" :label="$t('reportScoreList.monthCardQty')"></el-table-column>
         <el-table-column prop="rank" :label="$t('reportScoreList.rank')"></el-table-column>
         <el-table-column prop="saleQty" :label="$t('reportScoreList.saleQty')"></el-table-column>
         <el-table-column prop="monthSaleQty" :label="$t('reportScoreList.monthSaleQty')"></el-table-column>
@@ -45,8 +45,12 @@
     </div>
   </div>
 </template>
+<style>
+  .el-table .danger-row {
+    background: #FF8888 !important;
+  }
+</style>
 <script>
-
   export default{
 
     data() {
@@ -68,6 +72,11 @@
         this.$nextTick(function () {
           this.searchText = util.getSearchText(this.$refs.searchDialog);
         })
+      },   tableRowClassName(row, index) {
+        if (row.cardQtyDiff>10) {
+          return "danger-row";
+        }
+        return '';
       },
       pageRequest() {
         this.pageLoading = true;

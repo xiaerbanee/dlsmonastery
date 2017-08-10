@@ -4,7 +4,7 @@
     <div>
       <el-form :model="inputForm" ref="inputForm"  label-width="120px"  class="form input-form">
         <el-form-item :label="$t('storeAllotForm.allotType')" prop="allotType" >
-          <el-select v-if="inputForm.extra.showAllotType" v-model="inputForm.allotType"  clearable @change="allotTypeChanged" >
+          <el-select v-model="inputForm.allotType"  clearable @change="allotTypeChanged" >
             <el-option v-for="item in inputForm.extra.allotTypeList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>

@@ -225,8 +225,8 @@ public class AccountChangeService {
             if (employee.getRegularDate() != null) {
                 accountChange.setOldLabel(LocalDateUtils.format(employee.getRegularDate()));
                 accountChange.setOldValue(LocalDateUtils.format(employee.getRegularDate()));
-                accountChange.setNewLabel(accountChangeForm.getNewValue());
             }
+            accountChange.setNewLabel(accountChangeForm.getNewValue());
         } else if (accountChange.getType().equals(AccountChangeTypeEnum.离职.toString())) {
             if (employee.getLeaveDate() != null) {
                 accountChange.setOldLabel(LocalDateUtils.format(employee.getLeaveDate()));

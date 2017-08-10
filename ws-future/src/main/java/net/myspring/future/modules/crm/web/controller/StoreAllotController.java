@@ -1,7 +1,7 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.Lists;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
@@ -69,9 +69,13 @@ public class StoreAllotController {
     @RequestMapping(value = "getForm")
     @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public StoreAllotForm getForm(StoreAllotForm storeAllotForm) {
-        storeAllotForm.getExtra().put("allotTypeList",StoreAllotTypeEnum.getList());
+        boolean showAllotType = storeAllotService.getShowAllotType();
+        if(showAllotType){
+            storeAllotForm.getExtra().put("allotTypeList",StoreAllotTypeEnum.getList());
+        }else{
+            storeAllotForm.getExtra().put("allotTypeList", Lists.newArrayList(StoreAllotTypeEnum.普通调拨.name()));
+        }
         storeAllotForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
-        storeAllotForm.getExtra().put("showAllotType", storeAllotService.getShowAllotType());
         return storeAllotForm;
     }
 
