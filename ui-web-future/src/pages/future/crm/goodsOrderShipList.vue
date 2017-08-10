@@ -30,6 +30,9 @@
               <el-form-item :label="$t('goodsOrderShipList.office')" >
                 <office-select v-model="formData.areaId" :remote="false" officeRuleName="办事处" @afterInit="setSearchText"></office-select>
               </el-form-item>
+              <el-form-item :label="$t('goodsOrderShipList.product')">
+                <product-select v-model="formData.productIds" multiple :hasIme=true></product-select>
+              </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item :label="$t('goodsOrderShipList.shipDate')" >
@@ -111,11 +114,13 @@
   import officeSelect from 'components/basic/office-select'
   import depotSelect from 'components/future/depot-select'
   import accountSelect from 'components/basic/account-select'
+  import productSelect from 'components/future/product-select'
   export default{
     components:{
       officeSelect,
       depotSelect,
       accountSelect,
+      productSelect
     },
     data() {
     return {
