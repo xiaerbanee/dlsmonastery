@@ -29,6 +29,8 @@ public class ReportQuery extends BaseQuery{
     private LocalDate dateEnd;
 
     private LocalDate date;
+    //网络制式
+    private String netType;
     //乡镇类型
     private String townType;
     //打分型号：是，否
@@ -211,5 +213,13 @@ public class ReportQuery extends BaseQuery{
 
     public void setShopName(String shopName) {
         this.shopName = shopName;
+    }
+
+    public String getNetType() {
+        return netType;
+    }
+
+    public void setNetType(String netType) {
+        this.netType = netType;
     }
 }

@@ -36,7 +36,7 @@ public class ArOtherRecAbleManager {
 
 
     public KingdeeSynReturnDto synForShopGoodsDeposit(ShopGoodsDeposit shopGoodsDeposit){
-        if (!CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName()) && !CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName())) {
+        if (!CompanyNameEnum.IDVIVO.name().equals(RequestUtils.getCompanyName()) && !CompanyNameEnum.JXDJ.name().equals(RequestUtils.getCompanyName()) && !CompanyNameEnum.WZOPPO.name().equals(RequestUtils.getCompanyName())) {
             Client client = clientRepository.findByDepotId(shopGoodsDeposit.getShopId());
             ArOtherRecAbleDto otherRecAbleDto = new ArOtherRecAbleDto();
             otherRecAbleDto.setExtendType(ExtendTypeEnum.定金收款.name());
@@ -74,7 +74,7 @@ public class ArOtherRecAbleManager {
     }
 
     public KingdeeSynReturnDto synForShopDeposit(ShopDeposit shopDeposit,String departmentNumber,ShopDepositTypeEnum type){
-        if (shopDeposit.getId()!=null && type !=null){
+        if (shopDeposit.getId()!=null && type !=null && !CompanyNameEnum.WZOPPO.name().equals(RequestUtils.getCompanyName())){
             Client client = clientRepository.findByDepotId(shopDeposit.getShopId());
             ArOtherRecAbleDto otherRecAbleDto = new ArOtherRecAbleDto();
             otherRecAbleDto.setDate(shopDeposit.getBillDate());

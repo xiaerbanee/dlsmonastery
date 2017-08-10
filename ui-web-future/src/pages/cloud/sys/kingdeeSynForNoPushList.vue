@@ -22,7 +22,7 @@
             <el-tag :type="scope.row.locked === true ? 'danger' : 'success'" >{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" width="240">
+        <el-table-column fixed="right" label="操作" width="120">
           <template scope="scope">
             <el-button size="small" @click.native="itemAction(scope.row.id,'detail')">详细</el-button>
           </template>

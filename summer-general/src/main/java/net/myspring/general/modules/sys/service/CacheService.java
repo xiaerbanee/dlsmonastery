@@ -2,6 +2,7 @@ package net.myspring.general.modules.sys.service;
 
 import net.myspring.general.common.utils.CacheUtils;
 import net.myspring.general.modules.sys.repository.DistrictRepository;
+import net.myspring.general.modules.sys.repository.ProcessTypeRepository;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,8 @@ public class CacheService {
     @Autowired
     private DistrictRepository districtRepository;
     @Autowired
+    private ProcessTypeRepository processTypeRepository;
+    @Autowired
     private CacheUtils cacheUtils;
 
     public void init() {
@@ -28,6 +31,7 @@ public class CacheService {
         logger.info("init cache start at " + LocalDateTimeUtils.format(start,LocalDateTimeUtils.FORMATTER_MILLISECOND));
 
         cacheUtils.initCache("districts", districtRepository.findAll());
+        cacheUtils.initCache("processTypes", processTypeRepository.findAll());
 
         LocalDateTime end = LocalDateTime.now();
         logger.info("init cache end at " + LocalDateTimeUtils.format(end,LocalDateTimeUtils.FORMATTER_MILLISECOND));

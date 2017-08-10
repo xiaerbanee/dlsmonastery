@@ -12,7 +12,7 @@
           <el-row :gutter="12">
             <el-col :span="12">
               <el-form-item :label="$t('adGoodsOrderDetailList.adGoodsOrderIdStr')">
-                <el-input v-model="formData.adGoodsOrderIdStr" :placeholder="$t('adGoodsOrderDetailList.comma')"></el-input>
+                <el-input v-model="formData.adGoodsOrderIdStr" :placeholder="$t('adGoodsOrderDetailList.blankOrComma')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderDetailList.createdDateRange')">
                 <date-range-picker v-model="formData.adGoodsOrderCreatedDateRange"></date-range-picker>

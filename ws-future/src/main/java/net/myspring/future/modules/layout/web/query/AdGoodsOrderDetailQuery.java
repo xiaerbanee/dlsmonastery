@@ -8,6 +8,7 @@ import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -118,7 +119,7 @@ public class AdGoodsOrderDetailQuery extends BaseQuery {
             return new ArrayList<>();
         }
 
-        return StringUtils.getSplitList(adGoodsOrderIdStr, CharConstant.COMMA);
+        return Arrays.asList(adGoodsOrderIdStr.split(CharConstant.COMMA+CharConstant.VERTICAL_LINE+CharConstant.ENTER+CharConstant.VERTICAL_LINE+CharConstant.SPACE));
     }
 
 

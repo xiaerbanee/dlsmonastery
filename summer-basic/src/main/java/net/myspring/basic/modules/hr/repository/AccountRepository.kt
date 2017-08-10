@@ -130,9 +130,11 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         WHERE
 	        t1.enabled = 1
             and t1.id in (:idList)
+            and (t2.leave_date is null or t2.leave_date>:today)
         """)
         var paramMap = HashMap<String, Any>()
         paramMap.put("idList", idList)
+        paramMap.put("today", LocalDate.now())
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(AccountDto::class.java))
     }
 
@@ -276,6 +278,7 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             and t1.employee_id=t2.id
             and t1.position_id=position.id
             and t1.login_name LIKE CONCAT('%',:name,'%')
+            and (t2.leave_date is null or t2.leave_date>:today)
         """)
         if (StringUtils.isNotBlank(type)) {
             sb.append(" and t1.type=:type")
@@ -283,6 +286,7 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         sb.append(" limit 0, 100")
         var paramMap = HashMap<String, Any>()
         paramMap.put("type", type)
+        paramMap.put("today", LocalDate.now())
         paramMap.put("name", loginName)
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(AccountDto::class.java))
     }

@@ -19,6 +19,7 @@ public class OppoPlantAgentProductSel extends IdEntity<OppoPlantAgentProductSel>
     private String itemNumber;
     private String lxProductId;
     private String productId;
+    private String companyName;
 
     public String getBrandId() {
         return brandId;
@@ -116,4 +117,11 @@ public class OppoPlantAgentProductSel extends IdEntity<OppoPlantAgentProductSel>
         this.productId = productId;
     }
 
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 }
