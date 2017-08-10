@@ -40,6 +40,7 @@ public class OppoCustomer  extends  IdEntity<OppoCustomer>{
     private String deskdoublenum;
     private String desksinglenum;
     private String cabinetnum;
+    private String companyName;
     @JsonIgnore
     private LocalDate createdDate;
 
@@ -246,6 +247,14 @@ public class OppoCustomer  extends  IdEntity<OppoCustomer>{
 
     public void setVillage(String village) {
         this.village = village;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public LocalDate getCreatedDate() {

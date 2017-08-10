@@ -14,7 +14,7 @@ interface OppoCustomerAfterSaleImeiRepository : BaseRepository<OppoCustomerAfter
 }
 interface OppoCustomerAfterSaleImeiRepositoryCustom{
     fun findByDate(dateStart:String,dateEnd:String):MutableList<OppoCustomerAfterSaleImei>
-    fun deleteByDate(dateStart: String,dateEnd: String):Int
+    fun deleteByCompanyNameAndDate(companyName:String,dateStart: String,dateEnd: String):Int
 }
 class OppoCustomerAfterSaleImeiRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : OppoCustomerAfterSaleImeiRepositoryCustom{
 
@@ -27,10 +27,16 @@ class OppoCustomerAfterSaleImeiRepositoryImpl @Autowired constructor(val namedPa
          """,paramMap, BeanPropertyRowMapper(OppoCustomerAfterSaleImei::class.java));
     }
 
-    override fun deleteByDate(dateStart: String, dateEnd: String): Int {
+    override fun deleteByCompanyNameAndDate(companyName:String,dateStart: String, dateEnd: String): Int {
         val map = Maps.newHashMap<String,String>()
         map.put("dateStart",dateStart)
         map.put("dateEnd",dateEnd)
-        return namedParameterJdbcTemplate.update("delete from oppo_push_customer_after_sale_imei where date >=:dateStart and date <:dateEnd",map)
+        map.put("companyName",companyName)
+        return namedParameterJdbcTemplate.update("""
+          delete from oppo_push_customer_after_sale_imei
+          where date >=:dateStart
+            and date < :dateEnd
+            and company_name = :companyName
+        """,map)
     }
 }
