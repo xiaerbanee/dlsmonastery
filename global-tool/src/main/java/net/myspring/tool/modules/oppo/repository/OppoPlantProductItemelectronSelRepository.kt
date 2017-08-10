@@ -26,26 +26,27 @@ interface OppoPlantProductItemelectronSelRepository : BaseRepository<OppoPlantPr
 }
 
 interface OppoPlantProductItemelectronSelRepositoryCustom{
-    fun findSynList(dateStart:String,dateEnd:String,agentCodes:MutableList<String>): MutableList<OppoPlantProductItemelectronSel>
+    fun findSynList(dateStart:String,dateEnd:String,agentCodes:MutableList<String>,companyName: String): MutableList<OppoPlantProductItemelectronSel>
     fun plantProductItemelectronSel(companyId: String, password: String, systemDate: String): MutableList<OppoPlantProductItemelectronSel>
 }
 
 class OppoPlantProductItemelectronSelRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate,val jdbcTemplate: JdbcTemplate) :OppoPlantProductItemelectronSelRepositoryCustom{
 
-    override fun findSynList(dateStart:String, dateEnd:String, agentCodes:MutableList<String>): MutableList<OppoPlantProductItemelectronSel> {
+    override fun findSynList(dateStart:String, dateEnd:String, agentCodes:MutableList<String>,companyName: String): MutableList<OppoPlantProductItemelectronSel> {
         val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("dateStart",dateStart);
         paramMap.put("dateEnd",dateEnd);
         paramMap.put("agentCodes",agentCodes);
-
+        paramMap.put("companyName",companyName);
         return namedParameterJdbcTemplate.query("""
          select
            *
         from
            oppo_plant_product_itemelectron_sel t
         where
-          t.created_time>=:dateStart
-          and t.created_time<=:dateEnd
+          t.created_time >= :dateStart
+          and t.created_time <= :dateEnd
+          and t.company_name = :companyName
           and t.customer_id in (:agentCodes)
             """,paramMap,BeanPropertyRowMapper(OppoPlantProductItemelectronSel::class.java));
     }
