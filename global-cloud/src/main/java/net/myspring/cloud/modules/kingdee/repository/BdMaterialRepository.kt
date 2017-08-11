@@ -2,6 +2,7 @@ package net.myspring.cloud.modules.kingdee.repository
 
 import net.myspring.cloud.modules.kingdee.domain.BdMaterial
 import net.myspring.common.dto.NameValueDto
+import net.myspring.util.time.LocalDateTimeUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 
@@ -102,7 +103,7 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
                 and t1.FFORBIDSTATUS = 'A'
                 and t1.FDOCUMENTSTATUS = 'C'
                 and t1.FMODIFYDATE > :modifyDate
-        """,Collections.singletonMap("modifyDate",modifyDate.toString()), BeanPropertyRowMapper(BdMaterial::class.java))
+        """,Collections.singletonMap("modifyDate",LocalDateTimeUtils.format(modifyDate)), BeanPropertyRowMapper(BdMaterial::class.java))
     }
 
     fun findByName(name: String): BdMaterial? {

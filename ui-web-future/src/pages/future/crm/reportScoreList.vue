@@ -47,7 +47,7 @@
 </template>
 <style>
   .el-table .danger-row {
-    background: #FF8888 !important;
+    background: #f2dede !important;
   }
 </style>
 <script>

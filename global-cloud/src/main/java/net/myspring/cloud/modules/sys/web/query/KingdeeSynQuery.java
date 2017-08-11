@@ -15,6 +15,7 @@ public class KingdeeSynQuery extends BaseQuery{
     private Boolean success;
     private Boolean locked;
     private String kingdeeBookId;
+    private String createdBy;
 
     public LocalDate getCreatedDate() {
         return createdDate;
@@ -70,5 +71,13 @@ public class KingdeeSynQuery extends BaseQuery{
 
     public void setKingdeeBookId(String kingdeeBookId) {
         this.kingdeeBookId = kingdeeBookId;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

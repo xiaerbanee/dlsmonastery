@@ -19,6 +19,11 @@
                 <el-form-item label="OA单据ID" :label-width="formLabelWidth">
                   <el-input v-model="formData.extendId" placeholder="模糊匹配搜索"></el-input>
                 </el-form-item>
+              <el-form-item label="创建人" :label-width="formLabelWidth">
+                <el-select v-model="formData.createdBy" filterable remote placeholder="模糊匹配查询" :remote-method="remoteAccount" :loading="remoteLoading">
+                  <el-option v-for="item in accountCommonList" :key="item.id" :label="item.loginName" :value="item.id"></el-option>
+                </el-select>
+              </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="单据分类" :label-width="formLabelWidth">
@@ -82,9 +87,11 @@
         },
         searchText:"",
         initPromise:{},
-        formLabelWidth: '120px',
+        accountCommonList:{},
+        formLabelWidth: '25%',
         formVisible: false,
-        pageLoading: false
+        pageLoading: false,
+        remoteLoading:false,
       };
     },
     methods: {
@@ -129,6 +136,16 @@
             this.$message(response.data.message);
             this.pageRequest();
           });
+        }
+      },remoteAccount(query) {
+        if (query !== '') {
+          this.remoteLoading = true;
+          axios.get('/api/basic/hr/account/findByLoginNameLike',{params:{loginName:query}}).then((response)=>{
+            this.accountCommonList = response.data;
+            this.remoteLoading = false;
+          })
+        } else {
+          this.accountCommonList = {};
         }
       },
     },created () {

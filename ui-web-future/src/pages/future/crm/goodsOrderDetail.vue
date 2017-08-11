@@ -94,31 +94,8 @@
       return this.getData();
     },
     methods: {
-      count(createElement,cols){
-        return createElement('label',{
-          domProps: {
-            innerHTML: `${cols.column.label} (合计:${this.countByProp(cols)})`,
-          }
-        })
-      },
-      countByProp(columns){
-        const prop = columns.column.property;
-        const data = columns.store.states.data;
-        let sum = 0;
-        if(prop === 'qty'){
-          data.forEach((col) => {
-            sum += col.qty;
-          })
-        }else if(prop === 'realBillQty'){
-          data.forEach((col) => {
-            sum += col.realBillQty;
-          })
-        }else if(prop === 'shippedQty'){
-          data.forEach((col) => {
-            sum += col.shippedQty;
-          })
-        }
-        return sum;
+      count(create,cols){
+        return util.countTotal(create,cols)
       },
       getData(){
         return {
