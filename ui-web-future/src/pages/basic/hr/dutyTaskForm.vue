@@ -180,8 +180,12 @@
         form.validate((valid) => {
           if (valid) {
             axios.post('/api/basic/hr/duty/audit',qs.stringify(this.submitData)).then((response)=> {
-              this.$message(response.data.message);
-              this.$router.push({name:'dutyTaskList',query:util.getQuery("dutyTaskList"), params:{_closeFrom:true}})
+              if(response.data.success){
+                this.$message(response.data.message);
+                this.$router.push({name:'dutyTaskList',query:util.getQuery("dutyTaskList"), params:{_closeFrom:true}})
+              }else {
+                this.$message.error(response.data.message);
+              }
             }).catch(function () {
               that.submitDisabled = false;
             });

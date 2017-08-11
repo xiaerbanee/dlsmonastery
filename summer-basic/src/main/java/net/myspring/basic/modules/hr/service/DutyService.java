@@ -1,7 +1,10 @@
 package net.myspring.basic.modules.hr.service;
 
 import com.google.common.collect.Lists;
-import net.myspring.basic.common.enums.*;
+import net.myspring.basic.common.enums.DutyDateTypeEnum;
+import net.myspring.basic.common.enums.DutyRestTypeEnum;
+import net.myspring.basic.common.enums.DutyTypeEnum;
+import net.myspring.basic.common.enums.WorkTimeTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.*;
@@ -52,6 +55,8 @@ public class DutyService {
     private DutyRestOvertimeRepository dutyRestOvertimeRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
 
     public List<DutyDto> findByAuditable(String leaderId, String status, LocalDateTime dateStart) {
@@ -102,14 +107,17 @@ public class DutyService {
     }
 
     @Transactional
-    public void audit(Map<String,String> map){
+    public StringBuilder audit(Map<String,String> map){
+        StringBuilder stringBuilder=new StringBuilder();
         for(Map.Entry<String,String> entry:map.entrySet()){
-            audit(entry.getKey(),entry.getValue(),true,null);
+            stringBuilder.append(audit(entry.getKey(),entry.getValue(),true,null));
         }
+        return stringBuilder;
     }
 
     @Transactional
-    public void audit(String id, String dutyType, Boolean pass, String auditRemarks) {
+    public StringBuilder audit(String id, String dutyType, Boolean pass, String auditRemarks) {
+        StringBuilder stringBuilder=new StringBuilder();
         String auditBy = RequestUtils.getAccountId();
         if (DutyTypeEnum.请假.toString().equals(dutyType)) {
             DutyLeave dutyLeave = dutyLeaveRepository.findOne(id);
@@ -164,7 +172,7 @@ public class DutyService {
         } else if (DutyTypeEnum.调休.toString().equals(dutyType)) {
             DutyRest dutyRest = dutyRestRepository.findOne(id);
             if (AuditTypeEnum.APPLY.getValue().equals(dutyRest.getStatus())) {
-                restAudit(dutyRest, auditBy, pass, auditRemarks);
+                return restAudit(dutyRest, auditBy, pass, auditRemarks);
             }
         } else if (DutyTypeEnum.签到.toString().equals(dutyType)) {
             DutySign dutySign = dutySignRepository.findOne(id);
@@ -186,11 +194,13 @@ public class DutyService {
                 dutySignRepository.save(dutySign);
             }
         }
+        return stringBuilder;
     }
 
-private Boolean restAudit(DutyRest dutyRest, String auditById, Boolean pass, String auditRemarks) {
+private StringBuilder restAudit(DutyRest dutyRest, String auditById, Boolean pass, String auditRemarks) {
         if (pass) {
             Double restHour = 0.0;
+            Employee employee=employeeRepository.findOne(dutyRest.getEmployeeId());
             if (DutyRestTypeEnum.加班调休.toString().equals(dutyRest.getType())) {
                 LocalDate dateStart = LocalDateUtils.getFirstDayOfThisMonth(LocalDate.now().minusMonths(3));
                 LocalDate dateEnd = dutyRest.getDutyDate();;
@@ -202,7 +212,7 @@ private Boolean restAudit(DutyRest dutyRest, String auditById, Boolean pass, Str
                     overTime += dutyOvertime.getLeftHour();
                 }
                 if (overTime < restHour) {
-                   return false;
+                    return new StringBuilder(employee.getName()+"调休时间不足");
                 }
                 for (DutyOvertime dutyOvertime : overtimeList) {
                     if (dutyOvertime.getLeftHour() > 0 && restHour > 0) {
@@ -236,7 +246,7 @@ private Boolean restAudit(DutyRest dutyRest, String auditById, Boolean pass, Str
                 restHour = DutyDateTypeEnum.全天.toString().equals(dutyRest.getDateType()) ? 8.0 : 4.0;
                 DutyAnnual dutyAnnual = dutyAnnualRepository.findByEmployeeId(dutyRest.getEmployeeId()).get(0);
                 if(dutyAnnual==null||dutyAnnual.getLeftHour()<restHour){
-                    return false;
+                    return new StringBuilder(employee.getName()+"调休时间不足");
                 }
                 dutyAnnual.setLeftHour(dutyAnnual.getLeftHour() - restHour);
                 dutyAnnualRepository.save(dutyAnnual);
@@ -249,7 +259,7 @@ private Boolean restAudit(DutyRest dutyRest, String auditById, Boolean pass, Str
         dutyRest.setAuditRemarks(auditRemarks);
         dutyRest.setLocked(true);
         dutyRestRepository.save(dutyRest);
-        return true;
+        return null;
     }
 
     public List<CalendarEventDto> findEvent(String employeeId, LocalDate start, LocalDate end) {

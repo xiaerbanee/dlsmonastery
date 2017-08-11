@@ -49,7 +49,11 @@
           this.pageLoading = true;
 
           axios.get('/api/basic/hr/duty/batchPass',{params:{dutyAuditMap : this.multipleSelection}}).then((response) =>{
-            this.$message(response.data.message);
+            if(response.data.success){
+              this.$message(response.data.message);
+            }else {
+              this.$message.error(response.data.message);
+            }
             this.pageRequest();
           })
         }).catch(()=>{});
