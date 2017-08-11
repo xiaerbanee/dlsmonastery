@@ -135,6 +135,9 @@ public class KingdeeSynService {
         List<String> list = Lists.newArrayList();
         list.addAll(salOutStockService.findNoPushDown());
         list.addAll(salReturnStockService.findNoPushDown());
-        return kingdeeSynRepository.findByBillNoList(list);
+        if (list.size() > 0){
+            return kingdeeSynRepository.findByBillNoList(list);
+        }
+        return null;
     }
 }
