@@ -83,7 +83,6 @@ public class GlVoucherService {
     //根据名称获取需要向金蝶接口插入的Number
     public Map<String, Map<String, String>> getFlexNameMap(List<String> flexItemNameList) {
         Map<String, Map<String, String>> result = Maps.newHashMap();
-
         result.put(VoucherFlexEnum.科目.name(), bdAccountRepository.findAll().stream().collect(Collectors.toMap(BdAccount::getFName,BdAccount::getFNumber)));
         for (String flexItemName : flexItemNameList) {
             if (VoucherFlexEnum.供应商.name().equals(flexItemName)){
