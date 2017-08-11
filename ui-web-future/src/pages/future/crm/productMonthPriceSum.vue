@@ -6,6 +6,7 @@
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:productMonthPrice:sum'">过滤</el-button>
         <el-button type="primary" @click="exportData()" icon="upload" v-permit="'crm:productMonthPrice:sum'">导出</el-button>
         <el-button type="primary" @click="uploadAudit()" icon="check">上报审核</el-button>
+        <el-button type="primary" @click="search()">刷新</el-button>
         <span v-html="searchText"></span>
       </el-row>
 
@@ -57,7 +58,6 @@
 
         tableHeaders: [],
         tableDatas: [],
-        initPromise: {},
         formVisible: false,
         formLabelWidth: '120px',
         pageLoading: false
@@ -123,7 +123,7 @@
     },
     created() {
       this.pageHeight = window.outerHeight - 325;
-      this.initPromise = axios.get('/api/ws/future/crm/productMonthPriceSum/getQuery').then((response) => {
+      axios.get('/api/ws/future/crm/productMonthPriceSum/getQuery').then((response) => {
         this.formData = response.data;
         util.copyValue(this.$route.query, this.formData);
         this.pageRequest();

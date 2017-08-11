@@ -1,6 +1,5 @@
 package net.myspring.future.modules.crm.repository
 
-import com.google.common.collect.Maps
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.ProductIme
 import net.myspring.future.modules.crm.dto.ProductImeDto
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
@@ -146,7 +144,6 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         sb.append("""
             FROM
                 crm_product_ime t1
-                LEFT JOIN crm_product_ime_upload t2 ON t1.product_ime_upload_id = t2.id
                 LEFT JOIN crm_depot t3 on t1.depot_id=t3.id
                 LEFT JOIN crm_product t4 on t1.product_id=t4.id
                 LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id,
@@ -160,11 +157,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append("""
                 AND (
                     t1.retail_date IS NULL
-                    OR t1.retail_date >:date
-                )
-                AND (
-                    t2.id IS NULL
-                    OR t2.created_date > :date
+                    OR t1.retail_date >= :date
                 )
                 AND t1.created_date < :date
             """)
@@ -214,7 +207,6 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         sb.append("""
                 FROM
                     crm_product_ime t1
-                    LEFT JOIN crm_product_ime_upload t2 ON t1.product_ime_upload_id = t2.id
                     LEFT JOIN crm_product_ime_sale t3 ON t1.product_ime_sale_id = t3.id
                     LEFT JOIN crm_product t4 on t1.product_id=t4.id
                     LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
@@ -232,11 +224,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append("""
                AND (
                     t1.retail_date IS NULL
-                    OR t1.retail_date > :date
-                )
-                AND (
-                    t2.id IS NULL
-                    OR t2.created_date > :date
+                    OR t1.retail_date >= :date
                 )
                 AND (
                     t3.id IS NULL
