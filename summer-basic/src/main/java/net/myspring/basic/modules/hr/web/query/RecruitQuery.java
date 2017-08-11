@@ -13,4 +13,35 @@ public class RecruitQuery extends BaseQuery {
     private LocalDate firstAppointDate;
     private LocalDate secondAppointDate;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public LocalDate getFirstAppointDate() {
+        return firstAppointDate;
+    }
+
+    public void setFirstAppointDate(LocalDate firstAppointDate) {
+        this.firstAppointDate = firstAppointDate;
+    }
+
+    public LocalDate getSecondAppointDate() {
+        return secondAppointDate;
+    }
+
+    public void setSecondAppointDate(LocalDate secondAppointDate) {
+        this.secondAppointDate = secondAppointDate;
+    }
 }

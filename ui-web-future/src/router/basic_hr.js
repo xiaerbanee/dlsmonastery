@@ -21,6 +21,8 @@ const dutyTaskForm = r => require.ensure([],() => r(require('pages/basic/hr/duty
 
 const recruitList = r => require.ensure([],() => r(require('pages/basic/hr/recruitList.vue')));
 const recruitForm = r => require.ensure([],() => r(require('pages/basic/hr/recruitForm.vue')));
+const recruitEnumList = r => require.ensure([],() => r(require('pages/basic/hr/recruitEnumList.vue')));
+const recruitEnumForm = r => require.ensure([],() => r(require('pages/basic/hr/recruitEnumForm.vue')));
 const recruitBatchForm = r => require.ensure([],() => r(require('pages/basic/hr/recruitBatchForm.vue')));
 const dutyLeaveList= r => require.ensure([], () => r(require('pages/basic/hr/dutyLeaveList.vue')));
 const dutyFreeList= r => require.ensure([], () => r(require('pages/basic/hr/dutyFreeList.vue')));
@@ -77,6 +79,8 @@ let routes = [
   {path:'/basic/hr/accountTaskList',component:accountTaskList,name:'accountTaskList'},
   {path:'/basic/hr/recruitList',component:recruitList,name:'recruitList'},
   {path:'/basic/hr/recruitForm',component:recruitForm,name:'recruitForm',meta: {menu:"recruitList",keepAlive:true}},
+  {path:'/basic/hr/recruitEnumList',component:recruitEnumList,name:'recruitEnumList'},
+  {path:'/basic/hr/recruitEnumForm',component:recruitEnumForm,name:'recruitEnumForm',meta: {menu:"recruitEnumList",keepAlive:true}},
   {path:'/basic/hr/recruitBatchForm',component:recruitBatchForm,name:'recruitBatchForm',meta: {menu:"recruitList",keepAlive:true}},
   {path:'/basic/hr/accountAuthorityForm',component:accountAuthorityForm,name:'accountAuthorityForm',meta: {menu:"accountList",keepAlive:true}},
 
