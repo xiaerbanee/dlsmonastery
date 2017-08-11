@@ -921,7 +921,7 @@ export default {
     carrierOrder: "商城相关",
     exportData: "导出",
     goodsOrderImeList: "串码",
-    goodsOrderImeList:"订货详细",
+    goodsOrderDetailList:"订货详细",
     batchAdd: "批量订货",
     more: "更多",
     carrierOrderCodes: "商城单号",

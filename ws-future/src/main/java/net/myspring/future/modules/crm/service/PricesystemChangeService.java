@@ -109,14 +109,21 @@ public class PricesystemChangeService {
                             pricesystemChange.setProductId(product.getId());
                             pricesystemChange.setPricesystemId(pricesystems.get(i-1).getId());
                             pricesystemChange.setStatus(AuditStatusEnum.申请中.name());
-                            pricesystemChange.setNewPrice(newPrice);
+                            pricesystemChange.setNewPrice(null);
                             pricesystemChange.setOldPrice(oldPrice);
                             pricesystemChange.setRemarks(pricesystemChangeForm.getRemarks());
                             pricesystemChanges.add(pricesystemChange);
-                        }else{
-                            return;
                         }
-                    }else if(newPrice.compareTo(oldPrice) !=0){
+                    }else if(oldPrice == null){
+                        PricesystemChange pricesystemChange = new PricesystemChange();
+                        pricesystemChange.setProductId(product.getId());
+                        pricesystemChange.setPricesystemId(pricesystems.get(i-1).getId());
+                        pricesystemChange.setStatus(AuditStatusEnum.申请中.name());
+                        pricesystemChange.setNewPrice(newPrice);
+                        pricesystemChange.setOldPrice(null);
+                        pricesystemChange.setRemarks(pricesystemChangeForm.getRemarks());
+                        pricesystemChanges.add(pricesystemChange);
+                    }else if(newPrice.compareTo(oldPrice) != 0){
                         PricesystemChange pricesystemChange = new PricesystemChange();
                         pricesystemChange.setProductId(product.getId());
                         pricesystemChange.setPricesystemId(pricesystems.get(i-1).getId());
