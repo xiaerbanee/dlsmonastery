@@ -147,7 +147,9 @@
           this.inputForm=response.data;
           axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
-            this.inputForm.type="子账号";
+            if(this.isCreate){
+              this.inputForm.type="子账号";
+            }
           })
         });
       }

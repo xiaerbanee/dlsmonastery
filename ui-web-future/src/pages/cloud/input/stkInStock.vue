@@ -81,7 +81,7 @@
                   if(column === 0){
                     let materialNumber = changes[i][3];
                     if (util.isNotBlank(materialNumber)){
-                      axios.get('/api/global/cloud/sys/product/findByCode',{params:{code:materialNumber}}).then((response) => {
+                      axios.get('/api/global/cloud/sys/product/findByCode',{params:{number:materialNumber}}).then((response) => {
                         let product = response.data;
                         if (product){
                           table.setDataAtCell(row, 2, product.price1);
