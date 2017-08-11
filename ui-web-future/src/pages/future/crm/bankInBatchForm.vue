@@ -40,8 +40,32 @@
             colHeaders: [ '门店', '银行', '到账日期',  '到账金额','类型','备注', '转账类型'],
             columns: [{
               data:"depotName",
-              type: 'text',
+              type: "autocomplete",
               strict: true,
+              tempShopNames: [],
+              source: function (query, process) {
+                if (this.tempShopNames.indexOf(query) >= 0) {
+                  process(this.tempShopNames);
+                } else {
+                  let shopNames = [];
+                  if (query.length >= 2) {
+                    axios.get('/api/ws/future/basic/depot/shop?name=' + query).then((response) => {
+                      if (response.data.length > 0) {
+                        for (let row of response.data) {
+                          let shopName = row.name;
+                          shopNames.push(shopName);
+                          if (this.tempShopNames.indexOf(shopName) < 0) {
+                            this.tempShopNames.push(shopName);
+                          }
+                        }
+                      }
+                      process(shopNames);
+                    });
+                  } else {
+                    process(shopNames);
+                  }
+                }
+              },
               allowEmpty:false,
               width:150
             }, {
@@ -126,6 +150,7 @@
       },initPage(){
         axios.get('/api/ws/future/crm/bankIn/getBatchForm').then((response)=>{
           this.inputForm = response.data;
+          console.log(response.data);
           this.settings.columns[1].source=response.data.extra.bankNameList;
           this.settings.columns[4].source=response.data.extra.typeList;
           this.settings.columns[6].source=response.data.extra.transferTypeList;
