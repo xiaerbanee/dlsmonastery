@@ -25,7 +25,7 @@
             <template>
               <el-table :data="productQtyList" style="width: 100%" border>
                 <el-table-column prop="productName" :label="$t('productImeBatchQuery.name')"></el-table-column>
-                <el-table-column prop="qty" :label="$t('productImeBatchQuery.qty')"></el-table-column>
+                <el-table-column prop="qty" :label="$t('productImeBatchQuery.qty')" :render-header="count"></el-table-column>
               </el-table>
             </template>
             <template>
@@ -124,6 +124,9 @@
         this.errMsg='';
         this.productImeList=[];
         this.productQtyList = [];
+      },
+      count(createElement,cols){
+        return util.countTotal(createElement,cols)
       }
     }
   }

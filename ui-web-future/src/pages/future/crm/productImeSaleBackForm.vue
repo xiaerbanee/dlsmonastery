@@ -32,7 +32,7 @@
             <template>
               <el-table :data="productQtyList" style="width: 100%" border>
                 <el-table-column prop="productName" :label="$t('productImeSaleBackForm.name')"></el-table-column>
-                <el-table-column prop="qty" :label="$t('productImeSaleBackForm.qty')"></el-table-column>
+                <el-table-column prop="qty" :label="$t('productImeSaleBackForm.qty')" :render-header="count"></el-table-column>
               </el-table>
             </template>
             <template>
@@ -142,6 +142,9 @@
         axios.get('/api/ws/future/crm/productImeSale/getSaleBackForm').then((response) => {
           this.inputForm = response.data;
         });
+      },
+      count(createElement,cols){
+        return util.countTotal(createElement,cols)
       }
     }, created () {
         this.initPage();
