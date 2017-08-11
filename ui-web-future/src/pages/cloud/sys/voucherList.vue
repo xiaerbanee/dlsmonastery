@@ -74,7 +74,7 @@
         },
         accountCommonList:{},
         initPromise:{},
-        formLabelWidth: '28%',
+        formLabelWidth: '25%',
         formVisible: false,
         pageLoading: false,
         remoteLoading:false
