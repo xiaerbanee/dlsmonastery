@@ -264,6 +264,7 @@ export default {
       goodsOrderBatchAdd: "货品批量订货",
       goodsOrderList: "货品订货",
       goodsOrderImeList: "货品订货串码列表",
+      goodsOrderDetailList: "货品订货详细",
       goodsOrderShip: "货品订货发货",
       goodsOrderShipList: "货品发货",
       goodsOrderSign: "订单签收",

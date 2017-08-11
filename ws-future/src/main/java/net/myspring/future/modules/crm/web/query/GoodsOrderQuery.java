@@ -53,16 +53,6 @@ public class GoodsOrderQuery extends BaseQuery {
     private List<String> statusList;
     private String remarks;
 
-    private List<String> productIds = Lists.newArrayList();
-
-    public List<String> getProductIds() {
-        return productIds;
-    }
-
-    public void setProductIds(List<String> productIds) {
-        this.productIds = productIds;
-    }
-
     public Boolean getLxMallOrder() {
         return lxMallOrder;
     }
