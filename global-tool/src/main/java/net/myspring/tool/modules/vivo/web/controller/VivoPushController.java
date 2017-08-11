@@ -39,9 +39,7 @@ public class VivoPushController {
     @RequestMapping(value = "pushToLocal")
     public String pushVivoData(String companyName,String date){
         logger.info("开始同步数据至中转库:"+ LocalDateTime.now());
-        if(StringUtils.isBlank(RequestUtils.getCompanyName())) {
-            DbContextHolder.get().setCompanyName(companyName);
-        }
+        DbContextHolder.get().setCompanyName(companyName);
         PushToLocalDto pushToLocalDto = new PushToLocalDto();
         pushToLocalDto.setDate(date);
         pushToLocalDto.setProductColorMap(vivoPushService.getProductColorMap());
