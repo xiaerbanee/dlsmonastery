@@ -88,9 +88,9 @@
                         }else {
                           table.setDataAtCell(row, 2, '');
                         }
-                        table.setDataAtCell(row, 6, typeList[1]);
-                        table.setDataAtCell(row, 8, typeList[0]);
                       });
+                      table.setDataAtCell(row, 6, typeList[1]);
+                      table.setDataAtCell(row, 8, typeList[0]);
                     }else {
                       table.setDataAtCell(row, 2, null);
                       table.setDataAtCell(row, 6, null);

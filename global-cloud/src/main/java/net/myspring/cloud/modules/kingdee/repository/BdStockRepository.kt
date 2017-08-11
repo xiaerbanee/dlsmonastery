@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.kingdee.repository
 
 import net.myspring.cloud.modules.kingdee.domain.BdStock
+import net.myspring.util.time.LocalDateTimeUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -114,6 +115,6 @@ class  BdStockRepository @Autowired constructor(val namedParameterJdbcTemplate: 
                 and t1.FForbidStatus = 'A'
                 and t1.FDOCUMENTSTATUS = 'C'
                 and t1.FMODIFYDATE > :modifyDate
-        """,Collections.singletonMap("modifyDate",modifyDate.toString()), BeanPropertyRowMapper(BdStock::class.java))
+        """,Collections.singletonMap("modifyDate", LocalDateTimeUtils.format(modifyDate)), BeanPropertyRowMapper(BdStock::class.java))
     }
 }

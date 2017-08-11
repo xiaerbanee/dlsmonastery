@@ -30,7 +30,7 @@
             <template>
               <el-table :data="productQtyList" style="width: 100%" border>
                 <el-table-column prop="productName" :label="$t('productImeUploadBackForm.productName')"></el-table-column>
-                <el-table-column prop="qty" :label="$t('productImeUploadBackForm.qty')"></el-table-column>
+                <el-table-column prop="qty" :label="$t('productImeUploadBackForm.qty')" :render-header="count"></el-table-column>
               </el-table>
             </template>
             <template>
@@ -59,6 +59,7 @@
 </style>
 <script>
   import suAlert from 'components/common/su-alert'
+  import util from "../../../utils/util";
 
   export default{
     components:{
@@ -142,6 +143,9 @@
         axios.get('/api/ws/future/crm/productImeUpload/getUploadBackForm').then((response)=>{
           this.inputForm = response.data;
         });
+      },
+      count(createElement,cols){
+        return util.countTotal(createElement,cols)
       }
     },created(){
       this.initPage();
