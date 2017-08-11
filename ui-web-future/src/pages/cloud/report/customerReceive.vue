@@ -73,7 +73,7 @@
   }
 
   .el-table .danger-row  {
-    background: #FF8888;
+    background: #f2dede;
   }
 
   .el-table .warning-row {
