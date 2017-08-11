@@ -89,6 +89,7 @@ public class VivoPushService {
 
     @Transactional
     public  List<SZones> pushVivoZonesData(String companyName){
+        logger.info("机构数据同步开始"+ LocalDateTime.now());
         List<OfficeDto> officeDtoList = officeClient.findAllChildCount(companyName);
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
             String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
@@ -116,7 +117,6 @@ public class VivoPushService {
             sZones.setAgentCode(officeDto.getAgentCode());
             sZonesList.add(sZones);
         }
-        logger.info("机构数据同步开始"+ LocalDateTime.now());
         sZonesRepository.deleteAll();
         sZonesRepository.batchSave(sZonesList);
         logger.info("机构数据同步完成"+LocalDateTime.now());
@@ -126,6 +126,7 @@ public class VivoPushService {
 
     @Transactional
     public void pushVivoPushSCustomersData(List<SCustomerDto> futureCustomerDtoList,String date){
+        logger.info("客户数据同步开始"+LocalDateTime.now());
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
             String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
             for (SCustomerDto sCustomerDto : futureCustomerDtoList){
@@ -157,7 +158,6 @@ public class VivoPushService {
             sCustomers.setAgentCode(agentCode);
             sCustomersList.add(sCustomers);
         }
-        logger.info("客户数据同步开始"+LocalDateTime.now());
         sCustomersRepository.deleteAll();
         sCustomersRepository.batchSave(sCustomersList);
         logger.info("客户数据同步完成"+LocalDateTime.now());
@@ -166,7 +166,7 @@ public class VivoPushService {
 
     @Transactional
     public void pushCustomerStockData(List<SPlantCustomerStockDto> sPlantCustomerStockDtoList,Map<String,String> productColorMap,String date){
-
+        logger.info("一代、二代、经销商库存数据同步开始:"+LocalDateTime.now());
         String dateStart = LocalDateUtils.format(LocalDateUtils.parse(date));
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(dateStart));
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
@@ -244,11 +244,12 @@ public class VivoPushService {
         sPlantStockDealerRepository.deleteByAccountDate(dateStart,dateEnd);
         sPlantStockDealerRepository.batchSave(sPlantStockDealerList);
         logger.info("经销商库存数据同步完成"+LocalDateTime.now());
+        logger.info("一代、二代、经销商库存数据同步完成:"+LocalDateTime.now());
     }
 
     @Transactional
     public void pushCustomerStockDetailData(List<SPlantCustomerStockDetailDto> sPlantCustomerStockDetailDtoList,Map<String,String> productColorMap,String date){
-
+        logger.info("库存串码明细数据同步开始:"+LocalDateTime.now());
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
             String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
             for (SPlantCustomerStockDetailDto sPlantCustomerStockDetailDto : sPlantCustomerStockDetailDtoList){
@@ -305,8 +306,6 @@ public class VivoPushService {
                 sProductItem000List.add(sProductItem000);
             }
         }
-
-        logger.info("库存串码明细数据同步开始:"+LocalDateTime.now());
         sProductItemStocksRepository.deleteByUpdateTime(date,LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1)));
         sProductItemStocksRepository.batchSave(sProductItemStocksList);
         sProductItem000Repository.deleteByUpdateTime(date,LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1)));
@@ -316,6 +315,7 @@ public class VivoPushService {
 
     @Transactional
     public void pushDemoPhonesData(List<SProductItemLend> sProductItemLendList, Map<String,String> productColorMap, String date){
+        logger.info("借机数据同步开始:"+LocalDateTime.now());
         String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
         if (StringUtils.isBlank(date)){
             date = LocalDateUtils.format(LocalDate.now());
@@ -337,7 +337,6 @@ public class VivoPushService {
             sProductItemLends.add(sProductItemLend);
         }
 
-        logger.info("借机数据同步开始:"+LocalDateTime.now());
         sProductItemLendRepository.deleteByUpdateTime(dateStart,dateEnd);
         sProductItemLendRepository.batchSave(sProductItemLends);
         logger.info("借机数据同步完成:"+LocalDateTime.now());
@@ -345,6 +344,7 @@ public class VivoPushService {
 
     @Transactional
     public void pushProductImeSaleData(List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList,Map<String,String> productColorMap,String date){
+        logger.info("核销记录数据同步开始:"+LocalDateTime.now());
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
             String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
             for (VivoCustomerSaleImeiDto vivoCustomerSaleImeiDto : vivoCustomerSaleImeiDtoList){
@@ -374,7 +374,6 @@ public class VivoPushService {
             sPlantEndProductSale.setAgentCode(agentCode);
             sPlantEndProductSaleList.add(sPlantEndProductSale);
         }
-        logger.info("核销记录数据同步开始:"+LocalDateTime.now());
         sPlantEndProductSaleRepository.deleteByBillDate(dateStart,dateEnd);
         sPlantEndProductSaleRepository.batchSave(sPlantEndProductSaleList);
         logger.info("核销记录数据同步结束:"+LocalDateTime.now());
@@ -382,6 +381,7 @@ public class VivoPushService {
 
     @Transactional
     public void pushSStoreData(List<SStores> sStoresList){
+        logger.info("一代仓库数据同步开始:"+LocalDateTime.now());
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
             sStoresList = Lists.newArrayList();
             String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
@@ -391,7 +391,6 @@ public class VivoPushService {
             sStores.setAgentCode(mainCode);
             sStoresList.add(sStores);
         }
-        logger.info("一代仓库数据同步开始:"+LocalDateTime.now());
         sStoresRepository.deleteAll();
         sStoresRepository.batchSave(sStoresList);
         logger.info("一代仓库数据同步结束:"+LocalDateTime.now());
