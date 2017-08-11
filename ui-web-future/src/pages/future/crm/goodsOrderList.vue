@@ -140,10 +140,10 @@
 </template>
 <style>
   .el-table .danger-row,.el-table .el-table__row--striped.danger-row>td {
-    background: #FF8888 !important;
+    background: #f2dede !important;
   }
   .el-table .danger-row:hover>td{
-    background: #FF8888 !important;
+    background: #f2dede !important;
   }
 </style>
 <script>

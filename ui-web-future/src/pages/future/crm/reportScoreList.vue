@@ -5,6 +5,7 @@
       <el-row>
         <el-button type="primary"  v-permit="'crm:reportScore:edit'" @click="itemAdd" icon="plus" >{{$t('reportScoreList.add')}}</el-button>
         <el-button type="primary"  v-permit="'crm:reportScore:view'"@click="formVisible = true" icon="search">{{$t('reportScoreList.filter')}}</el-button>
+        <el-button type="primary" @click="search()">刷新</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('reportScoreList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -47,7 +48,7 @@
 </template>
 <style>
   .el-table .danger-row {
-    background: #FF8888 !important;
+    background: #f2dede !important;
   }
 </style>
 <script>
@@ -60,7 +61,6 @@
         formData:{
             extra:{}
         },
-        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
@@ -114,14 +114,11 @@
     },created () {
       const that = this;
       that.pageHeight = 0.75*window.innerHeight;
-      that.initPromise=axios.get('/api/ws/future/crm/reportScore/getQuery').then((response) =>{
+      axios.get('/api/ws/future/crm/reportScore/getQuery').then((response) =>{
       that.formData=response.data;
-        that.formData.sort="scoreDate,desc"
+      that.formData.sort="scoreDate,desc";
       util.copyValue(that.$route.query,that.formData);
-      });
-    },activated(){
-      this.initPromise.then(()=>{
-        this.pageRequest();
+      that.pageRequest();
       });
     }
   };

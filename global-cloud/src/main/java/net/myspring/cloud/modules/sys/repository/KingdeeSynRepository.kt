@@ -75,6 +75,9 @@ class KingdeeSynRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if(StringUtils.isNotBlank(kingdeeSynQuery.kingdeeBookId)){
             sb.append(" and kingdee_book_id = :kingdeeBookId ");
         }
+        if(StringUtils.isNotBlank(kingdeeSynQuery.createdBy)){
+            sb.append(" and created_by = :createdBy ");
+        }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
         var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(kingdeeSynQuery), BeanPropertyRowMapper(KingdeeSynDto::class.java));

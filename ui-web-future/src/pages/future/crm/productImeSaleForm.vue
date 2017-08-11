@@ -48,7 +48,7 @@
             <template>
               <el-table :data="productQtyList" style="width: 100%" border>
                 <el-table-column prop="productName" :label="$t('productImeSaleForm.name')"></el-table-column>
-                <el-table-column prop="qty" :label="$t('productImeSaleForm.qty')"></el-table-column>
+                <el-table-column prop="qty" :label="$t('productImeSaleForm.qty')" :render-header="count"></el-table-column>
               </el-table>
             </template>
             <template>
@@ -193,6 +193,9 @@
         axios.get('/api/ws/future/crm/productImeSale/getSaleForm').then((response)=>{
           this.inputForm=response.data;
         });
+      },
+      count(create,cols){
+        return util.countTotal(create,cols)
       }
     },created () {
       this.initPage();

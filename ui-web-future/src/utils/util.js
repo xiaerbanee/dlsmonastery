@@ -439,6 +439,23 @@ util.moneyFormatter = function(row,col){
   }else{
     return row[pro];
   }
-
+}
+util.countTotal = function(fn,cols){
+  const a = 'label';
+  const b = {
+    domProps: {
+           innerHTML: `${cols.column.label} (合计:${util.countByProp(cols)})`,
+         }
+    };
+  return fn(a,b);
+}
+util.countByProp = function(columns){
+  const prop = columns.column.property;
+  const data = columns.store.states.data;
+  let sum = 0;
+  data.forEach((col) => {
+    sum += col[prop];
+  })
+  return sum;
 }
 export default util;

@@ -119,7 +119,7 @@ public class ProductImeUploadService {
         List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByEnabledIsTrueAndProductImeIdIn(CollectionUtil.extractToList(productImeList,"id"));
         Map<String, GoodsOrderIme> goodsOrderImeMap = CollectionUtil.extractToMap(goodsOrderImeList,"productImeId");
         Map<String, GoodsOrder> goodsOrderMap = goodsOrderRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"goodsOrderId"));
-        String accountShopIds = getEmployeeDepotIds(productImeUploadForm.getEmployeeId());
+        String accountShopIds = StringUtils.trimToEmpty(getEmployeeDepotIds(productImeUploadForm.getEmployeeId()));
 
         for (ProductIme productIme : productImeList) {
             if(productIme.getProductImeUploadId()!=null){
@@ -270,7 +270,7 @@ public class ProductImeUploadService {
                 }else{
                     productImeUpload.setGoodsOrderShopId(null);
                 }
-                productImeUpload.setAccountShopIds(employeeDepotIdsMap.get(productImeSaleDto.getEmployeeId()));
+                productImeUpload.setAccountShopIds(StringUtils.trimToEmpty(employeeDepotIdsMap.get(productImeSaleDto.getEmployeeId())));
                 productImeUploadRepository.save(productImeUpload);
 
                 ProductIme productIme = productImeMap.get(productImeSaleDto.getProductImeId());

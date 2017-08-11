@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.kingdee.repository
 
 import net.myspring.cloud.modules.kingdee.domain.CnBankAcnt
+import net.myspring.util.time.LocalDateTimeUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -71,6 +72,6 @@ class CnBankAcntRepository @Autowired constructor(val namedParameterJdbcTemplate
                 and t1.FFORBIDSTATUS = 'A'
                 and t1.FDOCUMENTSTATUS = 'C'
                 and t1.FMODIFYDATE > :modifyDate
-        """,Collections.singletonMap("modifyDate",modifyDate.toString()), BeanPropertyRowMapper(CnBankAcnt::class.java))
+        """,Collections.singletonMap("modifyDate", LocalDateTimeUtils.format(modifyDate)), BeanPropertyRowMapper(CnBankAcnt::class.java))
     }
 }
