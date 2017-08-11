@@ -54,8 +54,8 @@ public class ProductController {
     }
 
     @RequestMapping(value = "findByCode")
-    public ProductDto findByCode(String code){
-        return productService.findByCodeAndCompanyName(code);
+    public ProductDto findByCode(String number){
+        return productService.findByCodeAndCompanyName(number);
     }
 
     @RequestMapping(value = "syn")
