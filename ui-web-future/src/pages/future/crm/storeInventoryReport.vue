@@ -11,6 +11,7 @@
               <el-dropdown-item command="按串码">按串码导出</el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
+        <el-button type="primary" @click="search()">刷新</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">

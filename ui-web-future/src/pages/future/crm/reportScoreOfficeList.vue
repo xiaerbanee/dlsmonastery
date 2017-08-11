@@ -4,8 +4,9 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="share">{{$t('reportScoreOfficeList.officeRank')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search">{{$t('reportScoreOfficeList.filter')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search">{{$t('reportScoreOfficeList.filter')}}</el-button>
         <el-button type="primary" @click="exportData" icon="upload">{{$t('reportScoreOfficeList.export')}}</el-button>
+        <el-button type="primary" @click="search()">刷新</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('reportScoreOfficeList.filter')"  v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
@@ -58,7 +59,6 @@
         formData:{
             extra:{}
         },
-        initPromise:{},
         productList:[],
         formLabelWidth: '120px',
         formVisible: false,
@@ -102,14 +102,11 @@
     },created () {
       const that = this;
       that.pageHeight = 0.75*window.innerHeight;
-      that.initPromise=axios.get('/api/ws/future/crm/reportScoreOffice/getQuery').then((response) =>{
+      axios.get('/api/ws/future/crm/reportScoreOffice/getQuery').then((response) =>{
         that.formData=response.data;
         console.log(that.formData)
         util.copyValue(that.$route.query,that.formData);
-    });
-    },activated(){
-      this.initPromise.then(()=>{
-        this.pageRequest();
+        that.pageRequest();
       });
     }
   };

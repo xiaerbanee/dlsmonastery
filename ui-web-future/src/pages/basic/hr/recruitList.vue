@@ -5,6 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:recruit:edit'">{{$t('recruitList.add')}}</el-button>
         <el-button type="primary" @click="batchEdit" icon="edit" v-permit="'hr:recruit:edit'">{{$t('recruitList.batchEdit')}}</el-button>
+        <el-button type="primary" @click="addCategory" icon="edit" v-permit="'hr:recruit:edit'">{{$t('recruitList.addCategory')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:recruit:view'">{{$t('recruitList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
@@ -143,6 +144,8 @@ import boolSelect from "components/common/bool-select"
         if(this.selects.length>1){
           this.$router.push({ name: 'recruitBatchForm', query: { ids: this.selects }})
         }
+      },addCategory(){
+        this.$router.push({ name: 'recruitEnumList'})
       }
     },created () {
       var that = this;

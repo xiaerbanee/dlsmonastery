@@ -3,7 +3,7 @@
     <head-tab active="productImeStockReport"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-if="!nextIsShop&&'区域'==formData.sumType || '型号'==formData.sumType">过滤</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-if="!nextIsShop&&'区域'==formData.sumType || '型号'==formData.sumType">过滤</el-button>
         <el-dropdown  @command="exportData">
           <el-button type="primary">导出<i class="el-icon-caret-bottom el-icon--right"></i></el-button>
           <el-dropdown-menu slot="dropdown">
@@ -13,6 +13,7 @@
           </el-dropdown-menu>
         </el-dropdown>
         <el-button type="primary" @click="preLevel()" v-show="officeId !=formData.officeId&&officeIds.length">返回</el-button>
+        <el-button type="primary" @click="search()">刷新</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -103,7 +104,6 @@
         formData:{
           extra:{productTypeIdList:[]},
         },
-        initPromise:{},
         sum:'',
         formLabelWidth: '120px',
         formVisible: false,
@@ -192,20 +192,17 @@
 
       }
     },created () {
-         this.pageHeight = 0.75*window.innerHeight;
-        this.initPromise=axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
+      this.pageHeight = 0.75*window.innerHeight;
+      axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
         this.formData = response.data;
         this.formData.scoreType=this.formData.scoreType?"1":"0";
-          if(response.data.officeId){
-            this.officeIds.push(response.data.officeId);
-            this.officeId=response.data.officeId;
-          }
+        if(response.data.officeId){
+          this.officeIds.push(response.data.officeId);
+          this.officeId=response.data.officeId;
+        }
         util.copyValue(this.$route.query, this.formData);
-      })
-    },activated(){
-      this.initPromise.then(()=>{
         this.pageRequest();
-      });
+      })
     }
   };
 </script>

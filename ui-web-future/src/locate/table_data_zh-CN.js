@@ -207,6 +207,8 @@ export default {
       recruitBatchForm: "招聘信息批量编辑",
       recruitForm: "招聘信息编辑",
       recruitList: "招聘信息",
+      recruitEnumForm: "分类编辑",
+      recruitEnumList: "分类列表",
       adApplyEditForm:"POP确认数修改",
       adApplyBillForm: "POP开单申请",
       adApplyForm: "POP申请",
