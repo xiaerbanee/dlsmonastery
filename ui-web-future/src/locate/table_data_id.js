@@ -247,6 +247,7 @@ export default {
       goodsOrderBatchAdd: "货品批量订货",
       goodsOrderList: "pengiriman barang",
       goodsOrderImeList: "货品订货串码列表",
+      goodsOrderDetailList: "货品订货详细",
       goodsOrderShip: "pengiriman barnag",
       goodsOrderSign: "订单签收",
       goodsOrderSreturn: "销售退货",

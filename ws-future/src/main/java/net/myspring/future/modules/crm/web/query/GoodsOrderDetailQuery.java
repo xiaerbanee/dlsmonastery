@@ -1,102 +1,66 @@
 package net.myspring.future.modules.crm.web.query;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.query.BaseQuery;
+import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class GoodsOrderDetailQuery extends BaseQuery {
 
-    private String goodsOrderId;
-    private String pricesystemId;
-    private String netType;
-    private Boolean showAll;
+    private String productName;
+    private String depotName;
+    private String createdBy;
+    private String createdDate;
 
-    //用来计算该区间内的办事处已订货数已下单数
-    private LocalDateTime createDateStart;
-    private LocalDateTime createDateEnd;
-    private LocalDateTime billDateStart;
-    private LocalDateTime billDateEnd;
-    private List<String> shipTypeList;
-    private List<String> officeIdList;
-
-    public String getGoodsOrderId() {
-        return goodsOrderId;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setGoodsOrderId(String goodsOrderId) {
-        this.goodsOrderId = goodsOrderId;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
-    public String getPricesystemId() {
-        return pricesystemId;
+    public String getDepotName() {
+        return depotName;
     }
 
-    public void setPricesystemId(String pricesystemId) {
-        this.pricesystemId = pricesystemId;
+    public void setDepotName(String depotName) {
+        this.depotName = depotName;
     }
 
-    public String getNetType() {
-        return netType;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setNetType(String netType) {
-        this.netType = netType;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
-    public Boolean getShowAll() {
-        return showAll;
+    public String getCreatedDate() {
+        return createdDate;
     }
 
-    public void setShowAll(Boolean showAll) {
-        this.showAll = showAll;
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public List<String> getOfficeIdList() {
-        return officeIdList;
+    public LocalDate getCreatedDateStart() {
+        if(StringUtils.isNotBlank(createdDate)) {
+            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
     }
 
-    public void setOfficeIdList(List<String> officeIdList) {
-        this.officeIdList = officeIdList;
-    }
-
-    public LocalDateTime getCreateDateStart() {
-        return createDateStart;
-    }
-
-    public void setCreateDateStart(LocalDateTime createDateStart) {
-        this.createDateStart = createDateStart;
-    }
-
-    public LocalDateTime getCreateDateEnd() {
-        return createDateEnd;
-    }
-
-    public void setCreateDateEnd(LocalDateTime createDateEnd) {
-        this.createDateEnd = createDateEnd;
-    }
-
-    public LocalDateTime getBillDateStart() {
-        return billDateStart;
-    }
-
-    public void setBillDateStart(LocalDateTime billDateStart) {
-        this.billDateStart = billDateStart;
-    }
-
-    public LocalDateTime getBillDateEnd() {
-        return billDateEnd;
-    }
-
-    public void setBillDateEnd(LocalDateTime billDateEnd) {
-        this.billDateEnd = billDateEnd;
-    }
-
-    public List<String> getShipTypeList() {
-        return shipTypeList;
-    }
-
-    public void setShipTypeList(List<String> shipTypeList) {
-        this.shipTypeList = shipTypeList;
+    public LocalDate getCreatedDateEnd() {
+        if(StringUtils.isNotBlank(createdDate)) {
+            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
     }
 }
