@@ -62,6 +62,9 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJd
     }
 
     override fun findAccountDepotIdsMap(accountIdList: List<String>): Map<String, String>{
+        if(CollectionUtil.isEmpty(accountIdList)){
+            return HashMap()
+        }
         val list = namedParameterJdbcTemplate.queryForList("""
                      select
                         t1.account_id accountId,
