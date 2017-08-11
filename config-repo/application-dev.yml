@@ -11,13 +11,13 @@ spring:
       password: bbk@123456
       driver-class-name: com.mysql.jdbc.Driver
     global-tool:
-        url: jdbc:mysql://168.192.1.17:3326/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        url: jdbc:mysql://168.192.1.243:3326/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
     ws-future:
       JXOPPO:
-        url: jdbc:mysql://168.192.1.17:3326/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        url: jdbc:mysql://168.192.1.243:3326/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
@@ -43,7 +43,7 @@ spring:
         driver-class-name: com.mysql.jdbc.Driver
     summer-basic:
       JXOPPO:
-        url: jdbc:mysql://168.192.1.17:3326/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        url: jdbc:mysql://168.192.1.243:3326/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
@@ -69,7 +69,7 @@ spring:
         driver-class-name: com.mysql.jdbc.Driver
     summer-general:
       JXOPPO:
-        url: jdbc:mysql://168.192.1.17:3326/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        url: jdbc:mysql://168.192.1.243:3326/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
