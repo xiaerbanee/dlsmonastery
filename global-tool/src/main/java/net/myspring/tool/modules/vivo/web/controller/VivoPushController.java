@@ -39,9 +39,7 @@ public class VivoPushController {
     @RequestMapping(value = "pushToLocal")
     public String pushVivoData(String companyName,String date){
         logger.info("开始同步数据至中转库:"+ LocalDateTime.now());
-        if(StringUtils.isBlank(RequestUtils.getCompanyName())) {
-            DbContextHolder.get().setCompanyName(companyName);
-        }
+        DbContextHolder.get().setCompanyName(companyName);
         PushToLocalDto pushToLocalDto = new PushToLocalDto();
         pushToLocalDto.setDate(date);
         pushToLocalDto.setProductColorMap(vivoPushService.getProductColorMap());
@@ -52,11 +50,13 @@ public class VivoPushController {
             pushToLocalDto.setsProductItemLendList(futureDemoPhoneService.getDemoPhonesData(date));
             pushToLocalDto.setVivoCustomerSaleImeiDtoList(futureProductImeSaleService.getProductImeSaleData(date));
         }else {
+            logger.info("获取业务数据开始:"+LocalDateTime.now());
             pushToLocalDto.setsCustomerDtoList(futureCustomerService.getIDVivoCustomersData(date));
             pushToLocalDto.setsPlantCustomerStockDtoList(futureProductImeService.getIDVivoCustomerStockData(date));
             pushToLocalDto.setsPlantCustomerStockDetailDtoList(futureProductImeService.getIDVivoCustomerStockDetailData(date));
             pushToLocalDto.setVivoCustomerSaleImeiDtoList(futureProductImeSaleService.getProductImeSaleData(date));
             pushToLocalDto.setsStoresList(futureCustomerService.findIDvivoStore());
+            logger.info("获取业务数据结束:"+LocalDateTime.now());
         }
         vivoPushService.pushToLocal(pushToLocalDto,companyName);
         logger.info("同步数据至中转库结束:"+ LocalDateTime.now());

@@ -10,6 +10,7 @@ import net.myspring.basic.modules.hr.web.form.DutyForm;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
+import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,25 +49,38 @@ public class DutyController {
 
     @RequestMapping(value = "audit")
     public RestResponse audit(String id, String dutyType, Boolean pass, String auditRemarks) {
-        dutyService.audit(id, dutyType, pass, auditRemarks);
-        return new RestResponse("审核成功", ResponseCodeEnum.audited.name());
+        StringBuilder stringBuilder=dutyService.audit(id, dutyType, pass, auditRemarks);
+        if(StringUtils.isNotBlank(stringBuilder.toString())){
+            return new RestResponse(stringBuilder.toString(), ResponseCodeEnum.audited.name(),false);
+        }else {
+            return new RestResponse("审核成功", ResponseCodeEnum.audited.name());
+        }
     }
 
     @RequestMapping(value = "passAll")
     public RestResponse passAll() {
         List<DutyDto> dutyDtoList = getDutyDtoList();
+        StringBuilder stringBuilder=new StringBuilder();
         for(DutyDto dutyDto : dutyDtoList) {
-            dutyService.audit(dutyDto.getId(), dutyDto.getDutyType(),true,null);
+            stringBuilder.append(dutyService.audit(dutyDto.getId(), dutyDto.getDutyType(),true,null));
         }
-        return new RestResponse("审批成功",ResponseCodeEnum.audited.name());
+        if(StringUtils.isNotBlank(stringBuilder.toString())){
+            return new RestResponse(stringBuilder.toString(), ResponseCodeEnum.audited.name(),false);
+        }else {
+            return new RestResponse("审核成功", ResponseCodeEnum.audited.name());
+        }
     }
 
     @RequestMapping(value = "batchPass")
     public RestResponse batchPass(String dutyAuditMap){
         dutyAuditMap= HtmlUtils.htmlUnescape(dutyAuditMap);
         Map<String,String> map = ObjectMapperUtils.readValue(dutyAuditMap,Map.class);
-        dutyService.audit(map);
-        return new RestResponse("审批成功",ResponseCodeEnum.audited.name());
+        StringBuilder stringBuilder=new StringBuilder(dutyService.audit(map));
+        if(StringUtils.isNotBlank(stringBuilder.toString())){
+            return new RestResponse(stringBuilder.toString(), ResponseCodeEnum.audited.name(),false);
+        }else {
+            return new RestResponse("审核成功", ResponseCodeEnum.audited.name());
+        }
     }
 
     @RequestMapping(value = "events", method = RequestMethod.GET)

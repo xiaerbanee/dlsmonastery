@@ -140,16 +140,22 @@ public class ReportScoreDto extends DataDto<ReportScore> {
     }
 
     public String getCardQtyStr() {
-        return cardQty + "/" + saleQty;
+        Integer realCardQry=cardQty==null?0:cardQty;
+        Integer realSaleQty=saleQty==null?0:saleQty;
+        return realCardQry + "/" + realSaleQty;
     }
 
 
     public String getMonthCardQtyStr() {
-        return monthCardQty + "/" + monthSaleQty;
+        Integer realMonthCardQty=monthCardQty==null?0:monthCardQty;
+        Integer realMonthSaleQty=monthSaleQty==null?0:monthSaleQty;
+        return realMonthCardQty + "/" + realMonthSaleQty;
     }
 
     public int getCardQtyDiff() {
-        Integer diff = cardQty-saleQty;
+        Integer realCardQry=cardQty==null?0:cardQty;
+        Integer realSaleQty=saleQty==null?0:saleQty;
+        Integer diff = realCardQry-realSaleQty;
         return Math.abs(diff);
     }
 }
