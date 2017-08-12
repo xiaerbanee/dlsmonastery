@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public class GoodsOrderDetailDto extends DataDto<GoodsOrderDetail> {
 
     private String productId;
+    @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
     private String productName;
     @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "outId")
     private String productOutId;
@@ -58,7 +59,10 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrderDetail> {
     private String storeName;
 
     public BigDecimal getAmount() {
-        return price.multiply(new BigDecimal(billQty));
+        if(price!=null&&billQty!=null){
+            return price.multiply(new BigDecimal(billQty));
+        }
+        return BigDecimal.ZERO;
     }
 
     public void setAmount(BigDecimal amount) {

@@ -41,21 +41,21 @@
           <el-table-column prop="billDate" label="单据日期"></el-table-column>
           <el-table-column prop="materialName" label="商品名称"></el-table-column>
           <el-table-column prop="qty" label="数量"></el-table-column>
-          <el-table-column prop="price" label="单价"></el-table-column>
-          <el-table-column prop="totalAmount" label="金额"></el-table-column>
-          <el-table-column prop="shouldGet" label="应收"></el-table-column>
-          <el-table-column prop="realGet" label="实收"></el-table-column>
-          <el-table-column prop="endShouldGet" label="期末"></el-table-column>
+          <el-table-column prop="price" label="单价" :formatter="moneyFormatter"></el-table-column>
+          <el-table-column prop="totalAmount" label="金额" :formatter="moneyFormatter"></el-table-column>
+          <el-table-column prop="shouldGet" label="应收" :formatter="moneyFormatter"></el-table-column>
+          <el-table-column prop="realGet" label="实收" :formatter="moneyFormatter"></el-table-column>
+          <el-table-column prop="endShouldGet" label="期末" :formatter="moneyFormatter"></el-table-column>
           <el-table-column prop="remarks" label="摘要"></el-table-column>
         </el-table>
       </el-dialog>
       <el-table :data="summary" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="customerGroupName" label="客户分组" sortable width="150"></el-table-column>
         <el-table-column prop="customerName" label="客户名称"></el-table-column>
-        <el-table-column prop="beginShouldGet" label="期初应收"></el-table-column>
-        <el-table-column prop="shouldGet" label="应收金额"></el-table-column>
-        <el-table-column prop="realGet" label="实收金额"></el-table-column>
-        <el-table-column prop="endShouldGet" label="期末应收"></el-table-column>
+        <el-table-column prop="beginShouldGet" label="期初应收" :formatter="moneyFormatter"></el-table-column>
+        <el-table-column prop="shouldGet" label="应收金额" :formatter="moneyFormatter"></el-table-column>
+        <el-table-column prop="realGet" label="实收金额" :formatter="moneyFormatter"></el-table-column>
+        <el-table-column prop="endShouldGet" label="期末应收" :formatter="moneyFormatter"></el-table-column>
         <el-table-column fixed="right" label="操作" width="200">
           <template scope="scope">
             <el-button size="small" @click="detailAction(scope.row.customerId)">详细</el-button>
@@ -111,6 +111,9 @@
         this.$nextTick(function () {
           this.searchText = util.getSearchText(this.$refs.searchDialog);
         })
+      },
+      moneyFormatter(row,col){
+        return util.moneyFormatter(row,col)
       },
       pageRequest() {
         this.pageLoading = true;

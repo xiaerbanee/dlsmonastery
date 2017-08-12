@@ -42,8 +42,8 @@
         <el-table-column prop="shopAreaName" :label="$t('shopDepositList.areaName')" ></el-table-column>
         <el-table-column prop="shopOfficeName" :label="$t('shopDepositList.officeName')" ></el-table-column>
         <el-table-column prop="type" :label="$t('shopDepositList.type')" sortable></el-table-column>
-        <el-table-column prop="amount" :label="$t('shopDepositList.amount')" sortable></el-table-column>
-        <el-table-column prop="leftAmount" :label="$t('shopDepositList.leftAmount')" sortable></el-table-column>
+        <el-table-column prop="amount" :label="$t('shopDepositList.amount')"  :formatter="moneyFormatter" sortable></el-table-column>
+        <el-table-column prop="leftAmount" :label="$t('shopDepositList.leftAmount')"  :formatter="moneyFormatter" sortable></el-table-column>
         <el-table-column prop="outCode" :label="$t('shopDepositList.outCode')" sortable></el-table-column>
         <el-table-column prop="createdByName" column-key="createdBy"  :label="$t('shopDepositList.createdBy')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('shopDepositList.createdDate')" sortable></el-table-column>
@@ -111,6 +111,8 @@
       },search() {
         this.formVisible = false;
         this.pageRequest();
+      },moneyFormatter(row,col){
+        return util.moneyFormatter(row,col)
       },itemAdd(){
         this.$router.push({ name: 'shopDepositForm'});
       },itemBatchAdd(){

@@ -33,15 +33,15 @@
             minSpareRows: 1,
             colHeaders: ["对方科目编码", "借方金额", "贷方金额", "摘要", "对方科目名称", "员工","部门","其他类","费用类"],
             columns: [
-              {type: "autocomplete", strict: true, allowEmpty: false, accountNumber:[],source: this.accountNumber},
-              {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true},
-              {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true},
-              {type: "text", allowEmpty: true, strict: true},
-              {type: "text", readOnly: true, allowEmpty: true, strict: true},
-              {type: "autocomplete", strict: true, allowEmpty: false, staffName:[],source: this.staffName},
-              {type: "autocomplete", strict: true, allowEmpty: false, departmentName:[],source: this.departmentName},
-              {type: "autocomplete", strict: true, allowEmpty: false, otherTypeName:[],source: this.otherTypeName},
-              {type: "autocomplete", strict: true, allowEmpty: false, expenseTypeName:[],source: this.expenseTypeName},
+              {type: "autocomplete", strict: true, allowEmpty: false, accountNumber:[],source: this.accountNumber, width:100},
+              {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true, width:100},
+              {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true, width:100},
+              {type: "text", allowEmpty: true, strict: true, width:100},
+              {type: "text", readOnly: true, allowEmpty: true, strict: true, width:100},
+              {type: "autocomplete", strict: true, allowEmpty: false, staffName:[],source: this.staffName, width:80},
+              {type: "autocomplete", strict: true, allowEmpty: false, departmentName:[],source: this.departmentName, width:150},
+              {type: "autocomplete", strict: true, allowEmpty: false, otherTypeName:[],source: this.otherTypeName, width:150},
+              {type: "autocomplete", strict: true, allowEmpty: false, expenseTypeName:[],source: this.expenseTypeName, width:150},
             ],
             contextMenu: true,
             afterChange: function (changes, source) {
@@ -139,7 +139,7 @@
         let flag = extra.customerForFlag;
         if(flag === true){
           this.settings.colHeaders.push("对方关联客户");
-          this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, customerNameFor:[],source: this.customerNameFor});
+          this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, customerNameFor:[],source: this.customerNameFor, width:150});
           this.settings.columns[9].source = extra.customerNameForList;
         }
         this.initPage();

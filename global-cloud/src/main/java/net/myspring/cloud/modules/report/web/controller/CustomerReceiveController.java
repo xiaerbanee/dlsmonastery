@@ -1,6 +1,5 @@
 package net.myspring.cloud.modules.report.web.controller;
 
-import net.myspring.cloud.modules.kingdee.service.BdCustomerService;
 import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
@@ -9,16 +8,13 @@ import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.util.excel.ExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Created by liuj on 2017/5/11.
+ * 客户应收
  */
 @RestController
 @RequestMapping(value = "report/customerReceive")
