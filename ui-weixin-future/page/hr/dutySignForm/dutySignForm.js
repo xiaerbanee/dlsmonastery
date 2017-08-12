@@ -56,7 +56,7 @@ Page({
         that.setData({ "formData.longitude": res.longitude, "formData.latitude": res.latitude, "formData.accuracy": res.accuracy })
         wx.getNetworkType({
           success: function (res) {
-            that.setData({ "formData.networkType": res.networkType })
+            that.setData({ "formData.netType": res.networkType })
           }
         })
         wx.getSystemInfo({

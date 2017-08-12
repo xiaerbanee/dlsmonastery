@@ -54,8 +54,8 @@ public class OppoPushController {
     private FutureImeAllotService futureImeAllotService;
     @Autowired
     private FutureAfterSaleService futureAfterSaleService;
-
-
+    @Autowired
+    private FutureAccountDepotService futureAccountDepotService;
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -64,9 +64,7 @@ public class OppoPushController {
     @RequestMapping(value = "pushToLocal")
     public String pushToLocal(String companyName,String date) {
         logger.info("开始同步JXOPPO数据至本地:"+ LocalDateTime.now());
-        if(StringUtils.isBlank(RequestUtils.getCompanyName())) {
-            DbContextHolder.get().setCompanyName(companyName);
-        }
+        DbContextHolder.get().setCompanyName(companyName);
         OppoPushDto oppoPushDto = new OppoPushDto();
         oppoPushDto.setDate(date);
         oppoPushDto.setAreaDepotMap(futureCustomerService.getAreaDepotMap());
@@ -80,7 +78,7 @@ public class OppoPushController {
         oppoPushDto.setOppoCustomerSaleCounts(futureProductImeSaleService.getFutureOppoCustomerSaleCounts(date));
         oppoPushDto.setOppoCustomerAfterSaleImeis(futureAfterSaleService.getFutureOppoCustomerAfterSaleImeis(date));
         oppoPushDto.setOppoCustomerDemoPhones(futureDemoPhoneService.getFutureOppoCustomerDemoPhone(date));
-
+//        oppoPushDto.setAccountDepotDtos(futureAccountDepotService.findAll());
         oppoPushSerivce.pushToLocal(oppoPushDto,companyName);
         logger.info("同步JXOPPO数据至本地成功:"+ LocalDateTime.now());
         return "OPPO同步成功";

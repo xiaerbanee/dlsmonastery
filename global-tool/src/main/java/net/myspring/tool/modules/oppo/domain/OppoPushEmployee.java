@@ -4,6 +4,7 @@ import net.myspring.tool.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "oppo_push_employee")
@@ -11,7 +12,7 @@ public class OppoPushEmployee extends IdEntity<OppoPushEmployee>{
     private String userId;
     private String userName;
     private String fatherUserId;
-    private String entryTime;
+    private LocalDate entryTime;
     private String sex;
     private String status;
     private String mobile;
@@ -19,6 +20,7 @@ public class OppoPushEmployee extends IdEntity<OppoPushEmployee>{
     private String userPost;
     private String experience;
     private String prize;
+    private String companyName;
 
     public String getUserId() {
         return userId;
@@ -44,11 +46,11 @@ public class OppoPushEmployee extends IdEntity<OppoPushEmployee>{
         this.fatherUserId = fatherUserId;
     }
 
-    public String getEntryTime() {
+    public LocalDate getEntryTime() {
         return entryTime;
     }
 
-    public void setEntryTime(String entryTime) {
+    public void setEntryTime(LocalDate entryTime) {
         this.entryTime = entryTime;
     }
 
@@ -106,5 +108,13 @@ public class OppoPushEmployee extends IdEntity<OppoPushEmployee>{
 
     public void setPrize(String prize) {
         this.prize = prize;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 }

@@ -13,4 +13,7 @@ public interface EmployeeClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/hr/employee/findAll")
     List<EmployeeDto> findAll(@RequestParam(value = "companyName")String companyName);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/hr/employee/findEmployeeInfo")
+    List<EmployeeDto> findEmployeeInfo(@RequestParam(value = "companyName")String companyName);
 }
