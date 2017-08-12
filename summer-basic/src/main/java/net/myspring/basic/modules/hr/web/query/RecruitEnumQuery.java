@@ -6,6 +6,15 @@ public class RecruitEnumQuery extends BaseQuery{
 
     private String category;
     private String value;
+    private String label;
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
     public String getCategory() {
         return category;

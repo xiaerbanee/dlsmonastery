@@ -26,9 +26,11 @@
           settings: {
             rowHeaders:true,
             autoColumnSize:true,
+            manualColumnResize:true,
             stretchH: 'all',
             height: 650,
             minSpareRows: 1,
+            fixedRowsTop:0,
             colHeaders:["编码", "名称", "一级价","广告让利(返利1.5%输入1.5)","物料分组", "存货类别"],
             columns: [
               {type: 'text',allowEmpty: false,strict: true},

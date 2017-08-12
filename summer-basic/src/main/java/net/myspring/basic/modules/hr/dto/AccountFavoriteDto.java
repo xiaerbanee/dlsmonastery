@@ -2,12 +2,23 @@ package net.myspring.basic.modules.hr.dto;
 
 import net.myspring.basic.modules.hr.domain.AccountFavorite;
 import net.myspring.common.dto.DataDto;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 public class AccountFavoriteDto extends DataDto<AccountFavorite> {
+    private String name;
+    @CacheInput(inputKey = "accounts",inputInstance = "accountId",outputInstance = "name")
     private String accountName;
     private String parentId;
     private String accountId;
     private String parentName;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getAccountName() {
         return accountName;

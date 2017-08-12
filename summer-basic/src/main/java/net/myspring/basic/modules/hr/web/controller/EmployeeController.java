@@ -140,4 +140,10 @@ public class EmployeeController {
         return new ModelAndView(new ExcelView(),"simpleExcelBook",employeeService.exportData(employeeQuery));
     }
 
+    @RequestMapping(value = "findEmployeeInfo")
+    public List<EmployeeDto> findEmployeeInfo(String companyName){
+        DbContextHolder.get().setCompanyName(companyName);
+        List<EmployeeDto> employeeDtoList = employeeService.findEmployeeInfo();
+        return employeeDtoList;
+    }
 }

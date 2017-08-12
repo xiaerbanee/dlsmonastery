@@ -3,9 +3,7 @@ package net.myspring.future.modules.basic.web.controller;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
-import net.myspring.common.enums.BoolEnum;
-import net.myspring.common.enums.CompanyConfigCodeEnum;
-import net.myspring.common.enums.JointLevelEnum;
+import net.myspring.common.enums.*;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.*;
@@ -15,6 +13,7 @@ import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.dto.DepotStoreDto;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.DepotStoreService;
+import net.myspring.future.modules.basic.web.form.DepotStoreAddForm;
 import net.myspring.future.modules.basic.web.form.DepotStoreForm;
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
@@ -66,15 +65,29 @@ public class DepotStoreController {
 
     @RequestMapping(value = "getForm")
     public DepotStoreForm getForm(DepotStoreForm depotStoreForm){
-        depotStoreForm.getExtra().put("depotStoreTypeList",DepotStoreTypeEnum.getList());
         depotStoreForm.getExtra().put("jointLevelList", JointLevelEnum.getList());
         return depotStoreForm;
     }
 
+    @RequestMapping(value = "getAddForm")
+    public DepotStoreAddForm getAddForm(DepotStoreAddForm depotStoreAddForm){
+        depotStoreAddForm.getExtra().put("depotStoreTypeList",DepotStoreTypeEnum.getList());
+        depotStoreAddForm.getExtra().put("jointLevelList", JointLevelEnum.getList());
+        return depotStoreAddForm;
+    }
+
+    //代理库保存
     @RequestMapping(value = "save")
     public RestResponse save(DepotStoreForm depotStoreForm){
         depotStoreService.save(depotStoreForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
+    //仓库保存
+    @RequestMapping(value = "saveStore")
+    public RestResponse saveStore(DepotStoreAddForm depotStoreAddForm){
+        depotStoreService.saveStore(depotStoreAddForm);
+        return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "delete")

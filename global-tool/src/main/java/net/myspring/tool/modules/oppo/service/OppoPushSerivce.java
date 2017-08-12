@@ -14,6 +14,7 @@ import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.enums.AgentCodeEnum;
 import net.myspring.tool.common.utils.CacheUtils;
 import net.myspring.tool.modules.future.domain.Office;
+import net.myspring.tool.modules.future.dto.AccountDepotDto;
 import net.myspring.tool.modules.future.dto.CustomerDto;
 import net.myspring.tool.modules.future.dto.DistrictDto;
 import net.myspring.tool.modules.future.dto.EmployeeDto;
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +74,10 @@ public class OppoPushSerivce {
     private OppoCustomerAfterSaleImeiRepository oppoCustomerAfterSaleImeiRepository;
     @Autowired
     private OppoCustomerDemoPhoneRepository oppoCustomerDemoPhoneRepository;
+    @Autowired
+    private OppoPushEmployeeRepository oppoPushEmployeeRepository;
+    @Autowired
+    private OppoPushCustomerEmployeeRepository oppoPushCustomerEmployeeRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -125,6 +131,10 @@ public class OppoPushSerivce {
         pushOppoCustomerAfterSaleImeis(oppoPushDto.getOppoCustomerAfterSaleImeis(),oppoPushDto.getDate());
         //门店演示机汇总数据
         pushOppoCustomerDemoPhone(oppoPushDto.getOppoCustomerDemoPhones(),oppoPushDto.getDate());
+//        //员工基本信息数据
+//        pushOppoEmployeeInfo(companyName);
+//        //员工绑定门店信息
+//        pushOppoCustomerEmployee(oppoPushDto.getAccountDepotDtos());
     }
 
 
@@ -510,6 +520,47 @@ public class OppoPushSerivce {
         return oppoCustomerDemoPhoneList;
     }
 
+    @LocalDataSource
+    @Transactional
+    public void pushOppoEmployeeInfo(String companyName){
+        List<EmployeeDto> employeeDtoList = employeeClient.findEmployeeInfo(companyName);
+        List<OppoPushEmployee> oppoPushEmployeeList = Lists.newArrayList();
+        for (EmployeeDto employeeDto : employeeDtoList){
+            OppoPushEmployee oppoPushEmployee = new OppoPushEmployee();
+            oppoPushEmployee.setUserId(employeeDto.getId());
+            oppoPushEmployee.setUserName(employeeDto.getName());
+            oppoPushEmployee.setEntryTime(employeeDto.getEntryDate());
+            oppoPushEmployee.setSex(employeeDto.getSex());
+            oppoPushEmployee.setStatus(employeeDto.getStatus());
+            oppoPushEmployee.setMobile(employeeDto.getMobilePhone());
+            oppoPushEmployee.setIdcard(employeeDto.getIdcard());
+            oppoPushEmployee.setUserPost(employeeDto.getPositionName());
+            oppoPushEmployee.setCompanyName(companyName);
+            oppoPushEmployeeList.add(oppoPushEmployee);
+        }
+        logger.info("同步员工信息数据开始:"+ LocalDateTime.now());
+        oppoPushEmployeeRepository.deleteAll();
+        oppoPushEmployeeRepository.save(oppoPushEmployeeList);
+        logger.info("同步员工信息数据结束:"+ LocalDateTime.now());
+    }
+
+    @LocalDataSource
+    @Transactional
+    public void pushOppoCustomerEmployee(List<AccountDepotDto> accountDepotDtoList){
+        List<OppoPushCustomerEmployee> oppoPushCustomerEmployeeList = Lists.newArrayList();
+        for (AccountDepotDto accountDepotDto : accountDepotDtoList){
+            OppoPushCustomerEmployee oppoPushCustomerEmployee = new OppoPushCustomerEmployee();
+            oppoPushCustomerEmployee.setCustomerId(accountDepotDto.getDepotId());
+            oppoPushCustomerEmployee.setUserId(accountDepotDto.getEmployeeId());
+            oppoPushCustomerEmployee.setCompanyName(DbContextHolder.get().getCompanyName());
+            oppoPushCustomerEmployeeList.add(oppoPushCustomerEmployee);
+        }
+        logger.info("员工绑定门店数据上抛开始:"+LocalDateTime.now());
+        oppoPushCustomerEmployeeRepository.deleteAll();
+        oppoPushCustomerEmployeeRepository.save(oppoPushCustomerEmployeeList);
+        logger.info("员工绑定门店数据上抛结束:"+LocalDateTime.now());
+    }
+
     private  String  getDepotId(CustomerDto customerDto){
         String jointLeavel=customerDto.getJointLeavel();
         String storeId=customerDto.getStoreId();
@@ -655,5 +706,19 @@ public class OppoPushSerivce {
         String companyName = DbContextHolder.get().getCompanyName();
         List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoCustomerDemoPhoneRepository.findByDate(companyName,dateStart,dateEnd);
         return oppoCustomerDemoPhones;
+    }
+
+    @LocalDataSource
+    public List<OppoPushEmployee> getOppoPushEmployee(){
+        String companyName = DbContextHolder.get().getCompanyName();
+        List<OppoPushEmployee> oppoPushEmployees = oppoPushEmployeeRepository.findByCompanyName(companyName);
+        return oppoPushEmployees;
+    }
+
+    @LocalDataSource
+    public List<OppoPushCustomerEmployee> getOppoPushCustomerEmployee(){
+        String companyName = DbContextHolder.get().getCompanyName();
+        List<OppoPushCustomerEmployee> oppoPushCustomerEmployees = oppoPushCustomerEmployeeRepository.findByCompanyName(companyName);
+        return oppoPushCustomerEmployees;
     }
 }

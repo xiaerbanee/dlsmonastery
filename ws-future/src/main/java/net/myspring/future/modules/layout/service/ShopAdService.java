@@ -193,6 +193,7 @@ public class ShopAdService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "price", "总价"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "specialAreaToString", "是否带LOGO"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "content", "内容说明"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "processStatus", "审核状态"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdByName", "申请人"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "申请时间"));
