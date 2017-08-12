@@ -67,14 +67,14 @@
                 }
               },
               allowEmpty:false,
-              width:150
+              width:300
             }, {
               data:"bank",
               type: "autocomplete",
               allowEmpty: false,
               strict: true,
               source: [],
-              width:200
+              width:150
             }, {
               data:'billDate',
               type:'date',
@@ -87,13 +87,13 @@
               type:'text',
               allowEmpty:false,
               strict: true,
-              width: 200
+              width: 150
             }, {
               data:"type",
               type: 'autocomplete',
               strict: true,
               allowEmpty:false,
-              width: 200
+              width: 100
             }, {
               data:"remarks",
               type:"text",
@@ -103,7 +103,7 @@
               type: 'autocomplete',
               strict: true,
               allowEmpty:false,
-              width: 200
+              width: 100
             }],
           },
         };
