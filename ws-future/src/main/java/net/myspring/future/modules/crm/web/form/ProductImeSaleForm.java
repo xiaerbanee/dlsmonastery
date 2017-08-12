@@ -13,12 +13,16 @@ import java.util.List;
 
 
 public class ProductImeSaleForm extends BaseForm<ProductImeSale> {
+    //TODO shopId也不再使用了，等小程序改了之后应该去掉
     private String shopId;
+    private String saleShopId;
     private String imeStr;
     private String buyer;
     private Integer buyerAge;
     private String buyerSex;
     private String buyerPhone;
+
+    //TODO 下面這兩個參數不再使用，等小程序改了之后应该去掉
     private String productImeSaleDetailStr;
     private List<ProductImeSaleDetailForm> productImeSaleDetailList;
 
@@ -27,6 +31,14 @@ public class ProductImeSaleForm extends BaseForm<ProductImeSale> {
             this.productImeSaleDetailList= ObjectMapperUtils.readValueToBeanList(HtmlUtils.htmlUnescape(productImeSaleDetailStr),ProductImeSaleDetailForm.class);
         }
         return productImeSaleDetailList;
+    }
+
+    public String getSaleShopId() {
+        return saleShopId;
+    }
+
+    public void setSaleShopId(String saleShopId) {
+        this.saleShopId = saleShopId;
     }
 
     public String getProductImeSaleDetailStr() {

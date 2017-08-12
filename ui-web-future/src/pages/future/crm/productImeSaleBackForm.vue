@@ -10,8 +10,8 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20">
-          <el-col :span="6">
+        <el-row>
+          <el-col :span="8">
             <el-form-item :label="$t('productImeSaleBackForm.ime')" prop="imeStr">
               <el-input type="textarea" :rows="6" v-model="inputForm.imeStr" :placeholder="$t('productImeSaleBackForm.inputIme')"></el-input>
             </el-form-item>
@@ -19,32 +19,36 @@
               <el-button  type="primary" @click.native="searchImeStr">{{$t('productImeSaleBackForm.search')}}</el-button>
               <el-button  type="primary" @click.native="reset">{{$t('productImeSaleBackForm.reset')}}</el-button>
             </el-form-item>
-            <div v-if="searched">
-              <el-form-item :label="$t('productImeSaleBackForm.remarks')" prop="remarks" >
-                <el-input type="textarea" :rows="2" v-model="inputForm.remarks"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" >{{$t('productImeSaleBackForm.save')}}</el-button>
-              </el-form-item>
-            </div>
           </el-col>
-          <el-col :span="18" v-if="searched">
+          <div v-if="searched">
+           <el-col :span="8">
+             <el-form-item :label="$t('productImeSaleBackForm.remarks')" prop="remarks" >
+               <el-input type="textarea" :rows="3" v-model="inputForm.remarks"></el-input>
+             </el-form-item>
+             <el-form-item>
+               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" >{{$t('productImeSaleBackForm.saleBack')}}</el-button>
+             </el-form-item>
+           </el-col>
+          </div>
+        </el-row>
+        <el-row :gutter="24" v-if="searched">
+          <el-col :span="6">
             <template>
               <el-table :data="productQtyList" style="width: 100%" border>
                 <el-table-column prop="productName" :label="$t('productImeSaleBackForm.name')"></el-table-column>
                 <el-table-column prop="qty" :label="$t('productImeSaleBackForm.qty')" :render-header="count"></el-table-column>
               </el-table>
             </template>
+          </el-col>
+          <el-col :span="18">
             <template>
               <el-table :data="productImeList" style="width: 100%" border>
                 <el-table-column prop="ime" :label="$t('productImeSaleBackForm.ime')"></el-table-column>
                 <el-table-column prop="depotName" :label="$t('productImeSaleBackForm.depotName')"></el-table-column>
                 <el-table-column prop="productName"  :label="$t('productImeSaleBackForm.productType')"></el-table-column>
-                <el-table-column prop="retailDate" :label="$t('productImeSaleBackForm.baokaDate')"></el-table-column>
                 <el-table-column prop="productImeSaleShopName" :label="$t('productImeSaleBackForm.shopName')"></el-table-column>
                 <el-table-column prop="productImeSaleEmployeeName" :label="$t('productImeSaleBackForm.productImeSaleEmployeeName')"></el-table-column>
                 <el-table-column prop="productImeSaleCreatedDate" :label="$t('productImeSaleBackForm.productImeSaleCreatedDate')"></el-table-column>
-                <el-table-column prop="productImeUploadEmployeeName" :label="$t('productImeSaleBackForm.productImeUploadEmployeeName')"></el-table-column>
                 <el-table-column prop="productImeUploadCreatedDate" :label="$t('productImeSaleBackForm.productImeUploadCreatedDate')"></el-table-column>
               </el-table>
             </template>
