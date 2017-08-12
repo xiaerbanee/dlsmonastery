@@ -51,6 +51,18 @@ Page({
       that.setData({ productImeSearchResult: {} })
     } else {
       wx.request({
+        url: $util.getUrl("ws/future/crm/productImeSale/checkForSale"),
+        data: that.data.formData,
+        header: {
+          Cookie: "JSESSIONID=" + app.globalData.sessionId
+        },
+        success: function (res) {
+          if (res.errMsg) {
+            that.setData({ "response.error": res.data });
+          }
+        }
+      });
+      wx.request({
         url: $util.getUrl("ws/future/crm/productImeSale/findProductImeForSaleDto"),
         data: that.data.formData,
         header: {

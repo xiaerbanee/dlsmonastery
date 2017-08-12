@@ -23,7 +23,7 @@ public class DutySignForm extends BaseForm<DutySign> {
     private String attachment;
     private String longitude;
     private String latitude;
-    private String networkType;
+    private String netType;
     private String model;
     private String accuracy;
 
@@ -102,12 +102,12 @@ public class DutySignForm extends BaseForm<DutySign> {
         this.latitude = latitude;
     }
 
-    public String getNetworkType() {
-        return networkType;
+    public String getNetType() {
+        return netType;
     }
 
-    public void setNetworkType(String networkType) {
-        this.networkType = networkType;
+    public void setNetType(String netType) {
+        this.netType = netType;
     }
 
     public String getModel() {

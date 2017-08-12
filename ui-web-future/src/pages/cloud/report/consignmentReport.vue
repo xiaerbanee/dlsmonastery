@@ -12,7 +12,9 @@
           <date-picker v-model="formData.dateEnd"></date-picker>
         </el-form-item>
         <el-button type="primary" @click="search()" icon="search">搜索</el-button>
-        <el-button type="primary" @click="exportData()" icon="export">导出</el-button>
+        <el-tooltip class="item" effect="dark" content="请在右边选择导出数据的日期，再点击导出" placement="top-start">
+          <el-button type="primary" @click="exportData()" icon="export">导出</el-button>
+        </el-tooltip>
         <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
       </el-form>
     </div>
@@ -84,9 +86,7 @@
       exportData(){
         this.formData.dateStart = util.formatLocalDate(this.formData.dateStart);
         this.formData.dateEnd = util.formatLocalDate(this.formData.dateEnd);
-        if(confirm("确认导出数据?")){
-          window.location.href = '/api/global/cloud/report/consignmentWZ/export?dateStart='+this.formData.dateStart+"&dateEnd="+this.formData.dateEnd;
-        }
+        window.location.href = '/api/global/cloud/report/consignmentWZ/export?dateStart='+this.formData.dateStart+"&dateEnd="+this.formData.dateEnd;
       }
     },created () {
       this.initPage();
