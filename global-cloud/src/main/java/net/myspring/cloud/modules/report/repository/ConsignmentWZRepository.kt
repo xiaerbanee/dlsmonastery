@@ -4,7 +4,6 @@ import net.myspring.cloud.modules.report.dto.CustomerInventoryDto
 import net.myspring.util.time.LocalDateUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
 import java.time.LocalDate
@@ -14,7 +13,7 @@ import java.util.HashMap
  * 温州-委托代销报表
  */
 @Component
-class ConsignmentWZRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
+class ConsignmentWZRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
     fun findByEndDate(dateEnd: LocalDate): MutableList<CustomerInventoryDto>? {
         var paramMap = HashMap<String, Any>()
