@@ -4,6 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:auditFile:edit'">{{$t('auditFileList.add')}}</el-button>
+        <el-button type="primary" @click="itemFavorite" icon="plus" v-permit="'hr:auditFile:edit'">{{$t('auditFileList.favorite')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'hr:auditFile:view'">{{$t('auditFileList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
@@ -156,6 +157,8 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'auditFileForm'})
+      },itemFavorite(){
+        this.$router.push({ name: 'accountFavoriteList'})
       },itemAction:function(id,action){
         if(action=="edit") {
           this.$router.push({ name: 'auditFileForm', query: { id: id }})
@@ -172,10 +175,14 @@
         }).catch(()=>{});
         }
       },collect(row){
-        axios.get('/api/basic/hr/auditFileCollect/collect?auditFileId='+row.id+'&collect='+!row.collect).then((response) =>{
-          this.$message(response.data.message);
-          row.collect=!row.collect
-        });
+        axios.get("/api/basic/hr/accountFavorite/findTreeNodeList").then((response)=>{
+          console.log(response.data)
+        })
+
+//        axios.get('/api/basic/hr/auditFileCollect/collect?auditFileId='+row.id+'&collect='+!row.collect).then((response) =>{
+//          this.$message(response.data.message);
+//          row.collect=!row.collect
+//        });
       }, updateMemo(row){
         this.updateVisible=true;
         this.inputForm=JSON.parse(JSON.stringify(row));
