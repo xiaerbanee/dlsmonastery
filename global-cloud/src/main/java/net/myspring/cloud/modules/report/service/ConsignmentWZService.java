@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,6 +28,7 @@ import java.util.Map;
  */
 @Service
 @KingdeeDataSource
+@Transactional(readOnly = true)
 public class ConsignmentWZService {
     @Autowired
     private ConsignmentWZRepository consignmentWZRepository;
@@ -257,7 +259,7 @@ public class ConsignmentWZService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "consignmentNotSettledAmount", "寄售未结算金额"));
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("委托代销",consignmentDtoList,simpleExcelColumnList);
         ExcelUtils.doWrite(workbook,simpleExcelSheet);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"委托代销报表"+"（"+dateStart+dateEnd+"）"+".xlsx",simpleExcelSheet);
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"委托代销报表"+"（"+dateStart+'-'+dateEnd+"）"+".xlsx",simpleExcelSheet);
         return simpleExcelBook;
     }
 

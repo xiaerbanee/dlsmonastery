@@ -177,6 +177,8 @@ export default {
       auditFileDetail: "文件审批详细",
       auditFileForm: "文件审批编辑",
       auditFileList: "文件审批",
+      accountFavoriteList:"收藏夹列表",
+      accountFavoriteForm:"收藏夹编辑",
       dutyAnnualForm: "年假管理编辑",
       dutyAnnualList: "年假管理",
       dutyFreeList: "免打考勤",

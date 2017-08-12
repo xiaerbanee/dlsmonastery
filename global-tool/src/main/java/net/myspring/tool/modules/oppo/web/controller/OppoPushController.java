@@ -54,8 +54,8 @@ public class OppoPushController {
     private FutureImeAllotService futureImeAllotService;
     @Autowired
     private FutureAfterSaleService futureAfterSaleService;
-
-
+    @Autowired
+    private FutureAccountDepotService futureAccountDepotService;
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -64,9 +64,7 @@ public class OppoPushController {
     @RequestMapping(value = "pushToLocal")
     public String pushToLocal(String companyName,String date) {
         logger.info("开始同步JXOPPO数据至本地:"+ LocalDateTime.now());
-        if(StringUtils.isBlank(RequestUtils.getCompanyName())) {
-            DbContextHolder.get().setCompanyName(companyName);
-        }
+        DbContextHolder.get().setCompanyName(companyName);
         OppoPushDto oppoPushDto = new OppoPushDto();
         oppoPushDto.setDate(date);
         oppoPushDto.setAreaDepotMap(futureCustomerService.getAreaDepotMap());
@@ -80,7 +78,7 @@ public class OppoPushController {
         oppoPushDto.setOppoCustomerSaleCounts(futureProductImeSaleService.getFutureOppoCustomerSaleCounts(date));
         oppoPushDto.setOppoCustomerAfterSaleImeis(futureAfterSaleService.getFutureOppoCustomerAfterSaleImeis(date));
         oppoPushDto.setOppoCustomerDemoPhones(futureDemoPhoneService.getFutureOppoCustomerDemoPhone(date));
-
+//        oppoPushDto.setAccountDepotDtos(futureAccountDepotService.findAll());
         oppoPushSerivce.pushToLocal(oppoPushDto,companyName);
         logger.info("同步JXOPPO数据至本地成功:"+ LocalDateTime.now());
         return "OPPO同步成功";
@@ -330,6 +328,50 @@ public class OppoPushController {
             String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
             List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoPushSerivce.getOppoCustomerDemoPhonesByDate(dateStartTime,dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerDemoPhones));
+            responseMessage.setResult("success");
+        }else {
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
+        }
+        return responseMessage;
+    }
+
+    //上抛员工信息
+    @RequestMapping(value ="pullEmployee", method = RequestMethod.GET)
+    public OppoResponseMessage pullEmployee(String key,String createdDate)  {
+        OppoResponseMessage responseMessage = new OppoResponseMessage();
+        String companyName = oppoPushSerivce.getCompanyName(key,createdDate);
+        if (CompanyNameEnum.JXOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
+            List<OppoPushEmployee> oppoPushEmployees = oppoPushSerivce.getOppoPushEmployee();
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoPushEmployees));
+            responseMessage.setResult("success");
+        }else if (CompanyNameEnum.WZOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.WZOPPO.name());
+            List<OppoPushEmployee> oppoPushEmployees = oppoPushSerivce.getOppoPushEmployee();
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoPushEmployees));
+            responseMessage.setResult("success");
+        }else {
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
+        }
+        return responseMessage;
+    }
+
+    //上抛门店绑定员工信息
+    @RequestMapping(value ="pullCustomerEmployee", method = RequestMethod.GET)
+    public OppoResponseMessage pullCustomerEmployee(String key,String createdDate)  {
+        OppoResponseMessage responseMessage = new OppoResponseMessage();
+        String companyName = oppoPushSerivce.getCompanyName(key,createdDate);
+        if (CompanyNameEnum.JXOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
+            List<OppoPushCustomerEmployee> oppoPushCustomerEmployees = oppoPushSerivce.getOppoPushCustomerEmployee();
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoPushCustomerEmployees));
+            responseMessage.setResult("success");
+        }else if (CompanyNameEnum.WZOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.WZOPPO.name());
+            List<OppoPushCustomerEmployee> oppoPushCustomerEmployees = oppoPushSerivce.getOppoPushCustomerEmployee();
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoPushCustomerEmployees));
             responseMessage.setResult("success");
         }else {
             responseMessage.setMessage("密钥不正确");

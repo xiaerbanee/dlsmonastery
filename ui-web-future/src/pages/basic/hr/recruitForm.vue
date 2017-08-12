@@ -1,6 +1,27 @@
 <template>
   <div>
     <head-tab active="recruitForm"></head-tab>
+    <el-form>
+      <el-row :gutter="24">
+        <el-col :span="6">
+          <el-form-item :label="$t('recruitForm.name')" v-if="active>1&&inputForm.name">{{inputForm.name}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.sex')" v-if="active>1&&inputForm.sex">{{inputForm.sex}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.mobilePhone')" v-if="active>1&&inputForm.mobilePhone">{{inputForm.mobilePhone}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.applyPositionId')" v-if="active>1&&inputForm.applyPositionId">{{inputForm.applyPositionId}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.applyFrom')" v-if="active>1&&inputForm.applyForm">{{inputForm.applyFrom}}</el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item :label="$t('recruitForm.workArea')" v-if="active>2&&inputForm.workArea">{{inputForm.workArea}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.workCategory')" v-if="active>2&&inputForm.workCategory">{{inputForm.workCategory}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.marriageStatus')" v-if="active>2&&inputForm.marriageStatus">{{inputForm.marriageStatus}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.major')" v-if="active>2&&inputForm.major">{{inputForm.major}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.education')" v-if="active>2&&inputForm.education">{{inputForm.education}}</el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item :label="$t('recruitForm.secondComment')" v-if="active>3&&inputForm.secondComment">{{inputForm.secondComment}}</el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
     <el-row :gutter="20">
       <el-steps :space="100" :active="active" finish-status="success">
         <el-step :title="$t('recruitForm.reserve')"></el-step>
@@ -224,25 +245,20 @@
         getData(){
           var checkPhone=(rule,value,callback)=>{
             if(value===''){
-              callback(new Error("必填信息"))
+              callback(new Error(this.$t('officeForm.prerequisiteMessage')))
             }else if(!(/^1[34578]\d{9}$/.test(value))){
-              callback(new Error("手机号码有误，请充填"))
+              callback(new Error("手机号码有误，请重填"))
             }else{
               callback();
             }
           }
           return{
-            options:["智联","人才","51job","58同城","boss直聘","地宝网","店长直聘","公众号","海投网","拉勾网","中华英才网","应届生网","邮箱","校园","推荐","搜索"],
             isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             formProperty:{},
             remoteLoading:false,
             active:1,
-            accounts:[],
-            selectedAccount:[],
-            origins:[],
-            marriageStatus:[this.$t('recruitForm.unmarriedAndChildless'),this.$t('recruitForm.marriedChildless'),this.$t('recruitForm.marriedAlready'),this.$t('recruitForm.other')],
             message:'',
             inputForm:{
             },

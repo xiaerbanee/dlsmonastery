@@ -4,15 +4,15 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('recruitEnumForm.category')" prop="category">
-          <el-select v-model="inputForm.category" filterable :placeholder="$t('recruitEnumForm.selectCategory')">
-            <el-option v-for="category in inputForm.extra.categoryList" :key="category" :label="category" :value="category"></el-option>
+          <el-select v-model="inputForm.category" filterable :placeholder="$t('recruitEnumForm.selectCategory')" @change="findValueByCategory(inputForm.category)">
+            <el-option v-for="category in inputForm.extra.categoryList" :key="category" :label="category" :value="category" ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('recruitEnumForm.value')" prop="value" v-if="inputForm.category!='初试人'&&inputForm.category!='复试人'">
           <el-input type="textarea" v-model="inputForm.value"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('recruitEnumForm.value')" prop="value" v-if="inputForm.category=='初试人'||inputForm.category=='复试人'">
-          <account-select v-model="inputForm.value" multiple></account-select>
+        <el-form-item :label="$t('recruitEnumForm.value')" prop="accountIdList" v-if="inputForm.category=='初试人'||inputForm.category=='复试人'">
+          <account-select v-model="accountIdList" multiple></account-select>
         </el-form-item>
         <el-form-item :label="$t('recruitEnumForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
@@ -38,12 +38,26 @@
         return{
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
+          accountIdList:[],
           inputForm:{
             extra:{}
           },
           rules: {
-            category: [{ required: true, message: this.$t('recruitEnumForm.prerequisiteMessage'),trigger:"blur"}],
+            category: [{ required: true, message: this.$t('recruitEnumForm.prerequisiteMessage')}],
           }
+        }
+      },findValueByCategory(category){
+        if(category){
+          axios.get('/api/basic/hr/recruitEnum/findValueByCategory?category='+category).then((response)=> {
+            console.log(response.data)
+            if(response.data){
+              if(this.inputForm.category == "初试人"||this.inputForm.category == "复试人"){
+                this.accountIdList=response.data;
+              }else {
+                this.inputForm.value=response.data.join();
+              }
+            }
+          })
         }
       },
       formSubmit(){
@@ -53,8 +67,9 @@
         form.validate((valid) => {
           if (valid) {
             if(this.inputForm.category == "初试人"||this.inputForm.category == "复试人"){
-              this.inputForm.value=this.inputForm.value.join();
+              this.inputForm.value=this.accountIdList.join();
             }
+            console.log(this.inputForm)
             axios.post('/api/basic/hr/recruitEnum/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
@@ -73,9 +88,6 @@
       },initPage(){
         axios.get('/api/basic/hr/recruitEnum/getForm').then((response)=>{
           this.inputForm = response.data;
-          axios.get('/api/basic/hr/recruitEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-          });
         });
       }
     },created () {

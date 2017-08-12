@@ -11,12 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Modifying
+import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 interface RecruitEnumRepository : BaseRepository<RecruitEnum, String>,RecruitEnumRepositoryCustom {
-
+    fun findByCategoryAndEnabledIsTrue(category:String):MutableList<RecruitEnum>
 }
 
 interface RecruitEnumRepositoryCustom {
@@ -36,9 +38,9 @@ class RecruitEnumRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
                    AND t1.category =:category
                 """);
         }
-        if(recruitEnumQuery.value!=null){
+        if(recruitEnumQuery.label!=null){
             sb.append("""
-                   AND t1.value LIKE CONCAT ('%',:value,'%')
+                   AND t1.label LIKE CONCAT ('%',:label,'%')
                 """);
         }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);

@@ -1,6 +1,7 @@
 package net.myspring.tool.modules.oppo.dto;
 
 import com.google.common.collect.Maps;
+import net.myspring.tool.modules.future.dto.AccountDepotDto;
 import net.myspring.tool.modules.future.dto.CustomerDto;
 import net.myspring.tool.modules.oppo.domain.*;
 
@@ -18,6 +19,7 @@ public class OppoPushDto {
     private List<OppoCustomerSaleCount> oppoCustomerSaleCounts;
     private List<OppoCustomerAfterSaleImei>  oppoCustomerAfterSaleImeis;
     private List<OppoCustomerDemoPhone> oppoCustomerDemoPhones;
+    private List<AccountDepotDto> accountDepotDtos;
 
     private Map<String,String> areaDepotMap = Maps.newHashMap();
     private Map<String,CustomerDto> customerDtoMap = Maps.newHashMap();
@@ -116,5 +118,13 @@ public class OppoPushDto {
 
     public void setCustomerDtoMap(Map<String, CustomerDto> customerDtoMap) {
         this.customerDtoMap = customerDtoMap;
+    }
+
+    public List<AccountDepotDto> getAccountDepotDtos() {
+        return accountDepotDtos;
+    }
+
+    public void setAccountDepotDtos(List<AccountDepotDto> accountDepotDtos) {
+        this.accountDepotDtos = accountDepotDtos;
     }
 }

@@ -69,6 +69,8 @@ interface EmployeeRepositoryCustom{
     fun findDtoByIdList(idList:MutableList<String>):MutableList<EmployeeDto>
 
     fun findAllWorking(dateEnd: LocalDate): MutableList<EmployeeDto>
+
+    fun findEmployeeInfo(): MutableList<EmployeeDto>
 }
 class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): EmployeeRepositoryCustom{
     override fun findAllWorking(dateEnd: LocalDate): MutableList<EmployeeDto> {
@@ -244,5 +246,22 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(employeeQuery),BeanPropertyRowMapper(EmployeeDto::class.java))
     }
 
-
+    override fun findEmployeeInfo(): MutableList<EmployeeDto> {
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+                em.*,po.name AS positionName
+            FROM
+                hr_employee em,
+                hr_account acc,
+                hr_position po
+            WHERE
+                em.id = acc.employee_id
+            AND em.enabled = 1
+            AND acc.enabled = 1
+            AND em.status = '在职'
+            AND acc.position_id = po.id
+            AND acc.type = '主账号'
+            AND po.id IN ('1', '41', '57', '80', '44', '46' )
+        """, BeanPropertyRowMapper(EmployeeDto::class.java))
+    }
 }

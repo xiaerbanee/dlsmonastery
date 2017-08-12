@@ -163,4 +163,8 @@ public class EmployeeService {
         ExcelUtils.doWrite(workbook,simpleExcelSheet);
         return new SimpleExcelBook(workbook,"员工详情"+ LocalDate.now()+".xlsx",simpleExcelSheet);
     }
+
+    public List<EmployeeDto> findEmployeeInfo(){
+        return employeeRepository.findEmployeeInfo();
+    }
 }

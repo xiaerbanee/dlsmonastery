@@ -56,12 +56,16 @@ class AccountFavoriteRepositoryImpl @Autowired constructor(val namedParameterJdb
             hr_account_favorite t1 left join hr_account_favorite t2 on t1.parent_id=t2.id
             where
             t1.enabled=1
-            and t1.account_id=:accountId
-            and t2.account_id=:accountId
+
         """)
+        if (StringUtils.isNotEmpty(accountFavoriteQuery.accountId)) {
+            sb.append("""
+            and t1.account_id=:accountId
+            and t2.account_id=:accountId            """)
+        }
         if (StringUtils.isNotEmpty(accountFavoriteQuery.name)) {
             sb.append("""
-                and t1.name=:name
+                and t1.name LIKE CONCAT ('%',:name,'%')
             """)
         }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(), pageable)

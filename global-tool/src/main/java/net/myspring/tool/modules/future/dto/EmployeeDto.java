@@ -11,6 +11,7 @@ public class EmployeeDto {
     private String officeId;
     private String code;
     private String positionId;
+    private String positionName;
     private String leaderId;
     private String status;
     private String mobilePhone;
@@ -31,6 +32,14 @@ public class EmployeeDto {
     private String dutyCode;
     private String salerName;
     private String accountId;
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
+    }
 
     public String getId() {
         return id;
