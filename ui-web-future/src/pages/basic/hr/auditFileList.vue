@@ -71,6 +71,26 @@
           <el-button type="primary" @click="formSubmit()">确定</el-button>
         </div>
       </el-dialog>
+      <el-dialog  title="收藏夹" v-model="favoriteVisible" size="tiny" class="search-form" z-index="1500">
+        <el-form :model="inputForm" label-width="120px">
+          <el-form-item :label="$t('auditFileList.favoriteName')" prop="name">
+            <el-tree
+              :data="treeData"
+              show-checkbox
+              node-key="id"
+              ref="tree"
+              :default-expanded-keys="checked"
+              :default-checked-keys="checked"
+              @check-change="handleCheckChange"
+              :props="defaultProps">
+            </el-tree>
+
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="formSubmit()">确定</el-button>
+        </div>
+      </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('auditFileList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="id" :label="$t('auditFileList.id')" sortable></el-table-column>
         <el-table-column prop="createdByName":label="$t('auditFileList.applyAccount')"></el-table-column>
@@ -127,6 +147,13 @@
         remoteLoading:false,
         updateVisible:false,
         processTypeList:[],
+        favoriteVisible:false,
+        treeData: [],
+        checked: [],
+        defaultProps: {
+          label: 'label',
+          children: 'children'
+        }
       };
     },
     methods: {
@@ -175,15 +202,26 @@
         }).catch(()=>{});
         }
       },collect(row){
+        this.favoriteVisible=true;
         axios.get("/api/basic/hr/accountFavorite/findTreeNodeList").then((response)=>{
           console.log(response.data)
+
         })
 
 //        axios.get('/api/basic/hr/auditFileCollect/collect?auditFileId='+row.id+'&collect='+!row.collect).then((response) =>{
 //          this.$message(response.data.message);
 //          row.collect=!row.collect
 //        });
-      }, updateMemo(row){
+      }, handleCheckChange(data, checked, indeterminate) {
+        var modules = new Array()
+        var check = this.$refs.tree.getCheckedKeys();
+        for (var index in check) {
+          if (check[index].match("\^(0|[1-9][0-9]*)$") && check[index] != 0) {
+            modules.push(check[index])
+          }
+        }
+        this.inputForm.moduleIdList = modules;
+      },updateMemo(row){
         this.updateVisible=true;
         this.inputForm=JSON.parse(JSON.stringify(row));
       },formSubmit(){

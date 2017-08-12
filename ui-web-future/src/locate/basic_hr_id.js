@@ -213,6 +213,7 @@ export default {
   },
   auditFileList: {
     auditFileList: "Dokumen persetujuan",
+    favoriteName:"收藏夹",
     id: "ID",
     auditType: "jenis pemeriksaan",
     applyAccount: "formulir akun",

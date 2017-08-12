@@ -213,6 +213,7 @@ export default {
   },
   auditFileList: {
     auditFileList: "文件审批",
+    favoriteName:"收藏夹",
     id: "文件编号",
     auditType: "审批类型",
     applyAccount: "申请人",
