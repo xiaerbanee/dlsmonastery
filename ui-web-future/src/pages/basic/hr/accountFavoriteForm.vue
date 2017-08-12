@@ -4,7 +4,7 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('accountFavoriteForm.name')" prop="name">
-          <el-input v-model.number="inputForm.name"></el-input>
+          <el-input v-model="inputForm.name"></el-input>
         </el-form-item>
         <el-form-item :label="$t('accountFavoriteForm.parentId')" prop="parentId">
           <el-select v-model="inputForm.parentId" placeholder="请选择">
