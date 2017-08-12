@@ -257,7 +257,7 @@ public class ConsignmentWZService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "consignmentNotSettledAmount", "寄售未结算金额"));
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("委托代销",consignmentDtoList,simpleExcelColumnList);
         ExcelUtils.doWrite(workbook,simpleExcelSheet);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"委托代销报表"+"（"+dateStart+dateEnd+"）"+".xlsx",simpleExcelSheet);
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"委托代销报表"+"（"+dateStart+'-'+dateEnd+"）"+".xlsx",simpleExcelSheet);
         return simpleExcelBook;
     }
 
