@@ -92,7 +92,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="formSubmit()">确定</el-button>
+          <el-button type="primary" @click="collect(auditFileId,true,accountFavoriteId)">确定</el-button>
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('auditFileList.loading')" @sort-change="sortChange" stripe border>
@@ -117,8 +117,8 @@
             <div class="action"> <el-button size="small" @click.native="itemAction(scope.row.id,'verify')"  class="action" v-if="scope.row.auditable">审核</el-button></div>
             <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')"  class="action"  v-permit="'hr:auditFile:view'">详细</el-button></div>
             <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')"  class="action" v-permit="'hr:auditFile:delete'" v-if="scope.row.editable">删除</el-button></div>
-            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'collect',scope.row)"  class="action"  v-if="scope.row.collect">取消收藏</el-button></div>
-            <div class="action"><el-button size="small" @click.native="collect(scope.row)"  class="action"  v-if="!scope.row.collect">收藏</el-button></div>
+            <div class="action"><el-button size="small" @click.native="collect(scope.row.id,false,null,scope.row)"  class="action"  v-if="scope.row.collect">取消收藏</el-button></div>
+            <div class="action"><el-button size="small" @click.native="showFavorite(scope.row)"  class="action"  v-if="!scope.row.collect">收藏</el-button></div>
             <div class="action"><el-button size="small" @click.native="updateMemo(scope.row)"  v-permit="'hr:auditFile:updateMemo'">批注修改</el-button></div>
           </template>
         </el-table-column>
@@ -138,6 +138,8 @@
         formData:{
           extra:{}
         },
+        auditFileId:"",
+        accountFavoriteId:"",
         inputForm:{},
         initPromise:{},
         searchText:'',
@@ -204,7 +206,13 @@
           });
         }).catch(()=>{});
         }
-      },collect(row){
+      },collect(auditFileId,collect,accountFavoriteId,row){
+        axios.get('/api/basic/hr/auditFileCollect/collect?auditFileId='+auditFileId+'&collect='+collect+'&accountFavoriteId='+accountFavoriteId).then((response) =>{
+          this.$message(response.data.message);
+          row.collect=collect
+        });
+      },showFavorite(row){
+        this.auditFileId=row.id;
         this.favoriteVisible=true;
         axios.get("/api/basic/hr/accountFavorite/findTreeNodeList").then((response)=>{
           this.treeData=response.data
@@ -217,7 +225,8 @@
             modules.push(check[index])
           }
         }
-        this.inputForm.moduleIdList = modules;
+        this.accountFavoriteId = modules[0];
+        console.log(this.accountFavoriteId )
       },updateMemo(row){
         this.updateVisible=true;
         this.inputForm=JSON.parse(JSON.stringify(row));
