@@ -4,11 +4,8 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.DepotShop
 import net.myspring.future.modules.basic.dto.DepotReportDto
 import net.myspring.future.modules.basic.dto.DepotShopDto
-import net.myspring.future.modules.basic.web.form.DepotAccountForm
-import net.myspring.future.modules.basic.web.query.DepotQuery
 import net.myspring.future.modules.basic.web.query.DepotShopQuery
 import net.myspring.future.modules.crm.web.query.ReportQuery
-import net.myspring.future.modules.layout.dto.ShopAllotDto
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
@@ -16,11 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import java.time.LocalDateTime
 import java.util.*
 
 /**
@@ -158,17 +153,17 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findBaokaStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append("""   SELECT t6.id as depotId,t6.name as 'depotName',t6.town_id as 'townId', COUNT(t1.id) AS qty,t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type""")
+            sb.append("""   SELECT t6.id as depotId,t6.name as 'depotName',t6.town_id as 'townId', COUNT(t1.id) AS qty,t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type,t6.district_id as 'districtId'""")
         }else if(reportQuery.isDetail){
             sb.append("""
                SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName',t6.town_id as 'townId',
-               t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type
+               t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type,t6.district_id as 'districtId',t2.employee_id, t2.created_date as 'saleDate'
             """)
         }
         sb.append("""
                     FROM
                     crm_product_ime t1
-                    LEFT JOIN crm_product_ime_upload t2 ON t1.product_ime_upload_id = t2.id
+                    LEFT JOIN crm_product_ime_sale t2 on t1.product_ime_sale_id=t2.id
                     LEFT JOIN crm_product t4 on t1.product_id=t4.id
                     LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
                     LEFT JOIN crm_depot t6 on t1.depot_id=t6.id
@@ -185,12 +180,8 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if(reportQuery.date!=null){
             sb.append("""
                 AND (
-                    t2.id IS NULL
-                    OR t2.created_date > :date
-                )
-                AND (
                     t1.retail_date IS NULL
-                    OR t1.retail_date > :date
+                    OR t1.retail_date >= :date
                 )
                 AND t1.created_date < :date
             """)
@@ -232,16 +223,15 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append("""  SELECT t6.id as depotId,t6.name as depotName,t6.town_id as 'townId',COUNT(t1.id) AS qty ,t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type""")
+            sb.append("""  SELECT t6.id as depotId,t6.name as depotName,t6.town_id as 'townId',COUNT(t1.id) AS qty ,t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type,t6.district_id as 'districtId'""")
         }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName',t6.town_id as 'townId',t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type
+               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName',t6.town_id as 'townId',t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type,t6.district_id as 'districtId',t3.employee_id,t3.created_date as 'saleDate'
             """)
         }
         sb.append("""
                     FROM
                     crm_product_ime t1
-                    LEFT JOIN crm_product_ime_upload t2 ON t1.product_ime_upload_id = t2.id
                     LEFT JOIN crm_product_ime_sale t3 ON t1.product_ime_sale_id = t3.id
                     LEFT JOIN crm_product t4 on t1.product_id=t4.id
                     LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
@@ -260,11 +250,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append("""
                 AND (
                     t1.retail_date IS NULL
-                    OR t1.retail_date > :date
-                )
-                AND (
-                    t2.id IS NULL
-                    OR t2.created_date > :date
+                    OR t1.retail_date >= :date
                 )
                 AND (
                     t3.id IS NULL

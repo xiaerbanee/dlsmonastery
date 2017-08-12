@@ -14,6 +14,7 @@
             <el-dropdown-item v-permit="'crm:goodsOrder:batchAdd'" command="batchAdd">{{$t('goodsOrderList.batchAdd')}}</el-dropdown-item>
             <el-dropdown-item v-permit="'api:carrierOrder:view'" command="carrierOrder">{{$t('goodsOrderList.carrierOrder')}}</el-dropdown-item>
             <el-dropdown-item v-permit="'crm:goodsOrder:view'" command="goodsOrderImeList">{{$t('goodsOrderList.goodsOrderImeList')}}</el-dropdown-item>
+            <el-dropdown-item v-permit="'crm:goodsOrder:view'" command="goodsOrderDetailList">{{$t('goodsOrderList.goodsOrderDetailList')}}</el-dropdown-item>
             <el-dropdown-item v-permit="'crm:goodsOrder:view'" command="exportData">{{$t('goodsOrderList.exportData')}}</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -56,9 +57,6 @@
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.office')">
                 <office-select v-model="formData.areaId" :remote="false" officeRuleName="办事处" @afterInit="setSearchText"></office-select>
-              </el-form-item>
-              <el-form-item :label="$t('goodsOrderList.product')">
-                <product-select v-model="formData.productIds" multiple :hasIme=true></product-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -254,6 +252,8 @@
         this.$router.push({name:'carrierOrderList'});
       }else if(command==="goodsOrderImeList"){
         this.$router.push({ name: 'goodsOrderImeList'});
+      }else if(command==="goodsOrderDetailList"){
+        this.$router.push({ name: 'goodsOrderDetailList'});
       }else if(command==="exportData"){
         util.confirmBeforeExportData(this).then(() => {
           window.location.href='/api/ws/future/crm/goodsOrder/export?'+qs.stringify(util.deleteExtra(this.formData));

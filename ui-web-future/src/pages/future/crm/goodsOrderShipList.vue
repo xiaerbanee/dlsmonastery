@@ -30,9 +30,6 @@
               <el-form-item :label="$t('goodsOrderShipList.office')" >
                 <office-select v-model="formData.areaId" :remote="false" officeRuleName="办事处" @afterInit="setSearchText"></office-select>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderShipList.product')">
-                <product-select v-model="formData.productIds" multiple :hasIme=true></product-select>
-              </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item :label="$t('goodsOrderShipList.shipDate')" >
