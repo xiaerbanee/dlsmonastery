@@ -3,9 +3,9 @@
     <head-tab active="storeInventoryReport"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bank:view'">过滤</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:storeInventoryReport:view'">过滤</el-button>
         <el-dropdown @command="exportData">
-            <el-button type="primary"  v-permit="'crm:bank:view'">导出 <i class="el-icon-caret-bottom el-icon--right"></i></el-button>
+            <el-button type="primary"  v-permit="'crm:storeInventoryReport:view'">导出 <i class="el-icon-caret-bottom el-icon--right"></i></el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="按合计">按合计导出</el-dropdown-item>
               <el-dropdown-item command="按串码">按串码导出</el-dropdown-item>

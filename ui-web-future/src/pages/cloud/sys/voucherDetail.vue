@@ -51,8 +51,9 @@
         settings: {
           rowHeaders:true,
           autoColumnSize:true,
+          manualColumnResize:true,
           stretchH: 'all',
-          minSpareRows: 10,
+          minSpareRows: 0,
           height: 650,
           colHeaders: [],
           columns: [],

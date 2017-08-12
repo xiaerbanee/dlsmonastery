@@ -10,6 +10,7 @@ import javax.persistence.Table;
 public class OppoPushCustomerEmployee extends IdEntity<OppoPushCustomerEmployee>{
     private String customerId;
     private String userId;
+    private String companyName;
 
     public String getCustomerId() {
         return customerId;
@@ -25,5 +26,13 @@ public class OppoPushCustomerEmployee extends IdEntity<OppoPushCustomerEmployee>
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 }

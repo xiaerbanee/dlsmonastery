@@ -9,7 +9,7 @@
     <search-dialog :title="$t('afterSaleFromCompany.filter')" @hide="formVisible = false" :show="formVisible" v-model="formVisible"  size="tiny" class="search-form">
       <el-form :model="formData" :label-width="formLabelWidth">
         <el-form-item :label="$t('afterSaleFromCompany.badProductName')" prop="productIdList">
-          <product-select-filter v-model="formData.badProductName" @afterInit="setSearchText"></product-select-filter>
+          <product-select-filter v-model="formData.badProductName" :multiple = "true" @afterInit="setSearchText"></product-select-filter>
         </el-form-item>
     <!--    <el-form-item :label="$t('afterSaleFromCompany.badProductName')" >
           <el-input v-model="formData.badProductName" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>

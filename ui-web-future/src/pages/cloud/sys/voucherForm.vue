@@ -55,12 +55,14 @@
         settings: {
           rowHeaders:true,
           autoColumnSize:true,
+          manualColumnResize:true,
           minRows: 10,
           height: 650,
           colHeaders: [],
           columns: [],
           data:{},
           contextMenu: true,
+          fixedRowsTop:0,
           afterChange: function (changes, source) {
             if (source !== 'loadData') {
               for (let i = changes.length - 1; i >= 0; i--) {
