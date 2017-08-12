@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,6 +28,7 @@ import java.util.Map;
  */
 @Service
 @KingdeeDataSource
+@Transactional(readOnly = true)
 public class ConsignmentWZService {
     @Autowired
     private ConsignmentWZRepository consignmentWZRepository;
