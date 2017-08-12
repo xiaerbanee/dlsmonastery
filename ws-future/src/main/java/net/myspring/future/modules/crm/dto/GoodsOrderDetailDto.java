@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public class GoodsOrderDetailDto extends DataDto<GoodsOrderDetail> {
 
     private String productId;
+    @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
     private String productName;
     @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "outId")
     private String productOutId;
