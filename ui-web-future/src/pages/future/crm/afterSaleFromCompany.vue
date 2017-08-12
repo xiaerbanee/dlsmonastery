@@ -150,7 +150,6 @@
           }]
         },
       }
-
     },
     mounted () {
       table = new Handsontable(this.$refs["handsontable"], this.settings)
