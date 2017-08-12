@@ -48,7 +48,7 @@ class ConsignmentWZRepository @Autowired constructor(val jdbcTemplate: JdbcTempl
             JOIN T_BD_MATERIAL_L f ON a.FMATERIALID = f.FMATERIALID
         """)
         sb.append(""" union all """)
-        //findTransferInByEndDate
+        //+findTransferInByEndDate
         sb.append("""
             SELECT
                 e.FCUSTID as customerId,
@@ -69,16 +69,16 @@ class ConsignmentWZRepository @Autowired constructor(val jdbcTemplate: JdbcTempl
                 b.FDATE < :dateEnd
         """)
         sb.append(""" union all """)
-        //findTransferOutByEndDate
+        //-findTransferOutByEndDate
         sb.append("""
             SELECT
                 e.FCUSTID as customerId,
                 e.FNAME as customerName,
                 a.FMATERIALID as materialId,
                 f.FNAME as materialName,
-                a.FQTY AS quantity,
+                -a.FQTY AS quantity,
                 c.FTAXPRICE as price,
-                c.FALLAMOUNT AS amount
+                -c.FALLAMOUNT AS amount
             FROM
                 T_STK_STKTRANSFERINENTRY a
                 JOIN T_STK_STKTRANSFERIN b ON a.FID = b.FID
@@ -90,16 +90,16 @@ class ConsignmentWZRepository @Autowired constructor(val jdbcTemplate: JdbcTempl
                 b.FDATE < :dateEnd
         """)
         sb.append(""" union all """)
-        //findOutStockByEndDate
+        //-findOutStockByEndDate
         sb.append("""
             SELECT
                 b.FCUSTOMERID AS customerId,
                 e.FNAME as customerName,
                 a.FMATERIALID as materialId,
                 f.FNAME as materialName,
-                a.FREALQTY AS quantity,
+                -a.FREALQTY AS quantity,
                 c.FTAXPRICE AS price,
-                c.FALLAMOUNT AS amount
+                -c.FALLAMOUNT AS amount
             FROM
                 T_SAL_OUTSTOCKENTRY a
                 JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
