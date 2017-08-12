@@ -1,11 +1,14 @@
 package net.myspring.basic.modules.hr.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.domain.AccountFavorite;
 import net.myspring.basic.modules.hr.dto.AccountFavoriteDto;
 import net.myspring.basic.modules.hr.repository.AccountFavoriteRepository;
 import net.myspring.basic.modules.hr.web.form.AccountFavoriteForm;
 import net.myspring.basic.modules.hr.web.query.AccountFavoriteQuery;
+import net.myspring.basic.modules.sys.domain.DictEnum;
+import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.mapper.BeanUtil;
@@ -20,11 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = false)
 public class AccountFavoriteService {
 
     @Autowired
     private AccountFavoriteRepository accountFavoriteRepository;
+
+    @Autowired
+    private CacheUtils cacheUtils;
 
     public Page<AccountFavoriteDto> list(Pageable pageable, AccountFavoriteQuery accountFavoriteQuery){
         Page<AccountFavoriteDto> page=accountFavoriteRepository.findPage(pageable,accountFavoriteQuery);
@@ -49,6 +54,10 @@ public class AccountFavoriteService {
     @Transactional
     public void delete(String id){
         accountFavoriteRepository.delete(id);
+    }
+
+    public List<AccountFavorite> findAll(){
+     return  accountFavoriteRepository.findAll();
     }
 
     public List<TreeNode> findTreeNodeList(String accountId){
@@ -80,5 +89,17 @@ public class AccountFavoriteService {
             AccountFavorite accountFavorite=accountFavoriteRepository.findOne(parentId);
             return accountFavorite.getParentIds()+CharConstant.COMMA+accountFavorite+CharConstant.COMMA;
         }
+    }
+
+    public AccountFavoriteDto findOne(String id) {
+        AccountFavoriteDto accountFavoriteDto;
+        if(org.apache.commons.lang.StringUtils.isBlank(id)){
+            accountFavoriteDto = new AccountFavoriteDto();
+        } else {
+            AccountFavorite accountFavorite= accountFavoriteRepository.findOne(id);
+            accountFavoriteDto = BeanUtil.map(accountFavorite,AccountFavoriteDto.class);
+            cacheUtils.initCacheInput(accountFavoriteDto);
+        }
+        return accountFavoriteDto;
     }
 }
