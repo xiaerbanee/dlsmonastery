@@ -13,8 +13,8 @@ public enum RecruitTypeEnum {
 
     public static List<String> getList(){
         if(CollectionUtil.isEmpty(list)){
-            for(AccountChangeTypeEnum accountChangeTypeEnum:AccountChangeTypeEnum.values()){
-                list.add(accountChangeTypeEnum.name());
+            for(RecruitTypeEnum recruitTypeEnum:RecruitTypeEnum.values()){
+                list.add(recruitTypeEnum.name());
             }
         }
         return list;
