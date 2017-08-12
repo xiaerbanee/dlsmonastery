@@ -36,7 +36,7 @@ public class ArReceiveBillManager {
     @Autowired
     private CloudClient cloudClient;
 
-    public KingdeeSynReturnDto synForBankIn(BankIn bankIn, BankInAuditForm bankInAuditForm) {
+    public KingdeeSynReturnDto synForBankIn(BankIn bankIn, String auditRemarks) {
         Depot depot = depotRepository.findOne(bankIn.getShopId());
         Client client = clientRepository.findOne(depot.getClientId());
 
@@ -58,7 +58,7 @@ public class ArReceiveBillManager {
             entityDto.setBankAcntNumber(bank.getCode());
             entityDto.setFSettleTypeIdNumber(SettleTypeEnum.电汇.getFNumber());
         }
-        entityDto.setComment("审：" + bankInAuditForm.getAuditRemarks() + "   申：" + bankIn.getRemarks());
+        entityDto.setComment("审：" + auditRemarks + "   申：" + bankIn.getRemarks());
         receiveBillDto.setArReceiveBillEntryDtoList(Collections.singletonList(entityDto));
          return cloudClient.synReceiveBill(Collections.singletonList(receiveBillDto)).get(0);
     }

@@ -84,8 +84,8 @@ public class BankInController {
     @PreAuthorize("hasPermission(null,'crm:bankIn:audit')")
     public RestResponse audit(BankInAuditForm bankInAuditForm) {
 
-        if(bankInAuditForm.getPass()== null || bankInAuditForm.getSyn() == null || bankInAuditForm.getBillDate() == null){
-            throw new ServiceException("审批结果、是否同步财务、开单日期均不能为空");
+        if(bankInAuditForm.getPass()== null || bankInAuditForm.getSyn() == null ){
+            throw new ServiceException("审批结果、是否同步财务均不能为空");
         }
 
         bankInService.audit(bankInAuditForm);
@@ -105,7 +105,7 @@ public class BankInController {
             }
         }
 
-        LocalDate billDate = LocalDate.now();
+
         StringBuilder errMsg =  new StringBuilder();
         for(int i=0; i<ids.length;i++){
             try{
@@ -115,7 +115,7 @@ public class BankInController {
                 bankInAuditForm.setId(id);
                 bankInAuditForm.setPass(pass);
                 bankInAuditForm.setSyn(true);
-                bankInAuditForm.setBillDate(billDate);
+
                 audit(bankInAuditForm);
             }catch(Exception e){
                 errMsg.append("第").append(i + 1).append("条记录审核失败，失败原因：").append(e.getMessage()).append("；");
