@@ -41,10 +41,10 @@
         <el-table-column prop="officeName" column-key="officeId" :label="$t('depotAccountList.officeName')" sortable></el-table-column>
         <el-table-column prop="areaName" column-key="areaId" :label="$t('depotAccountList.areaName')" sortable></el-table-column>
         <el-table-column prop="name" :label="$t('depotAccountList.name')" sortable></el-table-column>
-        <el-table-column prop="qcys" :label="$t('depotAccountList.qcys')"></el-table-column>
-        <el-table-column prop="qmys" :label="$t('depotAccountList.qmys')" ></el-table-column>
-        <el-table-column prop="xxbzj" :label="$t('depotAccountList.xxbzj')"></el-table-column>
-        <el-table-column prop="scbzj" :label="$t('depotAccountList.scbzj')"></el-table-column>
+        <el-table-column prop="qcys" :label="$t('depotAccountList.qcys')" :formatter="moneyFormatter"></el-table-column>
+        <el-table-column prop="qmys" :label="$t('depotAccountList.qmys')" :formatter="moneyFormatter"></el-table-column>
+        <el-table-column prop="xxbzj" :label="$t('depotAccountList.xxbzj')" :formatter="moneyFormatter"></el-table-column>
+        <el-table-column prop="scbzj" :label="$t('depotAccountList.scbzj')" :formatter="moneyFormatter"></el-table-column>
         <el-table-column :label="$t('depotAccountList.operation')" >
           <template scope="scope">
             <div class="action" v-permit="'crm:depot:depotAccountData'"><el-button size="small"  @click.native="itemDetail(scope.row.clientOutId)">{{$t('depotAccountList.detail')}}</el-button></div>
@@ -119,7 +119,9 @@
       util.confirmBeforeExportData(this).then(() => {
         window.location.href='/api/ws/future/basic/depot/depotAccountExportDetail?'+qs.stringify(util.deleteExtra(this.formData));
       }).catch(()=>{});
-    }
+    },moneyFormatter(row,col){
+        return util.moneyFormatter(row,col)
+      }
   }, created (){
       this.pageHeight = 0.75*window.innerHeight;
       this.initPromise=axios.get('/api/ws/future/basic/depot/getDepotAccountQuery').then((response) =>{

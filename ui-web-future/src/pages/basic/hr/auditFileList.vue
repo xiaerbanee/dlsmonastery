@@ -79,8 +79,7 @@
               show-checkbox
               node-key="id"
               ref="tree"
-              :default-expanded-keys="checked"
-              :default-checked-keys="checked"
+              check-strictly
               @check-change="handleCheckChange"
               :props="defaultProps">
             </el-tree>
@@ -149,7 +148,6 @@
         processTypeList:[],
         favoriteVisible:false,
         treeData: [],
-        checked: [],
         defaultProps: {
           label: 'label',
           children: 'children'
@@ -204,14 +202,8 @@
       },collect(row){
         this.favoriteVisible=true;
         axios.get("/api/basic/hr/accountFavorite/findTreeNodeList").then((response)=>{
-          console.log(response.data)
-
+          this.treeData=response.data
         })
-
-//        axios.get('/api/basic/hr/auditFileCollect/collect?auditFileId='+row.id+'&collect='+!row.collect).then((response) =>{
-//          this.$message(response.data.message);
-//          row.collect=!row.collect
-//        });
       }, handleCheckChange(data, checked, indeterminate) {
         var modules = new Array()
         var check = this.$refs.tree.getCheckedKeys();

@@ -1668,6 +1668,7 @@ export default {
     pleaseSelectSaleShop:'请选择核销门店',
     alreadySaleShopName:'已核销门店',
     saleShopName:'核销门店',
+    saleShop:'核销门店',
   },
 
   productImeSaleBackForm: {
@@ -1687,9 +1688,9 @@ export default {
     inputKey: "请输入关键字",
     inputWord: "请输入关键词",
     likeSearch: "模糊搜索",
-    remarks: "备注",
+    remarks: "退回备注",
     sure: "确定",
-    save: "保存",
+    saleBack: "退回",
     filter: "过滤",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",

@@ -4,7 +4,6 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:recruit:edit'">{{$t('recruitList.add')}}</el-button>
-        <el-button type="primary" @click="batchEdit" icon="edit" v-permit="'hr:recruit:edit'">{{$t('recruitList.batchEdit')}}</el-button>
         <el-button type="primary" @click="addCategory" icon="edit" v-permit="'hr:recruit:edit'">{{$t('recruitList.addCategory')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search">{{$t('recruitList.filter')}}</el-button>
         <span v-html="searchText"></span>

@@ -9,9 +9,6 @@
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('accountFavoriteList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" :label-width="formLabelWidth">
-          <el-form-item :label="$t('accountFavoriteList.accountId')">
-            <account-select v-model="formData.accountId"></account-select>
-          </el-form-item>
           <el-form-item :label="$t('accountFavoriteList.name')">
             <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('accountFavoriteList.likeSearch')"></el-input>
           </el-form-item>
@@ -21,10 +18,9 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('accountFavoriteList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column prop="accountName" :label="$t('accountFavoriteList.accountName')"></el-table-column>
+        <el-table-column prop="parentName" label="上级文件夹"></el-table-column>
         <el-table-column prop="name" :label="$t('accountFavoriteList.name')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('accountFavoriteList.remarks')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('accountFavoriteList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('accountFavoriteList.createdDate')"></el-table-column>
         <el-table-column prop="locked" :label="$t('accountFavoriteList.locked')" width="120">
           <template scope="scope">
