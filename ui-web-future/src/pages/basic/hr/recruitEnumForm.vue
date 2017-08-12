@@ -5,7 +5,7 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('recruitEnumForm.category')" prop="category">
           <el-select v-model="inputForm.category" filterable :placeholder="$t('recruitEnumForm.selectCategory')">
-            <el-option v-for="category in inputForm.extra.categoryList" :key="category" :label="category" :value="category"></el-option>
+            <el-option v-for="category in inputForm.extra.categoryList" :key="category" :label="category" :value="category" @change="findValueByCategory(inputForm.category)"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('recruitEnumForm.value')" prop="value" v-if="inputForm.category!='初试人'&&inputForm.category!='复试人'">
@@ -44,6 +44,10 @@
           rules: {
             category: [{ required: true, message: this.$t('recruitEnumForm.prerequisiteMessage'),trigger:"blur"}],
           }
+        }
+      },findValueByCategory(category){
+        if(category){
+
         }
       },
       formSubmit(){
