@@ -12,17 +12,31 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
 
 interface AccountFavoriteRepository : BaseRepository<AccountFavorite, String>,AccountFavoriteRepositoryCustom {
-    fun findByAccountIdAndEnabledIsTrue(accountId:String):MutableList<AccountFavorite>
 
-    fun findByAccountIdAndEnabledIsTrueAndParentIdIsNull(accountId:String):MutableList<AccountFavorite>
+    @Query("""
+        SELECT t
+        FROM  #{#entityName} t
+        where t.enabled=1
+        and t.accountId=?1
+        and t.parentId=null
+    """)
+    fun findByAccountIdAndParentIdIsNull(accountId:String):MutableList<AccountFavorite>
 
-    fun findByAccountIdAndEnabledIsTrueAndParentIdIsNotNull(accountId:String):MutableList<AccountFavorite>
+    @Query("""
+             SELECT t
+        FROM  #{#entityName} t
+        where t.enabled=1
+        and t.accountId=?1
+        and t.parentId is not null
+    """)
+    fun findByAccountIdAndParentIdIsNotNull(accountId:String):MutableList<AccountFavorite>
 }
 
 interface AccountFavoriteRepositoryCustom {

@@ -53,8 +53,8 @@ public class AccountFavoriteService {
 
     public List<TreeNode> findTreeNodeList(String accountId){
         List<TreeNode> treeNodeList= Lists.newArrayList();
-        List<AccountFavorite> accountFavoriteList=accountFavoriteRepository.findByAccountIdAndEnabledIsTrueAndParentIdIsNotNull(accountId);
-        List<AccountFavorite> accountFavorites=accountFavoriteRepository.findByAccountIdAndEnabledIsTrueAndParentIdIsNull(accountId);
+        List<AccountFavorite> accountFavoriteList=accountFavoriteRepository.findByAccountIdAndParentIdIsNotNull(accountId);
+        List<AccountFavorite> accountFavorites=accountFavoriteRepository.findByAccountIdAndParentIdIsNull(accountId);
         for(AccountFavorite accountFavorite:accountFavorites){
             TreeNode treeNode=new TreeNode(accountFavorite.getId(),accountFavorite.getName());
             treeNodeList.add(treeNode);
