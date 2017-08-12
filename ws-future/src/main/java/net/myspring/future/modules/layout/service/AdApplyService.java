@@ -192,7 +192,7 @@ public class AdApplyService {
             adApply.setLeftQty(applyQty);
             adApply.setShopId(adApplyForm.getShopId());
             adApply.setProductId(productAdForm.getId());
-            adApply.setRemarks(adApplyForm.getRemarks());
+            adApply.setRemarks(StringUtils.trimToEmpty(adApplyForm.getRemarks()));
             adApply.setExpiryDateRemarks(productAdForm.getExpiryDateRemarks());
             adApplyList.add(adApply);
         }
@@ -208,7 +208,7 @@ public class AdApplyService {
                 throw new ServiceException("修改的确认数不能小于已开单数");
             }
             adApply.setLeftQty(adApplyEditForm.getConfirmQty()-adApply.getBilledQty());
-            adApply.setRemarks(adApplyEditForm.getRemarks());
+            adApply.setRemarks(StringUtils.trimToEmpty(adApplyEditForm.getRemarks()));
             adApplyRepository.save(adApply);
         }
     }
@@ -236,7 +236,7 @@ public class AdApplyService {
             adApply.setBilledQty(0);
             adApply.setLeftQty(depotAdApplyForm.getApplyQty());
             adApply.setExpiryDateRemarks(product.getExpiryDateRemarks());
-            adApply.setRemarks(adApplyGoodsForm.getRemarks());
+            adApply.setRemarks(StringUtils.trimToEmpty(adApplyGoodsForm.getRemarks()));
             adApplyList.add(adApply);
         }
         adApplyRepository.save(adApplyList);
