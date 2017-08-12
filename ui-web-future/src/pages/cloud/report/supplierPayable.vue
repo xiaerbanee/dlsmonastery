@@ -36,20 +36,20 @@
           <el-table-column prop="date" label="单据日期"></el-table-column>
           <el-table-column prop="materialName" label="商品名称"></el-table-column>
           <el-table-column prop="qty" label="数量"></el-table-column>
-          <el-table-column prop="price" label="单价"></el-table-column>
-          <el-table-column prop="amount" label="金额"></el-table-column>
-          <el-table-column prop="payableAmount" label="应付"></el-table-column>
-          <el-table-column prop="actualPayAmount" label="实付"></el-table-column>
-          <el-table-column prop="endAmount" label="期末"></el-table-column>
+          <el-table-column prop="price" label="单价" :formatter="moneyFormatter"></el-table-column>
+          <el-table-column prop="amount" label="金额" :formatter="moneyFormatter"></el-table-column>
+          <el-table-column prop="payableAmount" label="应付" :formatter="moneyFormatter"></el-table-column>
+          <el-table-column prop="actualPayAmount" label="实付" :formatter="moneyFormatter"></el-table-column>
+          <el-table-column prop="endAmount" label="期末" :formatter="moneyFormatter"></el-table-column>
           <el-table-column prop="note" label="摘要"></el-table-column>
         </el-table>
       </el-dialog>
       <el-table :data="summary" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." stripe border>
         <el-table-column fixed prop="supplierName" label="供应商名称" sortable width="200"></el-table-column>
-        <el-table-column prop="beginAmount" label="期初应付"></el-table-column>
-        <el-table-column prop="payableAmount" label="应付金额"></el-table-column>
-        <el-table-column prop="actualPayAmount" label="实付金额"></el-table-column>
-        <el-table-column prop="endAmount" label="期末应付"></el-table-column>
+        <el-table-column prop="beginAmount" label="期初应付" :formatter="moneyFormatter"></el-table-column>
+        <el-table-column prop="payableAmount" label="应付金额" :formatter="moneyFormatter"></el-table-column>
+        <el-table-column prop="actualPayAmount" label="实付金额" :formatter="moneyFormatter"></el-table-column>
+        <el-table-column prop="endAmount" label="期末应付" :formatter="moneyFormatter"></el-table-column>
         <el-table-column fixed="right" label="操作" width="200">
           <template scope="scope">
             <el-button size="small" @click="detailAction(scope.row.supplierId)">详细</el-button>
@@ -104,6 +104,9 @@
         this.$nextTick(function () {
           this.searchText = util.getSearchText(this.$refs.searchDialog);
         })
+      },
+      moneyFormatter(row,col){
+        return util.moneyFormatter(row,col)
       },
       pageRequest() {
         this.pageLoading = true;
