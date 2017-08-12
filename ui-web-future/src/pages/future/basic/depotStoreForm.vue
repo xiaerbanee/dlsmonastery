@@ -11,10 +11,7 @@
                 <el-option v-for="item in inputForm.extra.jointLevelList" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="仓库类型" prop="type">
-              <el-select v-model="inputForm.type" filterable>
-                <el-option v-for="item in inputForm.extra.depotStoreTypeList" :key="item" :label="item" :value="item"></el-option>
-              </el-select>
+            <el-form-item label="仓库类型" prop="type">{{inputForm.type}}
             </el-form-item>
             <el-form-item label="是否是广告仓库" prop="popShop">
               <bool-radio-group v-model="inputForm.popShop"></bool-radio-group>
@@ -53,7 +50,6 @@
         },
         rules: {
           depotId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          type: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           jointLevel:[{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           popShop: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           storeGroup: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],

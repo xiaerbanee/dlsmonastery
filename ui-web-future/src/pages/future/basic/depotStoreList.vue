@@ -4,6 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus"  >添加</el-button>
+        <el-button type="primary" @click="itemAddAgency" icon="plus">代理库添加</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search">过滤</el-button>
         <span v-html="searchText"></span>
       </el-row>
@@ -109,10 +110,12 @@
         this.formVisible = false;
         this.pageRequest();
       },itemAdd(){
+        this.$router.push({ name: 'depotStoreAddForm'})
+      },itemAddAgency(){
         this.$router.push({ name: 'depotStoreForm'})
       },itemAction:function(id,action){
         if(action=="edit") {
-          this.$router.push({ name: 'depotStoreForm', query: { id: id }})
+          this.$router.push({ name: 'depotStoreAddForm', query: { id: id }})
         }else if(action=="delete"){
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/ws/future/basic/depotStore/delete',{params:{id:id}}).then((response) =>{
