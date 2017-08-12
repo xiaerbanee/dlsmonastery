@@ -51,6 +51,11 @@
               <el-form-item label="是否收藏">
                 <bool-select v-model="formData.collect"></bool-select>
               </el-form-item>
+              <el-form-item label="收藏夹" prop="accountFavoriteId">
+                <el-select v-model="formData.accountFavoriteId" filterable clearable :placeholder="$t('auditFileForm.inputWord')">
+                  <el-option v-for="type in formData.extra.accountFavoriteList" :key="type.id" :label="type.name" :value="type.id"></el-option>
+                </el-select>
+              </el-form-item>
               <el-form-item label="收藏日期">
                 <date-range-picker v-model="formData.collectDate"></date-range-picker>
               </el-form-item>
@@ -61,7 +66,7 @@
           <el-button type="primary" @click="search()">{{$t('auditFileList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-dialog  title="订单详细" v-model="updateVisible" size="tiny" class="search-form" z-index="1500">
+      <el-dialog  title="选择收藏夹" v-model="updateVisible" size="tiny" class="search-form" z-index="1500">
         <el-form :model="inputForm" label-width="120px">
               <el-form-item :label="$t('auditFileList.memo')" prop="memo">
                 <el-input v-model="inputForm.memo"></el-input>

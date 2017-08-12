@@ -32,9 +32,18 @@ public class AuditFileQuery extends BaseQuery {
     private boolean collect;
     private String collectDate;
     private String accountId;
+    private String accountFavoriteId;
     private List<String> positionIdList=Lists.newArrayList();
     private List<String> processTypeIdList=Lists.newArrayList();
     private List<String> processFlowIdList=Lists.newArrayList();
+
+    public String getAccountFavoriteId() {
+        return accountFavoriteId;
+    }
+
+    public void setAccountFavoriteId(String accountFavoriteId) {
+        this.accountFavoriteId = accountFavoriteId;
+    }
 
     public String getAccountId() {
         if(StringUtils.isBlank(accountId)){

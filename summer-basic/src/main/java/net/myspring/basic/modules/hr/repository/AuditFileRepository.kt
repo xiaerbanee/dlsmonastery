@@ -46,6 +46,9 @@ class AuditFileRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempl
         }
         if (auditFileQuery.collect) {
             sb.append("and t2.account_id =:accountId ")
+            if (StringUtils.isNotEmpty(auditFileQuery.accountFavoriteId)) {
+                sb.append(" and t2.account_favorite_id=:accountFavoriteId ")
+            }
             if (auditFileQuery.collectDateStart != null) {
                 sb.append(" and t2.collect_date >=:collectDateStart ")
             }
