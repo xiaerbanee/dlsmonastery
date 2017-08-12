@@ -140,6 +140,7 @@
         },
         auditFileId:"",
         accountFavoriteId:"",
+        row:{},
         inputForm:{},
         initPromise:{},
         searchText:'',
@@ -207,11 +208,13 @@
         }).catch(()=>{});
         }
       },collect(auditFileId,collect,accountFavoriteId,row){
+        this.favoriteVisible=false;
         axios.get('/api/basic/hr/auditFileCollect/collect?auditFileId='+auditFileId+'&collect='+collect+'&accountFavoriteId='+accountFavoriteId).then((response) =>{
           this.$message(response.data.message);
-          row.collect=collect
+          this.row.collect=collect
         });
       },showFavorite(row){
+        this.row=row;
         this.auditFileId=row.id;
         this.favoriteVisible=true;
         axios.get("/api/basic/hr/accountFavorite/findTreeNodeList").then((response)=>{
