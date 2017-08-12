@@ -6,10 +6,10 @@
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:recruit:edit'">{{$t('recruitList.add')}}</el-button>
         <el-button type="primary" @click="batchEdit" icon="edit" v-permit="'hr:recruit:edit'">{{$t('recruitList.batchEdit')}}</el-button>
         <el-button type="primary" @click="addCategory" icon="edit" v-permit="'hr:recruit:edit'">{{$t('recruitList.addCategory')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:recruit:view'">{{$t('recruitList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search">{{$t('recruitList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible = false" :title="$t('recruitList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible = false" :title="$t('recruitList.filter')" v-model="formVisible" size="medium " class="search-form">
         <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="12">
@@ -58,10 +58,9 @@
         <el-table-column prop="sex" :label="$t('recruitList.sex')"></el-table-column>
         <el-table-column prop="mobilePhone" :label="$t('recruitList.mobilePhone')"></el-table-column>
         <el-table-column prop="applyPositionId" :label="$t('recruitList.positionName')"></el-table-column>
-        <el-table-column prop="education" :label="$t('recruitList.education')"></el-table-column>
         <el-table-column prop="firstAppointDate" :label="$t('recruitList.firstAppointDate')"></el-table-column>
         <el-table-column prop="secondAppointDate" :label="$t('recruitList.secondAppointDate')"></el-table-column>
-        <el-table-column prop="physicalAppointDate" :label="$t('recruitList.physicalAppointDate')"></el-table-column>
+        <el-table-column prop="auditAppointDate" :label="$t('recruitList.auditAppointDate')"></el-table-column>
         <el-table-column prop="entryRealDate" :label="$t('recruitList.entryRealDate')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('recruitList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('expressOrderList.operation')" width="140">
