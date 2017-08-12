@@ -4,25 +4,17 @@
   <div>
     <head-tab active="consignmentReport"></head-tab>
     <div>
-      <el-row>
-        <el-button type="primary"@click="formVisible = true" icon="search">过滤</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
-      </el-row>
-      <search-dialog @enter="search()"  :show="formVisible" @hide="formVisible = false" title="过滤" v-model="formVisible" size="tiny" class="search-form">
-        <el-form :model="formData" :label-width="formLabelWidth">
-          <el-row :gutter="7">
-            <el-col :span="24">
-              <el-form-item :label="formLabel.dateRange.label" >
-                <date-range-picker v-model="formData.dateRange"></date-range-picker>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="search()">搜索</el-button>
-        </div>
-      </search-dialog>
-      <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px;"></div>
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
+        <el-form-item label="开始日期"  prop="dateStart">
+          <date-picker v-model="formData.dateStart"></date-picker>
+        </el-form-item>
+        <el-form-item label="结束日期"  prop="dateEnd">
+          <date-picker v-model="formData.dateEnd"></date-picker>
+        </el-form-item>
+        <el-button type="primary" @click="search()" icon="search">搜索</el-button>
+        <el-button type="primary" @click="exportData()" icon="export">导出</el-button>
+        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
+      </el-form>
     </div>
   </div>
 </template>
@@ -31,11 +23,10 @@
 </style>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js';
+  var table = null;
   export default {
     data() {
       return {
-        submitDisabled:false,
-        table:null,
         settings: {
           data:{},
           rowHeaders:true,
@@ -48,54 +39,57 @@
           colHeaders: ["客户代码","客户名称","商品代码","商品名称","寄售期初数量","寄售期初单价","寄售期初金额","寄售发出数量","寄售发出单价","寄售发出金额",
             "寄售结算数量","寄售结算单价","寄售结算金额","寄售未结算数量","寄售未结算单价","寄售未结算金额"],
           columns: [
-            {data:'customerCode', type: 'text'},
-            {data:'customerName', type: 'text'},
-            {data:'goodsCode', type: 'text'},
-            {data:'goodsName', type: 'text'},
-            {data:'consignmentInitialQuantity', type: 'numeric'},
-            {data:'consignmentInitialPrice', type: 'numeric',format:"0,0.00"},
-            {data:'consignmentInitialAmount', type: 'numeric',format:"0,0.00"},
-            {data:'consignmentSendQuantity', type: 'numeric'},
-            {data:'consignmentSendPrice', type: 'numeric',format:"0,0.00"},
-            {data:'consignmentSendAmount', type: 'numeric',format:"0,0.00"},
-            {data:'consignmentSettlementQuantity', type: 'numeric'},
-            {data:'consignmentSettlementPrice', type: 'numeric',format:"0,0.00"},
-            {data:'consignmentSettlementAmount', type: 'numeric',format:"0,0.00"},
-            {data:'consignmentNotSettledQuantity', type: 'numeric'},
-            {data:'consignmentNotSettledPrice', type: 'numeric',format:"0,0.00"},
-            {data:'consignmentNotSettledAmount', type: 'numeric',format:"0,0.00"}
+            {data:'customerCode', type: 'text', readOnly:true},
+            {data:'customerName', type: 'text', readOnly:true},
+            {data:'goodsCode', type: 'text', readOnly:true},
+            {data:'goodsName', type: 'text', readOnly:true},
+            {data:'consignmentInitialQuantity', type: 'numeric', readOnly:true},
+            {data:'consignmentInitialPrice', type: 'numeric',format:"0,0.00", readOnly:true},
+            {data:'consignmentInitialAmount', type: 'numeric',format:"0,0.00", readOnly:true},
+            {data:'consignmentSendQuantity', type: 'numeric', readOnly:true},
+            {data:'consignmentSendPrice', type: 'numeric',format:"0,0.00", readOnly:true},
+            {data:'consignmentSendAmount', type: 'numeric',format:"0,0.00", readOnly:true},
+            {data:'consignmentSettlementQuantity', type: 'numeric', readOnly:true},
+            {data:'consignmentSettlementPrice', type: 'numeric',format:"0,0.00", readOnly:true},
+            {data:'consignmentSettlementAmount', type: 'numeric',format:"0,0.00", readOnly:true},
+            {data:'consignmentNotSettledQuantity', type: 'numeric', readOnly:true},
+            {data:'consignmentNotSettledPrice', type: 'numeric',format:"0,0.00", readOnly:true},
+            {data:'consignmentNotSettledAmount', type: 'numeric',format:"0,0.00", readOnly:true}
           ],
         },
         formData: {
-          dateRange: '',
+          dateStart: new Date().toLocaleDateString(),
+          dateEnd:new Date().toLocaleDateString(),
         },
-        formLabel:{
-          dateRange:{label:"日期"},
+        rules: {
+          dateStart: [{ required: true, message: '必填项'}],
+          dateEnd: [{ required: true, message: '必填项'}],
         },
         formLabelWidth: '28%',
         formVisible: false,
       };
     },
-    mounted () {
-      axios.get("/api/global/cloud/report/consignmentReport/report").then((response)=>{
-        this.settings.data = response.data.consignmentDtoList;
-        this.formData.dateRange = response.data.dateRange;
-        this.table = new Handsontable(this.$refs["handsontable"], this.settings)
-      })
-    },
     methods: {
       search(){
-        this.formVisible = false;
-        util.getQuery("consignmentReport");
-        util.setQuery("consignmentReport",this.formData);
-        util.copyValue(this.formData,this.submitData);
-        axios.get("/api/global/cloud/report/consignmentReport/report",{params:this.submitData}).then((response)=>{
-          this.settings.data = response.data.consignmentDtoList;
-          this.formData.dateRange = response.data.dateRange;
+        this.initPage();
+      },
+      initPage() {
+        this.formData.dateStart = util.formatLocalDate(this.formData.dateStart);
+        this.formData.dateEnd = util.formatLocalDate(this.formData.dateEnd);
+        axios.get("/api/global/cloud/report/consignmentWZ/list",qs.stringify(this.formData,{allowDots:true})).then((response)=>{
+          this.settings.data = response.data;
+          table = new Handsontable(this.$refs["handsontable"], this.settings)
         })
+      },
+      exportData(){
+        this.formData.dateStart = util.formatLocalDate(this.formData.dateStart);
+        this.formData.dateEnd = util.formatLocalDate(this.formData.dateEnd);
+        if(confirm("确认导出数据?")){
+          window.location.href = '/api/global/cloud/report/consignmentWZ/export?dateStart='+this.formData.dateStart+"&dateEnd="+this.formData.dateEnd;
+        }
       }
     },created () {
-
+      this.initPage();
     }
   };
 </script>

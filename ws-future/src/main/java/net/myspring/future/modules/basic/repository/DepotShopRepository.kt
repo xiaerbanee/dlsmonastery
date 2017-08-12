@@ -77,6 +77,9 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (StringUtils.isNotEmpty(depotShopQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
         }
+        if (StringUtils.isNotEmpty(depotShopQuery.clientName)) {
+            sb.append("""  and t4.name LIKE CONCAT('%',:clientName,'%') """)
+        }
         if (StringUtils.isNotEmpty(depotShopQuery.areaType)) {
             sb.append("""  and t1.area_type =:areaType  """)
         }
@@ -456,6 +459,9 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         """)
         if (StringUtils.isNotEmpty(depotShopQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
+        if (StringUtils.isNotEmpty(depotShopQuery.clientName)) {
+            sb.append("""  and t4.name LIKE CONCAT('%',:clientName,'%') """)
         }
         if (StringUtils.isNotEmpty(depotShopQuery.areaType)) {
             sb.append("""  and t1.area_type =:areaType  """)
