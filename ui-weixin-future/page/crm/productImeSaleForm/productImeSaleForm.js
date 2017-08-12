@@ -8,7 +8,6 @@ Page({
     formProperty: {},
     response: {},
     shops: [],
-    saleShopId: null,
     saleShopName: null,
     submitDisabled: false,
   },
@@ -60,46 +59,45 @@ Page({
           if (res.errMsg) {
             that.setData({ "response.error": res.data });
           }
+          wx.request({
+            url: $util.getUrl("ws/future/crm/productImeSale/findProductImeForSaleDto"),
+            data: that.data.formData,
+            header: {
+              Cookie: "JSESSIONID=" + app.globalData.sessionId
+            },
+            success: function (res) {
+              console.log(res.data)
+              that.setData({ productImeSearchResult: res.data });
+              wx.request({
+                url: $util.getUrl('ws/future/basic/depot/shop'),
+                data: {},
+                method: 'GET',
+                header: {
+                  Cookie: "JSESSIONID=" + app.globalData.sessionId
+                },
+                success: function (res) {
+                  console.log(res.data)
+                  if(res.data.length==1){
+                    that.setData({'formData.saleShopId': res.data[0].id,'formData.saleFormName':res.data[0].name})
+                  }
+                }
+              })
+            }
+          })
         }
       });
-      wx.request({
-        url: $util.getUrl("ws/future/crm/productImeSale/findProductImeForSaleDto"),
-        data: that.data.formData,
-        header: {
-          Cookie: "JSESSIONID=" + app.globalData.sessionId
-        },
-        success: function (res) {
-          console.log(res.data)
-          that.setData({ shops: res.data[0].accessChainDepotList })
-          that.setData({ productImeSearchResult: res.data });
-        }
-      })
     }
   },
-  bindSaleShop: function (e) {
-    var that = this;
-    that.setData({
-      saleShopId: that.data.shops[e.detail.value].id,
-      saleShopName: that.data.shops[e.detail.value].name,
+  bindShop: function (e) {
+    wx.navigateTo({
+      url: '/page/crm/depotSearch/depotSearch?category=shop'
     })
   },
   formSubmit: function (e) {
     var that = this;
     that.setData({ submitDisabled: true });
-    if (that.data.shops.length!=0&&!that.data.saleShopName){
-      that.setData({ submitDisabled: false,"response.error":"核销门店必填"});
-      return;
-    }
-    if (that.data.productImeSearchResult.length != 0) {
-      var productImeSaleDetailList = new Array();
-      if (that.data.saleShopId) {
-        productImeSaleDetailList.push({ saleShopId: that.data.saleShopId, productImeId: that.data.productImeSearchResult[0].id });
-      } else {
-        productImeSaleDetailList.push({ saleShopId: null, productImeId: that.data.productImeSearchResult[0].id });
-      }
-      e.detail.value.productImeSaleDetailStr = JSON.stringify(productImeSaleDetailList);
       wx.request({
-        url: $util.getUrl("ws/future/crm/productImeSale/sale"),
+        url: $util.getUrl("ws/future/crm/productImeSale/saleIme"),
         data: e.detail.value,
         header: {
           Cookie: "JSESSIONID=" + app.globalData.sessionId,
@@ -115,9 +113,6 @@ Page({
           }
         }
       })
-    } else {
-      that.setData({ submitDisabled: false });
-    }
   },
   showError: function (e) {
     var that = this;
