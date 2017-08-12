@@ -58,7 +58,10 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrderDetail> {
     private String storeName;
 
     public BigDecimal getAmount() {
-        return price.multiply(new BigDecimal(billQty));
+        if(price!=null&&billQty!=null){
+            return price.multiply(new BigDecimal(billQty));
+        }
+        return BigDecimal.ZERO;
     }
 
     public void setAmount(BigDecimal amount) {
