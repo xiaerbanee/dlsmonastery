@@ -7,6 +7,7 @@ import java.util.List;
 public class DepotShopQuery extends BaseQuery {
 
     private String name;
+    private String clientName;
     private String outType;
     private String type;
     private Boolean ScoreType;
@@ -43,6 +44,14 @@ public class DepotShopQuery extends BaseQuery {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
     }
 
     public String getOutType() {

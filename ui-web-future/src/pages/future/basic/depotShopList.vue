@@ -14,7 +14,10 @@
           <el-row :gutter="4">
             <el-col :span="12">
               <el-form-item label="门店名称" >
-                <el-input v-model="formData.name" auto-complete="off"></el-input>
+                <el-input v-model="formData.name" auto-complete="off" placeholder="模糊搜索"></el-input>
+              </el-form-item>
+              <el-form-item label="金蝶名称" >
+                <el-input v-model="formData.clientName" auto-complete="off" placeholder="模糊搜索"></el-input>
               </el-form-item>
               <el-form-item label="区域类型"  >
                 <dict-map-select  v-model="formData.areaType" category="门店_地区属性"></dict-map-select>

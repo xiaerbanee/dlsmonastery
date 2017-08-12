@@ -4,8 +4,10 @@ import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.ArReceiveBillDto;
 import net.myspring.cloud.modules.input.dto.ArReceiveBillEntryDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.common.enums.SettleTypeEnum;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.domain.Client;
@@ -36,7 +38,7 @@ public class ArReceiveBillManager {
     @Autowired
     private CloudClient cloudClient;
 
-    public KingdeeSynReturnDto synForBankIn(BankIn bankIn, BankInAuditForm bankInAuditForm) {
+    public KingdeeSynReturnDto synForBankIn(BankIn bankIn, String auditRemarks) {
         Depot depot = depotRepository.findOne(bankIn.getShopId());
         Client client = clientRepository.findOne(depot.getClientId());
 
@@ -58,7 +60,9 @@ public class ArReceiveBillManager {
             entityDto.setBankAcntNumber(bank.getCode());
             entityDto.setFSettleTypeIdNumber(SettleTypeEnum.电汇.getFNumber());
         }
-        entityDto.setComment("审：" + bankInAuditForm.getAuditRemarks() + "   申：" + bankIn.getRemarks());
+        if(!RequestUtils.getCompanyName().equals(CompanyNameEnum.WZOPPO.name())){
+            entityDto.setComment("审：" + auditRemarks + "   申：" + bankIn.getRemarks());
+        }
         receiveBillDto.setArReceiveBillEntryDtoList(Collections.singletonList(entityDto));
          return cloudClient.synReceiveBill(Collections.singletonList(receiveBillDto)).get(0);
     }

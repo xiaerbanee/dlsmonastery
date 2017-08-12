@@ -38,6 +38,11 @@
           }
           for(var index in response.data) {
             var item = response.data[index];
+            var sub1="移动";/**/
+            var sub2="联信";/**/
+            if(item.name.indexOf(sub1)>=0||item.name.indexOf(sub2)>=0){/**/
+              item.name=item.name.substring(0,item.name.length-4);/**/
+            }/**/
             if(idList.indexOf(item.id)<0) {
               newList.push(item);
             }
