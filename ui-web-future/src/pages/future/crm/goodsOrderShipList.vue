@@ -83,7 +83,7 @@
         <el-table-column prop="status" :label="$t('goodsOrderShipList.status')"></el-table-column>
         <el-table-column prop="shopName" :label="$t('goodsOrderShipList.shop')" width="160"></el-table-column>
         <el-table-column prop="shipType" :label="$t('goodsOrderShipList.shipType')"></el-table-column>
-        <el-table-column prop="amount" :label="$t('goodsOrderShipList.amount')" ></el-table-column>
+        <el-table-column prop="amount" :label="$t('goodsOrderShipList.amount')" :formatter="moneyFormatter"></el-table-column>
         <el-table-column prop="storeName" :label="$t('goodsOrderShipList.store')" ></el-table-column>
         <el-table-column prop="remarks" :label="$t('goodsOrderShipList.remarks')" width="200"></el-table-column>
         <el-table-column prop="netType" :label="$t('goodsOrderShipList.netType')" ></el-table-column>
@@ -188,6 +188,8 @@
       }
     },itemShip(businessId){
       this.$router.push({name:'goodsOrderShip',query:{businessId:businessId}});
+    },moneyFormatter(row,col){
+      return util.moneyFormatter(row,col)
     }
  },created () {
      this.pageHeight = 0.75*window.innerHeight;
