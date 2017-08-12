@@ -2,13 +2,12 @@ package net.myspring.basic.modules.hr.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.utils.CacheUtils;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.AccountFavorite;
 import net.myspring.basic.modules.hr.dto.AccountFavoriteDto;
 import net.myspring.basic.modules.hr.repository.AccountFavoriteRepository;
 import net.myspring.basic.modules.hr.web.form.AccountFavoriteForm;
 import net.myspring.basic.modules.hr.web.query.AccountFavoriteQuery;
-import net.myspring.basic.modules.sys.domain.DictEnum;
-import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.mapper.BeanUtil;
@@ -40,6 +39,7 @@ public class AccountFavoriteService {
     public AccountFavorite save(AccountFavoriteForm accountFavoriteForm){
         AccountFavorite accountFavorite;
         accountFavoriteForm.setParentIds(getParentIds(accountFavoriteForm.getParentId()));
+        accountFavoriteForm.setAccountId(RequestUtils.getAccountId());
         if(accountFavoriteForm.isCreate()){
             accountFavorite= BeanUtil.map(accountFavoriteForm,AccountFavorite.class);
             accountFavoriteRepository.save(accountFavorite);
@@ -57,7 +57,14 @@ public class AccountFavoriteService {
     }
 
     public List<AccountFavorite> findAll(){
-     return  accountFavoriteRepository.findAll();
+        String accountId=RequestUtils.getAccountId();
+        List<AccountFavorite> list = accountFavoriteRepository.findByAccountIdAndEnabledIsTrue(accountId);
+        for(AccountFavorite accountFavorite:list){
+            for(int i=0;i<StringUtils.getSplitList(accountFavorite.getParentIds(),CharConstant.COMMA).size()-1;i++){
+                accountFavorite.setName(CharConstant.SPACE_FULL+accountFavorite.getName());
+            }
+        }
+        return list;
     }
 
     public List<TreeNode> findTreeNodeList(String accountId){

@@ -122,7 +122,7 @@ public class BankInService {
         bankIn.setInputDate(bankInForm.getInputDate());
         bankIn.setAmount(bankInForm.getAmount());
         bankIn.setSerialNumber(bankInForm.getSerialNumber());
-        bankIn.setRemarks(bankInForm.getRemarks());
+        bankIn.setRemarks(StringUtils.trimToEmpty(bankInForm.getRemarks()));
         bankInRepository.save(bankIn);
 
         if(bankInForm.isCreate()) {
