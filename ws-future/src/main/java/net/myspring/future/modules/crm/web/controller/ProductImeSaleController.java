@@ -5,6 +5,9 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.service.DepotService;
+import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.dto.ProductImeForSaleDto;
 import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
 import net.myspring.future.modules.crm.service.ProductImeSaleService;
@@ -30,6 +33,8 @@ public class ProductImeSaleController {
 
     @Autowired
     private ProductImeSaleService productImeSaleService;
+    @Autowired
+    private DepotService depotService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ProductImeSaleDto> list(Pageable pageable, ProductImeSaleQuery productImeSaleQuery){
@@ -54,7 +59,12 @@ public class ProductImeSaleController {
 
     @RequestMapping(value = "checkForSale")
     public String checkForSale(String imeStr) {
-        return null;
+
+        List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+        if(imeList.size() == 0){
+            return null;
+        }
+        return productImeSaleService.checkForSale(imeList);
     }
 
     @RequestMapping(value = "checkForSaleBack")
@@ -72,6 +82,7 @@ public class ProductImeSaleController {
     }
 
     @RequestMapping(value = "sale")
+    @Deprecated
     public RestResponse sale(ProductImeSaleForm productImeSaleForm) {
         List<String> imeList = productImeSaleForm.getImeList();
         if(CollectionUtil.isEmpty(imeList)){
@@ -82,16 +93,25 @@ public class ProductImeSaleController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
+    @RequestMapping(value = "saleIme")
+    public RestResponse saleIme(ProductImeSaleForm productImeSaleForm) {
+        List<String> imeList = productImeSaleForm.getImeList();
+        if(CollectionUtil.isEmpty(imeList)){
+            throw new ServiceException("没有输入任何有效的串码");
+        }
+        if(StringUtils.isBlank(productImeSaleForm.getSaleShopId())){
+            throw new ServiceException("核销门店不可以为空");
+        }
+
+        productImeSaleService.saleIme(productImeSaleForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
     @RequestMapping(value = "saleBack")
     public RestResponse saleBack(ProductImeSaleBackForm productImeSaleBackForm) {
         List<String> imeList = productImeSaleBackForm.getImeList();
         if(CollectionUtil.isEmpty(imeList)){
             throw new ServiceException("没有输入任何有效的串码");
-        }
-
-        String errMsg = productImeSaleService.checkForSaleBack(imeList);
-        if(StringUtils.isNotBlank(errMsg)){
-            throw new ServiceException(errMsg);
         }
 
         productImeSaleService.saleBack(productImeSaleBackForm);
@@ -109,6 +129,13 @@ public class ProductImeSaleController {
 
     @RequestMapping(value="getSaleForm")
     public  ProductImeSaleForm getSaleForm(ProductImeSaleForm productImeSaleForm) {
+        List<DepotDto> depotList = depotService.findShopList(new DepotQuery());
+        if(depotList.size() == 1){
+            productImeSaleForm.getExtra().put("defaultSaleShopId", depotList.get(0).getId());
+        }else{
+            productImeSaleForm.getExtra().put("defaultSaleShopId", null);
+        }
+
         return productImeSaleForm;
     }
 

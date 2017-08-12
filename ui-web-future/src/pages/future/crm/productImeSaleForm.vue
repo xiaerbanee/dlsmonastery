@@ -2,7 +2,7 @@
   <div>
     <head-tab active="productImeSaleForm"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm"  :rules="rules" label-width="120px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm"  :rules="rules" label-width="100px" class="form input-form">
         <el-row >
           <el-col :span="21">
             <el-form-item>
@@ -10,69 +10,66 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20">
-          <el-col :span="6">
+        <el-row >
+          <el-col :span="8">
             <el-form-item :label="$t('productImeSaleForm.ime')" prop="imeStr">
               <el-input type="textarea" :rows="6" v-model="inputForm.imeStr" :placeholder="$t('productImeSaleForm.inputIme')"></el-input>
             </el-form-item>
             <el-form-item >
               <el-button  type="primary" @click.native="searchImeStr">{{$t('productImeSaleForm.search')}}</el-button>
               <el-button  type="primary" @click.native="reset">{{$t('productImeSaleForm.reset')}}</el-button>
-
             </el-form-item>
-            <div v-if="searched">
+          </el-col>
+          <div v-if="searched">
+            <el-col :span="8">
+              <el-form-item :label="$t('productImeSaleForm.saleShop')" prop="saleShopId" >
+                <depot-select v-model="inputForm.saleShopId" category="shop"></depot-select>
+              </el-form-item>
               <el-form-item :label="$t('productImeSaleForm.buyer')" prop="buyer" >
                 <el-input  v-model="inputForm.buyer"></el-input>
               </el-form-item>
               <el-form-item :label="$t('productImeSaleForm.buyerAge')" prop="buyerAge" >
                 <el-input  v-model.number="inputForm.buyerAge"></el-input>
               </el-form-item>
+              <el-form-item  :label="$t('productImeSaleForm.buyerPhone')" prop="buyerPhone" >
+                <el-input  v-model="inputForm.buyerPhone"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
               <el-form-item :label="$t('productImeSaleForm.buyerSex')" prop="buyerSex"  >
                 <el-radio-group v-model="inputForm.buyerSex">
                   <el-radio :label="$t('productImeSaleForm.man')"></el-radio>
                   <el-radio :label="$t('productImeSaleForm.women')"></el-radio>
                 </el-radio-group>
               </el-form-item>
-              <el-form-item  :label="$t('productImeSaleForm.buyerPhone')" prop="buyerPhone" >
-                <el-input  v-model="inputForm.buyerPhone"></el-input>
-              </el-form-item>
               <el-form-item :label="$t('productImeSaleForm.remarks')" prop="remarks" >
-                <el-input type="textarea" :rows="2" v-model="inputForm.remarks"></el-input>
+                <el-input type="textarea" :rows="3" v-model="inputForm.remarks"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" >{{$t('productImeSaleForm.save')}}</el-button>
               </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="18" v-if="searched">
+            </el-col>
+          </div>
+        </el-row>
+        <el-row :gutter="24" v-if="searched">
+          <el-col :span="6" >
             <template>
               <el-table :data="productQtyList" style="width: 100%" border>
                 <el-table-column prop="productName" :label="$t('productImeSaleForm.name')"></el-table-column>
                 <el-table-column prop="qty" :label="$t('productImeSaleForm.qty')" :render-header="count"></el-table-column>
               </el-table>
             </template>
+          </el-col>
+          <el-col :span="18" >
             <template>
               <el-table :data="inputForm.productImeSaleDetailList" style="width: 100%" border>
                 <el-table-column prop="ime" :label="$t('productImeSaleForm.ime')"></el-table-column>
                 <el-table-column prop="depotName" :label="$t('productImeSaleForm.depotName')"></el-table-column>
                 <el-table-column prop="productName"  :label="$t('productImeSaleForm.productType')"></el-table-column>
-                <el-table-column prop="retailDate" :label="$t('productImeSaleForm.baokaDate')"></el-table-column>
                 <el-table-column prop="productImeUploadCreatedDate" :label="$t('productImeSaleForm.productImeUploadCreatedDate')"></el-table-column>
                 <el-table-column prop="productImeSaleShopName" :label="$t('productImeSaleForm.alreadySaleShopName')"></el-table-column>
                 <el-table-column prop="productImeSaleEmployeeName" :label="$t('productImeSaleForm.productImeSaleEmployeeName')"></el-table-column>
                 <el-table-column prop="productImeSaleCreatedDate" :label="$t('productImeSaleForm.productImeSaleCreatedDate')"></el-table-column>
-                <el-table-column :label="$t('productImeSaleForm.saleShopName')">
-                  <template scope="scope" >
-                    <div v-if="scope.row.editable">
-                      <div v-if="scope.row.fromChain">
-                        <el-select v-model="scope.row.saleShopId" filterable>
-                          <el-option v-for="item in scope.row.accessChainDepotList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                        </el-select>
-                      </div>
-                      <div v-else>{{scope.row.depotName}}</div>
-                    </div>
-                  </template>
-                </el-table-column>
               </el-table>
             </template>
           </el-col>
@@ -105,6 +102,8 @@
           productQtyList:[],
           rules: {
             imeStr: [{ required: true, message: this.$t('productImeSaleForm.prerequisiteMessage')}],
+            saleShopId: [{ required: true, message: this.$t('productImeSaleForm.prerequisiteMessage')}],
+
           },
         }
       },
@@ -113,17 +112,12 @@
           this.$alert( this.$t('productImeSaleForm.formInvalid'), this.$t('productImeSaleForm.notify'));
           return;
         }
-        for(let productImeSaleDetail of this.inputForm.productImeSaleDetailList){
-          if(productImeSaleDetail.editable && productImeSaleDetail.fromChain && util.isBlank(productImeSaleDetail.saleShopId)){
-            this.$alert( this.$t('productImeSaleForm.pleaseSelectSaleShop'), this.$t('productImeSaleForm.notify'));
-            return;
-          }
-        }
+
         this.submitDisabled = true;
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/ws/future/crm/productImeSale/sale',qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
+            axios.post('/api/ws/future/crm/productImeSale/saleIme',qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               this.submitDisabled = false;
             if(response.data.success){
@@ -156,10 +150,6 @@
                     productImeSaleShopName : each.productImeSaleShopName,
                     productImeSaleEmployeeName : each.productImeSaleEmployeeName,
                     productImeSaleCreatedDate : each.productImeSaleCreatedDate,
-                    editable : each.editable,
-                    fromChain : each.fromChain,
-                    saleShopId : each.saleShopId,
-                    accessChainDepotList:each.accessChainDepotList
                   });
               }
             }
@@ -192,6 +182,9 @@
       },initPage(){
         axios.get('/api/ws/future/crm/productImeSale/getSaleForm').then((response)=>{
           this.inputForm=response.data;
+          if(response.data.extra.defaultSaleShopId){
+            this.inputForm.saleShopId=response.data.extra.defaultSaleShopId;
+          }
         });
       },
       count(create,cols){

@@ -29,7 +29,7 @@ public class GoodsOrderDetailController {
         return page;
     }
 
-    @RequestMapping(method = RequestMethod.GET,value = "/getQuery")
+    @RequestMapping(value = "getQuery")
     public GoodsOrderDetailQuery getQuery(GoodsOrderDetailQuery goodsOrderDetailQuery){
         LocalDate today = LocalDate.now();
         LocalDate firstDayOfMonth = LocalDateTimeUtils.getFirstDayOfMonth(today.atStartOfDay()).toLocalDate();

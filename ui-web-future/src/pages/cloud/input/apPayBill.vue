@@ -28,9 +28,11 @@
           settings: {
             rowHeaders:true,
             autoColumnSize:true,
+            manualColumnResize:true,
             stretchH: 'all',
             height: 650,
             minSpareRows: 1,
+            fixedRowsTop:0,
             colHeaders: ["往来单位", "部门", "银行账户", "结算方式", "金额", "备注","对方科目"],
             columns: [
               {type: "autocomplete", strict: true, allowEmpty: false, supplierName:[],source: this.supplierName},

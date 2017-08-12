@@ -16,6 +16,7 @@ import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
+import net.myspring.future.modules.basic.web.form.DepotStoreAddForm;
 import net.myspring.future.modules.basic.web.form.DepotStoreForm;
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
@@ -73,7 +74,7 @@ public class DepotStoreService {
     public DepotStoreDto findOne(DepotStoreDto depotStoreDto) {
         if(!depotStoreDto.isCreate()) {
             DepotStore depotStore =depotStoreRepository.findOne(depotStoreDto.getId());
-            depotStoreDto= BeanUtil.map(depotStore,DepotStoreDto.class);
+            depotStoreDto = BeanUtil.map(depotStore,DepotStoreDto.class);
             cacheUtils.initCacheInput(depotStoreDto);
         }
         return depotStoreDto;
@@ -107,6 +108,26 @@ public class DepotStoreService {
         depotStore.setOutGroupName(client.getOutGroupName());
         depotStoreRepository.save(depotStore);
         return depotStore;
+    }
+
+    @Transactional
+    public void saveStore(DepotStoreAddForm depotStoreAddForm){
+        DepotStore depotStore;
+        //保存depot
+        Depot depot = BeanUtil.map(depotStoreAddForm.getDepotForm(), Depot.class);
+        depot.setNamePinyin(StringUtils.getFirstSpell(depot.getName()));
+        depotRepository.save(depot);
+        //保存depotStore
+        if(depotStoreAddForm.isCreate()) {
+            depotStoreAddForm.setDepotId(depot.getId());
+            depotStore = BeanUtil.map(depotStoreAddForm,DepotStore.class);
+            depotStoreRepository.save(depotStore);
+        } else {
+            depotStore = depotStoreRepository.findOne(depotStoreAddForm.getId());
+            ReflectionUtil.copyProperties(depotStoreAddForm,depotStore);
+            depotStore.setDepotId(depot.getId());
+            depotStoreRepository.save(depotStore);
+        }
     }
 
     public Integer setReportData(List<DepotStoreDto> depotStoreList,ReportQuery reportQuery) {

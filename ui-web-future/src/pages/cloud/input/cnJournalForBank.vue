@@ -34,9 +34,10 @@
           settings: {
             rowHeaders:true,
             autoColumnSize:true,
-            stretchH: 'all',
+            manualColumnResize:true,
             height: 650,
             minSpareRows: 1,
+            fixedRowsTop:0,
             colHeaders: ["对方科目编码", "结算方式","借方金额", "贷方金额","银行账户", "摘要", "对方科目名称", "员工","部门","其他类","费用类"],
             columns: [
               {type: "autocomplete", strict: true, allowEmpty: false, source: [], width:80},

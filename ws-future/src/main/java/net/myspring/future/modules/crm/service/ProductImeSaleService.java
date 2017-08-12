@@ -37,9 +37,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -73,6 +71,7 @@ public class ProductImeSaleService {
     }
 
     @Transactional
+    @Deprecated
     public void sale(ProductImeSaleForm productImeSaleForm) {
         List<String> imeList = productImeSaleForm.getImeList();
 
@@ -135,7 +134,6 @@ public class ProductImeSaleService {
             productIme.setDepotId(saleShopId);
             productIme.setRetailShopId(saleShopId);
             productImeRepository.save(productIme);
-
         }
     }
 
@@ -153,20 +151,20 @@ public class ProductImeSaleService {
         StringBuilder sb = new StringBuilder();
         List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn( imeList);
         Map<String, ProductIme> imeMap = CollectionUtil.extractToMap(productImeList, "ime");
+        List<String> accountDepotIdList = depotManager.getFilterDepotIds(false, RequestUtils.getAccountId());
+
         for(String ime:imeList){
             ProductIme productIme = imeMap.get(ime);
             if(productIme == null) {
                 sb.append("串码：").append(ime).append("在系统中不存在；");
             } else {
-                Depot depot = depotRepository.findOne(productIme.getDepotId());
-
                 if(productIme.getProductImeSaleId() ==null) {
                     sb.append("串码：").append(ime).append("还未被核销，不能退回；");
-                } else if(!depotManager.isAccess(depot.getId(),true,RequestUtils.getAccountId())) {
-                    sb.append("您没有串码：").append(ime).append("所在门店：").append(depot.getName()).append("的核销权限，请先将串码调拨至您管辖的门店；");
+                } else if(!accountDepotIdList.contains(productIme.getDepotId())){
+                    sb.append("您没有串码：").append(ime).append("所在门店的核销退回权限；");
                 }
                 if(productIme.getProductImeUploadId() != null) {
-                    sb.append("串码：").append(ime).append("已上报,不能退回；");
+                    sb.append("串码：").append(ime).append("已上报，不能退回；");
                 }
             }
         }
@@ -179,22 +177,33 @@ public class ProductImeSaleService {
         String employeeId = RequestUtils.getEmployeeId();
 
         List<ProductIme> productImes = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
+        Map<String, ProductImeSale> saleMap = productImeSaleRepository.findMap(CollectionUtil.extractToList(productImes, "productImeSaleId"));
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
+        Map<String, ProductIme> imeMap = CollectionUtil.extractToMap(productImeList, "ime");
+        List<String> accountDepotIdList = depotManager.getFilterDepotIds(false, RequestUtils.getAccountId());
         Integer leftCredit = getLeftCredit(employeeId);
 
-        for(ProductIme productIme : productImes) {
-            ProductImeSale productImeSale = productImeSaleRepository.findOne(productIme.getProductImeSaleId());
+        for(String ime : imeList) {
+            ProductIme productIme = imeMap.get(ime);
+            checkProductImeForSaleBack(ime, productIme);
 
+            if(!accountDepotIdList.contains(productIme.getDepotId())){
+                throw new ServiceException("您没有串码："+ime+"所在门店的核销撤回权限；");
+            }
+
+            ProductImeSale productImeSale = saleMap.get(productIme.getProductImeSaleId());
             productImeSale.setEnabled(false);
             productImeSaleRepository.save(productImeSale);
 
             Integer credit = 0-(productImeSale.getCredit()==null?0:productImeSale.getCredit());
+            leftCredit = leftCredit +credit;
+
             ProductImeSale saleBack = new ProductImeSale();
             saleBack.setEmployeeId(employeeId);
             saleBack.setProductImeId(productIme.getId());
             saleBack.setShopId(productImeSale.getShopId());
             saleBack.setRemarks(productImeSale.getRemarks());
             saleBack.setCredit(credit);
-            leftCredit = leftCredit +credit;
             saleBack.setLeftCredit(leftCredit);
             saleBack.setIsBack(true);
             productImeSaleRepository.save(saleBack);
@@ -269,7 +278,125 @@ public class ProductImeSaleService {
                         }
                     }
             }
-
         return result;
+    }
+
+    @Transactional
+    public void saleIme(ProductImeSaleForm productImeSaleForm) {
+
+        if(!depotManager.isAccess(productImeSaleForm.getSaleShopId(), false, RequestUtils.getAccountId())) {
+            Depot saleShop = depotRepository.findOne(productImeSaleForm.getSaleShopId());
+            throw new ServiceException("您没有门店："+saleShop.getName()+"的核销权限，请选择您管辖的门店进行核销；");
+        }
+
+        List<String> imeList = productImeSaleForm.getImeList();
+        Integer leftCredit = getLeftCredit(RequestUtils.getEmployeeId());
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
+        Map<String, Depot> depotMap = depotRepository.findMap(CollectionUtil.extractToList(productImeList, "depotId"));
+        Map<String, ProductIme> imeMap = CollectionUtil.extractToMap(productImeList, "ime");
+        Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(productImeList, "productId"));
+        Map<String, List<Depot>> chainDepotMap = getChainDepotMap(depotMap.values());
+
+        for(String ime : imeList){
+            ProductIme productIme = imeMap.get(ime);
+
+            checkProductImeForSale(ime, productIme);
+
+            Depot productImeDepot = depotMap.get(productIme.getDepotId());
+            checkSaleShopId(productImeSaleForm.getSaleShopId(), productIme, productImeDepot, chainDepotMap.get(productImeDepot.getChainId()));
+
+            Product product = productMap.get(productIme.getProductId());
+            Integer credit = (product.getRetailPrice() != null ? product.getRetailPrice().intValue()/1000 : 0);
+            leftCredit = leftCredit + credit;
+
+            ProductImeSale productImeSale = saveProductImeSale(productImeSaleForm, productIme, credit, leftCredit);
+
+            productIme.setProductImeSaleId(productImeSale.getId());
+            productIme.setDepotId(productImeSaleForm.getSaleShopId());
+            productIme.setRetailShopId(productImeSaleForm.getSaleShopId());
+            productImeRepository.save(productIme);
+        }
+    }
+
+    private Map<String, List<Depot>> getChainDepotMap(Collection<Depot> depots) {
+        List<String> chainIdList = CollectionUtil.extractToList(depots, "chainId");
+
+        if(CollectionUtil.isNotEmpty(chainIdList)){
+            List<Depot> chainDepotList = depotRepository.findByEnabledIsTrueAndChainIdIn(chainIdList);
+            return CollectionUtil.extractToMapList(chainDepotList, "chainId");
+        }
+
+        return new HashMap<>();
+    }
+
+    private ProductImeSale saveProductImeSale(ProductImeSaleForm productImeSaleForm, ProductIme productIme, Integer credit, Integer leftCredit) {
+        ProductImeSale productImeSale = new ProductImeSale();
+        productImeSale.setEmployeeId(RequestUtils.getEmployeeId());
+        productImeSale.setProductImeId(productIme.getId());
+        productImeSale.setShopId(productImeSaleForm.getSaleShopId());
+        productImeSale.setIsBack(false);
+        productImeSale.setRemarks(productImeSaleForm.getRemarks());
+        productImeSale.setBuyer(productImeSaleForm.getBuyer());
+        productImeSale.setBuyerAge(productImeSaleForm.getBuyerAge());
+        productImeSale.setBuyerSex(productImeSaleForm.getBuyerSex());
+        productImeSale.setBuyerPhone(productImeSaleForm.getBuyerPhone());
+        productImeSale.setCredit(credit);
+        productImeSale.setLeftCredit(leftCredit);
+        productImeSaleRepository.save(productImeSale);
+        return productImeSale;
+    }
+
+    private void checkSaleShopId(String saleShopId, ProductIme productIme, Depot productImeDepot, List<Depot> chainDepotList) {
+        if(StringUtils.isNotBlank(productImeDepot.getDepotStoreId())) {
+            throw new ServiceException("串码：" + productIme.getIme() + "的所属地点为："+productImeDepot.getName()+"，不是门店，无法核销；");
+        }
+        if(StringUtils.isBlank(productImeDepot.getChainId())){
+            if(!saleShopId.equals(productIme.getDepotId())){
+                throw new ServiceException("串码：" + productIme.getIme() + "所在门店不是连锁体系，只能被核销在其所属门店："+productImeDepot.getName());
+            }
+        }else{
+            List<String> productImeAllowSaleDepotIdList = CollectionUtil.extractToList(chainDepotList, "id");
+            if(!productImeAllowSaleDepotIdList.contains(saleShopId)){
+                throw new ServiceException("串码：" + productIme.getIme() + "所在门店为"+productImeDepot.getName()+"，是一个连锁体系，该串码只能被核销在该连锁体系内");
+            }
+        }
+    }
+
+    private void checkProductImeForSaleBack(String ime, ProductIme productIme) {
+        if(productIme == null) {
+            throw new ServiceException("串码：" + ime + "在系统中不存在；");
+        }
+        if(productIme.getProductImeSaleId()==null) {
+            throw new ServiceException("串码：" + ime + "未核销，不能核销退回；");
+        }
+        if(productIme.getProductImeUploadId() != null) {
+            throw new ServiceException("串码：" + ime + "已上报，不能核销退回；");
+        }
+    }
+
+    private void checkProductImeForSale(String ime, ProductIme productIme) {
+        if(productIme == null) {
+            throw new ServiceException("串码：" + ime + "在系统中不存在；");
+        }
+        if(productIme.getProductImeSaleId()!=null) {
+            throw new ServiceException("串码：" + ime + "已核销；");
+        }
+        if(productIme.getProductImeUploadId() != null) {
+            throw new ServiceException("串码：" + ime + "已上报，不能核销；");
+        }
+    }
+
+    public String checkForSale(List<String> imeList) {
+        try{
+            List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
+            Map<String, ProductIme> imeMap = CollectionUtil.extractToMap(productImeList, "ime");
+
+            for(String ime : imeList){
+                checkProductImeForSale(ime, imeMap.get(ime));
+            }
+            return null;
+        }catch(ServiceException e){
+            return e.getMessage();
+        }
     }
 }

@@ -28,9 +28,11 @@
           settings: {
             rowHeaders:true,
             autoColumnSize:true,
+            manualColumnResize:true,
             stretchH: 'all',
             height: 650,
             minSpareRows: 1,
+            fixedRowsTop:0,
             colHeaders: ["客户", "用承担部门","对方科目编码(4)", "对方科目", "金额", "备注", '员工', "其他类", "费用类", '对方关联客户'],
             columns: [
               {type: "autocomplete", strict: true, allowEmpty: false, customerName:[],source: this.customerName},

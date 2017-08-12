@@ -25,9 +25,11 @@
           settings: {
             rowHeaders:true,
             autoColumnSize:true,
+            manualColumnResize:true,
             stretchH: 'all',
             height: 650,
             minSpareRows: 1,
+            fixedRowsTop:0,
             colHeaders: ["往来单位", "我方银行账号", "业务日期", "退款金额", "结算方式", "备注"],
             columns: [
               {type: "autocomplete", strict: true, allowEmpty: false, customerName:[],source: this.customerName},

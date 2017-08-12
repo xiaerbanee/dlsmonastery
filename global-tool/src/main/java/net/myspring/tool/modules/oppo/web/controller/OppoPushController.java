@@ -335,4 +335,48 @@ public class OppoPushController {
         }
         return responseMessage;
     }
+
+    //上抛员工信息
+    @RequestMapping(value ="pullEmployee", method = RequestMethod.GET)
+    public OppoResponseMessage pullEmployee(String key,String createdDate)  {
+        OppoResponseMessage responseMessage = new OppoResponseMessage();
+        String companyName = oppoPushSerivce.getCompanyName(key,createdDate);
+        if (CompanyNameEnum.JXOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
+            List<OppoPushEmployee> oppoPushEmployees = oppoPushSerivce.getOppoPushEmployee();
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoPushEmployees));
+            responseMessage.setResult("success");
+        }else if (CompanyNameEnum.WZOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.WZOPPO.name());
+            List<OppoPushEmployee> oppoPushEmployees = oppoPushSerivce.getOppoPushEmployee();
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoPushEmployees));
+            responseMessage.setResult("success");
+        }else {
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
+        }
+        return responseMessage;
+    }
+
+    //上抛门店绑定员工信息
+    @RequestMapping(value ="pullCustomerEmployee", method = RequestMethod.GET)
+    public OppoResponseMessage pullCustomerEmployee(String key,String createdDate)  {
+        OppoResponseMessage responseMessage = new OppoResponseMessage();
+        String companyName = oppoPushSerivce.getCompanyName(key,createdDate);
+        if (CompanyNameEnum.JXOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.JXOPPO.name());
+            List<OppoPushCustomerEmployee> oppoPushCustomerEmployees = oppoPushSerivce.getOppoPushCustomerEmployee();
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoPushCustomerEmployees));
+            responseMessage.setResult("success");
+        }else if (CompanyNameEnum.WZOPPO.name().equals(companyName)){
+            DbContextHolder.get().setCompanyName(CompanyNameEnum.WZOPPO.name());
+            List<OppoPushCustomerEmployee> oppoPushCustomerEmployees = oppoPushSerivce.getOppoPushCustomerEmployee();
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoPushCustomerEmployees));
+            responseMessage.setResult("success");
+        }else {
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
+        }
+        return responseMessage;
+    }
 }
