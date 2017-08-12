@@ -111,7 +111,7 @@ public class BankInController {
             try{
                 String id = ids[i];
                 BankInAuditForm bankInAuditForm = new BankInAuditForm();
-                bankInAuditForm.setAuditRemarks("批量审核");
+                bankInAuditForm.setAuditRemarks("");
                 bankInAuditForm.setId(id);
                 bankInAuditForm.setPass(pass);
                 bankInAuditForm.setSyn(true);

@@ -60,9 +60,9 @@ public class ArReceiveBillManager {
             entityDto.setBankAcntNumber(bank.getCode());
             entityDto.setFSettleTypeIdNumber(SettleTypeEnum.电汇.getFNumber());
         }
-        if(!RequestUtils.getCompanyName().equals(CompanyNameEnum.WZOPPO.name())){
-            entityDto.setComment("审：" + auditRemarks + "   申：" + bankIn.getRemarks());
-        }
+
+        entityDto.setComment("审：" + auditRemarks + "   申：" + bankIn.getRemarks());
+
         receiveBillDto.setArReceiveBillEntryDtoList(Collections.singletonList(entityDto));
          return cloudClient.synReceiveBill(Collections.singletonList(receiveBillDto)).get(0);
     }
