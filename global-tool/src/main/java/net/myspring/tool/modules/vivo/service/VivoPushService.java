@@ -460,13 +460,17 @@ public class VivoPushService {
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
             agentCodeList.add(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0]);
         }else if (CompanyNameEnum.IDVIVO.name().equals(DbContextHolder.get().getCompanyName())){
+            logger.info("IDVIVO获取AgentCode数据开始"+LocalDateTime.now());
             agentCodeList = officeClient.findDistinctAgentCode(companyName);
+            logger.info("IDVIVO获取AgentCode数据成功:agentCodeList.size()="+agentCodeList.size());
         }else {
             return;
         }
         String dateSart = date;
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         for (String agentCode : agentCodeList){
+
+            logger.info("开始上抛工厂编码为"+agentCode+"的数据:"+LocalDateTime.now());
 
             List<SZones> sZonesList = Lists.newArrayList();
             List<SPlantEndProductSale> sPlantEndProductSaleList = Lists.newArrayList();
@@ -478,6 +482,8 @@ public class VivoPushService {
             List<SProductItemStocks> sProductItemStocksList = Lists.newArrayList();
             List<SStores> sStoresList = Lists.newArrayList();
             List<SCustomers> sCustomersList = Lists.newArrayList();
+
+            logger.info("数据初始化开始:"+LocalDateTime.now());
 
             for (SZones sZones : vivoPushDto.getsZonesList()){
                 if (agentCode.equals(sZones.getAgentCode())){
@@ -539,37 +545,56 @@ public class VivoPushService {
                 }
             }
 
+            logger.info("数据初始化结束:"+LocalDateTime.now());
+
+            logger.info("机构数据上抛开始:"+LocalDateTime.now());
             sZonesRepository.deleteByAgentCode(agentCode);
             sZonesRepository.batchSaveToFactroy(agentCode,sZonesList);
+            logger.info("机构数据上抛结束:"+LocalDateTime.now());
 
+            logger.info("客户数据上抛开始:"+LocalDateTime.now());
             sCustomersRepository.deleteByAgentCode(agentCode);
             sCustomersRepository.batchSaveToFactory(agentCode,sCustomersList);
+            logger.info("客户数据上抛结束:"+LocalDateTime.now());
 
+            logger.info("核销记录数据上抛开始:"+LocalDateTime.now());
             sPlantEndProductSaleRepository.deleteByBillDateAndAgentCode(dateSart,dateEnd,agentCode);
             sPlantEndProductSaleRepository.batchSaveToFactory(agentCode,sPlantEndProductSaleList);
+            logger.info("核销记录数据上抛结束:"+LocalDateTime.now());
 
+            logger.info("上抛经销商库存数据开始:"+LocalDateTime.now());
             sPlantStockDealerRepository.deleteByAccountDateAndAgentCode(dateSart,dateEnd,agentCode);
             sPlantStockDealerRepository.batchSaveToFactory(agentCode,sPlantStockDealerList);
+            logger.info("上抛经销商库存数据结束:"+LocalDateTime.now());
 
+            logger.info("上抛一代库库存数据开始:"+LocalDateTime.now());
             sPlantStockStoresRepository.deleteByAccountDateAndAgentCode(dateSart,dateEnd,agentCode);
             sPlantStockStoresRepository.batchSaveToFactory(agentCode,sPlantStockStoresList);
+            logger.info("上抛一代库库存数据结束:"+LocalDateTime.now());
 
+            logger.info("上抛二代库库存数据开始:"+LocalDateTime.now());
             sPlantStockSupplyRepository.deleteByAccountDateAndAgentCode(dateSart,dateEnd,agentCode);
             sPlantStockSupplyRepository.batchSaveToFactory(agentCode,sPlantStockSupplyList);
+            logger.info("上抛二代库库存数据结束:"+LocalDateTime.now());
 
+            logger.info("上抛库存串码明细数据开始:"+LocalDateTime.now());
             sProductItem000Repository.deleteByAgentCode(agentCode);
             sProductItem000Repository.batchSaveToFactory(agentCode,sProductItem000List);
-
             sProductItemStocksRepository.deleteByAgentCode(agentCode);
             sProductItemStocksRepository.batchSaveToFactory(agentCode,sProductItemStocksList);
+            logger.info("上抛库存串码明细数据结束:"+LocalDateTime.now());
 
+            logger.info("上抛一代仓库数据开始:"+LocalDateTime.now());
             sStoresRepository.deleteByAgentCode(agentCode);
             sStoresRepository.batchSaveToFactory(agentCode,sStoresList);
+            logger.info("上抛一代仓库数据结束:"+LocalDateTime.now());
 
             if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
                 sProductItemLendRepository.deletePushFactoryDataByUpdateTime(dateSart,dateEnd);
                 sProductItemLendRepository.batchSavePushFactoryData(sProductItemLendList);
             }
+
+            logger.info("上抛工厂编码为"+agentCode+"的数据完成:"+LocalDateTime.now());
         }
         logger.info("上抛数据完成:"+LocalDateTime.now());
     }

@@ -16,7 +16,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 interface RecruitEnumRepository : BaseRepository<RecruitEnum, String>,RecruitEnumRepositoryCustom {
-
+    fun findByCategory(category:String):MutableList<RecruitEnum>
 }
 
 interface RecruitEnumRepositoryCustom {

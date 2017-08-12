@@ -9,7 +9,7 @@
     <search-dialog :title="$t('afterSaleFromCompany.filter')" @hide="formVisible = false" :show="formVisible" v-model="formVisible"  size="tiny" class="search-form">
       <el-form :model="formData" :label-width="formLabelWidth">
         <el-form-item :label="$t('afterSaleFromCompany.badProductName')" prop="productIdList">
-          <product-select v-model="formData.badProductName" @afterInit="setSearchText"></product-select>
+          <product-select-filter v-model="formData.badProductName" @afterInit="setSearchText"></product-select-filter>
         </el-form-item>
     <!--    <el-form-item :label="$t('afterSaleFromCompany.badProductName')" >
           <el-input v-model="formData.badProductName" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
@@ -58,12 +58,14 @@
   import Handsontable from 'handsontable/dist/handsontable.full.js'
   import productSelect from 'components/future/product-select'
   import ProductTypeSelect from "components/future/product-type-select"
+  import ProductSelectFilter from "components/future/product-select-filter"
 
   var table=null;
   export default{
     components:{
       ProductTypeSelect,
-      productSelect
+      productSelect,
+      ProductSelectFilter
     },
     data(){
       return{
@@ -150,7 +152,6 @@
           }]
         },
       }
-
     },
     mounted () {
       table = new Handsontable(this.$refs["handsontable"], this.settings)

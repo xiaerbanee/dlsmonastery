@@ -86,17 +86,17 @@ public class BankInService {
 
         bankIn.setProcessStatus(simpleProcess.getCurrentProcessStatus());
         bankIn.setPositionId(simpleProcess.getCurrentPositionId());
-        bankIn.setBillDate(bankInAuditForm.getBillDate() == null ? LocalDate.now() : bankInAuditForm.getBillDate());
+        bankIn.setBillDate(bankInAuditForm.getBillDate() == null ? bankIn.getInputDate() : bankInAuditForm.getBillDate());
         bankInRepository.save(bankIn);
 
         if(Boolean.TRUE.equals(bankInAuditForm.getSyn()) && SimpleProcessEndsEnum.已通过.name().equals(simpleProcess.getCurrentProcessStatus())){
-            synToCloud(bankIn, bankInAuditForm);
+            synToCloud(bankIn, bankInAuditForm.getAuditRemarks());
         }
     }
 
-    private void synToCloud(BankIn bankIn, BankInAuditForm bankInAuditForm) {
+    private void synToCloud(BankIn bankIn, String auditRemarks) {
 
-        KingdeeSynReturnDto kingdeeSynReturnDto = arReceiveBillManager.synForBankIn(bankIn,bankInAuditForm);
+        KingdeeSynReturnDto kingdeeSynReturnDto = arReceiveBillManager.synForBankIn(bankIn, auditRemarks);
 
         bankIn.setCloudSynId(kingdeeSynReturnDto.getId());
         bankIn.setOutCode(kingdeeSynReturnDto.getBillNo());

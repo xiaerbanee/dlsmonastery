@@ -69,7 +69,7 @@ public class ToolVivoSchedule {
         }
     }
 
-    @Scheduled(cron = "0 0,30 23 * * ?")
+    @Scheduled(cron = "0 0 0/1 * * ?")
     public void pushIdvivoData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.IDVIVO.name())) {

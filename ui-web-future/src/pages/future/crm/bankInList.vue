@@ -67,7 +67,7 @@
         <el-table-column prop="shopClientName"  :label="$t('bankInList.shopClientName')"></el-table-column>
         <el-table-column prop="bankName" column-key="bankId"  :label="$t('bankInList.bankName')" sortable></el-table-column>
         <el-table-column prop="transferType" :label="$t('bankInList.transferType')" sortable></el-table-column>
-        <el-table-column prop="amount" :label="$t('bankInList.amount')" ></el-table-column>
+        <el-table-column prop="amount" :label="$t('bankInList.amount')" :formatter="moneyFormatter"></el-table-column>
         <el-table-column prop="serialNumber" :label="$t('bankInList.serialNumber')" sortable></el-table-column>
         <el-table-column prop="billDate" :label="$t('bankInList.billDate')" sortable></el-table-column>
         <el-table-column prop="createdByName" :label="$t('bankInList.createdBy')" ></el-table-column>
@@ -160,6 +160,8 @@
         }
       },checkSelectable(row) {
         return row.processStatus !== '已通过' && row.processStatus !== '未通过'
+      },moneyFormatter(row,col){
+        return util.moneyFormatter(row,col)
       },selectionChange(selection){
         this.selects=[];
         for(let each of selection){
