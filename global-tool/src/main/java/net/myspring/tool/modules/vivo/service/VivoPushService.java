@@ -70,7 +70,7 @@ public class VivoPushService {
         //同步机构数据
         pushVivoZonesData(companyName);
         //客户数据
-        pushVivoPushSCustomersData(pushToLocalDto.getsCustomerDtoList(),pushToLocalDto.getDate());
+        pushVivoPushSCustomersData(pushToLocalDto.getsCustomerDtoList());
         //库存汇总数据
         pushCustomerStockData(pushToLocalDto.getsPlantCustomerStockDtoList(),pushToLocalDto.getProductColorMap(),pushToLocalDto.getDate());
         //库存串码明细
@@ -125,7 +125,7 @@ public class VivoPushService {
 
 
     @Transactional
-    public void pushVivoPushSCustomersData(List<SCustomerDto> futureCustomerDtoList,String date){
+    public void pushVivoPushSCustomersData(List<SCustomerDto> futureCustomerDtoList){
         logger.info("客户数据同步开始"+LocalDateTime.now());
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
             String mainCode = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0];
@@ -133,6 +133,7 @@ public class VivoPushService {
                 sCustomerDto.setAgentCode(mainCode);
             }
         }
+        logger.info("CompanyName:"+DbContextHolder.get().getCompanyName());
         List<SCustomers> sCustomersList = Lists.newArrayList();
         for(SCustomerDto futureCustomerDto :futureCustomerDtoList){
             SCustomers sCustomers = new SCustomers();

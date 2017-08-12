@@ -43,21 +43,26 @@ public class VivoPushController {
         PushToLocalDto pushToLocalDto = new PushToLocalDto();
         pushToLocalDto.setDate(date);
         pushToLocalDto.setProductColorMap(vivoPushService.getProductColorMap());
+
+        logger.info("获取业务数据开始:"+LocalDateTime.now());
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
             pushToLocalDto.setsCustomerDtoList(futureCustomerService.getVivoCustomersData(date));
             pushToLocalDto.setsPlantCustomerStockDtoList(futureProductImeService.getVivoCustomerStockData(date));
             pushToLocalDto.setsPlantCustomerStockDetailDtoList(futureProductImeService.getVivoCustomerStockDetailData(date));
             pushToLocalDto.setsProductItemLendList(futureDemoPhoneService.getDemoPhonesData(date));
             pushToLocalDto.setVivoCustomerSaleImeiDtoList(futureProductImeSaleService.getProductImeSaleData(date));
-        }else {
-            logger.info("获取业务数据开始:"+LocalDateTime.now());
+        }else if(CompanyNameEnum.IDVIVO.name().equals(DbContextHolder.get().getCompanyName())){
             pushToLocalDto.setsCustomerDtoList(futureCustomerService.getIDVivoCustomersData(date));
             pushToLocalDto.setsPlantCustomerStockDtoList(futureProductImeService.getIDVivoCustomerStockData(date));
             pushToLocalDto.setsPlantCustomerStockDetailDtoList(futureProductImeService.getIDVivoCustomerStockDetailData(date));
             pushToLocalDto.setVivoCustomerSaleImeiDtoList(futureProductImeSaleService.getProductImeSaleData(date));
             pushToLocalDto.setsStoresList(futureCustomerService.findIDvivoStore());
-            logger.info("获取业务数据结束:"+LocalDateTime.now());
+        }else {
+            logger.info("同步数据失败至中转库失败！");
+            return "数据同步失败";
         }
+        logger.info("获取业务数据结束:"+LocalDateTime.now());
+
         vivoPushService.pushToLocal(pushToLocalDto,companyName);
         logger.info("同步数据至中转库结束:"+ LocalDateTime.now());
         return "数据同步成功";
