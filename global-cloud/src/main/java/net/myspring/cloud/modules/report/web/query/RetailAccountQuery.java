@@ -3,9 +3,6 @@ package net.myspring.cloud.modules.report.web.query;
 import java.time.YearMonth;
 import java.util.List;
 
-/**
- * Created by lihx on 2017/6/7.
- */
 public class RetailAccountQuery {
     private YearMonth monthStart;
     private YearMonth monthEnd;
