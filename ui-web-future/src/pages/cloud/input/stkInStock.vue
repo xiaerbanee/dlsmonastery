@@ -47,9 +47,11 @@
           settings: {
             rowHeaders:true,
             autoColumnSize:true,
+            manualColumnResize:true,
             stretchH: 'all',
             minSpareRows: 1,
             height: 650,
+            fixedRowsTop:0,
             colHeaders: ["货品编码","货品","单价","数量","备注","售后服务费","服务费类型",'广告让利(返利1.5%输入1.5)','让利类型'],
             columns: [
               {type: 'text',allowEmpty: false, strict:true, readOnly: true},

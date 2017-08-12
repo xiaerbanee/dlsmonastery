@@ -46,9 +46,11 @@
           settings: {
             rowHeaders:true,
             autoColumnSize:true,
+            manualColumnResize:true,
             stretchH: 'all',
             minSpareRows: 1,
             height: 650,
+            fixedRowsTop:0,
             colHeaders: ["货品", "单价","数量", "备注"],
             columns: [
               {type: "autocomplete", strict: true, allowEmpty: false, productName:[],source: this.productName},

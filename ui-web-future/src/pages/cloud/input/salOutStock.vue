@@ -35,9 +35,11 @@
           settings: {
             rowHeaders:true,
             autoColumnSize:true,
+            manualColumnResize:true,
             stretchH: 'all',
             height: 650,
             minSpareRows: 1,
+            fixedRowsTop:0,
             colHeaders: ["货品编码","门店","货品","价格","数量","备注","类型"],
             columns: [
               {type:"text", allowEmpty: false, readOnly: true, strict: true},
