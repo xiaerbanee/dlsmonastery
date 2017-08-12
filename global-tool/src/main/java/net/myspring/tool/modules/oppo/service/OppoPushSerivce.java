@@ -707,4 +707,18 @@ public class OppoPushSerivce {
         List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoCustomerDemoPhoneRepository.findByDate(companyName,dateStart,dateEnd);
         return oppoCustomerDemoPhones;
     }
+
+    @LocalDataSource
+    public List<OppoPushEmployee> getOppoPushEmployee(){
+        String companyName = DbContextHolder.get().getCompanyName();
+        List<OppoPushEmployee> oppoPushEmployees = oppoPushEmployeeRepository.findByCompanyName(companyName);
+        return oppoPushEmployees;
+    }
+
+    @LocalDataSource
+    public List<OppoPushCustomerEmployee> getOppoPushCustomerEmployee(){
+        String companyName = DbContextHolder.get().getCompanyName();
+        List<OppoPushCustomerEmployee> oppoPushCustomerEmployees = oppoPushCustomerEmployeeRepository.findByCompanyName(companyName);
+        return oppoPushCustomerEmployees;
+    }
 }
