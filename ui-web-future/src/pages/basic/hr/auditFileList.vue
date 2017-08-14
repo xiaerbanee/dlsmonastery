@@ -211,7 +211,8 @@
         this.favoriteVisible=false;
         axios.get('/api/basic/hr/auditFileCollect/collect?auditFileId='+auditFileId+'&collect='+collect+'&accountFavoriteId='+accountFavoriteId).then((response) =>{
           this.$message(response.data.message);
-          this.row.collect=collect
+          this.row.collect=collect;
+          this.pageRequest();
         });
       },showFavorite(row){
         this.row=row;
