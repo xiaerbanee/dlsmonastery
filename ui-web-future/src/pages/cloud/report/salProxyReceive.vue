@@ -2,7 +2,7 @@
 </style>
 <template>
   <div>
-    <head-tab active="consignmentReport"></head-tab>
+    <head-tab active="salProxyReceive"></head-tab>
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
         <el-form-item label="开始日期"  prop="dateStart">
@@ -40,25 +40,14 @@
           stretchH: 'all',
           height: 650,
           fixedRowsTop:0,
-          colHeaders: ["客户代码","客户名称","商品代码","商品名称","寄售期初数量","寄售期初单价","寄售期初金额","寄售发出数量","寄售发出单价","寄售发出金额",
-            "寄售结算数量","寄售结算单价","寄售结算金额","寄售未结算数量","寄售未结算单价","寄售未结算金额"],
+          colHeaders:  ['分组名称','制式','销售金额','银行名称','收款金额','收款占比'],
           columns: [
-            {data:'customerCode', type: 'text', readOnly:true},
-            {data:'customerName', type: 'text', readOnly:true},
-            {data:'goodsCode', type: 'text', readOnly:true},
-            {data:'goodsName', type: 'text', readOnly:true},
-            {data:'consignmentInitialQuantity', type: 'numeric', readOnly:true},
-            {data:'consignmentInitialPrice', type: 'numeric',format:"0,0.00", readOnly:true},
-            {data:'consignmentInitialAmount', type: 'numeric',format:"0,0.00", readOnly:true},
-            {data:'consignmentSendQuantity', type: 'numeric', readOnly:true},
-            {data:'consignmentSendPrice', type: 'numeric',format:"0,0.00", readOnly:true},
-            {data:'consignmentSendAmount', type: 'numeric',format:"0,0.00", readOnly:true},
-            {data:'consignmentSettlementQuantity', type: 'numeric', readOnly:true},
-            {data:'consignmentSettlementPrice', type: 'numeric',format:"0,0.00", readOnly:true},
-            {data:'consignmentSettlementAmount', type: 'numeric',format:"0,0.00", readOnly:true},
-            {data:'consignmentNotSettledQuantity', type: 'numeric', readOnly:true},
-            {data:'consignmentNotSettledPrice', type: 'numeric',format:"0,0.00", readOnly:true},
-            {data:'consignmentNotSettledAmount', type: 'numeric',format:"0,0.00", readOnly:true}
+            {data:'groupName', type: 'text'},
+            {data:'flx', type: 'text'},
+            {data:'fallAmount', type: 'numeric',format:"0,0.00"},
+            {data:'bankName', type: 'text'},
+            {data:'skAmount', type: 'numeric',format:"0,0.00"},
+            {data:'backLV', type: 'numeric',format: "0.00%"}
           ],
         },
         formData: {
@@ -78,7 +67,7 @@
       initPage() {
         this.formData.dateStart = util.formatLocalDate(this.formData.dateStart);
         this.formData.dateEnd = util.formatLocalDate(this.formData.dateEnd);
-        axios.post("/api/global/cloud/report/consignmentWZ/list",qs.stringify(this.formData,{allowDots:true})).then((response)=>{
+        axios.post("/api/global/cloud/report/salProxyReceive/list",qs.stringify(this.formData,{allowDots:true})).then((response)=>{
           this.settings.data = response.data;
           table = new Handsontable(this.$refs["handsontable"], this.settings)
         })
@@ -86,7 +75,7 @@
       exportData(){
         this.formData.dateStart = util.formatLocalDate(this.formData.dateStart);
         this.formData.dateEnd = util.formatLocalDate(this.formData.dateEnd);
-        window.location.href = '/api/global/cloud/report/consignmentWZ/export?dateStart='+this.formData.dateStart+"&dateEnd="+this.formData.dateEnd;
+        window.location.href = '/api/global/cloud/report/salProxyReceive/export?dateStart='+this.formData.dateStart+"&dateEnd="+this.formData.dateEnd;
       }
     },created () {
       this.initPage();
