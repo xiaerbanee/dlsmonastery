@@ -69,8 +69,6 @@
           dateStart: [{ required: true, message: '必填项'}],
           dateEnd: [{ required: true, message: '必填项'}],
         },
-        formLabelWidth: '28%',
-        formVisible: false,
       };
     },
     methods: {
