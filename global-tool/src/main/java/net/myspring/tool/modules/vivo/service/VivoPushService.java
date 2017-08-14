@@ -10,6 +10,7 @@ import net.myspring.tool.common.client.OfficeClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
+import net.myspring.tool.common.enums.AgentCodeEnum;
 import net.myspring.tool.modules.future.dto.OfficeDto;
 import net.myspring.tool.common.utils.CacheUtils;
 import net.myspring.tool.modules.vivo.domain.*;
@@ -466,9 +467,7 @@ public class VivoPushService {
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
             agentCodeList.add(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0]);
         }else if (CompanyNameEnum.IDVIVO.name().equals(DbContextHolder.get().getCompanyName())){
-            logger.info("IDVIVO获取AgentCode数据开始"+LocalDateTime.now());
-            agentCodeList = officeClient.findDistinctAgentCode(companyName);
-            logger.info("IDVIVO获取AgentCode数据成功:agentCodeList.size()="+agentCodeList.size());
+            agentCodeList = AgentCodeEnum.getList();
         }else {
             return;
         }
