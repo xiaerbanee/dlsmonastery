@@ -99,6 +99,9 @@ public class VivoPushService {
         }
         List<SZones> sZonesList = Lists.newArrayList();
         for(OfficeDto officeDto:officeDtoList){
+            if (StringUtils.isBlank(officeDto.getAgentCode())){
+                continue;
+            }
             SZones sZones = new SZones();
             sZones.setZoneId(getZoneId(officeDto.getAgentCode(),officeDto.getId()));
             sZones.setZoneName(officeDto.getName());
@@ -136,6 +139,9 @@ public class VivoPushService {
         logger.info("CompanyName:"+DbContextHolder.get().getCompanyName());
         List<SCustomers> sCustomersList = Lists.newArrayList();
         for(SCustomerDto futureCustomerDto :futureCustomerDtoList){
+            if (StringUtils.isBlank(futureCustomerDto.getAgentCode())){
+                continue;
+            }
             SCustomers sCustomers = new SCustomers();
             String customerId = futureCustomerDto.getCustomerId();
             String agentCode = futureCustomerDto.getAgentCode();
@@ -183,7 +189,7 @@ public class VivoPushService {
 
         for (SPlantCustomerStockDto sPlantCustomerStockDto : sPlantCustomerStockDtoList) {
             String colorId = productColorMap.get(sPlantCustomerStockDto.getProductId());
-            if (StringUtils.isBlank(colorId)){
+            if (StringUtils.isBlank(colorId)||StringUtils.isBlank(sPlantCustomerStockDto.getAgentCode())){
                 continue;
             }
             int customerLevel = sPlantCustomerStockDto.getCustomerLevel();
@@ -264,7 +270,7 @@ public class VivoPushService {
         for (SPlantCustomerStockDetailDto sPlantCustomerStockDetailDto : sPlantCustomerStockDetailDtoList){
             int customerLevel = sPlantCustomerStockDetailDto.getCustomerLevel();
             String colorId = productColorMap.get(sPlantCustomerStockDetailDto.getProductId());
-            if(StringUtils.isBlank(colorId)){
+            if(StringUtils.isBlank(colorId)||StringUtils.isBlank(sPlantCustomerStockDetailDto.getAgentCode())){
                 continue;
             }
             String agentCode = sPlantCustomerStockDetailDto.getAgentCode();
@@ -359,7 +365,7 @@ public class VivoPushService {
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<SPlantEndProductSale> sPlantEndProductSaleList = Lists.newArrayList();
         for (VivoCustomerSaleImeiDto vivoCustomerSaleImeiDto : vivoCustomerSaleImeiDtoList){
-            if (StringUtils.isBlank(productColorMap.get(vivoCustomerSaleImeiDto.getProductId()))){
+            if (StringUtils.isBlank(productColorMap.get(vivoCustomerSaleImeiDto.getProductId()))||StringUtils.isBlank(vivoCustomerSaleImeiDto.getAgentCode())){
                 continue;
             }
             String agentCode=vivoCustomerSaleImeiDto.getAgentCode();
