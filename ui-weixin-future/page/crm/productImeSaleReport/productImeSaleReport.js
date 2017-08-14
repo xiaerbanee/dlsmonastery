@@ -24,10 +24,8 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.setData({ height: $util.getWindowHeight() })
-  },
-  onShow: function () {
     var that = this;
+    that.setData({ height: $util.getWindowHeight() });
     wx.showToast({
       title: '加载中',
       icon: 'loading',
@@ -39,6 +37,9 @@ Page({
       }
     })
   },
+  onShow: function () {
+
+  },
   initPage: function () {
     var that = this;
     wx.request({
@@ -49,7 +50,6 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
-        console.log(res.data)
         that.setData({ formData: res.data, 'formData.dateEnd': $util.formatLocalDate(new Date()), formProperty: res.data.extra });
         that.pageRequest();
       }
@@ -68,7 +68,7 @@ Page({
         },
         data: $util.deleteExtra(that.data.formData),
         success: function (res) {
-          console.log(res.data)
+          console.log('data get back:',res.data)
           that.setData({ page: res.data.list, sum: res.data.sum });
           wx.hideToast();
         }
@@ -101,7 +101,7 @@ Page({
         data: { officeId },
         success: function (res) {
           that.data.officeIds.push(officeId);
-          that.setData({ officeId: officeId, 'formData.officeId': that.data.officeIds[that.data.officeIds.length - 1], nextIsShop: res.data })
+          that.setData({ officeIds: that.data.officeIds,officeId: officeId, 'formData.officeId': that.data.officeIds[that.data.officeIds.length - 1], nextIsShop: res.data })
           wx.showToast({
             title: '加载中',
             icon: 'loading',
@@ -139,7 +139,7 @@ Page({
       that.setData({ nextIsShop: true })
     } else {
       that.data.officeIds.pop();
-      that.setData({ nextIsShop: false, })
+      that.setData({ officeIds: that.data.officeIds,nextIsShop: false, })
     }
     that.setData({
       isDepot: false, 'formData.isDetail': false, productTypeDetail: null, 'formData.depotId': null,
@@ -172,8 +172,24 @@ Page({
     var that = this;
     that.setData({ 'formData.outType': that.data.formProperty.outTypeList[e.detail.value] })
   },
+  bindAreaType: function (e) {
+    var that = this;
+    that.setData({ 'formData.areaType': that.data.formProperty.areaTypeList[e.detail.value] })
+  },
+  bindTownType: function (e) {
+    var that = this;
+    that.setData({ 'formData.townType': that.data.formProperty.townTypeList[e.detail.value] })
+  },
+  bindNetType:function(e){
+    var that = this;
+    that.setData({ 'formData.netType': that.data.formProperty.netTypeList[e.detail.value] })
+  },
+  bindProductType: function (e) {
+    wx.navigateTo({
+      url: '/page/crm/productTypeSearch/productTypeSearch'
+    })
+  },
   switchChange: function (e) {
-    console.log("eeee", e.detail.value)
     this.setData({ 'formData.scoreType': e.detail.value })
   },
   search: function () {
@@ -181,6 +197,7 @@ Page({
     that.setData({ searchHidden: !that.data.searchHidden })
   },
   formSubmit: function (e) {
+    console.log('form when click:',e.detail)
     var that = this;
     that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
     wx.showToast({

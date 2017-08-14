@@ -53,7 +53,10 @@
     "page/crm/productDataReport/productDataReport",
     "page/crm/productSearch/productSearch",
     "page/crm/productImeSaleReport/productImeSaleReport",
-    "page/sys/accountUpdate/accountUpdate"
+    "page/crm/productImeStockReport/productImeStockReport",
+    "page/sys/accountUpdate/accountUpdate",
+    "page/crm/productTypeSearch/productTypeSearch",
+    "page/crm/productImeStockReport/productImeStockReport"
   ],
   "window": {
     "navigationBarTextStyle": "#fff",
