@@ -11,7 +11,6 @@ import net.myspring.tool.common.client.EmployeeClient;
 import net.myspring.tool.common.client.OfficeClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
-import net.myspring.tool.common.enums.AgentCodeEnum;
 import net.myspring.tool.common.utils.CacheUtils;
 import net.myspring.tool.modules.future.domain.Office;
 import net.myspring.tool.modules.future.dto.AccountDepotDto;
@@ -94,8 +93,8 @@ public class OppoPushSerivce {
         for(String arg:args){
             params=params.append(arg);
         }
-        String jxoppoKey= MD5Utils.encode(AgentCodeEnum.M13AMB.name() + params);
-        String wzoppoKey=MD5Utils.encode(AgentCodeEnum.M03FMB.name() + params);
+        String jxoppoKey= MD5Utils.encode("M13AMB" + params);
+        String wzoppoKey=MD5Utils.encode("M03FMB" + params);
         if(jxoppoKey.equals(key)){
             return CompanyNameEnum.JXOPPO.name();
         }else if(wzoppoKey.equals(key)){
@@ -131,10 +130,10 @@ public class OppoPushSerivce {
         pushOppoCustomerAfterSaleImeis(oppoPushDto.getOppoCustomerAfterSaleImeis(),oppoPushDto.getDate());
         //门店演示机汇总数据
         pushOppoCustomerDemoPhone(oppoPushDto.getOppoCustomerDemoPhones(),oppoPushDto.getDate());
-//        //员工基本信息数据
-//        pushOppoEmployeeInfo(companyName);
-//        //员工绑定门店信息
-//        pushOppoCustomerEmployee(oppoPushDto.getAccountDepotDtos());
+        //员工基本信息数据
+        pushOppoEmployeeInfo(companyName);
+        //员工绑定门店信息
+        pushOppoCustomerEmployee(oppoPushDto.getAccountDepotDtos());
     }
 
 

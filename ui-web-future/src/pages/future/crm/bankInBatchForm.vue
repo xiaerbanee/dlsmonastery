@@ -34,6 +34,8 @@
           submitDisabled: false,
           settings: {
             rowHeaders: true,
+            contextMenu: true,
+            manualColumnResize:true,
             minSpareRows: 100,
             startRows: 100,
             startCols: 7,
