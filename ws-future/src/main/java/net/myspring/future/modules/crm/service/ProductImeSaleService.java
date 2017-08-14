@@ -3,6 +3,7 @@ package net.myspring.future.modules.crm.service;
 import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.constant.ServiceConstant;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -215,7 +216,7 @@ public class ProductImeSaleService {
 
     public SimpleExcelBook export(ProductImeSaleQuery productImeSaleQuery) {
 
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
 
         List<SimpleExcelColumn> productImeSaleColumnList = Lists.newArrayList();
         productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "productImeIme", "串码"));
@@ -237,7 +238,7 @@ public class ProductImeSaleService {
         productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "lotteryDate", "抽奖时间"));
         productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "hongbao", "红包"));
 
-        List<ProductImeSaleDto> productImeSaleDtoList = findPage(new PageRequest(0,10000), productImeSaleQuery).getContent();
+        List<ProductImeSaleDto> productImeSaleDtoList = findPage(new PageRequest(0,ServiceConstant.EXPORT_MAX_ROW_NUM), productImeSaleQuery).getContent();
 
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("核销列表", productImeSaleDtoList, productImeSaleColumnList);
         ExcelUtils.doWrite(workbook, simpleExcelSheet);

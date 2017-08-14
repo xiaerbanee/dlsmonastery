@@ -6,6 +6,7 @@ import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.enums.CompanyNameEnum;
+import net.myspring.future.common.constant.ServiceConstant;
 import net.myspring.future.common.enums.InputTypeEnum;
 import net.myspring.future.common.enums.OutTypeEnum;
 import net.myspring.future.common.enums.SumTypeEnum;
@@ -296,7 +297,7 @@ public class ProductImeService {
     }
 
     public SimpleExcelBook getFolderFileId(List<DepotReportDto> depotReportList, ReportQuery reportQuery) {
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaName", "办事处"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "officeName", "机构"));

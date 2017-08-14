@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.future.common.constant.ServiceConstant;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.manager.DepotManager;
@@ -48,7 +49,7 @@ public class GoodsOrderImeService {
 
     public SimpleExcelBook export(GoodsOrderImeQuery goodsOrderImeQuery) {
 
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
         List<List<SimpleExcelColumn>> excelColumnList= Lists.newArrayList();
         Map<String, CellStyle> cellStyleMap=ExcelUtils.getCellStyleMap(workbook);
         CellStyle headCellStyle = cellStyleMap.get(ExcelCellStyle.HEADER.name());
@@ -73,7 +74,7 @@ public class GoodsOrderImeService {
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"备注"));
         excelColumnList.add(headColumnList);
 
-        List<GoodsOrderImeDto> goodsOrderImeDtoList=findPage(new PageRequest(0,10000), goodsOrderImeQuery).getContent();
+        List<GoodsOrderImeDto> goodsOrderImeDtoList=findPage(new PageRequest(0,ServiceConstant.EXPORT_MAX_ROW_NUM), goodsOrderImeQuery).getContent();
         List<String> goodsOrderIdList= CollectionUtil.extractToList(goodsOrderImeDtoList,"goodsOrderId");
         List<GoodsOrderDto> goodsOrderDtoList = goodsOrderRepository.findDtoListByIdList(goodsOrderIdList);
         cacheUtils.initCacheInput(goodsOrderDtoList);
