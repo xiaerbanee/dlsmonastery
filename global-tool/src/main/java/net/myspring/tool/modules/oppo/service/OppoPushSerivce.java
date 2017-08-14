@@ -130,10 +130,10 @@ public class OppoPushSerivce {
         pushOppoCustomerAfterSaleImeis(oppoPushDto.getOppoCustomerAfterSaleImeis(),oppoPushDto.getDate());
         //门店演示机汇总数据
         pushOppoCustomerDemoPhone(oppoPushDto.getOppoCustomerDemoPhones(),oppoPushDto.getDate());
-//        //员工基本信息数据
-//        pushOppoEmployeeInfo(companyName);
-//        //员工绑定门店信息
-//        pushOppoCustomerEmployee(oppoPushDto.getAccountDepotDtos());
+        //员工基本信息数据
+        pushOppoEmployeeInfo(companyName);
+        //员工绑定门店信息
+        pushOppoCustomerEmployee(oppoPushDto.getAccountDepotDtos());
     }
 
 
