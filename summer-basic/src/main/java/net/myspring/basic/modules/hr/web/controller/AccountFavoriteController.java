@@ -5,7 +5,6 @@ import net.myspring.basic.modules.hr.dto.AccountFavoriteDto;
 import net.myspring.basic.modules.hr.service.AccountFavoriteService;
 import net.myspring.basic.modules.hr.web.form.AccountFavoriteForm;
 import net.myspring.basic.modules.hr.web.query.AccountFavoriteQuery;
-import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,7 @@ public class AccountFavoriteController  {
 
     @RequestMapping(value = "getForm")
     public AccountFavoriteForm getForm(AccountFavoriteForm accountFavoriteForm){
-        accountFavoriteForm.getExtra().put("parentIdList",accountFavoriteService.findAll());
+        accountFavoriteForm.getExtra().put("parentList",accountFavoriteService.findAll());
         return accountFavoriteForm;
     }
 

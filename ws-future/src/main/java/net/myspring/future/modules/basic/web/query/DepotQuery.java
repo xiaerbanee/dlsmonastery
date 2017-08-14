@@ -1,6 +1,9 @@
 package net.myspring.future.modules.basic.web.query;
 
+import com.google.common.collect.Lists;
 import net.myspring.future.common.query.BaseQuery;
+
+import java.util.List;
 
 
 public class DepotQuery extends BaseQuery {
@@ -18,6 +21,15 @@ public class DepotQuery extends BaseQuery {
 
     private String shipType;
     private Boolean includeHidden;
+    private List<String> officeIds= Lists.newArrayList();
+
+    public List<String> getOfficeIds() {
+        return officeIds;
+    }
+
+    public void setOfficeIds(List<String> officeIds) {
+        this.officeIds = officeIds;
+    }
 
     public Boolean getIncludeHidden() {
         return includeHidden;

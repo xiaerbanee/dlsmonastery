@@ -20,6 +20,8 @@ import java.util.*
 
 interface AccountFavoriteRepository : BaseRepository<AccountFavorite, String>,AccountFavoriteRepositoryCustom {
 
+    fun findByAccountIdAndEnabledIsTrue(accountId: String):MutableList<AccountFavorite>
+
     @Query("""
         SELECT t
         FROM  #{#entityName} t
@@ -56,7 +58,6 @@ class AccountFavoriteRepositoryImpl @Autowired constructor(val namedParameterJdb
             hr_account_favorite t1 left join hr_account_favorite t2 on t1.parent_id=t2.id
             where
             t1.enabled=1
-
         """)
         if (StringUtils.isNotEmpty(accountFavoriteQuery.accountId)) {
             sb.append("""

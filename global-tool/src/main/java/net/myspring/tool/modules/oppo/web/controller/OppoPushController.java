@@ -78,7 +78,7 @@ public class OppoPushController {
         oppoPushDto.setOppoCustomerSaleCounts(futureProductImeSaleService.getFutureOppoCustomerSaleCounts(date));
         oppoPushDto.setOppoCustomerAfterSaleImeis(futureAfterSaleService.getFutureOppoCustomerAfterSaleImeis(date));
         oppoPushDto.setOppoCustomerDemoPhones(futureDemoPhoneService.getFutureOppoCustomerDemoPhone(date));
-//        oppoPushDto.setAccountDepotDtos(futureAccountDepotService.findAll());
+        oppoPushDto.setAccountDepotDtos(futureAccountDepotService.findAll());
         oppoPushSerivce.pushToLocal(oppoPushDto,companyName);
         logger.info("同步JXOPPO数据至本地成功:"+ LocalDateTime.now());
         return "OPPO同步成功";

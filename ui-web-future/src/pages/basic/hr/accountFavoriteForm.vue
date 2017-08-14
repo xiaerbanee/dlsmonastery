@@ -3,13 +3,13 @@
     <head-tab active="accountFavoriteForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-        <el-form-item :label="$t('accountFavoriteForm.name')" prop="name">
-          <el-input v-model="inputForm.name"></el-input>
-        </el-form-item>
         <el-form-item :label="$t('accountFavoriteForm.parentId')" prop="parentId">
           <el-select v-model="inputForm.parentId" placeholder="请选择">
-            <el-option v-for="item in inputForm.extra.parentIdList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in inputForm.extra.parentList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item :label="$t('accountFavoriteForm.name')" prop="name">
+          <el-input v-model.number="inputForm.name"></el-input>
         </el-form-item>
         <el-form-item :label="$t('accountFavoriteForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
@@ -35,8 +35,7 @@
             extra:{}
           },
           rules: {
-            accountId: [{ required: true, message: this.$t('accountFavoriteForm.prerequisiteMessage'),trigger:"blur"}],
-            name: [{ required: true, message: this.$t('accountFavoriteForm.prerequisiteMessage'),trigger:"blur"}]
+            name: [{ required: true, message: this.$t('accountFavoriteForm.prerequisiteMessage')}]
           }
         }
       },

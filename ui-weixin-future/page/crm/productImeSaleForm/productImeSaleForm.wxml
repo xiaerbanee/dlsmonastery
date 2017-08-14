@@ -17,13 +17,13 @@
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
-      <view class="weui-cell weui-cell_input"  wx:if="{{shops.length!=0}}">
+      <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
           <view class="weui-label">核销门店</view>
         </view>
-        <view class="weui-cell__bd">
-          <picker range="{{shops}}" range-key="name" value="{{saleShopId}}" bindchange="bindSaleShop">
-            <view class="weui-input">{{saleShopName?saleShopName:''}}</view>
+        <view class="weui-cell__bd" style="overflow:hidden">
+          <picker name="saleShopId"  value="{{formData.shopId?formData.shopId:''}}" bindtap="bindShop" disabled>
+            <view class="weui-input">{{formData.shopName?formData.shopName:''}}<image class="right_icon" src="/image/icons/right.png"/></view>
           </picker>
         </view>
       </view>

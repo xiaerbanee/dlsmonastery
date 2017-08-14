@@ -252,10 +252,6 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if(reportQuery.date!=null){
             sb.append("""
                 AND (
-                    t1.retail_date IS NULL
-                    OR t1.retail_date >= :date
-                )
-                AND (
                     t3.id IS NULL
                     OR t3.created_date > :date
                 )
