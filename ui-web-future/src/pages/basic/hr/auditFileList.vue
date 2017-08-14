@@ -51,6 +51,11 @@
               <el-form-item label="是否收藏">
                 <bool-select v-model="formData.collect"></bool-select>
               </el-form-item>
+              <el-form-item label="收藏夹" prop="accountFavoriteId">
+                <el-select v-model="formData.accountFavoriteId" filterable clearable :placeholder="$t('auditFileForm.inputWord')">
+                  <el-option v-for="type in formData.extra.accountFavoriteList" :key="type.id" :label="type.name" :value="type.id"></el-option>
+                </el-select>
+              </el-form-item>
               <el-form-item label="收藏日期">
                 <date-range-picker v-model="formData.collectDate"></date-range-picker>
               </el-form-item>
@@ -61,7 +66,7 @@
           <el-button type="primary" @click="search()">{{$t('auditFileList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-dialog  title="订单详细" v-model="updateVisible" size="tiny" class="search-form" z-index="1500">
+      <el-dialog  title="选择收藏夹" v-model="updateVisible" size="tiny" class="search-form" z-index="1500">
         <el-form :model="inputForm" label-width="120px">
               <el-form-item :label="$t('auditFileList.memo')" prop="memo">
                 <el-input v-model="inputForm.memo"></el-input>
@@ -87,7 +92,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="formSubmit()">确定</el-button>
+          <el-button type="primary" @click="collect(auditFileId,true,accountFavoriteId)">确定</el-button>
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('auditFileList.loading')" @sort-change="sortChange" stripe border>
@@ -112,8 +117,8 @@
             <div class="action"> <el-button size="small" @click.native="itemAction(scope.row.id,'verify')"  class="action" v-if="scope.row.auditable">审核</el-button></div>
             <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')"  class="action"  v-permit="'hr:auditFile:view'">详细</el-button></div>
             <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')"  class="action" v-permit="'hr:auditFile:delete'" v-if="scope.row.editable">删除</el-button></div>
-            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'collect',scope.row)"  class="action"  v-if="scope.row.collect">取消收藏</el-button></div>
-            <div class="action"><el-button size="small" @click.native="collect(scope.row)"  class="action"  v-if="!scope.row.collect">收藏</el-button></div>
+            <div class="action"><el-button size="small" @click.native="collect(scope.row.id,false,null,scope.row)"  class="action"  v-if="scope.row.collect">取消收藏</el-button></div>
+            <div class="action"><el-button size="small" @click.native="showFavorite(scope.row)"  class="action"  v-if="!scope.row.collect">收藏</el-button></div>
             <div class="action"><el-button size="small" @click.native="updateMemo(scope.row)"  v-permit="'hr:auditFile:updateMemo'">批注修改</el-button></div>
           </template>
         </el-table-column>
@@ -133,6 +138,9 @@
         formData:{
           extra:{}
         },
+        auditFileId:"",
+        accountFavoriteId:"",
+        row:{},
         inputForm:{},
         initPromise:{},
         searchText:'',
@@ -199,7 +207,16 @@
           });
         }).catch(()=>{});
         }
-      },collect(row){
+      },collect(auditFileId,collect,accountFavoriteId,row){
+        this.favoriteVisible=false;
+        axios.get('/api/basic/hr/auditFileCollect/collect?auditFileId='+auditFileId+'&collect='+collect+'&accountFavoriteId='+accountFavoriteId).then((response) =>{
+          this.$message(response.data.message);
+          this.row.collect=collect;
+          this.pageRequest();
+        });
+      },showFavorite(row){
+        this.row=row;
+        this.auditFileId=row.id;
         this.favoriteVisible=true;
         axios.get("/api/basic/hr/accountFavorite/findTreeNodeList").then((response)=>{
           this.treeData=response.data
@@ -212,7 +229,8 @@
             modules.push(check[index])
           }
         }
-        this.inputForm.moduleIdList = modules;
+        this.accountFavoriteId = modules[0];
+        console.log(this.accountFavoriteId )
       },updateMemo(row){
         this.updateVisible=true;
         this.inputForm=JSON.parse(JSON.stringify(row));

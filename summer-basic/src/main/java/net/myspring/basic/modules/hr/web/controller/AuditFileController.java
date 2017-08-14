@@ -4,6 +4,7 @@ import gui.ava.html.image.generator.HtmlImageGenerator;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.basic.modules.hr.dto.AuditFileDto;
+import net.myspring.basic.modules.hr.service.AccountFavoriteService;
 import net.myspring.basic.modules.hr.service.AuditFileService;
 import net.myspring.basic.modules.hr.web.form.AuditFileForm;
 import net.myspring.basic.modules.hr.web.query.AuditFileQuery;
@@ -30,6 +31,8 @@ public class AuditFileController {
 
     @Autowired
     private AuditFileService auditFileService;
+    @Autowired
+    private AccountFavoriteService accountFavoriteService;
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -43,6 +46,8 @@ public class AuditFileController {
     @RequestMapping(value = "getQuery", method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'hr:auditFile:view')")
     public AuditFileQuery getQuery(AuditFileQuery auditFileQuery) {
+        String accountId= RequestUtils.getAccountId();
+        auditFileQuery.getExtra().put("accountFavoriteList",accountFavoriteService.findAll());
         return auditFileQuery;
     }
 

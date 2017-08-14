@@ -12,6 +12,15 @@ public class AuditFileCollect extends DataEntity<AuditFileCollect>{
     private String accountId;
     private String auditFileId;
     private LocalDate collectDate;
+    private String accountFavoriteId;
+
+    public String getAccountFavoriteId() {
+        return accountFavoriteId;
+    }
+
+    public void setAccountFavoriteId(String accountFavoriteId) {
+        this.accountFavoriteId = accountFavoriteId;
+    }
 
     public LocalDate getCollectDate() {
         return collectDate;

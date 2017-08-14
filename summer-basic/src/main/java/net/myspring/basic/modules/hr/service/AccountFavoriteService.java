@@ -35,6 +35,11 @@ public class AccountFavoriteService {
         return page;
     }
 
+    public List<AccountFavoriteDto> findByAccountId(String accountId){
+        List<AccountFavorite> accountFavoriteList=accountFavoriteRepository.findByAccountIdAndEnabledIsTrue(accountId);
+        return BeanUtil.map(accountFavoriteList,AccountFavoriteDto.class);
+    }
+
     @Transactional
     public AccountFavorite save(AccountFavoriteForm accountFavoriteForm){
         AccountFavorite accountFavorite;

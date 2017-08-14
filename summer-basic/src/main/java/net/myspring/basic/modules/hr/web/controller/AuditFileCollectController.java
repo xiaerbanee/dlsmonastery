@@ -14,8 +14,8 @@ public class AuditFileCollectController {
     private AuditFileCollectService auditFileCollectService;
 
     @RequestMapping(value = "collect")
-    public RestResponse collect(String auditFileId,boolean collect){
-        auditFileCollectService.collect(auditFileId,collect);
+    public RestResponse collect(String auditFileId,String accountFavoriteId,boolean collect){
+        auditFileCollectService.collect(auditFileId,accountFavoriteId,collect);
         if(collect){
             return new RestResponse("收藏成功",null);
         }else {

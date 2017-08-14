@@ -23,11 +23,12 @@ public class AuditFileCollectService {
     private AuditFileRepository auditFileRepository;
 
     @Transactional
-    public void collect(String auditFileId, boolean collect) {
+    public void collect(String auditFileId, String accountFavoriteId, boolean collect) {
         String accountId = RequestUtils.getAccountId();
         AuditFileCollect auditFileCollect = auditFileCollectRepository.findByAccountIdAndAuditFileIdAndEnabledIsTrue(accountId, auditFileId);
         if (auditFileCollect == null && collect) {
             auditFileCollect = new AuditFileCollect();
+            auditFileCollect.setAccountFavoriteId(accountFavoriteId);
             auditFileCollect.setAccountId(accountId);
             auditFileCollect.setAuditFileId(auditFileId);
             auditFileCollect.setCollectDate(LocalDate.now());
@@ -35,7 +36,7 @@ public class AuditFileCollectService {
         } else if (auditFileCollect != null && !collect) {
             auditFileCollect.setEnabled(false);
             auditFileCollectRepository.save(auditFileCollect);
-}
+        }
     }
 
 }
