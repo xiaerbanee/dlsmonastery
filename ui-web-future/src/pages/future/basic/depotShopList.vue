@@ -5,6 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAddDepot" icon="plus" v-permit="'crm:depotShop:basicEdit'">添加</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:depotShop:view'">过滤或导出</el-button>
+        <el-button type="primary" @click="synArea = true" icon="search">机构同步</el-button>
         <el-button type="primary" @click="itemBindAccount" icon="share" v-permit="'crm:depotShop:basicEdit'">账户绑定</el-button>
         <el-button type="primary" @click="itemMerge" icon="setting" v-permit="'crm:depotShop:businessEdit'">门店合并</el-button>
         <span v-html="searchText"></span>
@@ -80,7 +81,7 @@
       <search-dialog @enter="search()" :show="synArea" @hide="synArea=false" title="过滤" v-model="synArea"  size="tiny" class="search-form" z-index="1500">
         <el-form :model="formData">
           <el-form-item label="门店名称" :label-width="formLabelWidth">
-            <el-input v-model="synData.depotName" auto-complete="off"></el-input>
+            <el-input v-model="synData.name" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="办事处" :label-width="formLabelWidth">
             <el-select v-model="synData.areaId" clearable filterable>
@@ -145,7 +146,7 @@
           extra:{}
         },
         synData:{
-          depotName:"",
+          name:"",
           areaId:""
         },
         initPromise:{},

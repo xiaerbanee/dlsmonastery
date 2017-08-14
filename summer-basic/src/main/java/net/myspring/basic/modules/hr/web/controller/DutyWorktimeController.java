@@ -54,6 +54,9 @@ public class DutyWorktimeController {
             String[] yearMonth=StringUtils.split(month, CharConstant.DATE_RANGE_SPLITTER);
             dateStart = LocalDate.of(Integer.valueOf(yearMonth[0]),Integer.valueOf(yearMonth[1]),1);
         }
+        if(StringUtils.isBlank(officeId)) {
+            officeId="";
+        }
         LocalDate dateEnd=LocalDateUtils.getLastDayOfThisMonth(dateStart);
         List<DutyWorktimeExportDto> dutyWorktimeExportDtoList=dutyWorktimeService.getDutyWorktimeExportDto(dateStart,dateEnd,officeId);
         Workbook workbook = new SXSSFWorkbook(10000);
