@@ -135,6 +135,7 @@ export default {
       customerReceive:"应收对账报表",
       consignmentReport:"委托代销报表",
       retailReport:"零售报表",
+      salProxyReceive:"销售收款汇总报表",
       cloudSysCategory:"系统设置",
       kingdeeBookList:"账套管理",
       kingdeeBookForm:"账套编辑",
