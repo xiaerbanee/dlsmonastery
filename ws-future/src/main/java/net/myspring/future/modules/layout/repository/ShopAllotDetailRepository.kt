@@ -12,12 +12,8 @@ import java.util.*
 
 
 interface ShopAllotDetailRepository : BaseRepository<ShopAllotDetail,String>, ShopAllotDetailRepositoryCustom{
-    @Query("""
-        SELECT t
-        FROM  #{#entityName} t
-        where t.shopAllotId = :shopAllotId
-     """)
-    fun findByShopAllotId(shopAllotId: String):MutableList<ShopAllotDetail>?
+
+    fun findByShopAllotId(shopAllotId: String):MutableList<ShopAllotDetail>
 }
 
 interface ShopAllotDetailRepositoryCustom{

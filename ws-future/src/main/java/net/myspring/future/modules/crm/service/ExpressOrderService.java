@@ -3,6 +3,7 @@ package net.myspring.future.modules.crm.service;
 import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.constant.ServiceConstant;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.manager.DepotManager;
@@ -81,7 +82,7 @@ public class ExpressOrderService {
 
     public SimpleExcelBook exportEMS(ExpressOrderQuery expressOrderQuery) {
 
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
         List<List<SimpleExcelColumn>> excelColumnList=Lists.newArrayList();
         Map<String, CellStyle> cellStyleMap=ExcelUtils.getCellStyleMap(workbook);
         CellStyle headCellStyle = cellStyleMap.get(ExcelCellStyle.HEADER.name());
@@ -132,7 +133,7 @@ public class ExpressOrderService {
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"其他费"));
         excelColumnList.add(headColumnList);
 
-        List<ExpressOrderDto> expressOrderDtoList=findPage(new PageRequest(0,10000, new Sort(Sort.Direction.ASC, "extend_business_id")), expressOrderQuery).getContent();
+        List<ExpressOrderDto> expressOrderDtoList=findPage(new PageRequest(0,ServiceConstant.EXPORT_MAX_ROW_NUM, new Sort(Sort.Direction.ASC, "extend_business_id")), expressOrderQuery).getContent();
         List<String>  extendBusinessIdList= CollectionUtil.extractToList(expressOrderDtoList,"extendBusinessId");
         List<String>  lxMallOrderBusinessIdList=goodsOrderRepository.findLxMallOrderBybusinessIdList(extendBusinessIdList);
 
@@ -201,7 +202,7 @@ public class ExpressOrderService {
     }
 
     public SimpleExcelBook export(ExpressOrderQuery expressOrderQuery) {
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
 
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"extendBusinessId","订单号"));
@@ -221,7 +222,7 @@ public class ExpressOrderService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"averageWeight","单机重量"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"remarks","备注"));
 
-        List<ExpressOrderDto> expressOrderDtoList=findPage(new PageRequest(0,10000), expressOrderQuery).getContent();
+        List<ExpressOrderDto> expressOrderDtoList=findPage(new PageRequest(0,ServiceConstant.EXPORT_MAX_ROW_NUM), expressOrderQuery).getContent();
 
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("快递打印列表", expressOrderDtoList, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook, simpleExcelSheet);

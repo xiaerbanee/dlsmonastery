@@ -66,7 +66,9 @@
         if(this.remote){
           return this.doSearchByIds(val);
         }else if(create){
-          return this.doSearchByKey(val, null);
+          return this.searchByKeyMethod(null).then((response)=>{
+            this.itemList = response.data;
+          });
         }else{
           return Promise.resolve();
         }
@@ -79,6 +81,7 @@
               newList.push(item);
             }
           }
+
           for(let item of response.data) {
             if(!this.selected(val, item)) {
               newList.push(item);

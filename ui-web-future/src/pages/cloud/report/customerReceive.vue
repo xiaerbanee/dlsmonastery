@@ -130,6 +130,7 @@
           if (submitData.customerIdList.length !== 0) {
             axios.get('/api/global/cloud/report/customerReceive/list?' + qs.stringify(submitData)).then((response) => {
               this.summary = response.data;
+              submitData.customerIdList = [];
             });
           }
           this.page = response.data;

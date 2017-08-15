@@ -8,6 +8,7 @@ import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.constant.ServiceConstant;
 import net.myspring.future.common.enums.AdGoodsOrderStatusEnum;
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
@@ -665,7 +666,7 @@ public class AdGoodsOrderService {
 
     public SimpleExcelBook export(AdGoodsOrderQuery adGoodsOrderQuery) {
 
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
 
         List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
         List<SimpleExcelColumn> adGoodsOrderColumnList = Lists.newArrayList();
@@ -691,7 +692,7 @@ public class AdGoodsOrderService {
         adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "expressOrderRealPay", "实付运费"));
         adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "expressOrderShouldGet", "应收运费"));
 
-        List<AdGoodsOrderDto> adGoodsOrderDtoList = findPage(new PageRequest(0, 10000), adGoodsOrderQuery).getContent();
+        List<AdGoodsOrderDto> adGoodsOrderDtoList = findPage(new PageRequest(0, ServiceConstant.EXPORT_MAX_ROW_NUM), adGoodsOrderQuery).getContent();
         simpleExcelSheetList.add(new SimpleExcelSheet("订单数据", adGoodsOrderDtoList, adGoodsOrderColumnList));
 
         List<SimpleExcelColumn> adGoodsOrderDetailColumnList = Lists.newArrayList();
@@ -726,7 +727,7 @@ public class AdGoodsOrderService {
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderBillDate", "开单时间"));
         List<AdGoodsOrderDetailExportDto> adGoodsOrderDetailExportDtoList = Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(adGoodsOrderDtoList)){
-            adGoodsOrderDetailExportDtoList = adGoodsOrderDetailRepository.findDtoListForExport(CollectionUtil.extractToList(adGoodsOrderDtoList, "id"), 10000);
+            adGoodsOrderDetailExportDtoList = adGoodsOrderDetailRepository.findDtoListForExport(CollectionUtil.extractToList(adGoodsOrderDtoList, "id"), ServiceConstant.EXPORT_MAX_ROW_NUM);
             cacheUtils.initCacheInput(adGoodsOrderDetailExportDtoList);
         }
         simpleExcelSheetList.add(new SimpleExcelSheet("订单明细", adGoodsOrderDetailExportDtoList, adGoodsOrderDetailColumnList));

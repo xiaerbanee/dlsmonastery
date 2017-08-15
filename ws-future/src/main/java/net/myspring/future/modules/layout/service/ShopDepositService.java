@@ -3,6 +3,7 @@ package net.myspring.future.modules.layout.service;
 import com.google.common.collect.Lists;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.constant.ServiceConstant;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
@@ -132,7 +133,7 @@ public class ShopDepositService {
 
     public SimpleExcelBook exportLatest() {
 
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
         List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
 
         List<SimpleExcelColumn> shopDepositLatestColumnList = Lists.newArrayList();
@@ -145,7 +146,7 @@ public class ShopDepositService {
         shopDepositLatestColumnList.add(new SimpleExcelColumn(workbook, "imageDepositCreatedDate", "形象保证金创建时间"));
         shopDepositLatestColumnList.add(new SimpleExcelColumn(workbook, "marketDepositCreatedByName", "市场保证金创建人"));
         shopDepositLatestColumnList.add(new SimpleExcelColumn(workbook, "marketDepositCreatedDate", "市场保证金创建时间"));
-        List<ShopDepositLatestDto> shopDepositLatestDtoList = shopDepositRepository.findShopDepositLatestDto(10000);
+        List<ShopDepositLatestDto> shopDepositLatestDtoList = shopDepositRepository.findShopDepositLatestDto(ServiceConstant.EXPORT_MAX_ROW_NUM);
         cacheUtils.initCacheInput(shopDepositLatestDtoList);
         SimpleExcelSheet sheet1 = new SimpleExcelSheet("门店最新押金数据", shopDepositLatestDtoList, shopDepositLatestColumnList);
         ExcelUtils.doWrite(workbook, sheet1);
@@ -162,7 +163,7 @@ public class ShopDepositService {
         shopDepositColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "创建时间"));
         shopDepositColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedByName", "更新人"));
         shopDepositColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
-        List<ShopDepositDto> shopDepositDtoList = shopDepositRepository.findForExport(10000);
+        List<ShopDepositDto> shopDepositDtoList = shopDepositRepository.findForExport(ServiceConstant.EXPORT_MAX_ROW_NUM);
         cacheUtils.initCacheInput(shopDepositDtoList);
         SimpleExcelSheet sheet2 = new SimpleExcelSheet("押金明细", shopDepositDtoList, shopDepositColumnList);
         ExcelUtils.doWrite(workbook, sheet2);

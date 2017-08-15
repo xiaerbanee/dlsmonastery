@@ -195,7 +195,7 @@ public class StkTransferDirectManager {
         return null;
     }
 
-    public KingdeeSynReturnDto synForShopAllot(ShopAllot shopAllot){
+    public KingdeeSynReturnDto synForShopAllot(ShopAllot shopAllot, String fromDepotStoreOutCode, String toDepotStoreOutCode){
         StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
         transferDirectDto.setExtendId(shopAllot.getId());
         transferDirectDto.setExtendType(ExtendTypeEnum.门店调拨.name());
@@ -204,8 +204,7 @@ public class StkTransferDirectManager {
         List<ShopAllotDetail> shopAllotDetailList = shopAllotDetailRepository.findByShopAllotId(shopAllot.getId());
         List<String> productIdList = shopAllotDetailList.stream().map(ShopAllotDetail::getProductId).collect(Collectors.toList());
         Map<String,Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId, Product->Product));
-        DepotStore fromDepotStore = depotStoreRepository.findById(shopAllot.getFromShopId());
-        DepotStore toDepotStore = depotStoreRepository.findById(shopAllot.getToShopId());
+
         for (ShopAllotDetail shopAllotDetail : shopAllotDetailList) {
             if (shopAllotDetail.getQty() != null && shopAllotDetail.getQty() > 0) {
                 StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
@@ -216,15 +215,15 @@ public class StkTransferDirectManager {
                     throw new ServiceException(product.getName() + " 该货品没有编码，不能开单");
                 }
                 entryDto.setQty(shopAllotDetail.getQty());
-                if (fromDepotStore.getOutCode() != null) {
-                    entryDto.setSrcStockNumber(fromDepotStore.getOutCode());//调出仓库
+                if( fromDepotStoreOutCode != null) {
+                    entryDto.setSrcStockNumber(fromDepotStoreOutCode);//调出仓库
                 } else {
-                    throw new ServiceException(fromDepotStore.getId() + " 该仓库（ID）没有编码，不能开单");
+                    throw new ServiceException("调出仓库没有outCode，不能开单");
                 }
-                if (toDepotStore.getOutCode() != null) {
-                    entryDto.setDestStockNumber(toDepotStore.getOutCode());//调入仓库
+                if (toDepotStoreOutCode != null) {
+                    entryDto.setDestStockNumber(toDepotStoreOutCode);//调入仓库
                 } else {
-                    throw new ServiceException(toDepotStore.getId() + " 该仓库（ID）没有编码，不能开单");
+                    throw new ServiceException("调入仓库没有调出仓库没有outCode，不能开单");
                 }
                 entryDto.setNoteEntry(shopAllot.getBusinessId()+"申："+shopAllot.getRemarks()+"审:"+shopAllot.getAuditRemarks());
                 transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
