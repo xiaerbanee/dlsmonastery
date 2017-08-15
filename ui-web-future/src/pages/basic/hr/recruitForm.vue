@@ -304,7 +304,6 @@
           }
         },privious(){
           this.active = this.active-1;
-          console.log(">>>>>>",this.active)
           if(this.active ==-1){
             this.active = 6;
           }
