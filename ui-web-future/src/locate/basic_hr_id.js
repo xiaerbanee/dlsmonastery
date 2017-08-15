@@ -970,7 +970,7 @@ export default {
     auditStatus: "status pemeriksaan",
     entryJob: "semua pekerjaan",
     anaphaseTracking:"后期跟踪",
-    primary:"上一步",
+    privious:"上一步",
     next: "selanjutnya",
     contactDate: "tanggal kontak",
     name: "nama",

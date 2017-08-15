@@ -11,17 +11,8 @@
             <el-option v-for="type in inputForm.typeList" :key="type" :label="type" :value="type"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="URL" prop="kingdeeUrl">
-          <el-input v-model="inputForm.kingdeeUrl"></el-input>
-        </el-form-item>
         <el-form-item label="POST-URL" prop="kingdeePostUrl">
           <el-input v-model="inputForm.kingdeePostUrl"></el-input>
-        </el-form-item>
-        <el-form-item label="用户名" prop="kingdeeUsername">
-          <el-input v-model="inputForm.kingdeeUsername"></el-input>
-        </el-form-item>
-        <el-form-item label="密码" prop="kingdeePassword">
-          <el-input v-model="inputForm.kingdeePassword"></el-input>
         </el-form-item>
         <el-form-item label="DBID" prop="kingdeeDbid">
           <el-input v-model="inputForm.kingdeeDbid"></el-input>
@@ -50,10 +41,7 @@
             rules: {
               name: [{ required: true, message: "必填信息"}],
               type: [{ required: true, message: "必填信息"}],
-              kingdeeUrl: [{ required: true, message: "必填信息"}],
               kingdeePostUrl: [{ required: true, message: "必填信息"}],
-              kingdeeUsername: [{ required: true, message: "必填信息"}],
-              kingdeePassword: [{ required: true, message: "必填信息"}],
               kingdeeDbid: [{ required: true, message: "必填信息"}],
             }
           }

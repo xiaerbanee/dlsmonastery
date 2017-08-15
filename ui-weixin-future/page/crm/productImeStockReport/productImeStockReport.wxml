@@ -5,27 +5,16 @@
       <input type="hidden" name="page" value="{{formData.page}}" class="hidden" />
       <input type="hidden" name="size" value="{{formData.size}}" class="hidden" />
       <input type="hidden" name="sort" value="{{formData.sort}}" class="hidden" />
-      <input type="hidden" name="companyName" value="{{formData.companyName}}" class="hidden" />
-      <input type="hidden" name="depotId" value="{{formData.depotId}}" class="hidden" />
-      <input type="hidden" name="officeId" value="{{formData.officeId}}" class="hidden" />
-      <input type="hidden" name="isDetail" value="{{formData.isDetail}}" class="hidden" />
+      <input name="depotId" value="{{formData.depotId}}" class="hidden" />
+      <input name="officeId" value="{{formData.officeId}}" class="hidden" />
+      <input name="isDetail" value="{{formData.isDetail}}" class="hidden" />
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
-          <view class="weui-label">开始日期</view>
+          <view class="weui-label">日期</view>
         </view>
         <view class="weui-cell__bd ">
-          <picker mode="date" name="dateStart" value="{{formData.dateStart}}" data-name="dateStart" bindchange="bindDateChange">
-            <view class="weui-input">{{formData.dateStart?formData.dateStart:""}}</view>
-          </picker>
-        </view>
-      </view>
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
-          <view class="weui-label">结束日期</view>
-        </view>
-        <view class="weui-cell__bd ">
-          <picker mode="date" name="dateEnd" value="{{formData.dateEnd}}" data-name="dateEnd" bindchange="bindDateChange">
-            <view class="weui-input">{{formData.dateEnd?formData.dateEnd:""}}</view>
+          <picker mode="date" name="date" value="{{formData.date}}" bindchange="bindDateChange">
+            <view class="weui-input">{{formData.date?formData.date:""}}</view>
           </picker>
         </view>
       </view>
@@ -84,17 +73,7 @@
         <view class="weui-cell__bd" style="overflow:hidden">
           <picker name="productTypeIdList" value="{{formData.productTypeIdList?formData.productTypeIdList:''}}" bindtap="bindProductType" disabled>
             <input type="text" name="productTypeName" value="{{formData.productTypeName}}" style="display:none" />
-            <view class="weui-input">{{formData.productTypeName}} <image class="right_icon" src="/image/icons/right.png" /> </view>
-          </picker>
-        </view>
-      </view>
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
-          <view class="weui-label">运营商</view>
-        </view>
-        <view class="weui-cell__bd">
-          <picker name="netType" range="{{formProperty.netTypeList}}" value="{{formData.netType?formData.netType:''}}" bindchange="bindNetType">
-            <view class="weui-input">{{formData.netType?formData.netType:""}}</view>
+            <view class="weui-input">{{formData.productTypeName}}<image class="right_icon" src="/image/icons/right.png" /> </view>
           </picker>
         </view>
       </view>
@@ -120,7 +99,7 @@
             </view>
             <view wx:for="{{page}}" wx:key="index" data-office-id="{{item.officeId}}" data-depot-id="{{item.depotId}}" data-product-type-name="{{item.productTypeName}}" data-product-type-id="{{item.productTypeId}}" class="rowspan" bindtap="nextLevel">
               <view class="tr">
-                <view class="td" wx:if="{{formData.sumType=='区域'}}">{{isDepot?item.depotName:item.officeName}}</view>
+                <view class="td" wx:if="{{formData.sumType=='区域'}}">{{isDepot?item.depotName:(item.officeName?item.officeName:"")}}</view>
                 <view class="td" wx:if="{{formData.sumType=='型号'}}">{{item.productTypeName?item.productTypeName:""}}</view>
                 <view class="td">{{item.qty}}</view>
                 <view class="td">{{item.percent}}</view>

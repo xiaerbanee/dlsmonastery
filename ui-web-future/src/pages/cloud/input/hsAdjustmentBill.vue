@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="apPayBill"></head-tab>
+    <head-tab active="hsAdjustmentBill"></head-tab>
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
         <el-form-item label="日期"  prop="billDate">
@@ -33,29 +33,13 @@
             height: 650,
             minSpareRows: 1,
             fixedRowsTop:0,
-            colHeaders: ["往来单位", "部门", "银行账户", "结算方式", "金额", "备注","对方科目"],
+            colHeaders: ["物料", "调整金额", "仓库"],
             columns: [
-              {type: "autocomplete", strict: true, allowEmpty: false, supplierName:[],source: this.supplierName},
-              {type: "autocomplete", strict: true, allowEmpty: false, departmentName:[],source: this.departmentName},
-              {type: "autocomplete", strict: true, allowEmpty: true, bankAcntName:[],source: this.bankAcntName},
-              {type: "autocomplete", strict: true, allowEmpty: false, settleTypeName:[],source: this.settleTypeName},
+              {type: "autocomplete", strict: true, allowEmpty: false,source: []},
               {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true},
-              {type: "text", allowEmpty: true, strict: true},
-              {type: "autocomplete", strict: true, allowEmpty: false, accountName:[],source: this.accountName},
+              {type: "autocomplete", strict: true, allowEmpty: false, source: []},
             ],
             contextMenu: true,
-            afterChange: function (changes, source) {
-              if (source !== 'loadData') {
-                for (let i = changes.length - 1; i >= 0; i--) {
-                  let row = changes[i][0];
-                  let column = changes[i][1];
-                  if(column === 3 &&　changes[i][3] === '现金') {
-                    table.setDataAtCell(row, 2, '');
-                    table.setDataAtCell(row, 5, '批量开单');
-                  }
-                }
-              }
-            }
           },
           formData:{
           },rules: {
@@ -79,7 +63,7 @@
             this.formData.json = JSON.stringify(this.formData.json);
             this.formData.billDate = util.formatLocalDate(this.formData.billDate);
             var submitData = util.deleteExtra(this.formData);
-            axios.post('/api/global/cloud/input/apPayBill/save', qs.stringify(submitData,{allowDots:true})).then((response)=> {
+            axios.post('/api/global/cloud/input/hsAdjustmentBill/save', qs.stringify(submitData,{allowDots:true})).then((response)=> {
               if(response.data.success){
                 this.$message(response.data.message);
                 this.initPage();
@@ -101,14 +85,11 @@
       },
     },
     created() {
-      axios.get('/api/global/cloud/input/apPayBill/form').then((response)=>{
+      axios.get('/api/global/cloud/input/hsAdjustmentBill/form').then((response)=>{
         this.formData = response.data;
         let extra = response.data.extra;
-        this.settings.columns[0].source = extra.supplierNameList;
-        this.settings.columns[1].source = extra.departmentNameList;
-        this.settings.columns[2].source = extra.bankAcntNameList;
-        this.settings.columns[3].source = extra.settleTypeNameList;
-        this.settings.columns[6].source = extra.accountNameList;
+        this.settings.columns[0].source = extra.materialNameList;
+        this.settings.columns[2].source = extra.stockNameList;
         this.initPage();
       });
     },

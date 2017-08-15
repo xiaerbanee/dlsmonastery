@@ -123,6 +123,9 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
 //            sb.append("""  and t3.name like concat('%',:badProductName,'%') """)
             sb.append("""  and t3.id =:badProductName """)/*modify*/
         }
+        if (CollectionUtil.isNotEmpty(afterSaleQuery.badProductNameList)) {
+            sb.append(""" and t3.id in (:badProductNameList) """)
+        }
         if (CollectionUtil.isNotEmpty(afterSaleQuery.createdByList)) {
             sb.append("""  and ( t9.login_name in (:createdByList) )""")
         }

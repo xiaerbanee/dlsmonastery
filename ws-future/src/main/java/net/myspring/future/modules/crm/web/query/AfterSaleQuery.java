@@ -29,6 +29,7 @@ public class AfterSaleQuery  extends BaseQuery{
     private List<String> toAreaImeList=Lists.newArrayList();
     private List<String> businessIdList=Lists.newArrayList();
     private List<String> createdByList=Lists.newArrayList();
+    private List<String> badProductNameList = Lists.newArrayList();
 
     private boolean fromCompany=false;
 
@@ -107,6 +108,18 @@ public class AfterSaleQuery  extends BaseQuery{
 
     public void setBadProductName(String badProductName) {
         this.badProductName = badProductName;
+    }
+
+    public List<String> getBadProductNameList() {
+        return badProductNameList;
+    }
+
+    public void setBadProductNameList(List<String> badProductNameList) {
+        this.badProductNameList = badProductNameList;
+    }
+
+    public boolean isFromCompany() {
+        return fromCompany;
     }
 
     public String getBadImeStr() {

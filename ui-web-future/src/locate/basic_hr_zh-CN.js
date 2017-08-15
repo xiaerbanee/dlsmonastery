@@ -971,7 +971,7 @@ export default {
     auditStatus: "资审",
     entryJob: "入职",
     anaphaseTracking:"后期跟踪",
-    primary:"上一步",
+    privious:"上一步",
     next: "下一步",
     contactDate: "预约时间",
     name: "姓名",

@@ -47,7 +47,10 @@
   </div>
 </template>
 <style>
-  .el-table .danger-row {
+  .el-table .danger-row,.el-table .el-table__row--striped.danger-row>td {
+    background: #f2dede !important;
+  }
+  .el-table .danger-row:hover>td{
     background: #f2dede !important;
   }
 </style>
@@ -73,6 +76,7 @@
           this.searchText = util.getSearchText(this.$refs.searchDialog);
         })
       },   tableRowClassName(row, index) {
+        console.log(row.scoreDate+":"+row.cardQtyDiff)
         if (row.cardQtyDiff>10) {
           return "danger-row";
         }
