@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.constant.ServiceConstant;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -167,7 +168,7 @@ public class ImeAllotService {
 
     public SimpleExcelBook export(ImeAllotQuery imeAllotQuery) {
 
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
 
         List<SimpleExcelColumn> imeAllotColumnList = Lists.newArrayList();
         imeAllotColumnList.add(new SimpleExcelColumn(workbook, "fromDepotName", "调拨前门店"));
@@ -178,7 +179,7 @@ public class ImeAllotService {
         imeAllotColumnList.add(new SimpleExcelColumn(workbook, "createdByName", "调拨人"));
         imeAllotColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
-        List<ImeAllotDto> imeAllotDtoList = findPage(new PageRequest(0,10000), imeAllotQuery).getContent();
+        List<ImeAllotDto> imeAllotDtoList = findPage(new PageRequest(0,ServiceConstant.EXPORT_MAX_ROW_NUM), imeAllotQuery).getContent();
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("调拨列表", imeAllotDtoList, imeAllotColumnList);
         ExcelUtils.doWrite(workbook, simpleExcelSheet);
         return  new SimpleExcelBook(workbook,"调拨列表"+ LocalDate.now()+".xlsx", simpleExcelSheet);

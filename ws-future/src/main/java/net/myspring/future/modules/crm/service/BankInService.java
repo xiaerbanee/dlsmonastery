@@ -3,6 +3,7 @@ package net.myspring.future.modules.crm.service;
 import com.google.common.collect.Lists;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.constant.ServiceConstant;
 import net.myspring.future.common.enums.SimpleProcessEndsEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -86,7 +87,7 @@ public class BankInService {
 
         bankIn.setProcessStatus(simpleProcess.getCurrentProcessStatus());
         bankIn.setPositionId(simpleProcess.getCurrentPositionId());
-        bankIn.setBillDate(bankInAuditForm.getBillDate() == null ? bankIn.getInputDate() : bankInAuditForm.getBillDate());
+        bankIn.setBillDate(bankInAuditForm.getBillDate() == null ? LocalDate.now() : bankInAuditForm.getBillDate());
         bankInRepository.save(bankIn);
 
         if(Boolean.TRUE.equals(bankInAuditForm.getSyn()) && SimpleProcessEndsEnum.已通过.name().equals(simpleProcess.getCurrentProcessStatus())){
@@ -142,7 +143,7 @@ public class BankInService {
 
     public SimpleExcelBook export(BankInQuery bankInQuery) {
 
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "formatId", "编号"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shopName", "门店"));
@@ -158,7 +159,7 @@ public class BankInService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "processStatus", "状态"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
-        List<BankInDto> bankInDtoList = findPage(new PageRequest(0,10000), bankInQuery).getContent();
+        List<BankInDto> bankInDtoList = findPage(new PageRequest(0,ServiceConstant.EXPORT_MAX_ROW_NUM), bankInQuery).getContent();
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("销售收款列表", bankInDtoList, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook, simpleExcelSheet);
         return new SimpleExcelBook(workbook,"销售收款列表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);

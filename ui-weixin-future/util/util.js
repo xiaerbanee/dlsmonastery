@@ -177,7 +177,7 @@ function deleteExtra(json) {
     var newJson = JSON.parse(JSON.stringify(json));
     delete newJson.extra;
     for (var index in newJson) {
-        if (!newJson[index]) {
+        if (newJson[index]==null) {
             delete newJson[index];
         } else if ((newJson[index] instanceof Array) && newJson[index].length == 0) {
             delete newJson[index];

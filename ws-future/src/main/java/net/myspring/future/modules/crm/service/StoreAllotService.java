@@ -12,6 +12,7 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.constant.ServiceConstant;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.enums.StoreAllotStatusEnum;
@@ -179,7 +180,7 @@ public class StoreAllotService {
 
     public SimpleExcelBook export(StoreAllotQuery storeAllotQuery) {
 
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
 
         List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
         List<SimpleExcelColumn> storeAllotColumnList = Lists.newArrayList();
@@ -193,7 +194,7 @@ public class StoreAllotService {
         storeAllotColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedByName", "更新人"));
         storeAllotColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
         storeAllotColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
-        List<StoreAllotDto> storeAllotDtoList = findPage(new PageRequest(0,10000), storeAllotQuery).getContent();
+        List<StoreAllotDto> storeAllotDtoList = findPage(new PageRequest(0,ServiceConstant.EXPORT_MAX_ROW_NUM), storeAllotQuery).getContent();
         simpleExcelSheetList.add(new SimpleExcelSheet("调拨单", storeAllotDtoList, storeAllotColumnList));
 
         List<SimpleExcelColumn> storeAllotImeColumnList = Lists.newArrayList();
@@ -205,7 +206,7 @@ public class StoreAllotService {
         storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "storeAllotToStoreName", "门店"));
         storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "productName", "产品名称"));
         storeAllotImeColumnList.add(new SimpleExcelColumn(workbook, "productImeIme", "串码"));
-        List<StoreAllotImeDto> storeAllotImeDtoList = storeAllotImeRepository.findDtoListByStoreAllotIdList(CollectionUtil.extractToList(storeAllotDtoList, "id"), 10000);
+        List<StoreAllotImeDto> storeAllotImeDtoList = storeAllotImeRepository.findDtoListByStoreAllotIdList(CollectionUtil.extractToList(storeAllotDtoList, "id"), ServiceConstant.EXPORT_MAX_ROW_NUM);
         cacheUtils.initCacheInput(storeAllotImeDtoList);
         simpleExcelSheetList.add(new SimpleExcelSheet("串码", storeAllotImeDtoList, storeAllotImeColumnList));
 

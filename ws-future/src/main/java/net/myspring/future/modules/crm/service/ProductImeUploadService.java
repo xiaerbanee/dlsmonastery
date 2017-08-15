@@ -3,6 +3,7 @@ package net.myspring.future.modules.crm.service;
 import com.google.common.collect.Lists;
 import net.myspring.basic.modules.sys.dto.AccountCommonDto;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.constant.ServiceConstant;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -205,7 +206,7 @@ public class ProductImeUploadService {
 
     public SimpleExcelBook export(ProductImeUploadQuery productImeUploadQuery) {
 
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
 
         List<SimpleExcelColumn> productImeUploadColumnList = Lists.newArrayList();
         productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "month", "上报月份"));
@@ -223,7 +224,7 @@ public class ProductImeUploadService {
         productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
         productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
-        List<ProductImeUploadDto> productImeUploadDtoList = findPage(new PageRequest(0,10000), productImeUploadQuery).getContent();
+        List<ProductImeUploadDto> productImeUploadDtoList = findPage(new PageRequest(0,ServiceConstant.EXPORT_MAX_ROW_NUM), productImeUploadQuery).getContent();
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("串码上报记录", productImeUploadDtoList, productImeUploadColumnList);
         ExcelUtils.doWrite(workbook, simpleExcelSheet);
         return  new SimpleExcelBook(workbook,"串码上报记录"+ LocalDate.now()+".xlsx", simpleExcelSheet);

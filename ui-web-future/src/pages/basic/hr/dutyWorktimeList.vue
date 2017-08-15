@@ -98,6 +98,10 @@
         this.exportVisible = false;
         this.formData.formatMonth = util.formatLocalMonth(this.month);
         util.confirmBeforeExportData(this).then(() => {
+          console.log(this.formData)
+          if(this.formData.officeId==null){
+            this.formData.officeId='';
+          }
           window.location.href="/api/basic/hr/dutyWorktime/export?month="+this.formData.formatMonth+"&officeId="+this.formData.officeId;
           this.pageRequest();
         }).catch(()=>{});

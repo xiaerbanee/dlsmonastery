@@ -6,6 +6,7 @@ import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.constant.ServiceConstant;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -177,7 +178,7 @@ private ExpressOrder saveExpressOrderWithoutSettingExpressCodes(ExpressForm expr
 
     public SimpleExcelBook export(ExpressQuery expressQuery) {
 
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
 
         List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
         List<SimpleExcelColumn> expressColumnList = Lists.newArrayList();
@@ -201,7 +202,7 @@ private ExpressOrder saveExpressOrderWithoutSettingExpressCodes(ExpressForm expr
         expressColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedByName", "更新人"));
         expressColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
         expressColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
-        List<ExpressDto> expressDtoList = findPage(new PageRequest(0,10000), expressQuery).getContent();
+        List<ExpressDto> expressDtoList = findPage(new PageRequest(0,ServiceConstant.EXPORT_MAX_ROW_NUM), expressQuery).getContent();
         simpleExcelSheetList.add(new SimpleExcelSheet("快递单列表", expressDtoList, expressColumnList));
 
         ExcelUtils.doWrite(workbook,simpleExcelSheetList);

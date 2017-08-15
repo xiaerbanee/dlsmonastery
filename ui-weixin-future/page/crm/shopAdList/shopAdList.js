@@ -115,6 +115,13 @@ Page({
       that.setData({ "formData.createdDateEnd": e.detail.value });
     }
   },
+  bindAdType:function(e){
+    var that = this;
+    that.setData({
+      'formData.shopAdTypeId': that.data.formProperty.shopAdTypeList[e.detail.value].id,
+      'formData.shopAdTypeName': that.data.formProperty.shopAdTypeList[e.detail.value].name
+    })
+  },
   itemActive: function (e) {
     var that = this;
     var id = e.currentTarget.dataset.id;

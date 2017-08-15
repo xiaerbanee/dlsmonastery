@@ -25,7 +25,3 @@ ribbon:
 
 logging:
   file: global-tool.log
-  level:
-    org.springframework.cloud: DEBUG
-    org.springframework.security: DEBUG
-    net.myspring: DEBUG

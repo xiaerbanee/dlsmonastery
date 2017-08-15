@@ -15,6 +15,7 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.constant.ServiceConstant;
 import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.ExpressUtils;
@@ -720,7 +721,7 @@ public class GoodsOrderService {
 
     public SimpleExcelBook export(GoodsOrderQuery goodsOrderQuery) {
 
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
         Map<String, CellStyle> cellStyleMap=ExcelUtils.getCellStyleMap(workbook);
 
         if (goodsOrderQuery.getExpressCodes() != null) {
@@ -731,7 +732,7 @@ public class GoodsOrderService {
         }
         goodsOrderQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
 
-        List<GoodsOrderDto> goodsOrderDtoList=goodsOrderRepository.findAll(new PageRequest(0,10000), goodsOrderQuery).getContent();
+        List<GoodsOrderDto> goodsOrderDtoList=goodsOrderRepository.findAll(new PageRequest(0,ServiceConstant.EXPORT_MAX_ROW_NUM), goodsOrderQuery).getContent();
         cacheUtils.initCacheInput(goodsOrderDtoList);
 
         List<String> goodsOrderIdList = CollectionUtil.extractToList(goodsOrderDtoList, "id");
