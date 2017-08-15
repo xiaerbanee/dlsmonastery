@@ -11,7 +11,7 @@
           <view class="weui-label">登录名</view>
         </view>
         <view class="weui-cell__bd">
-          <input  name="loginName" class="weui-input" placeholder="请输入登录名" />
+          <input name="loginName" class="weui-input" placeholder="请输入登录名" />
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -24,7 +24,10 @@
       </view>
     </view>
     <view class="weui-btn-area">
-        <button disabled="{{disabled}}"  formType="submit" class="weui-btn" type="primary">确定</button>
+      <button disabled="{{disabled}}" formType="submit" class="weui-btn" type="primary">确定</button>
     </view>
   </form>
+   <view class="weui-btn-area">
+      <button disabled="{{disabled}}" bindtap="back" class="weui-btn" type="primary">返回</button>
+    </view>
 </view>
