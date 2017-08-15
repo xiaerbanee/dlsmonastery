@@ -68,7 +68,7 @@ Page({
         },
         data: $util.deleteExtra(that.data.formData),
         success: function (res) {
-          console.log('data get back:',res.data)
+          console.log( res.data)
           that.setData({ page: res.data.list, sum: res.data.sum });
           wx.hideToast();
         }
@@ -92,45 +92,59 @@ Page({
     let that = this;
     let officeId = e.currentTarget.dataset.officeId
     let depotId = e.currentTarget.dataset.depotId;
-    if (!that.data.nextIsShop) {
-      wx.request({
-        url: $util.getUrl('basic/sys/office/checkLastLevel'),
-        header: {
-          Cookie: "JSESSIONID=" + app.globalData.sessionId
-        },
-        data: { officeId },
+    let productTypeId = e.currentTarget.dataset.productTypeId;
+    let productTypeName = e.currentTarget.dataset.productTypeName;
+    if (productTypeId) {
+      that.setData({ "formData.productTypeIdList": productTypeId, "formData.productTypeName": productTypeName, "formData.sumType": "区域" })
+      wx.showToast({
+        title: '加载中',
+        icon: 'loading',
+        duration: 10000,
         success: function (res) {
-          that.data.officeIds.push(officeId);
-          that.setData({ officeIds: that.data.officeIds,officeId: officeId, 'formData.officeId': that.data.officeIds[that.data.officeIds.length - 1], nextIsShop: res.data })
-          wx.showToast({
-            title: '加载中',
-            icon: 'loading',
-            duration: 10000,
-            success: function (res) {
-              that.pageRequest();
-            }
-          })
+          that.pageRequest();
         }
       })
     } else {
-      that.setData({ 'formData.isDetail': true, 'formData.depotId': depotId })
-      wx.request({
-        url: $util.getUrl('ws/future/basic/depotShop/depotReportDetail'),
-        header: {
-          Cookie: "JSESSIONID=" + app.globalData.sessionId
-        },
-        data: $util.deleteExtra(that.data.formData),
-        success: function (res) {
-          let productQtyMap = res.data.productQtyMap;
-          let productTypeDetail = [];
-          if (productQtyMap) {
-            for (let key in productQtyMap) {
-              productTypeDetail.push({ productName: key, qty: productQtyMap[key] })
-            }
-            that.setData({ productTypeDetail: productTypeDetail });
+      if (!that.data.nextIsShop) {
+        wx.request({
+          url: $util.getUrl('basic/sys/office/checkLastLevel'),
+          header: {
+            Cookie: "JSESSIONID=" + app.globalData.sessionId
+          },
+          data: { officeId },
+          success: function (res) {
+            that.data.officeIds.push(officeId);
+            that.setData({ officeIds: that.data.officeIds, officeId: officeId, 'formData.officeId': that.data.officeIds[that.data.officeIds.length - 1], nextIsShop: res.data })
+            wx.showToast({
+              title: '加载中',
+              icon: 'loading',
+              duration: 10000,
+              success: function (res) {
+                that.pageRequest();
+              }
+            })
           }
-        }
-      })
+        })
+      } else {
+        that.setData({ 'formData.isDetail': true, 'formData.depotId': depotId })
+        wx.request({
+          url: $util.getUrl('ws/future/basic/depotShop/depotReportDetail'),
+          header: {
+            Cookie: "JSESSIONID=" + app.globalData.sessionId
+          },
+          data: $util.deleteExtra(that.data.formData),
+          success: function (res) {
+            let productQtyMap = res.data.productQtyMap;
+            let productTypeDetail = [];
+            if (productQtyMap) {
+              for (let key in productQtyMap) {
+                productTypeDetail.push({ productName: key, qty: productQtyMap[key] })
+              }
+              that.setData({ productTypeDetail: productTypeDetail });
+            }
+          }
+        })
+      }
     }
   },
   preLevel() {
@@ -139,7 +153,7 @@ Page({
       that.setData({ nextIsShop: true })
     } else {
       that.data.officeIds.pop();
-      that.setData({ officeIds: that.data.officeIds,nextIsShop: false, })
+      that.setData({ officeIds: that.data.officeIds, nextIsShop: false, })
     }
     that.setData({
       isDepot: false, 'formData.isDetail': false, productTypeDetail: null, 'formData.depotId': null,
@@ -180,7 +194,7 @@ Page({
     var that = this;
     that.setData({ 'formData.townType': that.data.formProperty.townTypeList[e.detail.value] })
   },
-  bindNetType:function(e){
+  bindNetType: function (e) {
     var that = this;
     that.setData({ 'formData.netType': that.data.formProperty.netTypeList[e.detail.value] })
   },
@@ -197,7 +211,6 @@ Page({
     that.setData({ searchHidden: !that.data.searchHidden })
   },
   formSubmit: function (e) {
-    console.log('form when click:',e.detail)
     var that = this;
     that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
     wx.showToast({
