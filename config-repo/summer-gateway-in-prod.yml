@@ -5,16 +5,16 @@ server:
 
 zuul:
   host:
-    socket-timeout-millis: 30000
-    connect-timeout-millis: 30000
+    socket-timeout-millis: 120000
+    connect-timeout-millis: 120000
     max-total-connections: 400
   add-proxy-headers: true
   semaphore:
     max-semaphores: 2000
 
 ribbon:
-  ReadTimeout: 30000
-  ConnectTimeout: 30000
+  ReadTimeout: 120000
+  ConnectTimeout: 120000
 
 hystrix:
   command:
@@ -28,4 +28,4 @@ hystrix:
           semaphore:
             maxConcurrentRequests: 2000
           thread:
-            timeoutInMilliseconds: 30000
+            timeoutInMilliseconds: 120000
