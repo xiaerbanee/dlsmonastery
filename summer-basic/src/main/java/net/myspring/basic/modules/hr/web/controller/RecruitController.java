@@ -1,16 +1,15 @@
 package net.myspring.basic.modules.hr.web.controller;
 
+import net.myspring.basic.common.enums.RecruitTypeEnum;
 import net.myspring.basic.modules.hr.dto.RecruitDto;
 import net.myspring.basic.modules.hr.service.RecruitEnumService;
 import net.myspring.basic.modules.hr.service.RecruitService;
 import net.myspring.basic.modules.hr.web.form.RecruitForm;
 import net.myspring.basic.modules.hr.web.query.RecruitQuery;
-import net.myspring.common.enums.DictEnumCategoryEnum;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,13 +36,13 @@ public class RecruitController {
 
     @RequestMapping(value = "getForm")
     public RecruitForm findForm(RecruitForm recruitForm){
-        recruitForm.getExtra().put("applyFromList",recruitEnumService.findValueByCategory("来源") );
-        recruitForm.getExtra().put("applyPositionList",recruitEnumService.findValueByCategory("岗位") );
-        recruitForm.getExtra().put("firstAppointByList",recruitEnumService.findValueByCategory("初试人") );
-        recruitForm.getExtra().put("secondAppointByList",recruitEnumService.findValueByCategory("复试人") );
-        recruitForm.getExtra().put("workCategoryList",recruitEnumService.findValueByCategory("品类") );
-        recruitForm.getExtra().put("marriageStatusList",recruitEnumService.findValueByCategory("婚育状况") );
-        recruitForm.getExtra().put("educationsList",recruitEnumService.findValueByCategory("最高学历") );
+        recruitForm.getExtra().put("applyFromList",recruitEnumService.findValueByCategory(RecruitTypeEnum.来源.name()) );
+        recruitForm.getExtra().put("applyPositionList",recruitEnumService.findValueByCategory(RecruitTypeEnum.岗位.name()) );
+        recruitForm.getExtra().put("firstAppointByList",recruitEnumService.findValueByCategory(RecruitTypeEnum.初试人.name()) );
+        recruitForm.getExtra().put("secondAppointByList",recruitEnumService.findValueByCategory(RecruitTypeEnum.复试人.name()) );
+        recruitForm.getExtra().put("workCategoryList",recruitEnumService.findValueByCategory(RecruitTypeEnum.品类.name()) );
+        recruitForm.getExtra().put("marriageStatusList",recruitEnumService.findValueByCategory(RecruitTypeEnum.婚育状况.name()) );
+        recruitForm.getExtra().put("educationsList",recruitEnumService.findValueByCategory(RecruitTypeEnum.最高学历.name()) );
         return recruitForm;
     }
 
