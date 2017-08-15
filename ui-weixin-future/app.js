@@ -29,7 +29,6 @@ App({
         weixinAccounts: [],
         companyNames: [],
         menuList: [],
-        isLogin:true
     },
     //检查用户是否登陆，如果未登陆，自动登陆
     autoLogin: function (cb) {
@@ -54,7 +53,6 @@ App({
                     that.globalData.weixinAccounts = weixinAccounts;
                     //判断公司个数
                     if (weixinAccounts.length == 0) {
-                      console.log("+++++++++++++bind+++")
                         wx.navigateTo({
                             url: '/page/sys/accountBind/accountBind'
                         })

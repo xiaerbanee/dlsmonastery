@@ -33,11 +33,9 @@ Page({
   }, initPage: function () {
     var that = this;
     if (app.globalData.weixinAccounts.length > 1 && app.globalData.weixinAccount == null) {
-      console.log(">>>>>>1")
       that.setData({ weixinAccountsHidden: false, companyHidden: true, weixinAccounts: app.globalData.weixinAccounts })
     } else {
       that.setData({ tip: "当前帐号：" + app.globalData.weixinAccount.companyName + "-" + app.globalData.weixinAccount.loginName })
-      console.log(">>>>>>2")
       that.setData({ weixinAccountsHidden: true, companyHidden: true })
       that.setData({ menuList: app.globalData.menuList })
     }
@@ -45,7 +43,6 @@ Page({
     var that = this;
     var index = event.currentTarget.dataset.index;
     app.globalData.weixinAccount = that.data.weixinAccounts[index];
-    console.log(">>>>>>3")
     that.setData({ weixinAccountsHidden: true, companyHidden: true })
     app.login(function () {
       that.initPage();
@@ -77,7 +74,6 @@ Page({
             that.setData({ menuList: [] })
             app.globalData.menuList = null
             app.globalData.weixinAccount = null
-            console.log(">>>>>>4")
             that.setData({ weixinAccountsHidden: false, companyHidden: true })
             wx.request({
               url: $util.getUaaUrl('user/getWeixinAccounts?weixinCode=' + app.globalData.weixinCode + "&companyName=" + app.globalData.companyName),
@@ -93,12 +89,10 @@ Page({
     })
   },
   chooseCompany: function (e) {
-    app.globalData.isLogin=false;
     app.globalData.companyName = e.currentTarget.dataset.name;
     var that = this;
     if ($util.isNotBlank(app.globalData.companyName)) {
-      console.log(">>>>>>5")
-      that.setData({ companyHidden: true, weixinAccountsHidden: false })
+      that.setData({ companyHidden: true, weixinAccountsHidden: false,weixinAccounts:null })
       app.autoLogin(function () {
         that.initPage();
       })
@@ -106,7 +100,6 @@ Page({
   },
   logoutCompany: function (e) {
     app.globalData.companyName = null;
-    console.log(">>>>>>6")
     this.setData({ companyHidden: false, weixinAccountsHidden: true, tip: '' });
   }
 })
