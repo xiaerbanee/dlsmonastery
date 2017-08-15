@@ -40,18 +40,6 @@
               {type: "autocomplete", strict: true, allowEmpty: false, source: []},
             ],
             contextMenu: true,
-            afterChange: function (changes, source) {
-              if (source !== 'loadData') {
-//                for (let i = changes.length - 1; i >= 0; i--) {
-//                  let row = changes[i][0];
-//                  let column = changes[i][1];
-//                  if(column === 3 &&　changes[i][3] === '现金') {
-//                    table.setDataAtCell(row, 2, '');
-//                    table.setDataAtCell(row, 5, '批量开单');
-//                  }
-//                }
-              }
-            }
           },
           formData:{
           },rules: {
@@ -74,7 +62,8 @@
             }
             this.formData.json = JSON.stringify(this.formData.json);
             this.formData.billDate = util.formatLocalDate(this.formData.billDate);
-            axios.post('/api/global/cloud/input/hsAdjustmentBill/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
+            var submitData = util.deleteExtra(this.formData);
+            axios.post('/api/global/cloud/input/hsAdjustmentBill/save', qs.stringify(submitData,{allowDots:true})).then((response)=> {
               if(response.data.success){
                 this.$message(response.data.message);
                 this.initPage();
