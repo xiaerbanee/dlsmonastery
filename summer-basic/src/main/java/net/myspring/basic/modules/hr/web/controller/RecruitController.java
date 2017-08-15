@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.web.controller;
 
 import net.myspring.basic.modules.hr.dto.RecruitDto;
+import net.myspring.basic.modules.hr.service.RecruitEnumService;
 import net.myspring.basic.modules.hr.service.RecruitService;
 import net.myspring.basic.modules.hr.web.form.RecruitForm;
 import net.myspring.basic.modules.hr.web.query.RecruitQuery;
@@ -20,6 +21,8 @@ public class RecruitController {
 
     @Autowired
     private RecruitService recruitService;
+    @Autowired
+    private RecruitEnumService recruitEnumService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<RecruitDto> list(Pageable pageable, RecruitQuery recruitQuery){
@@ -34,7 +37,13 @@ public class RecruitController {
 
     @RequestMapping(value = "getForm")
     public RecruitForm findForm(RecruitForm recruitForm){
-        recruitForm.getExtra().put("educationsList", DictEnumCategoryEnum.EDUCATION.getValue());
+        recruitForm.getExtra().put("applyFromList",recruitEnumService.findValueByCategory("来源") );
+        recruitForm.getExtra().put("applyPositionList",recruitEnumService.findValueByCategory("岗位") );
+        recruitForm.getExtra().put("firstAppointByList",recruitEnumService.findValueByCategory("初试人") );
+        recruitForm.getExtra().put("secondAppointByList",recruitEnumService.findValueByCategory("复试人") );
+        recruitForm.getExtra().put("workCategoryList",recruitEnumService.findValueByCategory("品类") );
+        recruitForm.getExtra().put("marriageStatusList",recruitEnumService.findValueByCategory("婚育状况") );
+        recruitForm.getExtra().put("educationsList",recruitEnumService.findValueByCategory("最高学历") );
         return recruitForm;
     }
 
