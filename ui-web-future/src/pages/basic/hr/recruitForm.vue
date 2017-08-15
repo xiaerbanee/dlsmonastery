@@ -31,6 +31,7 @@
         <el-step :title="$t('recruitForm.entryJob')"></el-step>
         <el-step :title="$t('recruitForm.anaphaseTracking')"></el-step>
         <el-button  @click="next">{{$t('recruitForm.next')}}</el-button>
+        <el-button  @click="privious">{{$t('recruitForm.privious')}}</el-button>
       </el-steps>
     </el-row>
     <el-alert :title="message" type="error" show-icon v-if="message !==''"></el-alert>
@@ -267,7 +268,7 @@
             submitDisabled:false,
             formProperty:{},
             remoteLoading:false,
-            active:1,
+            active:0,
             message:'',
             inputForm:{
               extra:{}
@@ -300,6 +301,12 @@
           this.active = this.active+1;
           if(this.active ==7){
             this.active = 1;
+          }
+        },privious(){
+          this.active = this.active-1;
+          console.log(">>>>>>",this.active)
+          if(this.active ==-1){
+            this.active = 6;
           }
         },
         initPage(){
