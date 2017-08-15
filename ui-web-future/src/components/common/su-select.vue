@@ -1,10 +1,27 @@
 <template>
-  <div>
+  <div :class="multiple ? 'suSelectMultiple' : ''">
     <el-select v-model="innerId"  filterable :remote="remote" :multiple="multiple" :disabled="disabled"  placeholder="输入关键字" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
       <el-option v-for="item in itemList"  :key="item.id" :label="item[labelProp]" :value="item.id"></el-option>
     </el-select>
   </div>
 </template>
+<style>
+  .suSelectMultiple .el-select{
+    margin-right: 5px;
+    max-height: 157px;
+    overflow: auto;
+  }
+  .suSelectMultiple .el-select::-webkit-scrollbar{
+    width:5px;
+    height: 5px;
+    background: #ccc;
+    border-radius: 10px;
+  }
+  .suSelectMultiple .el-select::-webkit-scrollbar-thumb{
+    background: #4db3ff;
+    border-radius: 10px;
+  }
+</style>
 <script>
   export default {
     props: {
