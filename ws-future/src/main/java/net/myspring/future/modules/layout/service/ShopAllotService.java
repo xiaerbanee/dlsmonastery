@@ -7,6 +7,7 @@ import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -137,7 +138,6 @@ public class ShopAllotService {
             shopAllot.setRemarks( shopAllotForm.getRemarks());
             shopAllotRepository.save(shopAllot);
 
-
             batchSaveShopAllotDetails(shopAllotForm.getShopAllotDetailList(), shopAllot);
         }
 
@@ -193,37 +193,51 @@ public class ShopAllotService {
         }
 
         if(shopAllotAuditForm.getSyn()) {
-            CompanyConfigCacheDto companyConfig = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFAULT_STORE_ID.name());
-            if (companyConfig != null && StringUtils.isNotBlank(companyConfig.getValue())) {
-                DepotStore store = depotStoreRepository.findOne(companyConfig.getValue());
-                //都不是寄售门店  一出一退
-                if (shopAllot.getFromShopId() == null && shopAllot.getToShopId() == null) {
-                    List<KingdeeSynReturnDto> salReturnList = salReturnStockManager.synForShopAllot(shopAllot,store.getOutCode());
-                    shopAllot.setReturnCloudSynId(salReturnList.get(0).getId());
-                    //销售开单
-                    List<KingdeeSynReturnDto> salOutList = salOutStockManager.synForShopAllot(shopAllot,store.getOutCode());
-                    shopAllot.setReturnCloudSynId(salOutList.get(0).getId());
-                } else {
-                    //都是寄售(直接调拨单)
-                    if (shopAllot.getFromShopId() != null && shopAllot.getToShopId() != null) {
-                        KingdeeSynReturnDto stkTransferDirect = stkTransferDirectManager.synForShopAllot(shopAllot);
-                        shopAllot.setReturnCloudSynId(stkTransferDirect.getId());
-                    } else {
-                        //调前为寄售 出库单
-                        if (shopAllot.getFromShopId() != null) {
-                            DepotStore fromDepotStore = depotStoreRepository.findById(shopAllot.getFromShopId());
-                            List<KingdeeSynReturnDto> salOutList = salOutStockManager.synForShopAllot(shopAllot,fromDepotStore.getOutCode());
-                            shopAllot.setReturnCloudSynId(salOutList.get(0).getId());
-                        } else {
-                            //调后为寄售  退货单
-                            DepotStore fromDepotStore = depotStoreRepository.findById(shopAllot.getToShopId());
-                            List<KingdeeSynReturnDto> salReturnList = salReturnStockManager.synForShopAllot(shopAllot,fromDepotStore.getOutCode());
-                            shopAllot.setReturnCloudSynId(salReturnList.get(0).getId());
-                        }
-                    }
-                }
-            }
+            syn(shopAllot);
         }
+    }
+
+    private void syn(ShopAllot shopAllot) {
+        CompanyConfigCacheDto companyConfig = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFAULT_STORE_ID.name());
+        if(companyConfig == null || StringUtils.isBlank(companyConfig.getValue())){
+            throw new ServiceException("CompanyConfig中没有配置DEFAULT_STORE_ID");
+        }
+
+        DepotStore store = depotStoreRepository.findOne(companyConfig.getValue());
+        Depot fromShop = depotRepository.findOne(shopAllot.getFromShopId());
+        Depot toShop = depotRepository.findOne(shopAllot.getToShopId());
+
+        //都不是寄售门店  一出一退
+        if (StringUtils.isBlank(fromShop.getDelegateDepotId()) && StringUtils.isBlank(toShop.getDelegateDepotId())) {
+            List<KingdeeSynReturnDto> salReturnList = salReturnStockManager.synForShopAllot(shopAllot,store.getOutCode());
+            shopAllot.setReturnCloudSynId(salReturnList.get(0).getId());
+
+            List<KingdeeSynReturnDto> salOutList = salOutStockManager.synForShopAllot(shopAllot,store.getOutCode());
+            shopAllot.setReturnCloudSynId(salOutList.get(0).getId());
+        } else  if (StringUtils.isNotBlank(fromShop.getDelegateDepotId()) && StringUtils.isNotBlank(toShop.getDelegateDepotId())) {
+            DepotStore fromDepotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(fromShop.getDelegateDepotId());
+            assert fromDepotStore != null;
+
+            DepotStore toDepotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(toShop.getDelegateDepotId());
+            assert toDepotStore != null;
+
+            KingdeeSynReturnDto stkTransferDirect = stkTransferDirectManager.synForShopAllot(shopAllot, fromDepotStore.getOutCode(), toDepotStore.getOutCode());
+            shopAllot.setReturnCloudSynId(stkTransferDirect.getId());
+        } else if (StringUtils.isNotBlank(fromShop.getDelegateDepotId()) && StringUtils.isBlank(toShop.getDelegateDepotId())) {
+            DepotStore fromDepotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(fromShop.getDelegateDepotId());
+            assert fromDepotStore != null;
+
+            List<KingdeeSynReturnDto> salOutList = salOutStockManager.synForShopAllot(shopAllot,fromDepotStore.getOutCode());
+            shopAllot.setReturnCloudSynId(salOutList.get(0).getId());
+        } else {
+            //调后为寄售  退货单
+            DepotStore toDepotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(toShop.getDelegateDepotId());
+            assert toDepotStore != null;
+
+            List<KingdeeSynReturnDto> salReturnList = salReturnStockManager.synForShopAllot(shopAllot,toDepotStore.getOutCode());
+            shopAllot.setReturnCloudSynId(salReturnList.get(0).getId());
+        }
+
         shopAllotRepository.save(shopAllot);
     }
 

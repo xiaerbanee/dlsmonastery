@@ -6,6 +6,7 @@ import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.enums.CompanyNameEnum;
+import net.myspring.future.common.constant.ServiceConstant;
 import net.myspring.future.common.enums.InputTypeEnum;
 import net.myspring.future.common.enums.OutTypeEnum;
 import net.myspring.future.common.enums.SumTypeEnum;
@@ -296,7 +297,7 @@ public class ProductImeService {
     }
 
     public SimpleExcelBook getFolderFileId(List<DepotReportDto> depotReportList, ReportQuery reportQuery) {
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaName", "办事处"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "officeName", "机构"));
@@ -357,9 +358,9 @@ public class ProductImeService {
         cacheUtils.initCacheInput(depotReportList);
         cacheUtils.initCacheInput(depotReportList);
         cacheUtils.initCacheInput(depotReportList);
-        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("销售报表" + reportQuery.getExportType(), depotReportList, simpleExcelColumnList);
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet(reportQuery.getType() + reportQuery.getExportType(), depotReportList, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook,simpleExcelSheet);
-        return new SimpleExcelBook(workbook, "销售报表" + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
+        return new SimpleExcelBook(workbook, reportQuery.getType() + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
     }
 
     @Transactional

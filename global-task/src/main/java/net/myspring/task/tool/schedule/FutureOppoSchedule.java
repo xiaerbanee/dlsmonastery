@@ -27,7 +27,7 @@ public class FutureOppoSchedule {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Scheduled(cron = "0 20 2-18 * * ?")
+    @Scheduled(cron = "0 0/20 * * * ?")
     public void pullJxoppoFactoryData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXOPPO.name())) {
@@ -38,7 +38,7 @@ public class FutureOppoSchedule {
         }
     }
 
-    @Scheduled(cron = "0 40 2-18 * * ?")
+    @Scheduled(cron = "0 0 0/1 * * ?")
     public void pullWzoppoFactoryData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.WZOPPO.name())) {

@@ -9,6 +9,7 @@ import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.constant.ServiceConstant;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
@@ -56,6 +57,7 @@ import java.util.*;
 @Service
 @Transactional(readOnly = true)
 public class DepotService {
+
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
@@ -72,7 +74,6 @@ public class DepotService {
     private CloudClient cloudClient;
     @Autowired
     private OfficeClient officeClient;
-
 
     public List<DepotDto> findShopList(DepotQuery depotQuery) {
         depotQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
@@ -122,8 +123,8 @@ public class DepotService {
 
     public Page<DepotAccountDto> findDepotAccountList(Pageable pageable, DepotAccountQuery depotAccountQuery, boolean queryDetail) {
 
-        if (depotAccountQuery.getDutyDateRange() == null || depotAccountQuery.getDutyDateStart() == null || LocalDate.now().minusDays(70).isAfter(depotAccountQuery.getDutyDateStart())) {
-            throw new ServiceException("查询条件请选择为70天以内");
+        if(depotAccountQuery.getDutyDateRange() == null || depotAccountQuery.getDutyDateStart()==null){
+            throw new ServiceException("请选择查询日期区间");
         }
 
         depotAccountQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
@@ -161,7 +162,7 @@ public class DepotService {
     public SimpleExcelBook depotAccountExportDetail(DepotAccountQuery depotAccountQuery) {
 
         List<SimpleExcelSheet> sheets = new ArrayList<>();
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
 
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "officeName", "所属机构"));
@@ -171,7 +172,7 @@ public class DepotService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "scbzj", "市场保证金"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "xxbzj", "形象押金"));
 
-        List<DepotAccountDto> depotAccountList = findDepotAccountList(new PageRequest(0, 10000), depotAccountQuery, true).getContent();
+        List<DepotAccountDto> depotAccountList = findDepotAccountList(new PageRequest(0,ServiceConstant.EXPORT_MAX_ROW_NUM),  depotAccountQuery, true).getContent();
         SimpleExcelSheet sheet = new SimpleExcelSheet("应收报表", depotAccountList, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook, sheet);
         sheets.add(sheet);
@@ -211,9 +212,9 @@ public class DepotService {
             Workbook workbook = new XSSFWorkbook(new BufferedInputStream(is));
             List<SimpleExcelSheet> sheets = new ArrayList<>();
 
-            List<DepotAccountDto> depotAccountList = findDepotAccountList(new PageRequest(0, 10000), depotAccountQuery, false).getContent();
-            for (int i = 0; i < depotAccountList.size(); i++) {
-                List<List<SimpleExcelColumn>> excelColumnList = Lists.newArrayList();
+            List<DepotAccountDto> depotAccountList = findDepotAccountList(new PageRequest(0,ServiceConstant.EXPORT_MAX_ROW_NUM),  depotAccountQuery, false).getContent();
+            for(int i=0;i<depotAccountList.size();i++){
+                List<List<SimpleExcelColumn>> excelColumnList=Lists.newArrayList();
                 DepotAccountDto depotAccountDto = depotAccountList.get(i);
 
                 workbook.cloneSheet(0);
@@ -244,7 +245,7 @@ public class DepotService {
 
     public SimpleExcelBook depotAccountExportAllDepots(DepotAccountQuery depotAccountQuery) {
 
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
 
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaName", "所属办事处"));
@@ -253,7 +254,7 @@ public class DepotService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "qcys", "期初应收"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "qmys", "期末应收"));
 
-        List<DepotAccountDto> depotAccountList = findDepotAccountList(new PageRequest(0, 10000), depotAccountQuery, false).getContent();
+        List<DepotAccountDto> depotAccountList = findDepotAccountList(new PageRequest(0, ServiceConstant.EXPORT_MAX_ROW_NUM),  depotAccountQuery, false).getContent();
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("应收列表", depotAccountList, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook, simpleExcelSheet);
         return new SimpleExcelBook(workbook, "应收列表" + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
