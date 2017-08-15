@@ -79,7 +79,6 @@ public class HsAdjustmentBillService {
     @Transactional
     public KingdeeSynDto save(HsAdjustmentBillForm hsAdjustmentBillForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         LocalDate billDate = hsAdjustmentBillForm.getBillDate();
-        String supplierNumber = hsAdjustmentBillForm.getSupplierNumber();
         String json = HtmlUtils.htmlUnescape(hsAdjustmentBillForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
         List<String> materialNameList = Lists.newArrayList();
@@ -94,7 +93,6 @@ public class HsAdjustmentBillService {
         hsAdjustmentBillDto.setExtendType(ExtendTypeEnum.入库成本调整单_K3.name());
         hsAdjustmentBillDto.setCreator(accountKingdeeBook.getUsername());
         hsAdjustmentBillDto.setDate(billDate);
-        hsAdjustmentBillDto.setSupplierNumber(supplierNumber);
         for (List<Object> row : data){
             String materialName = HandsontableUtils.getValue(row,0);
             String priceStr = HandsontableUtils.getValue(row,1);
@@ -112,8 +110,6 @@ public class HsAdjustmentBillService {
     public HsAdjustmentBillForm getForm(){
         HsAdjustmentBillForm hsAdjustmentBillForm = new HsAdjustmentBillForm();
         Map<String,Object> map = Maps.newHashMap();
-//        map.put("supplierNameList",bdSupplierRepository.findAll().stream().map(BdSupplier::getFName).collect(Collectors.toList()));
-//        map.put("departmentNameList",bdDepartmentRepository.findAll().stream().map(BdDepartment::getFFullName).collect(Collectors.toList()));
         map.put("materialNameList",bdMaterialRepository.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList()));
         map.put("stockNameList",bdStockRepository.findAll().stream().map(BdStock::getFName).collect(Collectors.toList()));
         hsAdjustmentBillForm.setExtra(map);

@@ -9,7 +9,6 @@ import java.time.LocalDate;
  */
 public class HsAdjustmentBillForm extends BaseForm<HsAdjustmentBillForm>{
     private LocalDate billDate;
-    private String supplierNumber = "B001";
     private String json;
 
     public LocalDate getBillDate() {
@@ -18,14 +17,6 @@ public class HsAdjustmentBillForm extends BaseForm<HsAdjustmentBillForm>{
 
     public void setBillDate(LocalDate billDate) {
         this.billDate = billDate;
-    }
-
-    public String getSupplierNumber() {
-        return supplierNumber;
-    }
-
-    public void setSupplierNumber(String supplierNumber) {
-        this.supplierNumber = supplierNumber;
     }
 
     public String getJson() {

@@ -23,8 +23,6 @@ public class HsAdjustmentBillDto {
     private String creator;
     //日期
     private LocalDate date;
-    //往来单位(供应商编码)
-    private String supplierNumber;
 
     private List<HsAdjustmentBillEntityDto> entityDtoList = Lists.newArrayList();
 
@@ -60,14 +58,6 @@ public class HsAdjustmentBillDto {
         this.date = date;
     }
 
-    public String getSupplierNumber() {
-        return supplierNumber;
-    }
-
-    public void setSupplierNumber(String supplierNumber) {
-        this.supplierNumber = supplierNumber;
-    }
-
     public List<HsAdjustmentBillEntityDto> getEntityDtoList() {
         return entityDtoList;
     }
@@ -85,20 +75,20 @@ public class HsAdjustmentBillDto {
         model.put("FID", 0);
         //单据类型-入库成本调整单
         model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "CGRKTZD01_SYS"));
-        //业务日期
-        model.put("FDate", LocalDateUtils.format(getDate()));
         //业务类型-入库调整
-        model.put("FBusinessType", "入库调整");
-        //往来单位
-        model.put("FSUPPLIERID", CollectionUtil.getMap("FNumber", getSupplierNumber()));
+        model.put("FBusinessType", 1);
+        //业务日期
+        model.put("FDate", LocalDateUtils.format(getDate(),"yyyy-M-d"));
         //核算体系编码-财务会计核算体系
         model.put("FACCTGSYSTEMID", CollectionUtil.getMap("FNumber", "KJHSTX01_SYS"));
         //核算组织编码-账套名
         model.put("FAcctOrgID", CollectionUtil.getMap("FNumber", "100"));
         //会计政策编码-中国准则会计政策
         model.put("FACCTPOLICYID", CollectionUtil.getMap("FNumber", "KJZC01_SYS"));
-        //调整原因
+        //调整原因-手工调差
         model.put("FAdjustmentReason", "手工调差");
+        //创建组织
+        model.put("FCreateOrgId", CollectionUtil.getMap("FNumber", "100"));
         List<Object> entity = Lists.newArrayList();
         for (HsAdjustmentBillEntityDto entityDto : getEntityDtoList()) {
             Map<String, Object> detail = Maps.newLinkedHashMap();
@@ -114,13 +104,12 @@ public class HsAdjustmentBillDto {
             detail.put("FStockID", CollectionUtil.getMap("FNumber", entityDto.getStockNumber()));
             //货主-账号名
             detail.put("FOwnerID", CollectionUtil.getMap("FNumber", "100"));
-            //
             entity.add(detail);
         }
         model.put("FEntity", entity);
         root.put("Model", model);
         String result = ObjectMapperUtils.writeValueAsString(root);
-        System.out.println(result);
+        //System.out.println(result);
         return result;
     }
 }
