@@ -358,9 +358,9 @@ public class ProductImeService {
         cacheUtils.initCacheInput(depotReportList);
         cacheUtils.initCacheInput(depotReportList);
         cacheUtils.initCacheInput(depotReportList);
-        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("销售报表" + reportQuery.getExportType(), depotReportList, simpleExcelColumnList);
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet(reportQuery.getType() + reportQuery.getExportType(), depotReportList, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook,simpleExcelSheet);
-        return new SimpleExcelBook(workbook, "销售报表" + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
+        return new SimpleExcelBook(workbook, reportQuery.getType() + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
     }
 
     @Transactional

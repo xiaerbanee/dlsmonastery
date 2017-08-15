@@ -29,6 +29,11 @@
         <el-table-column prop="remarks" :label="$t('recruitEnumList.remarks')"></el-table-column>
         <el-table-column prop="createdByName" :label="$t('recruitEnumList.createdBy')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('recruitEnumList.createdDate')"></el-table-column>
+        <el-table-column fixed="right" :label="$t('dictEnumList.operation')" width="140">
+          <template scope="scope">
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'sys:dictEnum:delete'">{{$t('dictEnumList.delete')}}</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
@@ -78,6 +83,15 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'recruitEnumForm'})
+      },itemAction(id,action){
+        if(action=="delete") {
+          util.confirmBeforeDelRecord(this).then(() => {
+            axios.get('/api/basic/hr/recruitEnum/delete',{params:{id:id}}).then((response) =>{
+              this.$message(response.data.message);
+              this.pageRequest();
+            });
+          }).catch(()=>{});
+        }
       }
     },created () {
       var that = this;

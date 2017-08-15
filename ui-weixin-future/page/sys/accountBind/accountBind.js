@@ -38,7 +38,7 @@ Page({
         loginName: e.detail.value.loginName,
         password: e.detail.value.password,
         code: that.data.code,
-        companyName:app.globalData.companyName
+        companyName: app.globalData.companyName
       },
       header: {
         Cookie: "JSESSIONID=" + app.globalData.sessionId
@@ -66,5 +66,10 @@ Page({
         }
       }
     })
+  },
+  back: function (e) {
+    wx.navigateBack({
+      url: '/page/hr/home/home'
+    });
   }
 })

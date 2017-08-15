@@ -160,7 +160,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         }else if(reportQuery.isDetail){
             sb.append("""
                SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName',t6.town_id as 'townId',
-               t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type,t6.district_id as 'districtId',t2.employee_id, t2.created_date as 'saleDate'
+               t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type,t6.district_id as 'districtId',t2.employee_id, t2.created_date as 'saleDate',t1.retail_date
             """)
         }
         sb.append("""
@@ -229,7 +229,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append("""  SELECT t6.id as depotId,t6.name as depotName,t6.town_id as 'townId',COUNT(t1.id) AS qty ,t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type,t6.district_id as 'districtId'""")
         }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName',t6.town_id as 'townId',t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type,t6.district_id as 'districtId',t3.employee_id,t3.created_date as 'saleDate'
+               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName',t6.town_id as 'townId',t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type,t6.district_id as 'districtId',t3.employee_id,t3.created_date as 'saleDate',t1.retail_date
             """)
         }
         sb.append("""
@@ -300,7 +300,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         }else if(reportQuery.isDetail){
             sb.append("""
                SELECT t2.id as 'productId',t2.name as 'productName',t1.ime,t1.retail_date,t6.employee_id,t4.office_id as 'officeId',t4.area_id as 'areaId',t4.town_id as 'townId', t4.district_id as 'districtId',
-               t6.created_date as 'saleDate',t4.id as 'depotId',t4.name as 'depotName',t3.name as 'productTypeName',t7.name as 'chainName',t4.area_type
+               t6.created_date as 'saleDate',t4.id as 'depotId',t4.name as 'depotName',t3.name as 'productTypeName',t7.name as 'chainName',t5.area_type
             """)
         }
         sb.append("""
@@ -365,7 +365,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         }else if(reportQuery.isDetail){
             sb.append("""
                SELECT t3.id as 'productId',t3.name as 'productName',t2.ime,t2.retail_date,t1.employee_id,t5.office_id as 'officeId',t5.area_id as 'areaId',
-               t1.created_date as 'saleDate',t5.id as 'depotId',t5.name as 'depotName',t5.town_id as 'townId',t5.district_id as 'districtId',t7.name as 'chainName',t4.name as 'productTypeName',t5.area_type
+               t1.created_date as 'saleDate',t5.id as 'depotId',t5.name as 'depotName',t5.town_id as 'townId',t5.district_id as 'districtId',t7.name as 'chainName',t4.name as 'productTypeName',t6.area_type
             """)
         }
         sb.append("""
