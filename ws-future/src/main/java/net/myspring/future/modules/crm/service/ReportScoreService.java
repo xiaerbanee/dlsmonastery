@@ -136,45 +136,48 @@ public class ReportScoreService {
                 ReportScoreOffice reportScoreOffice = reportScoreOfficeMap.get(officeId);
                 reportScoreOffice.setRecentMonthSaleQty(reportScoreOffice.getRecentMonthSaleQty() + reportScoreDataDto.getTotalSaleQty());
                 reportScoreOffice.setRecentMonthSaleMoney(reportScoreOffice.getRecentMonthSaleMoney().add(reportScoreDataDto.getTotalSaleMoney()));
-                reportScore.setRecentMonthSaleQty(reportScore.getRecentMonthSaleQty() + reportScoreDataDto.getTotalSaleQty());
-                reportScore.setRecentMonthSaleMoney(reportScore.getRecentMonthSaleMoney().add(reportScoreDataDto.getTotalSaleMoney()));
             }
+            reportScore.setRecentMonthSaleQty(reportScore.getRecentMonthSaleQty() + reportScoreDataDto.getTotalSaleQty());
+            reportScore.setRecentMonthSaleMoney(reportScore.getRecentMonthSaleMoney().add(reportScoreDataDto.getTotalSaleMoney()));
         }
         //统计本月数据
         List<ReportScoreDataDto> monthReportScoreDataList = reportScoreRepository.findDataByRetailDate(firstDayOfMonth, dateEnd);
         for (ReportScoreDataDto reportScoreDataDto : monthReportScoreDataList) {
             String areaId = getOfficeId(areaMap, reportScoreDataDto.getOfficeId());
             String officeId = getOfficeId(officeMap, reportScoreDataDto.getOfficeId());
-            if (StringUtils.isNotBlank(areaId) && StringUtils.isNotBlank(officeId)) {
+            if (StringUtils.isNotBlank(areaId)  ) {
                 ReportScoreArea reportScoreArea = reportScoreAreaMap.get(areaId);
                 reportScoreArea.setMonthSaleQty(reportScoreArea.getMonthSaleQty() + reportScoreDataDto.getTotalSaleQty());
                 reportScoreArea.setMonthSaleMoney(reportScoreArea.getMonthSaleMoney().add(reportScoreDataDto.getTotalSaleMoney()));
-                ReportScoreOffice reportScoreOffice = reportScoreOfficeMap.get(officeId);
-                reportScoreOffice.setMonthSaleQty(reportScoreOffice.getMonthSaleQty() + reportScoreDataDto.getTotalSaleQty());
-                reportScoreOffice.setMonthSaleMoney(reportScoreOffice.getMonthSaleMoney().add(reportScoreDataDto.getTotalSaleMoney()));
-                reportScore.setMonthSaleQty(reportScore.getMonthSaleQty() + reportScoreDataDto.getTotalSaleQty());
-                reportScore.setMonthSaleMoney(reportScore.getMonthSaleMoney().add(reportScoreDataDto.getTotalSaleMoney()));
+                if(StringUtils.isNotBlank(officeId)){
+                    ReportScoreOffice reportScoreOffice = reportScoreOfficeMap.get(officeId);
+                    reportScoreOffice.setMonthSaleQty(reportScoreOffice.getMonthSaleQty() + reportScoreDataDto.getTotalSaleQty());
+                    reportScoreOffice.setMonthSaleMoney(reportScoreOffice.getMonthSaleMoney().add(reportScoreDataDto.getTotalSaleMoney()));
+                }
             }
+            reportScore.setMonthSaleQty(reportScore.getMonthSaleQty() + reportScoreDataDto.getTotalSaleQty());
+            reportScore.setMonthSaleMoney(reportScore.getMonthSaleMoney().add(reportScoreDataDto.getTotalSaleMoney()));
         }
         //统计当日数据
         List<ReportScoreDataDto> reportScoreDataList = reportScoreRepository.findDataByRetailDate(dateStart, dateEnd);
         for (ReportScoreDataDto reportScoreDataDto : reportScoreDataList) {
             String areaId = getOfficeId(areaMap, reportScoreDataDto.getOfficeId());
             String officeId = getOfficeId(officeMap, reportScoreDataDto.getOfficeId());
-            if (StringUtils.isNotBlank(areaId) && StringUtils.isNotBlank(officeId)) {
+            if (StringUtils.isNotBlank(areaId)) {
                 ReportScoreArea reportScoreArea = reportScoreAreaMap.get(areaId);
                 reportScoreArea.setSaleQty(reportScoreArea.getSaleQty() + reportScoreDataDto.getTotalSaleQty());
                 reportScoreArea.setSaleMoney(reportScoreArea.getSaleMoney().add(reportScoreDataDto.getTotalSaleMoney()));
-                ReportScoreOffice reportScoreOffice = reportScoreOfficeMap.get(officeId);
-                reportScoreOffice.setSaleQty(reportScoreOffice.getSaleQty() + reportScoreDataDto.getTotalSaleQty());
-                reportScoreOffice.setSaleMoney(reportScoreOffice.getSaleMoney().add(reportScoreDataDto.getTotalSaleMoney()));
-                reportScore.setSaleQty(reportScore.getSaleQty() + reportScoreDataDto.getTotalSaleQty());
-                reportScore.setSaleMoney(reportScore.getSaleMoney().add(reportScoreDataDto.getTotalSaleMoney()));
+                if(StringUtils.isNotBlank(officeId)){
+                    ReportScoreOffice reportScoreOffice = reportScoreOfficeMap.get(officeId);
+                    reportScoreOffice.setSaleQty(reportScoreOffice.getSaleQty() + reportScoreDataDto.getTotalSaleQty());
+                    reportScoreOffice.setSaleMoney(reportScoreOffice.getSaleMoney().add(reportScoreDataDto.getTotalSaleMoney()));
+                }
             }
+            reportScore.setSaleQty(reportScore.getSaleQty() + reportScoreDataDto.getTotalSaleQty());
+            reportScore.setSaleMoney(reportScore.getSaleMoney().add(reportScoreDataDto.getTotalSaleMoney()));
         }
         reportScore.setScore(reportScoreForm.getCompanyScore());
         reportScore.setMonthScore(reportScoreForm.getCompanyMonthScore());
-
         List<ReportScoreArea> reportScoreAreas = Lists.newArrayList();
         List<ReportScoreOffice> reportScoreOffices = Lists.newArrayList();
         for (ReportScoreArea reportScoreArea : reportScoreAreaMap.values()) {
