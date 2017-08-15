@@ -45,7 +45,7 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="extendId" label="OA单据ID" sortable ></el-table-column>
+        <el-table-column fixed prop="extendId" label="OA单据ID" width="100"></el-table-column>
         <el-table-column prop="extendType" label="单据分类" ></el-table-column>
         <el-table-column prop="formId" label="单据类型"></el-table-column>
         <el-table-column prop="billNo" label="单据编码"></el-table-column>
@@ -61,7 +61,7 @@
             <el-tag :type="scope.row.locked === true ? 'danger' : 'success'" >{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" width="240">
+        <el-table-column fixed="right" label="操作" width="100">
           <template scope="scope">
             <el-button size="small" v-if="!scope.row.success" @click.native="itemAction(scope.row.id,'syn')">重新同步</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'detail')">详细</el-button>

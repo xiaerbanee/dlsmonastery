@@ -111,7 +111,7 @@ public class AccountService {
     @Transactional
     public Account save(AccountForm accountForm) {
         Account account;
-        accountForm.setOfficeIds(StringUtils.join(accountForm.getOfficeIdList(),CharConstant.COMMA));
+        accountForm.setOfficeIds(CharConstant.COMMA+StringUtils.join(accountForm.getOfficeIdList(),CharConstant.COMMA)+CharConstant.COMMA);
         if (accountForm.isCreate()) {
             if (StringUtils.isNotBlank(accountForm.getPassword())) {
                 accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getPassword()));
@@ -137,7 +137,7 @@ public class AccountService {
             }else if(!positionIdList.contains(account.getPositionId())){
                 account.setPositionIds(positionIds+CharConstant.COMMA+account.getPositionId()+CharConstant.COMMA);
             }else if(positionIdList.contains(account.getPositionId())){
-                account.setPositionIds(positionIds.replace(","+positionId+",",","+accountForm.getPositionId()+","));
+                account.setPositionIds(positionIds.replace(CharConstant.COMMA+positionId+CharConstant.COMMA,CharConstant.COMMA+accountForm.getPositionId()+CharConstant.COMMA));
             }
             accountRepository.save(account);
         }
