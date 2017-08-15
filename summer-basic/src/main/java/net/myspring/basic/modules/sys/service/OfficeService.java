@@ -148,8 +148,7 @@ public class OfficeService {
                 officeList.remove(i);
             }
         }
-        OfficeRule officeRule=officeRuleRepository.findLastOfficeRule(new PageRequest(0,1)).getContent().get(0);
-        List<Office> lastRuleOfficeList=officeRepository.findByParentIdsListLikeAndOfficeRuleId(CollectionUtil.extractToList(officeList,"id"),officeRule.getId());
+        List<Office> lastRuleOfficeList=officeRepository.findAllByParentIdsListLike(CollectionUtil.extractToList(officeList,"id"));
         return getOfficeMap(officeList,lastRuleOfficeList);
     }
 
@@ -171,6 +170,15 @@ public class OfficeService {
             }
         }
         return map;
+    }
+
+    private String getTopOfficeIdByParentIds(List<Office> officeList ,String parentIds){
+        for(Office office:officeList){
+            if(parentIds.contains(','+office.getId()+',')){
+                return office.getId();
+            }
+        }
+        return null;
     }
 
     public RestResponse checkSave(OfficeForm officeForm) {
@@ -334,14 +342,7 @@ public class OfficeService {
         return officeDtoList;
     }
 
-    private String getTopOfficeIdByParentIds(List<Office> officeList ,String parentIds){
-        for(Office office:officeList){
-            if(parentIds.contains(','+office.getId()+',')){
-                return office.getId();
-            }
-        }
-        return null;
-    }
+
 
     public boolean checkLastLevel(String officeId){
         OfficeRule lastOfficeRule = officeRuleRepository.findLastOfficeRule(new PageRequest(0,1)).getContent().get(0);

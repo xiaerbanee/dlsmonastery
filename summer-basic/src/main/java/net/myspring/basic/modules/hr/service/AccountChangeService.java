@@ -102,13 +102,19 @@ public class AccountChangeService {
             Account account = accountRepository.findOne(accountChange.getAccountId());
             Employee employee = employeeRepository.findOne(account.getEmployeeId());
             if (accountChange.getType().equals(AccountChangeTypeEnum.部门.toString())) {
+                String officeId=account.getOfficeId();
                 account.setOfficeId(accountChange.getNewValue());
+                if(!officeId.equals(accountChange.getNewValue())){
+                    account.setOfficeIds(CharConstant.COMMA+account.getOfficeId()+CharConstant.COMMA);
+                }
             } else if (accountChange.getType().equals(AccountChangeTypeEnum.岗位.toString())) {
+                String positionId=account.getPositionId();
                 account.setPositionId(accountChange.getNewValue());
-                if(!account.getPositionIds().contains(CharConstant.COMMA)){
+                List<String> positionIdList=StringUtils.getSplitList(account.getPositionIds(),CharConstant.COMMA);
+                if(positionIdList.size()==1){
                     account.setPositionIds(CharConstant.COMMA+account.getPositionId()+CharConstant.COMMA);
-                }else {
-                    account.setPositionIds(account.getPositionIds().replace(","+accountChange.getOldValue()+",",","+accountChange.getNewValue()+","));
+                }else if(positionIdList.contains(positionId)){
+                    account.setPositionIds(account.getPositionIds().replace(CharConstant.COMMA+positionId+CharConstant.COMMA,CharConstant.COMMA+account.getPositionId()+CharConstant.COMMA));
                 }
             } else if (accountChange.getType().equals(AccountChangeTypeEnum.上级.toString())) {
                 account.setLeaderId(accountChange.getNewValue());

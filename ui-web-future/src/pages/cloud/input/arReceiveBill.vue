@@ -71,7 +71,8 @@
               }
             }
             this.formData.json = JSON.stringify(this.formData.json);
-            axios.post('/api/global/cloud/input/arReceiveBill/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
+            var submitData = util.deleteExtra(this.formData);
+            axios.post('/api/global/cloud/input/arReceiveBill/save', qs.stringify(submitData,{allowDots:true})).then((response)=> {
               if(response.data.success){
                 this.$message(response.data.message);
                 this.initPage();

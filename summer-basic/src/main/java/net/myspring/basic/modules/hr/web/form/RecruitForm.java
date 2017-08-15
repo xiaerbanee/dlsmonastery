@@ -7,47 +7,58 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class RecruitForm extends BaseForm<Recruit> {
-    private LocalDateTime contactDate;
+    //邀约时间
+    private LocalDate inviteDate;
     private String name;
     private String sex;
     private String mobilePhone;
-    private String applyPositionId;
     private String applyPositionName;
     private String applyFrom;
+    private String registerBy;
+    //初试预约时间
     private LocalDateTime firstAppointDate;
-    private Long contactBy;
-    private LocalDateTime firstRealDate;
+    private String registerRemarks;
+
+    //初试时间
+    private Boolean firstAppoint;
+    private String firstAppointBy;
     private String workArea;
     private String workCategory;
     private String marriageStatus;
-    private String originId;
     private LocalDate birthday;
+    private String originId;
+    private String education;
     private String school;
     private String major;
-    private String education;
-    private Long firstBy;
-    private Double firstPoint;
     private String firstComment;
+    private String mainCompany;
+    private String firstAppointRemarks;
+    //复试预约时间
     private LocalDateTime secondAppointDate;
-    private LocalDateTime secondRealDate;
-    private Long secondBy;
+    private Boolean secondAppoint;
+    private String secondAppointBy;
     private String secondComment;
     private Boolean toStorage;
     private String storageRemarks;
-    private LocalDateTime physicalAppointDate;
-    private LocalDateTime physicalRealDate;
-    private LocalDateTime auditAppointDate;
-    private LocalDateTime auditRealDate;
-    private LocalDateTime entryAppointDate;
-    private LocalDateTime entryRealDate;
-    private String idcard;
+    private String secondAppointRemarks;
 
-    public LocalDateTime getContactDate() {
-        return contactDate;
+    private LocalDateTime auditAppointDate;
+    private Boolean auditAppoint;
+    private String auditAppointRemarks;
+
+    private LocalDateTime entryAppointDate;
+    private Boolean entryAppoint;
+    private String  entryAppointRemarks;
+
+    private Boolean onJob;
+    private String leaveJobRemarks;
+
+    public LocalDate getInviteDate() {
+        return inviteDate;
     }
 
-    public void setContactDate(LocalDateTime contactDate) {
-        this.contactDate = contactDate;
+    public void setInviteDate(LocalDate inviteDate) {
+        this.inviteDate = inviteDate;
     }
 
     public String getName() {
@@ -74,14 +85,6 @@ public class RecruitForm extends BaseForm<Recruit> {
         this.mobilePhone = mobilePhone;
     }
 
-    public String getApplyPositionId() {
-        return applyPositionId;
-    }
-
-    public void setApplyPositionId(String applyPositionId) {
-        this.applyPositionId = applyPositionId;
-    }
-
     public String getApplyPositionName() {
         return applyPositionName;
     }
@@ -98,6 +101,14 @@ public class RecruitForm extends BaseForm<Recruit> {
         this.applyFrom = applyFrom;
     }
 
+    public String getRegisterBy() {
+        return registerBy;
+    }
+
+    public void setRegisterBy(String registerBy) {
+        this.registerBy = registerBy;
+    }
+
     public LocalDateTime getFirstAppointDate() {
         return firstAppointDate;
     }
@@ -106,20 +117,28 @@ public class RecruitForm extends BaseForm<Recruit> {
         this.firstAppointDate = firstAppointDate;
     }
 
-    public Long getContactBy() {
-        return contactBy;
+    public String getRegisterRemarks() {
+        return registerRemarks;
     }
 
-    public void setContactBy(Long contactBy) {
-        this.contactBy = contactBy;
+    public void setRegisterRemarks(String registerRemarks) {
+        this.registerRemarks = registerRemarks;
     }
 
-    public LocalDateTime getFirstRealDate() {
-        return firstRealDate;
+    public Boolean getFirstAppoint() {
+        return firstAppoint;
     }
 
-    public void setFirstRealDate(LocalDateTime firstRealDate) {
-        this.firstRealDate = firstRealDate;
+    public void setFirstAppoint(Boolean firstAppoint) {
+        this.firstAppoint = firstAppoint;
+    }
+
+    public String getFirstAppointBy() {
+        return firstAppointBy;
+    }
+
+    public void setFirstAppointBy(String firstAppointBy) {
+        this.firstAppointBy = firstAppointBy;
     }
 
     public String getWorkArea() {
@@ -146,6 +165,14 @@ public class RecruitForm extends BaseForm<Recruit> {
         this.marriageStatus = marriageStatus;
     }
 
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
     public String getOriginId() {
         return originId;
     }
@@ -154,12 +181,12 @@ public class RecruitForm extends BaseForm<Recruit> {
         this.originId = originId;
     }
 
-    public LocalDate getBirthday() {
-        return birthday;
+    public String getEducation() {
+        return education;
     }
 
-    public void setBirthday(LocalDate birthday) {
-        this.birthday = birthday;
+    public void setEducation(String education) {
+        this.education = education;
     }
 
     public String getSchool() {
@@ -178,36 +205,28 @@ public class RecruitForm extends BaseForm<Recruit> {
         this.major = major;
     }
 
-    public String getEducation() {
-        return education;
-    }
-
-    public void setEducation(String education) {
-        this.education = education;
-    }
-
-    public Long getFirstBy() {
-        return firstBy;
-    }
-
-    public void setFirstBy(Long firstBy) {
-        this.firstBy = firstBy;
-    }
-
-    public Double getFirstPoint() {
-        return firstPoint;
-    }
-
-    public void setFirstPoint(Double firstPoint) {
-        this.firstPoint = firstPoint;
-    }
-
     public String getFirstComment() {
         return firstComment;
     }
 
     public void setFirstComment(String firstComment) {
         this.firstComment = firstComment;
+    }
+
+    public String getMainCompany() {
+        return mainCompany;
+    }
+
+    public void setMainCompany(String mainCompany) {
+        this.mainCompany = mainCompany;
+    }
+
+    public String getFirstAppointRemarks() {
+        return firstAppointRemarks;
+    }
+
+    public void setFirstAppointRemarks(String firstAppointRemarks) {
+        this.firstAppointRemarks = firstAppointRemarks;
     }
 
     public LocalDateTime getSecondAppointDate() {
@@ -218,20 +237,20 @@ public class RecruitForm extends BaseForm<Recruit> {
         this.secondAppointDate = secondAppointDate;
     }
 
-    public LocalDateTime getSecondRealDate() {
-        return secondRealDate;
+    public Boolean getSecondAppoint() {
+        return secondAppoint;
     }
 
-    public void setSecondRealDate(LocalDateTime secondRealDate) {
-        this.secondRealDate = secondRealDate;
+    public void setSecondAppoint(Boolean secondAppoint) {
+        this.secondAppoint = secondAppoint;
     }
 
-    public Long getSecondBy() {
-        return secondBy;
+    public String getSecondAppointBy() {
+        return secondAppointBy;
     }
 
-    public void setSecondBy(Long secondBy) {
-        this.secondBy = secondBy;
+    public void setSecondAppointBy(String secondAppointBy) {
+        this.secondAppointBy = secondAppointBy;
     }
 
     public String getSecondComment() {
@@ -258,20 +277,12 @@ public class RecruitForm extends BaseForm<Recruit> {
         this.storageRemarks = storageRemarks;
     }
 
-    public LocalDateTime getPhysicalAppointDate() {
-        return physicalAppointDate;
+    public String getSecondAppointRemarks() {
+        return secondAppointRemarks;
     }
 
-    public void setPhysicalAppointDate(LocalDateTime physicalAppointDate) {
-        this.physicalAppointDate = physicalAppointDate;
-    }
-
-    public LocalDateTime getPhysicalRealDate() {
-        return physicalRealDate;
-    }
-
-    public void setPhysicalRealDate(LocalDateTime physicalRealDate) {
-        this.physicalRealDate = physicalRealDate;
+    public void setSecondAppointRemarks(String secondAppointRemarks) {
+        this.secondAppointRemarks = secondAppointRemarks;
     }
 
     public LocalDateTime getAuditAppointDate() {
@@ -282,12 +293,20 @@ public class RecruitForm extends BaseForm<Recruit> {
         this.auditAppointDate = auditAppointDate;
     }
 
-    public LocalDateTime getAuditRealDate() {
-        return auditRealDate;
+    public Boolean getAuditAppoint() {
+        return auditAppoint;
     }
 
-    public void setAuditRealDate(LocalDateTime auditRealDate) {
-        this.auditRealDate = auditRealDate;
+    public void setAuditAppoint(Boolean auditAppoint) {
+        this.auditAppoint = auditAppoint;
+    }
+
+    public String getAuditAppointRemarks() {
+        return auditAppointRemarks;
+    }
+
+    public void setAuditAppointRemarks(String auditAppointRemarks) {
+        this.auditAppointRemarks = auditAppointRemarks;
     }
 
     public LocalDateTime getEntryAppointDate() {
@@ -298,19 +317,35 @@ public class RecruitForm extends BaseForm<Recruit> {
         this.entryAppointDate = entryAppointDate;
     }
 
-    public LocalDateTime getEntryRealDate() {
-        return entryRealDate;
+    public Boolean getEntryAppoint() {
+        return entryAppoint;
     }
 
-    public void setEntryRealDate(LocalDateTime entryRealDate) {
-        this.entryRealDate = entryRealDate;
+    public void setEntryAppoint(Boolean entryAppoint) {
+        this.entryAppoint = entryAppoint;
     }
 
-    public String getIdcard() {
-        return idcard;
+    public String getEntryAppointRemarks() {
+        return entryAppointRemarks;
     }
 
-    public void setIdcard(String idcard) {
-        this.idcard = idcard;
+    public void setEntryAppointRemarks(String entryAppointRemarks) {
+        this.entryAppointRemarks = entryAppointRemarks;
+    }
+
+    public Boolean getOnJob() {
+        return onJob;
+    }
+
+    public void setOnJob(Boolean onJob) {
+        this.onJob = onJob;
+    }
+
+    public String getLeaveJobRemarks() {
+        return leaveJobRemarks;
+    }
+
+    public void setLeaveJobRemarks(String leaveJobRemarks) {
+        this.leaveJobRemarks = leaveJobRemarks;
     }
 }
