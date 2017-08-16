@@ -298,9 +298,6 @@
             }
           })
         },next() {
-          if(this.inputForm.active==null){
-            this.inputForm.active=-1;
-          }
           this.inputForm.active = this.inputForm.active+1;
           if(this.inputForm.active ==7){
             this.inputForm.active = 6;
