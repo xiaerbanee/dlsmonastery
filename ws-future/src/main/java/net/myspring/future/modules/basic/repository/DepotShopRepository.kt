@@ -169,13 +169,12 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     LEFT JOIN crm_product_ime_sale t2 on t1.product_ime_sale_id=t2.id
                     LEFT JOIN crm_product t4 on t1.product_id=t4.id
                     LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
-                    LEFT JOIN crm_depot t6 on t1.depot_id=t6.id
+                    LEFT JOIN crm_depot t6 on t1.depot_id=t6  and t6.depot_store_id is null
                     LEFT JOIN crm_chain t8 on t6.chain_id=t8.id,
                     crm_depot_shop t7
                     WHERE
                     t1.enabled = 1
                     and  t6.depot_shop_id=t7.id
-                    and t6.depot_store_id is null
         """)
         if(reportQuery.scoreType!=null){
             sb.append("""  and t5.score_type =:scoreType """)
@@ -238,13 +237,12 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     LEFT JOIN crm_product_ime_sale t3 ON t1.product_ime_sale_id = t3.id
                     LEFT JOIN crm_product t4 on t1.product_id=t4.id
                     LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
-                    LEFT JOIN crm_depot t6 on t1.depot_id=t6.id
+                    LEFT JOIN crm_depot t6 on t1.depot_id=t6.id and t6.depot_store_id is null
                     LEFT JOIN crm_chain t8 on t6.chain_id=t8.id,
                     crm_depot_shop t7
                     WHERE
                     t1.enabled = 1
                     and t6.depot_shop_id=t7.id
-                    and t6.depot_store_id is null
         """)
         if(reportQuery.scoreType!=null){
             sb.append("""  and t5.score_type =:scoreType """)
@@ -308,13 +306,13 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     crm_product_ime t1
                     LEFT JOIN crm_product t2 ON t1.product_id = t2.id
                     LEFT JOIN crm_product_type t3 on t2.product_type_id=t3.id
-                    LEFT JOIN crm_depot t4 on t1.depot_id=t4.id
+                    LEFT JOIN crm_depot t4 on t1.depot_id=t4.id and t4.depot_store_id is null
                     LEFT JOIN crm_chain t7 on t4.chain_id=t7.id
         """)
         if(reportQuery.isDetail!=null&&reportQuery.isDetail){
             sb.append(""" LEFT JOIN crm_product_ime_sale t6 on t1.product_ime_sale_id=t6.id """)
         }
-        sb.append(""" ,crm_depot_shop t5   WHERE t1.enabled = 1 and t4.depot_shop_id=t5.id   and t4.depot_store_id is null""")
+        sb.append(""" ,crm_depot_shop t5   WHERE t1.enabled = 1 and t4.depot_shop_id=t5.id """)
         if(reportQuery.scoreType!=null){
             sb.append("""  and t3.score_type =:scoreType """)
         }
@@ -374,14 +372,13 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     LEFT JOIN crm_product_ime t2 ON t2.product_ime_sale_id = t1.id
                     LEFT JOIN crm_product t3 on t2.product_id=t3.id
                     LEFT JOIN crm_product_type t4 on t3.product_type_id=t4.id
-                    LEFT JOIN crm_depot t5 on t1.shop_id=t5.id
+                    LEFT JOIN crm_depot t5 on t1.shop_id=t5.id   and t5.depot_store_id is null
                     LEFT JOIN crm_chain t7 on t5.chain_id=t7.id,
                     crm_depot_shop t6
                     WHERE
                     t1.enabled = 1
                     and t1.is_back=0
                     and t5.depot_shop_id=t6.id
-                    and t5.depot_store_id is null
         """)
         if(reportQuery.scoreType!=null){
             sb.append("""  and t4.score_type =:scoreType """)

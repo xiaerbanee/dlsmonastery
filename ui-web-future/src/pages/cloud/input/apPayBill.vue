@@ -43,7 +43,7 @@
               {type: "text", allowEmpty: true, strict: true},
               {type: "autocomplete", strict: true, allowEmpty: false, accountName:[],source: this.accountName},
             ],
-            contextMenu: true,
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
             afterChange: function (changes, source) {
               if (source !== 'loadData') {
                 for (let i = changes.length - 1; i >= 0; i--) {
