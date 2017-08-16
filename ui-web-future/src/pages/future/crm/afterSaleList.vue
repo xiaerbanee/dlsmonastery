@@ -40,7 +40,8 @@
                 <el-input type="textarea" v-model="formData.badImeStr" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"  :autosize="{ minRows: 2, maxRows: 5}"></el-input>
               </el-form-item>
               <el-form-item :label="$t('afterSaleList.createdBy')" >
-                <el-input type="textarea" v-model="formData.createdBy" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"  :autosize="{ minRows: 2, maxRows: 5}"></el-input>
+               <!-- <el-input type="textarea" v-model="formData.createdBy" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"  :autosize="{ minRows: 2, maxRows: 5}"></el-input>-->
+                <account-select v-model="formData.createdAccounts" :multiple="true"></account-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -82,7 +83,11 @@
   </div>
 </template>
 <script>
+  import accountSelect from "components/basic/account-select";
   export default {
+    components:{
+      accountSelect
+    },
     data() {
       return {
         searchText:"",
@@ -103,9 +108,9 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("afterSaleList",submitData);
-        axios.get('/api/ws/future/crm/afterSale',{params:submitData}).then((response) => {
+        axios.post('/api/ws/future/crm/afterSale',qs.stringify(submitData, {allowDots:true})).then((response) => {
             console.log(response.data);
           this.page = response.data;
           this.pageLoading = false;
