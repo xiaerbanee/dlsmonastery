@@ -46,7 +46,7 @@
         this.settings.columns.push({readonly:true});
         for(let key in this.pricesystem){
           this.settings.colHeaders.push(this.pricesystem[key].name);
-          this.settings.columns.push({type: "numeric"});
+          this.settings.columns.push({type: "numeric",format:"0.00"});
         }
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
@@ -57,7 +57,7 @@
           submitDisabled:false,
           settings: {
             cells: function (row, col, prop) {
-              var cellProperties = {width:150};
+              let cellProperties = {width:150};
               if (col==0) {
                 cellProperties.readOnly = true;
               } else {
@@ -65,6 +65,8 @@
               }
               return cellProperties;
             },
+            fixedColumnsLeft:1,
+            fixedRowsTop:0,
             colHeaders: [],
             data:[],
             columns:[]
