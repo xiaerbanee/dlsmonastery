@@ -210,7 +210,7 @@
       },saleReportGrid(){
 
       },detail(){
-          this.detailVisible=true;
+        this.detailVisible=true;
         this.formData.depotId=null;
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("productImeSaleReport",submitData);
@@ -227,16 +227,16 @@
         })
       }
     },created () {
-         this.pageHeight = 0.75*window.innerHeight;
-         axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
-          this.formData = response.data;
-          this.formData.scoreType=this.formData.scoreType?"1":"0";
-          if(response.data.officeId){
-            this.officeIds.push(response.data.officeId);
-            this.officeId=response.data.officeId;
-          }
-          util.copyValue(this.$route.query, this.formData);
-          this.pageRequest();
+      this.pageHeight = 0.75*window.innerHeight;
+      axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
+        this.formData = response.data;
+        this.formData.scoreType=this.formData.scoreType?"1":"0";
+        if(response.data.officeId){
+          this.officeIds.push(response.data.officeId);
+          this.officeId=response.data.officeId;
+        }
+        util.copyValue(this.$route.query, this.formData);
+        this.pageRequest();
       })
     }
   };
