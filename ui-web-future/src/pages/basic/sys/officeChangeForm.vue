@@ -78,7 +78,7 @@
             {type: "text", data: "newName", allowEmpty: true, strict: true},
             {type: "numeric", data: "newPoint",  format:"0,0.00000",allowEmpty: false}
           ],
-          contextMenu: true,
+         contextMenu: util.contextMenu(this.$store.state.global.lang),
           afterChange: function (changes, source) {
             if (source !== 'loadData') {
               for (let i = changes.length - 1; i >= 0; i--) {

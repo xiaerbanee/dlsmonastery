@@ -53,6 +53,8 @@ public class RecruitForm extends BaseForm<Recruit> {
     private Boolean onJob;
     private String leaveJobRemarks;
 
+    private Integer active=0;
+
     public LocalDate getInviteDate() {
         return inviteDate;
     }
@@ -347,5 +349,13 @@ public class RecruitForm extends BaseForm<Recruit> {
 
     public void setLeaveJobRemarks(String leaveJobRemarks) {
         this.leaveJobRemarks = leaveJobRemarks;
+    }
+
+    public Integer getActive() {
+        return active;
+    }
+
+    public void setActive(Integer active) {
+        this.active = active;
     }
 }

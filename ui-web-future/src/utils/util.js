@@ -458,4 +458,26 @@ util.countByProp = function(columns){
   })
   return sum;
 }
+util.contextMenu = function(lang){
+  console.log(lang);
+  let menus = {
+    items:{
+      "row_above":{
+        name:'插入行(上方)'
+      },
+      "row_below":{
+        name:'插入行(下方)'
+      },
+      "remove_row":{
+        name:"删除行"
+      }
+    }
+  }
+  if(lang === 'id'){
+    return true;
+  }else{
+    return menus;
+  }
+}
+
 export default util;

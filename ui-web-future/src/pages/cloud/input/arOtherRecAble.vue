@@ -46,7 +46,7 @@
               {type: "autocomplete", strict: true, allowEmpty: false, expenseTypeName:[],source: this.expenseTypeName},
               {type: "autocomplete", strict: true, allowEmpty: false, customerForName:[],source: this.customerForName},
             ],
-            contextMenu: true,
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
             afterChange: function (changes, source) {
               if (source !== 'loadData') {
                 var data = table.getData();

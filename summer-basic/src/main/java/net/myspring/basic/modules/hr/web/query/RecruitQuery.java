@@ -12,6 +12,13 @@ public class RecruitQuery extends BaseQuery {
     private String mobilePhone;
     private LocalDate firstAppointDate;
     private LocalDate secondAppointDate;
+    private LocalDate auditAppointDate;
+    private LocalDate entryAppointDate;
+    private String registerBy;
+    private String firstAppointBy;
+    private String secondAppointBy;
+    private Boolean onJob;
+
 
     public String getName() {
         return name;
@@ -43,5 +50,53 @@ public class RecruitQuery extends BaseQuery {
 
     public void setSecondAppointDate(LocalDate secondAppointDate) {
         this.secondAppointDate = secondAppointDate;
+    }
+
+    public LocalDate getAuditAppointDate() {
+        return auditAppointDate;
+    }
+
+    public void setAuditAppointDate(LocalDate auditAppointDate) {
+        this.auditAppointDate = auditAppointDate;
+    }
+
+    public LocalDate getEntryAppointDate() {
+        return entryAppointDate;
+    }
+
+    public void setEntryAppointDate(LocalDate entryAppointDate) {
+        this.entryAppointDate = entryAppointDate;
+    }
+
+    public String getRegisterBy() {
+        return registerBy;
+    }
+
+    public void setRegisterBy(String registerBy) {
+        this.registerBy = registerBy;
+    }
+
+    public String getFirstAppointBy() {
+        return firstAppointBy;
+    }
+
+    public void setFirstAppointBy(String firstAppointBy) {
+        this.firstAppointBy = firstAppointBy;
+    }
+
+    public String getSecondAppointBy() {
+        return secondAppointBy;
+    }
+
+    public void setSecondAppointBy(String secondAppointBy) {
+        this.secondAppointBy = secondAppointBy;
+    }
+
+    public Boolean getOnJob() {
+        return onJob;
+    }
+
+    public void setOnJob(Boolean onJob) {
+        this.onJob = onJob;
     }
 }

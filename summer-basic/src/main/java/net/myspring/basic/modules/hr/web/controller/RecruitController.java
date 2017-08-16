@@ -6,6 +6,7 @@ import net.myspring.basic.modules.hr.service.RecruitEnumService;
 import net.myspring.basic.modules.hr.service.RecruitService;
 import net.myspring.basic.modules.hr.web.form.RecruitForm;
 import net.myspring.basic.modules.hr.web.query.RecruitQuery;
+import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -61,6 +62,6 @@ public class RecruitController {
     @RequestMapping(value = "delete")
     public RestResponse delete(String id){
         recruitService.delete(id);
-        return new RestResponse("删除成功",null);
+        return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 }
