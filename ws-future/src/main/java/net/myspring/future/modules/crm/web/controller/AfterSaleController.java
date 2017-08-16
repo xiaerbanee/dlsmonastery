@@ -49,13 +49,13 @@ public class AfterSaleController {
     @Autowired
     private AfterSaleRepository afterSaleRepository;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.POST)
     public Page<AfterSaleDto> list(Pageable pageable,AfterSaleQuery afterSaleQuery) {
         Page<AfterSaleDto> page = afterSaleService.findPage(pageable, afterSaleQuery);
         return page;
     }
 
-    @RequestMapping(value = "getFromCompanyData",method = RequestMethod.GET)
+    @RequestMapping(value = "getFromCompanyData")
     public List<AfterSaleDto> getFromCompanyData(AfterSaleQuery afterSaleQuery) {
         List<AfterSaleDto> list=afterSaleService.findFilter(afterSaleQuery);
         return list;

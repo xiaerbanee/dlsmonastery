@@ -157,7 +157,7 @@
                 }
               }
             ],
-            contextMenu: true,
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
           },
           date:util.currentDate(),
           rules: {},

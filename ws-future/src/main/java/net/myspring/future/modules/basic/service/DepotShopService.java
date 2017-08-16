@@ -12,6 +12,7 @@ import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.client.TownClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotShop;
+import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.dto.DepotReportDetailDto;
 import net.myspring.future.modules.basic.dto.DepotReportDto;
@@ -51,6 +52,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -181,7 +183,20 @@ public class DepotShopService {
 
     @Transactional
     public void logicDelete(String id) {
-        depotShopRepository.logicDelete(id);
+        DepotShop depotShop = depotShopRepository.findOne(id);
+        if(depotShop != null){
+            depotShopRepository.logicDelete(id);
+            Depot depot = depotRepository.findOne(depotShop.getDepotId());
+            if(depot!= null){
+                depot.setName(depot.getName()+"(废除时间:"+ LocalDateTime.now()+")");
+                depot.setEnabled(false);
+                depotRepository.save(depot);
+            }
+            if(depot.getDepotStoreId()!=null){
+                depotStoreRepository.logicDelete(depot.getDepotStoreId());
+            }
+        }
+
     }
 
     public SimpleExcelBook findSimpleExcelSheet(DepotShopQuery depotShopQuery)  {

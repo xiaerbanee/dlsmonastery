@@ -1,12 +1,17 @@
 package net.myspring.future.modules.basic.web.controller;
 
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.dto.ClientDto;
+import net.myspring.future.modules.basic.dto.ReceivableDto;
 import net.myspring.future.modules.basic.service.ClientService;
+import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.DepotStoreService;
 import net.myspring.future.modules.basic.web.form.ClientForm;
 import net.myspring.future.modules.basic.web.query.ClientQuery;
+import net.myspring.future.modules.basic.web.query.ReceivableQuery;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -24,6 +30,8 @@ public class ClientController {
     private ClientService clientService;
     @Autowired
     private DepotStoreService depotStoreService;
+    @Autowired
+    private DepotService depotService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ClientDto> list(Pageable pageable, ClientQuery clientQuery) {
@@ -72,6 +80,26 @@ public class ClientController {
         clientService.syn();
         depotStoreService.syn();
         return new RestResponse("同步成功",null);
+    }
+
+    @RequestMapping(value = "getReceivableQuery")
+    public ReceivableQuery getReceivableQuery(ReceivableQuery receivableQuery) {
+        LocalDate now = LocalDate.now();
+        LocalDate dutyDateStart = now.minusDays(30);
+        LocalDate dutyDateEnd = now.plusDays(30);
+        receivableQuery.setDutyDateRange(LocalDateUtils.format(dutyDateStart) + " - "+LocalDateUtils.format(dutyDateEnd));
+
+        return receivableQuery;
+    }
+
+    @RequestMapping(value = "findReceivableList")
+    public Page<ReceivableDto> findReceivableList(Pageable pageable, ReceivableQuery receivableQuery) {
+        if(receivableQuery.getDutyDateRange() == null || receivableQuery.getDutyDateStart()==null){
+            throw new ServiceException("请选择查询日期区间");
+        }
+
+        receivableQuery.setDepotIdList(depotService.filterDepotIds());
+        return clientService.findReceivableList(pageable, receivableQuery, false);
     }
 
 }

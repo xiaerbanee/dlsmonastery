@@ -147,6 +147,8 @@ interface OfficeRepositoryCustom {
 
     fun findByParentIdsListLike(parentIdList: MutableList<String>): MutableList<Office>
 
+    fun findAllByParentIdsListLike(parentIdList: MutableList<String>): MutableList<Office>
+
     fun findByParentIdsListLikeAndOfficeRuleId(parentIdList: MutableList<String>,officeRuleId: String): MutableList<Office>
 
     fun findByFilter(officeQuery: OfficeQuery): MutableList<Office>
@@ -210,7 +212,6 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
           FROM  sys_office t1,sys_office_rule t2
           where t1.office_rule_id=t2.id
           and t2.name = :officeRuleName
-          and t1.enabled =1
           ORDER BY t1.task_point DESC
         """,Collections.singletonMap("officeRuleName",officeRuleName),BeanPropertyRowMapper(Office::class.java))
     }
@@ -227,6 +228,29 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
         var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(officeQuery), BeanPropertyRowMapper(OfficeDto::class.java));
         var count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(officeQuery),Long::class.java);
         return PageImpl(list,pageable,count);
+    }
+
+    override fun findAllByParentIdsListLike(parentIdList: MutableList<String>): MutableList<Office> {
+        var sb = StringBuilder();
+        sb.append("""
+            SELECT t1.*
+            FROM sys_office t1
+            where  (
+        """)
+        for((index) in parentIdList.withIndex()) {
+            sb.append(" t1.parent_ids like :parentId").append(index);
+            if(index < parentIdList.size-1) {
+                sb.append(" or ");
+            }
+        }
+        sb.append(")");
+        var paramMap = Maps.newHashMap<String,String>();
+        for((index,value) in parentIdList.withIndex()) {
+            paramMap.put("parentId" + index ,"%,$value,%");
+        }
+        print(sb.toString())
+        print(paramMap)
+        return namedParameterJdbcTemplate.query(sb.toString(),paramMap, BeanPropertyRowMapper(Office::class.java))
     }
 
     override fun findByParentIdsListLike(parentIdList: MutableList<String>): MutableList<Office> {

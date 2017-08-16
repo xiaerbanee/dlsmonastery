@@ -173,7 +173,7 @@
             tempPostList.push(goodsOrderDetail);
           }
         }
-        this.filterDetailList = tempList.concat(tempPostList).slice(0, util.MAX_DETAIL_ROW);
+        this.filterDetailList = tempList.concat(tempPostList).slice(0, util.MAX_FILTER_DETAIL_ROW);
       },shopChange(id){
         axios.get('/api/ws/future/basic/depot/findOne',{params: {id:id}}).then((response)=>{
           this.shop = response.data;

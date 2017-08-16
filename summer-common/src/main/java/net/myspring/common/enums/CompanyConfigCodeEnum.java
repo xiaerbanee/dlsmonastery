@@ -1,9 +1,5 @@
 package net.myspring.common.enums;
 
-import com.google.common.collect.Maps;
-
-import java.util.Map;
-
 public enum CompanyConfigCodeEnum {
 	AD_DEFAULT_STORE_ID,
 	DEFAULT_STORE_ID,
@@ -49,5 +45,7 @@ public enum CompanyConfigCodeEnum {
 	PRODUCT_NAME,
 	COMPANY_NAME,
 	DEFAULT_PROVINCE_ID,
+	DEFAULT_NET_TYPE,
+	DEFAULT_SHIP_TYPE,
 	EXPRESS_PRINT_QTY;
 }

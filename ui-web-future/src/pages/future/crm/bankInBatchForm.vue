@@ -34,7 +34,7 @@
           submitDisabled: false,
           settings: {
             rowHeaders: true,
-            contextMenu: true,
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
             manualColumnResize:true,
             minSpareRows: 100,
             startRows: 100,

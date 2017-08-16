@@ -25,10 +25,12 @@ public class AfterSaleQuery  extends BaseQuery{
     private String createdRange;
     private String depotName;
     private String createdBy;
+    private List<String> createdAccounts;
     private List<String> imeList=Lists.newArrayList();
     private List<String> toAreaImeList=Lists.newArrayList();
     private List<String> businessIdList=Lists.newArrayList();
     private List<String> createdByList=Lists.newArrayList();
+    private List<String> badProductNameList = Lists.newArrayList();
 
     private boolean fromCompany=false;
 
@@ -107,6 +109,18 @@ public class AfterSaleQuery  extends BaseQuery{
 
     public void setBadProductName(String badProductName) {
         this.badProductName = badProductName;
+    }
+
+    public List<String> getBadProductNameList() {
+        return badProductNameList;
+    }
+
+    public void setBadProductNameList(List<String> badProductNameList) {
+        this.badProductNameList = badProductNameList;
+    }
+
+    public boolean isFromCompany() {
+        return fromCompany;
     }
 
     public String getBadImeStr() {
@@ -231,5 +245,13 @@ public class AfterSaleQuery  extends BaseQuery{
         } else {
             return null;
         }
+    }
+
+    public List<String> getCreatedAccounts() {
+        return createdAccounts;
+    }
+
+    public void setCreatedAccounts(List<String> createdAccounts) {
+        this.createdAccounts = createdAccounts;
     }
 }

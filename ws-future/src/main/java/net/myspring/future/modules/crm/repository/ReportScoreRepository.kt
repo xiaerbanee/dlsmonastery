@@ -46,11 +46,8 @@ class ReportScoreRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
                         crm_product_ime t1
                         LEFT JOIN crm_depot t2 ON t1.depot_id = t2.id
                         LEFT JOIN crm_product t3 ON t1.product_id = t3.id
-                        LEFT JOIN crm_product_type t4 ON t3.product_type_id = t4.id,
-                        crm_depot_shop t5
+                        LEFT JOIN crm_product_type t4 ON t3.product_type_id = t4.id
                         where t1.enabled=1
-                        and t2.depot_shop_id=t5.id
-                        and t2.depot_store_id is null
                         and t4.score_type=1
                         and t1.retail_date>=:retailDateStart
                         and t1.retail_date<:retailDateEnd

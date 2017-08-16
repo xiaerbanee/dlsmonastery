@@ -10,21 +10,20 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="hr_recruit")
 public class Recruit extends DataEntity<Recruit> {
-    //预约时间
+    //邀约时间
+    private LocalDate inviteDate;
     private String name;
     private String sex;
     private String mobilePhone;
-    private String applyPositionId;
     private String applyPositionName;
     private String applyFrom;
     private String registerBy;
-    private String registerRemarks;
-
     //初试预约时间
     private LocalDateTime firstAppointDate;
+    private String registerRemarks;
 
     //初试时间
-    private LocalDateTime firstRealDate;
+    private Boolean firstAppoint;
     private String firstAppointBy;
     private String workArea;
     private String workCategory;
@@ -35,11 +34,11 @@ public class Recruit extends DataEntity<Recruit> {
     private String school;
     private String major;
     private String firstComment;
+    private String mainCompany;
     private String firstAppointRemarks;
     //复试预约时间
     private LocalDateTime secondAppointDate;
-    //复试时间
-    private LocalDateTime secondRealDate;
+    private Boolean secondAppoint;
     private String secondAppointBy;
     private String secondComment;
     private Boolean toStorage;
@@ -47,16 +46,26 @@ public class Recruit extends DataEntity<Recruit> {
     private String secondAppointRemarks;
 
     private LocalDateTime auditAppointDate;
-    private LocalDateTime auditRealDate;
+    private Boolean auditAppoint;
     private String auditAppointRemarks;
 
     private LocalDateTime entryAppointDate;
-    private LocalDateTime entryRealDate;
+    private Boolean entryAppoint;
     private String  entryAppointRemarks;
 
     private Boolean onJob;
     private String leaveJobRemarks;
     private Integer version = 0;
+
+    private Integer active;
+
+    public LocalDate getInviteDate() {
+        return inviteDate;
+    }
+
+    public void setInviteDate(LocalDate inviteDate) {
+        this.inviteDate = inviteDate;
+    }
 
     public String getName() {
         return name;
@@ -80,14 +89,6 @@ public class Recruit extends DataEntity<Recruit> {
 
     public void setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
-    }
-
-    public String getApplyPositionId() {
-        return applyPositionId;
-    }
-
-    public void setApplyPositionId(String applyPositionId) {
-        this.applyPositionId = applyPositionId;
     }
 
     public String getApplyPositionName() {
@@ -114,14 +115,6 @@ public class Recruit extends DataEntity<Recruit> {
         this.registerBy = registerBy;
     }
 
-    public String getRegisterRemarks() {
-        return registerRemarks;
-    }
-
-    public void setRegisterRemarks(String registerRemarks) {
-        this.registerRemarks = registerRemarks;
-    }
-
     public LocalDateTime getFirstAppointDate() {
         return firstAppointDate;
     }
@@ -130,12 +123,20 @@ public class Recruit extends DataEntity<Recruit> {
         this.firstAppointDate = firstAppointDate;
     }
 
-    public LocalDateTime getFirstRealDate() {
-        return firstRealDate;
+    public String getRegisterRemarks() {
+        return registerRemarks;
     }
 
-    public void setFirstRealDate(LocalDateTime firstRealDate) {
-        this.firstRealDate = firstRealDate;
+    public void setRegisterRemarks(String registerRemarks) {
+        this.registerRemarks = registerRemarks;
+    }
+
+    public Boolean getFirstAppoint() {
+        return firstAppoint;
+    }
+
+    public void setFirstAppoint(Boolean firstAppoint) {
+        this.firstAppoint = firstAppoint;
     }
 
     public String getFirstAppointBy() {
@@ -218,6 +219,14 @@ public class Recruit extends DataEntity<Recruit> {
         this.firstComment = firstComment;
     }
 
+    public String getMainCompany() {
+        return mainCompany;
+    }
+
+    public void setMainCompany(String mainCompany) {
+        this.mainCompany = mainCompany;
+    }
+
     public String getFirstAppointRemarks() {
         return firstAppointRemarks;
     }
@@ -234,12 +243,12 @@ public class Recruit extends DataEntity<Recruit> {
         this.secondAppointDate = secondAppointDate;
     }
 
-    public LocalDateTime getSecondRealDate() {
-        return secondRealDate;
+    public Boolean getSecondAppoint() {
+        return secondAppoint;
     }
 
-    public void setSecondRealDate(LocalDateTime secondRealDate) {
-        this.secondRealDate = secondRealDate;
+    public void setSecondAppoint(Boolean secondAppoint) {
+        this.secondAppoint = secondAppoint;
     }
 
     public String getSecondAppointBy() {
@@ -290,12 +299,12 @@ public class Recruit extends DataEntity<Recruit> {
         this.auditAppointDate = auditAppointDate;
     }
 
-    public LocalDateTime getAuditRealDate() {
-        return auditRealDate;
+    public Boolean getAuditAppoint() {
+        return auditAppoint;
     }
 
-    public void setAuditRealDate(LocalDateTime auditRealDate) {
-        this.auditRealDate = auditRealDate;
+    public void setAuditAppoint(Boolean auditAppoint) {
+        this.auditAppoint = auditAppoint;
     }
 
     public String getAuditAppointRemarks() {
@@ -314,12 +323,12 @@ public class Recruit extends DataEntity<Recruit> {
         this.entryAppointDate = entryAppointDate;
     }
 
-    public LocalDateTime getEntryRealDate() {
-        return entryRealDate;
+    public Boolean getEntryAppoint() {
+        return entryAppoint;
     }
 
-    public void setEntryRealDate(LocalDateTime entryRealDate) {
-        this.entryRealDate = entryRealDate;
+    public void setEntryAppoint(Boolean entryAppoint) {
+        this.entryAppoint = entryAppoint;
     }
 
     public String getEntryAppointRemarks() {
@@ -352,5 +361,13 @@ public class Recruit extends DataEntity<Recruit> {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public Integer getActive() {
+        return active;
+    }
+
+    public void setActive(Integer active) {
+        this.active = active;
     }
 }

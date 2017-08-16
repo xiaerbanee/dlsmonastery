@@ -38,7 +38,7 @@
           startCols: 5,
           manualRowResize: true,
           manualColumnResize: true,
-          contextMenu: true,
+         contextMenu: util.contextMenu(this.$store.state.global.lang),
           columns: [
             {
               data: "idStr",

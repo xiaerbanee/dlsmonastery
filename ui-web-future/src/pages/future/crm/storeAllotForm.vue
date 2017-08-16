@@ -202,7 +202,7 @@
             tempPostList.push(storeAllotDetail);
           }
         }
-        this.filterStoreAllotDetailList = tempList.concat(tempPostList).slice(0, util.MAX_DETAIL_ROW);
+        this.filterStoreAllotDetailList = tempList.concat(tempPostList).slice(0, util.MAX_FILTER_DETAIL_ROW);
       },initPage(){
         axios.get('/api/ws/future/crm/storeAllot/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm= response.data;

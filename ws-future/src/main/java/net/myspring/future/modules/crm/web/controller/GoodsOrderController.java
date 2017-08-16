@@ -93,6 +93,11 @@ public class GoodsOrderController {
     public GoodsOrderForm getForm(GoodsOrderForm goodsOrderForm){
         goodsOrderForm.getExtra().put("netTypeList", getNetTypeList());
         goodsOrderForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
+        CompanyConfigCacheDto defaultNetTypeConfig = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFAULT_NET_TYPE.name());
+        goodsOrderForm.getExtra().put("defaultNetType", defaultNetTypeConfig==null ? null : defaultNetTypeConfig.getValue());
+
+        CompanyConfigCacheDto defaultShipTypeConfig = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFAULT_SHIP_TYPE.name());
+        goodsOrderForm.getExtra().put("defaultShipType", defaultShipTypeConfig==null ? null : defaultShipTypeConfig.getValue());
         return goodsOrderForm;
     }
 
