@@ -91,6 +91,12 @@ class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
         if (shopAdQuery.specialArea != null && !shopAdQuery.specialArea) {
             sb.append("""  and t1.special_area = 0 """)
         }
+        if(shopAdQuery.doorType == null || !shopAdQuery.doorType){
+            sb.append(""" and type.door_type is null or type.door_type = 0 """)
+        }
+        if(shopAdQuery.doorType != null && shopAdQuery.doorType){
+            sb.append(""" and type.door_type = 1 """)
+        }
         if (shopAdQuery.ids != null) {
             sb.append("""  and t1.id in (:ids) """)
         }

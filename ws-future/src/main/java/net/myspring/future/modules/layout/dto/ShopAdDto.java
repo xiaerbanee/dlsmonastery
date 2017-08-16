@@ -31,7 +31,9 @@ public class ShopAdDto extends DataDto<ShopAd>{
     private String totalPriceType;
     private BigDecimal length;
     private BigDecimal width;
+    private BigDecimal thickness;
     private Integer qty;
+    private BigDecimal area;
     private String attachment;
     private BigDecimal price;
     private String content;
@@ -224,11 +226,23 @@ public class ShopAdDto extends DataDto<ShopAd>{
         }
     }
 
+    public BigDecimal getThickness() {
+        return thickness;
+    }
+
+    public void setThickness(BigDecimal thickness) {
+        this.thickness = thickness;
+    }
+
+    public void setArea(BigDecimal area) {
+        this.area = area;
+    }
+
     public BigDecimal getArea() {
-        if(this.length !=null&&this.width!=null&&this.qty!=null){
+        if(this.length !=null&&this.width!=null&&this.qty!=null&&this.area == null){
             return length.multiply(width).multiply(BigDecimal.valueOf(qty));
         }else{
-            return null;
+            return area;
         }
     }
 

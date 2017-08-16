@@ -12,7 +12,16 @@ public class ShopAdType extends DataEntity<ShopAdType> {
     private String name;
     private String totalPriceType;
     private BigDecimal price;
+    private Boolean doorType;
     private Integer version = 0;
+
+    public Boolean getDoorType() {
+        return doorType;
+    }
+
+    public void setDoorType(Boolean doorType) {
+        this.doorType = doorType;
+    }
 
     public String getName() {
         return name;
