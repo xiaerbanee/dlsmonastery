@@ -2,13 +2,13 @@
   <div>
     <head-tab active="recruitForm"></head-tab>
     <el-form>
-      <el-row :gutter="24">
+      <el-row :gutter="20">
         <el-col :span="6">
           <el-form-item :label="$t('recruitForm.name')" v-if="inputForm.active>1&&inputForm.name">{{inputForm.name}}</el-form-item>
           <el-form-item :label="$t('recruitForm.sex')" v-if="inputForm.active>1&&inputForm.sex">{{inputForm.sex}}</el-form-item>
           <el-form-item :label="$t('recruitForm.mobilePhone')" v-if="inputForm.active>1&&inputForm.mobilePhone">{{inputForm.mobilePhone}}</el-form-item>
           <el-form-item :label="$t('recruitForm.applyPositionName')" v-if="inputForm.active>1&&inputForm.applyPositionName">{{inputForm.applyPositionName}}</el-form-item>
-          <el-form-item :label="$t('recruitForm.applyFrom')" v-if="inputForm.active>1&&inputForm.applyForm">{{inputForm.applyFrom}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.applyFrom')" v-if="inputForm.active>1&&inputForm.applyFrom">{{inputForm.applyFrom}}</el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item :label="$t('recruitForm.workArea')" v-if="inputForm.active>2&&inputForm.workArea">{{inputForm.workArea}}</el-form-item>
