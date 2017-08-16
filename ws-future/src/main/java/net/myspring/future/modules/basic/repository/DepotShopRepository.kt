@@ -160,13 +160,14 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         }else if(reportQuery.isDetail){
             sb.append("""
                SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName',t6.town_id as 'townId',
-               t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type,t6.district_id as 'districtId',t2.employee_id, t2.created_date as 'saleDate',t1.retail_date
+               t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type,t6.district_id as 'districtId',t2.employee_id, t2.created_date as 'saleDate',t1.retail_date,t3.created_date as 'uploadDate'
             """)
         }
         sb.append("""
                     FROM
                     crm_product_ime t1
                     LEFT JOIN crm_product_ime_sale t2 on t1.product_ime_sale_id=t2.id
+                    LEFT JOIN crm_product_ime_upload t3 on t3.id = t1.product_ime_upload_id
                     LEFT JOIN crm_product t4 on t1.product_id=t4.id
                     LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
                     LEFT JOIN crm_depot t6 on t1.depot_id=t6.id  and t6.depot_store_id is null
@@ -228,13 +229,14 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append("""  SELECT t6.id as depotId,t6.name as depotName,t6.town_id as 'townId',COUNT(t1.id) AS qty ,t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type,t6.district_id as 'districtId'""")
         }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName',t6.town_id as 'townId',t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type,t6.district_id as 'districtId',t3.employee_id,t3.created_date as 'saleDate',t1.retail_date
+               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName',t6.town_id as 'townId',t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type,t6.district_id as 'districtId',t3.employee_id,t3.created_date as 'saleDate',t1.retail_date,t2.created_date as 'uploadDate'
             """)
         }
         sb.append("""
                     FROM
                     crm_product_ime t1
-                    LEFT JOIN crm_product_ime_sale t3 ON t1.product_ime_sale_id = t3.id
+                    LEFT JOIN crm_product_ime_upload t2 on t2.id = t1.product_ime_upload_id
+                    LEFT JOIN crm_product_ime_sale t3 on t1.product_ime_sale_id = t3.id
                     LEFT JOIN crm_product t4 on t1.product_id=t4.id
                     LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
                     LEFT JOIN crm_depot t6 on t1.depot_id=t6.id and t6.depot_store_id is null
