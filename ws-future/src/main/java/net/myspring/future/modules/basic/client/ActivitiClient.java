@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wangzm on 2017/4/25.
@@ -23,6 +24,9 @@ public interface ActivitiClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/sys/activiti/complete")
     ActivitiCompleteDto complete(ActivitiCompleteForm activitiCompleteForm);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/activiti/completeBatch")
+    Map<String,ActivitiCompleteDto> completeBatch(List<ActivitiCompleteForm> activitiCompleteFormList);
 
     @RequestMapping(method = RequestMethod.GET, value = "/sys/activiti/getActivitiDetail")
     List<ActivitiDetailDto> getActivitiDetail(@RequestParam("processInstanceId") String processInstanceId);
