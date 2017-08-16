@@ -307,8 +307,9 @@
           }
         },privious(){
           this.inputForm.active = this.inputForm.active-1;
-          if(this.inputForm.active ==0){
-            this.inputForm.active = 1;
+          console.log(this.inputForm.active)
+          if(this.inputForm.active ==-1){
+            this.inputForm.active = 0;
           }
         },
         initPage(){
@@ -318,7 +319,6 @@
             if(!this.isCreate){
               axios.get('/api/basic/hr/recruit/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
                 util.copyValue(response.data,this.inputForm);
-                this.inputForm.active=this.inputForm.active+1;
               })
             }
           });
