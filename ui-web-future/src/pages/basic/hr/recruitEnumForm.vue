@@ -9,7 +9,7 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('recruitEnumForm.value')" prop="value" v-if="inputForm.category!='初试人'&&inputForm.category!='复试人'">
-          <el-input type="textarea" v-model="inputForm.value"></el-input>
+          <el-input type="textarea" :autosize="autosize" v-model="inputForm.value"></el-input>
         </el-form-item>
         <el-form-item :label="$t('recruitEnumForm.value')" prop="accountIdList" v-if="inputForm.category=='初试人'||inputForm.category=='复试人'">
           <account-select v-model="accountIdList" multiple></account-select>
@@ -39,6 +39,7 @@
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
           accountIdList:[],
+          autosize:{ minRows: 2, maxRows: 8 },
           inputForm:{
             extra:{}
           },
