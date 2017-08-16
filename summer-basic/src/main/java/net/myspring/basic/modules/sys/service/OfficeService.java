@@ -80,7 +80,7 @@ public class OfficeService {
 
     public List<String> getTopOfficeListByIdList(){
         List<Office> officeList=officeRepository.findByEnabledIsTrueAndIdIn(RequestUtils.getOfficeIdList());
-        List<OfficeRule> officeRuleList=officeRuleRepository.findAllEnabled();
+        List<OfficeRule> officeRuleList=officeRuleRepository.findByEnabledIsTrue();
         Map<String,OfficeRule> officeRuleMap=officeRuleList.stream().collect(Collectors.toMap(OfficeRule::getId,OfficeRule -> OfficeRule));
         Map<Integer, List<String>> levelMap = Maps.newTreeMap();
         for(Office office:officeList){
@@ -141,7 +141,7 @@ public class OfficeService {
         return getOfficeMap(officeList,lastRuleOfficeList);
     }
 
-    public Map<String,List<String>> getLastRuleMapByOfficeRuleName(String officeRuleName){
+    public Map<String,List<String>> getMapByOfficeRuleName(String officeRuleName){
         List<Office> officeList=officeRepository.findByOfficeRuleName(officeRuleName);
         for(int i=officeList.size()-1;i>0;i--){
             if(officeList.get(i).getPoint()==null||officeList.get(i).getPoint().compareTo(BigDecimal.ZERO)<=0){
@@ -313,7 +313,7 @@ public class OfficeService {
     }
 
     public List<OfficeRuleDto> findOfficeRuleList() {
-        List<OfficeRule> officeRuleList = officeRuleRepository.findAllEnabled();
+        List<OfficeRule> officeRuleList = officeRuleRepository.findByEnabledIsTrue();
         List<OfficeRuleDto> officeRuleDtoList = BeanUtil.map(officeRuleList, OfficeRuleDto.class);
         return officeRuleDtoList;
     }
