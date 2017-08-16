@@ -171,6 +171,9 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         if(CollectionUtil.isNotEmpty(employeeQuery.officeIdList)) {
             sb.append(" and account.office_id in (:officeIdList)");
         }
+        if(CollectionUtil.isNotEmpty(employeeQuery.nameList)) {
+            sb.append(" and employee.name in (:nameList)");
+        }
         if(StringUtils.isNotBlank(employeeQuery.leaderName)) {
             sb.append(" AND leader.login_name like concat('%',:leaderName,'%')");
         }
