@@ -1,12 +1,16 @@
 package net.myspring.basic.modules.sys.service;
 
+import com.google.common.collect.Maps;
 import net.myspring.basic.common.utils.CacheUtils;
+import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
+import net.myspring.basic.modules.sys.repository.OfficeRepository;
 import net.myspring.basic.modules.sys.repository.OfficeRuleRepository;
 import net.myspring.basic.modules.sys.web.form.OfficeRuleForm;
 import net.myspring.basic.modules.sys.web.query.OfficeRuleQuery;
 import net.myspring.common.constant.TreeConstant;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -17,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wangzm on 2017/4/22.
@@ -29,6 +34,8 @@ public class OfficeRuleService {
     private OfficeRuleRepository officeRuleRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private OfficeRepository officeRepository;
     
     public Page<OfficeRuleDto> findPage(Pageable pageable, OfficeRuleQuery officeRuleQuery) {
         Page<OfficeRuleDto> page = officeRuleRepository.findPage(pageable, officeRuleQuery);
@@ -39,7 +46,7 @@ public class OfficeRuleService {
 
 
     public List<OfficeRuleDto> findAll(){
-        List<OfficeRule> officeRuleList=officeRuleRepository.findAllEnabled();
+        List<OfficeRule> officeRuleList=officeRuleRepository.findByEnabledIsTrue();
         List<OfficeRuleDto> officeRuleDtoList=BeanUtil.map(officeRuleList,OfficeRuleDto.class);
         return officeRuleDtoList;
     }
@@ -91,5 +98,32 @@ public class OfficeRuleService {
                 officeRuleForm.setLevel(parent.getLevel()==null?1:parent.getLevel()+1);
             }
         }
+    }
+
+    public Map<String,Map<String,String>> getOfficeRuleMap(){
+        Map<String,Map<String,String>> map= Maps.newHashMap();
+        List<OfficeRule> officeRuleList=officeRuleRepository.findByEnabledIsTrue();
+        List<Office> officeList=officeRepository.findByEnabledIsTrue();
+        Map<String,List<Office>> officeMap= CollectionUtil.extractToMapList(officeList,"officeRuleId");
+        for(OfficeRule officeRule:officeRuleList){
+            map.put(officeRule.getCode(),Maps.newHashMap());
+            Map<String,String> ruleMap=Maps.newHashMap();
+            for(Office childOffice:officeList){
+                List<Office> offices=officeMap.get(officeRule.getId());
+                String value=getValueByParentIds(offices,childOffice.getParentIds());
+                ruleMap.put(childOffice.getId(),value==null?childOffice.getName():value);
+            }
+            map.put(officeRule.getCode(),ruleMap);
+        }
+        return map;
+    }
+
+    private String getValueByParentIds(List<Office> officeList ,String parentIds){
+        for(Office office:officeList){
+            if(parentIds.contains(','+office.getId()+',')){
+                return office.getName();
+            }
+        }
+        return null;
     }
 }

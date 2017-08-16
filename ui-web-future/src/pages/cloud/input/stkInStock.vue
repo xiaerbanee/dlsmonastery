@@ -63,7 +63,7 @@
               {type: 'text',readOnly: true, strict: true},
               {type: 'numeric', format:"0,0.00", strict: true}
             ],
-            contextMenu: true,
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
             afterChange: function (changes, source) {
               if (source !== 'loadData') {
                 for (let i = changes.length - 1; i >= 0; i--) {

@@ -54,6 +54,8 @@ public class RecruitDto extends DataDto<Recruit> {
     private Boolean onJob;
     private String leaveJobRemarks;
 
+    private Integer active=0;
+
     public LocalDate getInviteDate() {
         return inviteDate;
     }
@@ -348,5 +350,13 @@ public class RecruitDto extends DataDto<Recruit> {
 
     public void setLeaveJobRemarks(String leaveJobRemarks) {
         this.leaveJobRemarks = leaveJobRemarks;
+    }
+
+    public Integer getActive() {
+        return active;
+    }
+
+    public void setActive(Integer active) {
+        this.active = active;
     }
 }

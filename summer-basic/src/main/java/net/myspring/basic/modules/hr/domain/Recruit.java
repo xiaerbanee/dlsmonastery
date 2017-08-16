@@ -57,6 +57,8 @@ public class Recruit extends DataEntity<Recruit> {
     private String leaveJobRemarks;
     private Integer version = 0;
 
+    private Integer active;
+
     public LocalDate getInviteDate() {
         return inviteDate;
     }
@@ -359,5 +361,13 @@ public class Recruit extends DataEntity<Recruit> {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public Integer getActive() {
+        return active;
+    }
+
+    public void setActive(Integer active) {
+        this.active = active;
     }
 }

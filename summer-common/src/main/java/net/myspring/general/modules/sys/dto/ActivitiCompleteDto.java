@@ -7,6 +7,15 @@ public class ActivitiCompleteDto {
     private String processStatus;
     private String processFlowId;
     private String positionId;
+    private String processInstanceId;
+
+    public String getProcessInstanceId() {
+        return processInstanceId;
+    }
+
+    public void setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
+    }
 
     public String getProcessStatus() {
         return processStatus;

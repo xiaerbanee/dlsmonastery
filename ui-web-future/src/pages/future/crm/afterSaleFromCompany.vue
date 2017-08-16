@@ -9,7 +9,7 @@
     <search-dialog :title="$t('afterSaleFromCompany.filter')" @hide="formVisible = false" :show="formVisible" v-model="formVisible"  size="tiny" class="search-form">
       <el-form :model="formData" :label-width="formLabelWidth">
         <el-form-item :label="$t('afterSaleFromCompany.badProductName')" prop="productIdList">
-          <product-select-filter v-model="formData.badProductNameList" :multiple = "true" @afterInit="setSearchText"></product-select-filter>
+          <product-select-filter v-model="formData.badProductNameList" :multiple = "true"></product-select-filter>
         </el-form-item>
     <!--    <el-form-item :label="$t('afterSaleFromCompany.badProductName')" >
           <el-input v-model="formData.badProductName" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
@@ -191,11 +191,16 @@
         this.formVisible = false;
         this.formData.fromCompany = true;
         console.log(this.formData);
-        axios.get('/api/ws/future/crm/afterSale/getFromCompanyData', {params: qs.stringify(this.formData)}).then((response) => {
+
+        axios.post('/api/ws/future/crm/afterSale/getFromCompanyData', qs.stringify(util.deleteExtra(this.formData), {allowDots:true})).then((response) => {
           this.settings.data = response.data;
           table.loadData(this.settings.data);
         });
       }
+    },created(){
+      axios.get('/api/ws/future/crm/afterSale/getQuery').then((response) =>{
+        this.formData=response.data;
+      });
     }
   }
 </script>

@@ -104,8 +104,8 @@ public class ReportScoreService {
         LocalDate firstDayOfMonth = LocalDateUtils.getFirstDayOfThisMonth(date);
         LocalDate dayOfLastMonth = date.minusMonths(1);
         List<ReportScoreDataDto> recentMonthReportScoreDataList = reportScoreRepository.findDataByRetailDate(dayOfLastMonth, dateEnd);
-        Map<String, List<String>> areaMap = officeClient.getLastRuleMapByOfficeRuleName("办事处");
-        Map<String, List<String>> officeMap = officeClient.getLastRuleMapByOfficeRuleName("考核区域");
+        Map<String, List<String>> areaMap = officeClient.getMapByOfficeRuleName("办事处");
+        Map<String, List<String>> officeMap = officeClient.getMapByOfficeRuleName("考核区域");
         Map<String, ReportScoreArea> reportScoreAreaMap = Maps.newHashMap();
         Map<String, ReportScoreOffice> reportScoreOfficeMap = Maps.newHashMap();
         //每个区域打分对应哪个办事处打分

@@ -2,28 +2,28 @@
   <div>
     <head-tab active="recruitForm"></head-tab>
     <el-form>
-      <el-row :gutter="24">
+      <el-row :gutter="20">
         <el-col :span="6">
-          <el-form-item :label="$t('recruitForm.name')" v-if="active>1&&inputForm.name">{{inputForm.name}}</el-form-item>
-          <el-form-item :label="$t('recruitForm.sex')" v-if="active>1&&inputForm.sex">{{inputForm.sex}}</el-form-item>
-          <el-form-item :label="$t('recruitForm.mobilePhone')" v-if="active>1&&inputForm.mobilePhone">{{inputForm.mobilePhone}}</el-form-item>
-          <el-form-item :label="$t('recruitForm.applyPositionId')" v-if="active>1&&inputForm.applyPositionId">{{inputForm.applyPositionId}}</el-form-item>
-          <el-form-item :label="$t('recruitForm.applyFrom')" v-if="active>1&&inputForm.applyForm">{{inputForm.applyFrom}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.name')" v-if="inputForm.active>1&&inputForm.name">{{inputForm.name}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.sex')" v-if="inputForm.active>1&&inputForm.sex">{{inputForm.sex}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.mobilePhone')" v-if="inputForm.active>1&&inputForm.mobilePhone">{{inputForm.mobilePhone}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.applyPositionName')" v-if="inputForm.active>1&&inputForm.applyPositionName">{{inputForm.applyPositionName}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.applyFrom')" v-if="inputForm.active>1&&inputForm.applyFrom">{{inputForm.applyFrom}}</el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item :label="$t('recruitForm.workArea')" v-if="active>2&&inputForm.workArea">{{inputForm.workArea}}</el-form-item>
-          <el-form-item :label="$t('recruitForm.workCategory')" v-if="active>2&&inputForm.workCategory">{{inputForm.workCategory}}</el-form-item>
-          <el-form-item :label="$t('recruitForm.marriageStatus')" v-if="active>2&&inputForm.marriageStatus">{{inputForm.marriageStatus}}</el-form-item>
-          <el-form-item :label="$t('recruitForm.major')" v-if="active>2&&inputForm.major">{{inputForm.major}}</el-form-item>
-          <el-form-item :label="$t('recruitForm.education')" v-if="active>2&&inputForm.education">{{inputForm.education}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.workArea')" v-if="inputForm.active>2&&inputForm.workArea">{{inputForm.workArea}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.workCategory')" v-if="inputForm.active>2&&inputForm.workCategory">{{inputForm.workCategory}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.marriageStatus')" v-if="inputForm.active>2&&inputForm.marriageStatus">{{inputForm.marriageStatus}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.major')" v-if="inputForm.active>2&&inputForm.major">{{inputForm.major}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.education')" v-if="inputForm.active>2&&inputForm.education">{{inputForm.education}}</el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item :label="$t('recruitForm.secondComment')" v-if="active>3&&inputForm.secondComment">{{inputForm.secondComment}}</el-form-item>
+          <el-form-item :label="$t('recruitForm.secondComment')" v-if="inputForm.active>3&&inputForm.secondComment">{{inputForm.secondComment}}</el-form-item>
         </el-col>
       </el-row>
     </el-form>
     <el-row :gutter="20">
-      <el-steps :space="100" :active="active" finish-status="success">
+      <el-steps :space="100" :active="inputForm.active" finish-status="success">
         <el-step :title="$t('recruitForm.reserve')"></el-step>
         <el-step :title="$t('recruitForm.initialTest')"></el-step>
         <el-step :title="$t('recruitForm.retest')"></el-step>
@@ -34,13 +34,12 @@
         <el-button  @click="privious">{{$t('recruitForm.privious')}}</el-button>
       </el-steps>
     </el-row>
-    <el-alert :title="message" type="error" show-icon v-if="message !==''"></el-alert>
     <el-row :gutter="20">
       <!--预约开始-->
-      <div class="form input-form" style="margin-top: 20px" v-if="active==1">
+      <div class="form input-form" style="margin-top: 20px" v-if="inputForm.active==0">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px">
-          <el-form-item  :label="$t('recruitForm.contactDate')" prop="contactDate">
-            <date-picker v-model="inputForm.contactDate"></date-picker>
+          <el-form-item  :label="$t('recruitForm.inviteDate')" prop="contactDate">
+            <date-picker v-model="inputForm.inviteDate"></date-picker>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.name')" prop="name">
             <el-input v-model="inputForm.name"></el-input>
@@ -54,9 +53,9 @@
           <el-form-item :label="$t('recruitForm.mobilePhone')" prop="mobilePhone">
             <el-input v-model="inputForm.mobilePhone"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('recruitForm.applyPositionId')" prop="applyPositionName">
-            <el-select v-model="inputForm.applyPositionId">
-              <el-option v-for="item in inputForm.extra.applyPositionList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-form-item :label="$t('recruitForm.applyPositionName')" prop="applyPositionName">
+            <el-select v-model="inputForm.applyPositionName">
+              <el-option v-for="item in inputForm.extra.applyPositionList" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.applyFrom')" prop="applyFrom">
@@ -66,7 +65,7 @@
           </el-form-item>
           <el-form-item :label="$t('recruitForm.contactById')" prop="registerBy">
             <el-select v-model="inputForm.firstAppointBy"  clearable >
-               <el-option v-for="item in inputForm.extra.firstAppointByList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
+               <el-option v-for="item in inputForm.extra.firstAppointByList"  :key="item.id" :label="item.loginName" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.firstAppointDate')" prop="firstAppointDate">
@@ -82,19 +81,16 @@
       </div>
       <!--预约结束-->
       <!--初始开始-->
-      <div style="margin-top: 20px"  v-if="active==2">
+      <div style="margin-top: 20px"  v-if="inputForm.active==1">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
           <el-row :gutter="20">
             <el-col :span="10">
-              <el-form-item  :label="$t('recruitForm.firstAppointment')" prop="firstAppointment">
-                <bool-select v-model="inputForm.firstAppointment"></bool-select>
+              <el-form-item  :label="$t('recruitForm.firstAppoint')" prop="firstAppoint">
+                <bool-select v-model="inputForm.firstAppoint"></bool-select>
               </el-form-item>
-          <el-form-item :label="$t('recruitForm.firstRealDate')" prop="firstRealDate">
-            <date-time-picker v-model="inputForm.firstRealDate"></date-time-picker>
-          </el-form-item>
           <el-form-item :label="$t('recruitForm.firstAppointBy')"  prop="firstAppointBy">
             <el-select v-model="inputForm.firstAppointBy"  clearable >
-              <el-option v-for="item in inputForm.extra.firstAppointByList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-option v-for="item in inputForm.extra.firstAppointByList"  :key="item.id" :label="item.loginName" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.workArea')" prop="workArea">
@@ -131,8 +127,8 @@
           <el-form-item :label="$t('recruitForm.firstComment')" prop="firstComment">
             <el-input v-model="inputForm.firstComment"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('recruitForm.experienceCompany')" prop="firstComment">
-            <el-input v-model="inputForm.experienceCompany"></el-input>
+          <el-form-item :label="$t('recruitForm.mainCompany')" prop="mainCompany">
+            <el-input v-model="inputForm.mainCompany"></el-input>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.remarks')" prop="firstAppointRemarks">
             <el-input v-model="inputForm.firstAppointRemarks"></el-input>
@@ -146,17 +142,17 @@
       </div>
       <!--初试结束-->
       <!--复试开始-->
-      <div  style="margin-top: 20px"  v-if="active==3">
+      <div  style="margin-top: 20px"  v-if="inputForm.active==2">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-          <el-form-item  :label="$t('recruitForm.secondAppointment')" prop="secondAppointment">
-            <bool-select v-model="inputForm.secondAppointment"></bool-select>
+          <el-form-item  :label="$t('recruitForm.secondAppoint')" prop="secondAppoint">
+            <bool-select v-model="inputForm.secondAppoint"></bool-select>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.secondRealDate')" prop="secondRealDate">
             <date-time-picker v-model="inputForm.secondRealDate"></date-time-picker>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.secondAppointBy')" prop="secondAppointBy">
             <el-select v-model="inputForm.secondAppointBy"  clearable >
-              <el-option v-for="item in inputForm.extra.secondAppointByList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-option v-for="item in inputForm.extra.secondAppointByList"  :key="item.id" :label="item.loginName" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.secondComment')"  prop="secondComment">
@@ -168,11 +164,11 @@
               <el-radio :label="0">{{$t('recruitForm.false')}}</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item :label="$t('recruitForm.remarks')" prop="storageRemarks">
+          <el-form-item :label="$t('recruitForm.storageRemarks')" prop="storageRemarks">
             <el-input v-model="inputForm.storageRemarks"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('recruitForm.physicalAppointDate')" prop="physicalAppointDate">
-            <date-time-picker v-model="inputForm.physicalAppointDate"></date-time-picker>
+          <el-form-item :label="$t('recruitForm.remarks')" prop="secondAppointRemarks">
+            <el-input v-model="inputForm.secondAppointRemarks"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('recruitForm.save')}}</el-button>
@@ -181,13 +177,13 @@
       </div>
       <!--复试结束-->
       <!--资审开始-->
-      <div  style="margin-top: 20px"  v-if="active==4">
+      <div  style="margin-top: 20px"  v-if="inputForm.active==3">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-          <el-form-item :label="$t('recruitForm.auditRealDate')" prop="auditAppointDate">
-            <date-picker v-model="inputForm.auditRealDate"></date-picker>
+          <el-form-item :label="$t('recruitForm.auditAppointDate')" prop="auditAppointDate">
+            <date-picker v-model="inputForm.auditAppointDate"></date-picker>
           </el-form-item>
-          <el-form-item :label="$t('recruitForm.isExamination ')" prop="isExamination">
-            <bool-select v-model="inputForm.isExamination"></bool-select>
+          <el-form-item :label="$t('recruitForm.auditAppoint ')" prop="auditAppoint">
+            <bool-select v-model="inputForm.auditAppoint"></bool-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.remarks')" prop="auditAppointRemarks">
             <el-input v-model="inputForm.auditAppointRemarks"></el-input>
@@ -199,13 +195,13 @@
       </div>
       <!--资审结束-->
       <!--资审开始-->
-      <div style="margin-top: 20px"  v-if="active==5">
+      <div style="margin-top: 20px"  v-if="inputForm.active==4">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
           <el-form-item :label="$t('recruitForm.entryRealDate')" prop="entryRealDate">
             <date-time-picker v-model="inputForm.entryRealDate"></date-time-picker>
           </el-form-item>
-          <el-form-item :label="$t('recruitForm.isPosition')"  prop="isPosition">
-            <bool-select v-model="inputForm.isPosition"></bool-select>
+          <el-form-item :label="$t('recruitForm.entryAppoint')"  prop="entryAppoint">
+            <bool-select v-model="inputForm.entryAppoint"></bool-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.remarks')" prop="entryAppointRemarks">
             <el-input v-model="inputForm.entryAppointRemarks"></el-input>
@@ -217,10 +213,10 @@
       </div>
       <!--资审结束-->
       <!--后期跟踪开始-->
-      <div style="margin-top: 20px" v-if="active==6">
+      <div style="margin-top: 20px" v-if="inputForm.active==5">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-          <el-form-item :label="$t('recruitForm.twoMonth')"  prop="twoMonth" >
-            <bool-select v-model="inputForm.twoMonth"></bool-select>
+          <el-form-item :label="$t('recruitForm.onJob')"  prop="onJob" >
+            <bool-select v-model="inputForm.onJob"></bool-select>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.remarks')"  prop="leaveJobRemarks" >
             <el-input v-model="inputForm.leaveJobRemarks"></el-input>
@@ -236,16 +232,12 @@
 </template>
 <script>
   import dateTimePicker from "components/common/date-time-picker.vue"
-  import accountSelect from 'components/basic/account-select'
   import districtSelect from 'components/general/district-select'
-  import positionSelect from 'components/basic/position-select'
   import boolSelect from 'components/common/bool-select'
   export default{
       components:{
           dateTimePicker,
-          accountSelect,
           districtSelect,
-          positionSelect,
           boolSelect
       },
       data(){
@@ -268,8 +260,6 @@
             submitDisabled:false,
             formProperty:{},
             remoteLoading:false,
-            active:0,
-            message:'',
             inputForm:{
               extra:{}
             },
@@ -281,10 +271,11 @@
         formSubmit(){
           var that = this;
           this.submitDisabled = true;
+          var submitData = util.deleteExtra(this.inputForm);
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/basic/hr/recruit/save', qs.stringify(this.inputForm)).then((response)=> {
+              axios.post('/api/basic/hr/recruit/save', qs.stringify(submitData)).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data, this.getData());
                 if(!this.isCreate){
@@ -298,14 +289,14 @@
             }
           })
         },next() {
-          this.active = this.active+1;
-          if(this.active ==7){
-            this.active = 1;
+          this.inputForm.active = this.inputForm.active+1;
+          if(this.inputForm.active ==7){
+            this.inputForm.active = 6;
           }
         },privious(){
-          this.active = this.active-1;
-          if(this.active ==-1){
-            this.active = 6;
+          this.inputForm.active = this.inputForm.active-1;
+          if(this.inputForm.active ==-1){
+            this.inputForm.active = 0;
           }
         },
         initPage(){
