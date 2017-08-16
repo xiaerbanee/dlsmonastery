@@ -224,7 +224,7 @@ public class ProductImeService {
         Map<String, List<String>> lastRuleMap = Maps.newHashMap();
         if (StringUtils.isNotBlank(reportQuery.getOfficeId())) {
             reportQuery.setOfficeIds(officeClient.getChildOfficeIds(reportQuery.getOfficeId()));
-            lastRuleMap = officeClient.getLastRuleMapByOfficeId(reportQuery.getOfficeId());
+            lastRuleMap = officeClient.geMapByOfficeId(reportQuery.getOfficeId());
         }
         List<ProductImeReportDto> productImeSaleReportList = getProductImeReportList(reportQuery);
         Integer sum;
@@ -268,7 +268,7 @@ public class ProductImeService {
                 }
             }
         }
-        return null;
+        return officeId;
     }
 
     private List<ProductImeReportDto> getProductImeReportList(ReportQuery reportQuery) {

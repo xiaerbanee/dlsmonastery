@@ -149,24 +149,22 @@ public class OfficeController {
             List<Office> officeList = officeService.findByParentIdsLike(officeId);
             if(CollectionUtil.isNotEmpty(officeList)){
                 officeIds=CollectionUtil.extractToList(officeList,"id");
-            }else {
-                officeIds=Lists.newArrayList(officeId);
             }
         }
         return officeIds;
     }
 
-    @RequestMapping(value = "getLastRuleMapByOfficeId")
-    public Map<String,List<String>> getLastRuleMapByOfficeId(String officeId){
+    @RequestMapping(value = "geMapByOfficeId")
+    public Map<String,List<String>> geMapByOfficeId(String officeId){
         Map<String,List<String>> map= Maps.newHashMap();
         if(StringUtils.isNotBlank(officeId)){
-            map = officeService.getLastRuleMapByOfficeId(officeId);
+            map = officeService.geMapByOfficeId(officeId);
         }
         return map;
     }
 
-    @RequestMapping(value = "getLastRuleMapByOfficeRuleName")
-    public Map<String,List<String>> getLastRuleMapByOfficeRuleName(String officeRuleName){
+    @RequestMapping(value = "getMapByOfficeRuleName")
+    public Map<String,List<String>> getMapByOfficeRuleName(String officeRuleName){
         Map<String,List<String>> map= Maps.newHashMap();
         if(StringUtils.isNotBlank(officeRuleName)){
             map = officeService.getMapByOfficeRuleName(officeRuleName);
