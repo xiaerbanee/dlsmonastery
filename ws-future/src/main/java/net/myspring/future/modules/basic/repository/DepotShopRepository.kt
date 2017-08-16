@@ -169,7 +169,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     LEFT JOIN crm_product_ime_sale t2 on t1.product_ime_sale_id=t2.id
                     LEFT JOIN crm_product t4 on t1.product_id=t4.id
                     LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
-                    LEFT JOIN crm_depot t6 on t1.depot_id=t6  and t6.depot_store_id is null
+                    LEFT JOIN crm_depot t6 on t1.depot_id=t6.id  and t6.depot_store_id is null
                     LEFT JOIN crm_chain t8 on t6.chain_id=t8.id,
                     crm_depot_shop t7
                     WHERE
