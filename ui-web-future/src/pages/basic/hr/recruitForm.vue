@@ -2,7 +2,7 @@
   <div>
     <head-tab active="recruitForm"></head-tab>
     <el-form>
-      <el-row :gutter="12">
+      <el-row :gutter="20">
         <el-col :span="6">
           <el-form-item :label="$t('recruitForm.name')" v-if="inputForm.active>1&&inputForm.name">{{inputForm.name}}</el-form-item>
           <el-form-item :label="$t('recruitForm.sex')" v-if="inputForm.active>1&&inputForm.sex">{{inputForm.sex}}</el-form-item>
@@ -22,7 +22,7 @@
         </el-col>
       </el-row>
     </el-form>
-    <el-row :gutter="12">
+    <el-row :gutter="20">
       <el-steps :space="100" :active="inputForm.active" finish-status="success">
         <el-step :title="$t('recruitForm.reserve')"></el-step>
         <el-step :title="$t('recruitForm.initialTest')"></el-step>
@@ -34,7 +34,7 @@
         <el-button  @click="privious">{{$t('recruitForm.privious')}}</el-button>
       </el-steps>
     </el-row>
-    <el-row :gutter="12">
+    <el-row :gutter="20">
       <!--预约开始-->
       <div class="form input-form" style="margin-top: 20px" v-if="inputForm.active==0">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px">
