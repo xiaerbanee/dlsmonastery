@@ -34,7 +34,6 @@
         <el-button  @click="privious">{{$t('recruitForm.privious')}}</el-button>
       </el-steps>
     </el-row>
-    <el-alert :title="message" type="error" show-icon v-if="message !==''"></el-alert>
     <el-row :gutter="20">
       <!--预约开始-->
       <div class="form input-form" style="margin-top: 20px" v-if="inputForm.active==0">
@@ -236,16 +235,12 @@
 </template>
 <script>
   import dateTimePicker from "components/common/date-time-picker.vue"
-  import accountSelect from 'components/basic/account-select'
   import districtSelect from 'components/general/district-select'
-  import positionSelect from 'components/basic/position-select'
   import boolSelect from 'components/common/bool-select'
   export default{
       components:{
           dateTimePicker,
-          accountSelect,
           districtSelect,
-          positionSelect,
           boolSelect
       },
       data(){
@@ -268,7 +263,6 @@
             submitDisabled:false,
             formProperty:{},
             remoteLoading:false,
-            message:'',
             inputForm:{
               extra:{}
             },
@@ -304,14 +298,12 @@
           }
         },privious(){
           this.inputForm.active = this.inputForm.active-1;
-          console.log(this.inputForm.active)
           if(this.inputForm.active ==-1){
             this.inputForm.active = 0;
           }
         },
         initPage(){
           axios.get('/api/basic/hr/recruit/getForm').then((response)=>{
-            console.log(response.data)
             this.inputForm=response.data;
             if(!this.isCreate){
               axios.get('/api/basic/hr/recruit/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
