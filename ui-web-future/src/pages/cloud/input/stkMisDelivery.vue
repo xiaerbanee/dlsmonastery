@@ -48,7 +48,7 @@
               {type: "autocomplete", allowEmpty: false, strict: true, types:[],source: this.types},
               {type: "text", allowEmpty: true}
             ],
-            contextMenu: true,
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
             afterChange: function (changes, source) {
               if (source !== 'loadData') {
                 for (let i = changes.length - 1; i >= 0; i--) {

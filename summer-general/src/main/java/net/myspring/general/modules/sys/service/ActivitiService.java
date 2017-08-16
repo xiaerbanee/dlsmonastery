@@ -85,6 +85,15 @@ public class ActivitiService {
         return activitiStartDto;
     }
 
+    public Map<String,ActivitiCompleteDto> completeBatch(List<ActivitiCompleteForm> activitiCompleteFormList){
+        Map<String,ActivitiCompleteDto> map=Maps.newHashMap();
+        for(ActivitiCompleteForm activitiCompleteForm:activitiCompleteFormList){
+            ActivitiCompleteDto activitiCompleteDto=complete(activitiCompleteForm);
+            map.put(activitiCompleteDto.getProcessInstanceId(),activitiCompleteDto);
+        }
+        return map;
+    }
+
     public ActivitiCompleteDto complete(ActivitiCompleteForm activitiCompleteForm) {
         ActivitiCompleteDto activitiCompleteDto=new ActivitiCompleteDto();
         Task task = taskService.createTaskQuery().processInstanceId(activitiCompleteForm.getProcessInstanceId()).singleResult();
@@ -104,6 +113,7 @@ public class ActivitiService {
             activitiCompleteDto.setPositionId(processFlow.getPositionId());
         }
         activitiCompleteDto.setProcessStatus(getProcessStatus(processFlow, activitiCompleteForm.getPass()));
+        activitiCompleteDto.setProcessInstanceId(activitiCompleteForm.getProcessInstanceId());
         ProcessTask processTask = processTaskRepository.findByProcessInstanceId(activitiCompleteForm.getProcessInstanceId());
         if(processTask!=null){
             if(activitiCompleteForm.getPass()){

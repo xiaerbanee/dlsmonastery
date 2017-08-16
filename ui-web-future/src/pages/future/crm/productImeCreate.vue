@@ -88,7 +88,7 @@
               strict: true,
               width: 100
             }],
-            contextMenu: true,
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
           }, rules: {},
           submitDisabled: false,
         };

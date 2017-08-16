@@ -44,7 +44,7 @@
               {type: "autocomplete", strict: true, allowEmpty: false, otherTypeName:[],source: this.otherTypeName, width:150},
               {type: "autocomplete", strict: true, allowEmpty: false, expenseTypeName:[],source: this.expenseTypeName, width:150},
             ],
-            contextMenu: true,
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
             afterChange: function (changes, source) {
               if (source !== 'loadData') {
                 for (let i = changes.length - 1; i >= 0; i--) {

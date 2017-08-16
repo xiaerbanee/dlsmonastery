@@ -19,9 +19,27 @@ public class ProcessTypeDto extends DataDto<ProcessType> {
     private String viewPositionIds;
     private String createPositionIds;
     private Boolean auditFileType;
+    private Boolean enabled;
+    private Boolean locked;
     private List<ProcessFlowDto> processFlowList=Lists.newArrayList();
     private List<String> viewPositionIdList=Lists.newArrayList();
     private List<String> createPositionIdList=Lists.newArrayList();
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
 
     public List<String> getViewPositionIdList() {
         if(CollectionUtil.isEmpty(viewPositionIdList)&& StringUtils.isNotBlank(viewPositionIds)){
