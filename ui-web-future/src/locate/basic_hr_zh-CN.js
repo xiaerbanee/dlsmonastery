@@ -1012,7 +1012,7 @@ export default {
     storageRemarks: "储备缘由",
     physicalAppointDate: "体检预约时间",
     physicalRealDate: "体检完成时间",
-    auditAppointDate: "资审预约时间",
+    auditAppointDate: "资审时间",
     auditRealDate: "资审时间",
     auditAppoint:"是否资审",
     entryAppointDate: "入职预约时间",

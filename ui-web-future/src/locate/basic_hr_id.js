@@ -1011,7 +1011,7 @@ export default {
     storageRemarks: "keterangan persediaan",
     physicalAppointDate: "tanggal perjanjian fisik",
     physicalRealDate: "tanggal fidik",
-    auditAppointDate: "tanggal perjanjian pemeriksaan",
+    auditAppointDate: "资审时间",
     auditRealDate: "tanggal pemeriksaan",
     auditAppoint:"是否资审",
     entryAppointDate: "tanggal perjanjian masuk",
