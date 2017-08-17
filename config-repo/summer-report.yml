@@ -1,0 +1,28 @@
+feign:
+  hystrix:
+    enabled: false
+  httpclient:
+    enabled: true
+
+security:
+  oauth2:
+    local:
+      clientId: summer-report-service
+      clientSecret: summer-report-password
+      accessTokenUri: http://localhost:1100/uaa/oauth/token
+      userAuthorizationUri: http://localhost:1100/uaa/oauth/authorize
+      grant-type: client_credentials
+      scope: server
+    resource:
+      user-info-uri: http://localhost:1100/uaa/user
+
+ribbon:
+  ReadTimeout: 300000
+  ConnectTimeout: 300000
+
+logging:
+  file: summer-report.log
+  level:
+    org.springframework.cloud: DEBUG
+    org.springframework.security: DEBUG
+    net.myspring: DEBUG
