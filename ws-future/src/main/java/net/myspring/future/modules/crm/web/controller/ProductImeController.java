@@ -261,4 +261,15 @@ public class ProductImeController {
         return new ModelAndView(new TempFileView(), "tempFileName", tempFileName);
     }
 
+    //vivo延保系统调用(检测该串码是否在系统中且未核销)
+    @RequestMapping(value = "checkIme")
+    public RestResponse checkIme(String ime){
+        String message = productImeService.checkIme(ime);
+        if(message.contains("该串码")){
+            return new RestResponse(message,ResponseCodeEnum.invalid.name(),false);
+        }else {
+            return new RestResponse(message,ResponseCodeEnum.valid.name());
+        }
+    }
+
 }
