@@ -101,7 +101,7 @@
       }
     },created () {
       const that = this;
-      that.pageHeight = 0.75*window.innerHeight;
+      that.pageHeight = 0.74*window.innerHeight;
       axios.get('/api/ws/future/crm/reportScoreOffice/getQuery').then((response) =>{
         that.formData=response.data;
         console.log(that.formData)

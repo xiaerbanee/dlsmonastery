@@ -26,7 +26,7 @@ import suAlert from './components/common/su-alert.vue';
 import suSelect from './components/common/su-select.vue';
 
 import './filters'
-
+import './styles/style.scss'
 import axios from 'axios'
 import qs from 'qs'
 import util from "./utils/util"
@@ -91,7 +91,17 @@ window.checkLogin = function () {
         return true;
     }
 }
-
+Vue.directive('permit', function (el, binding) {
+    var  hasPermit=false;
+    if(binding.value){
+        hasPermit= util.isPermit(binding.value);
+    }
+    if(!hasPermit){
+        el.style.display="none"
+    }else {
+        el.style.display=""
+    }
+})
 
 //router.afterEach(transition => {
 //NProgress.done();

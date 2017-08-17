@@ -91,7 +91,17 @@ window.checkLogin = function () {
         return true;
     }
 }
-
+Vue.directive('permit', function (el, binding) {
+    var  hasPermit=false;
+    if(binding.value){
+        hasPermit= util.isPermit(binding.value);
+    }
+    if(!hasPermit){
+        el.style.display="none"
+    }else {
+        el.style.display=""
+    }
+})
 
 //router.afterEach(transition => {
 //NProgress.done();

@@ -181,7 +181,7 @@
         }).catch(()=>{});
       }
     },created () {
-       this.pageHeight = 0.75*window.innerHeight;
+       this.pageHeight = 0.74*window.innerHeight;
       this.initPromise=axios.get('/api/ws/future/crm/expressOrder/getQuery').then((response) =>{
         this.formData=response.data;
         if(!this.formData.extendType){
