@@ -5,12 +5,17 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
+import net.myspring.tool.common.utils.HmacUtils;
 import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.modules.oppo.dto.OppoPlantSendImeiPpselDto;
 import net.myspring.tool.modules.oppo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.text.MD5Utils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -236,6 +241,27 @@ public class OppoPullService {
                 oppoPlantProductItemelectronSelRepository.save(list);
             }
             logger.info("电子保卡同步成功");
+        }
+    }
+
+    @LocalDataSource
+    public void pullExperienceShops(){
+        String key = MD5Utils.encode("oppozmd9988");
+        String timestamp = String.valueOf(System.currentTimeMillis()/1000L);
+        String aValue = "80b7703608064d45b85c788b2cabe6ae"+"&"+timestamp;
+        String aKey = "a4Gs#vHnmlr54PzdBT3";
+        String identity = HmacUtils.hmacSign(aValue,aKey);
+        String url = "http://so5.opposales.com:808/HttpInfos/StoreList.ashx?key="+key+"&timestamp="+timestamp+"&identity="+identity;
+        System.err.println(url);
+        try{
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder().url(url).build();
+            Response response = client.newCall(request).execute();
+            response.body().string();
+            response.close();
+        }catch (Exception e){
+            logger.info("调用工厂接口异常"+LocalDateTime.now());
+            e.printStackTrace();
         }
     }
 
