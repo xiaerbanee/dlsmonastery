@@ -57,7 +57,6 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"   :element-loading-text="$t('recruitList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column type="selection" width="55" ></el-table-column>
         <el-table-column  prop="name"  :label="$t('recruitList.name')"></el-table-column>
         <el-table-column prop="sex" :label="$t('recruitList.sex')"></el-table-column>
         <el-table-column prop="mobilePhone" :label="$t('recruitList.mobilePhone')"></el-table-column>
@@ -97,7 +96,6 @@ import boolSelect from "components/common/bool-select"
         formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
-        selects:new Array(),
       };
     },
     methods: {
@@ -145,9 +143,7 @@ import boolSelect from "components/common/bool-select"
           this.selects.push(selection[key].id)
         }
       },batchEdit(){
-        if(this.selects.length>1){
-          this.$router.push({ name: 'recruitBatchForm', query: { ids: this.selects }})
-        }
+          this.$router.push({ name: 'recruitBatchForm'})
       },addCategory(){
         this.$router.push({ name: 'recruitEnumList'})
       }
