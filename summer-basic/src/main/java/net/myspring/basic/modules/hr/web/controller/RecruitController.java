@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.web.controller;
 
 import net.myspring.basic.common.enums.RecruitTypeEnum;
 import net.myspring.basic.modules.hr.dto.RecruitDto;
+import net.myspring.basic.modules.hr.service.AccountService;
 import net.myspring.basic.modules.hr.service.RecruitEnumService;
 import net.myspring.basic.modules.hr.service.RecruitService;
 import net.myspring.basic.modules.hr.web.form.RecruitForm;
@@ -23,6 +24,8 @@ public class RecruitController {
     private RecruitService recruitService;
     @Autowired
     private RecruitEnumService recruitEnumService;
+    @Autowired
+    private AccountService accountService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<RecruitDto> list(Pageable pageable, RecruitQuery recruitQuery){
@@ -32,6 +35,8 @@ public class RecruitController {
 
     @RequestMapping(value = "getQuery")
     public RecruitQuery findQuery(RecruitQuery recruitQuery){
+        recruitQuery.getExtra().put("firstAppointByList", accountService.findByIds(recruitEnumService.findValueByCategory((RecruitTypeEnum.初试人.name()))));
+        recruitQuery.getExtra().put("secondAppointByList",accountService.findByIds(recruitEnumService.findValueByCategory((RecruitTypeEnum.复试人.name()))));
         return recruitQuery;
     }
 
@@ -39,8 +44,8 @@ public class RecruitController {
     public RecruitForm findForm(RecruitForm recruitForm){
         recruitForm.getExtra().put("applyFromList",recruitEnumService.findValueByCategory(RecruitTypeEnum.来源.name()) );
         recruitForm.getExtra().put("applyPositionList",recruitEnumService.findValueByCategory(RecruitTypeEnum.岗位.name()) );
-        recruitForm.getExtra().put("firstAppointByList",recruitEnumService.findValueByCategory(RecruitTypeEnum.初试人.name()) );
-        recruitForm.getExtra().put("secondAppointByList",recruitEnumService.findValueByCategory(RecruitTypeEnum.复试人.name()) );
+        recruitForm.getExtra().put("firstAppointByList", accountService.findByIds(recruitEnumService.findValueByCategory((RecruitTypeEnum.初试人.name()))));
+        recruitForm.getExtra().put("secondAppointByList",accountService.findByIds(recruitEnumService.findValueByCategory((RecruitTypeEnum.复试人.name()))));
         recruitForm.getExtra().put("workCategoryList",recruitEnumService.findValueByCategory(RecruitTypeEnum.品类.name()) );
         recruitForm.getExtra().put("marriageStatusList",recruitEnumService.findValueByCategory(RecruitTypeEnum.婚育状况.name()) );
         recruitForm.getExtra().put("educationsList",recruitEnumService.findValueByCategory(RecruitTypeEnum.最高学历.name()) );

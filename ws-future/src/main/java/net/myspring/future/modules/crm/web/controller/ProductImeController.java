@@ -7,6 +7,7 @@ import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.BoolEnum;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
@@ -118,7 +119,7 @@ public class ProductImeController {
         reportQuery.getExtra().put("netTypeList", NetTypeEnum.getList());
         reportQuery.setSumType(ProductImeStockReportSumTypeEnum.区域.name());
         CompanyConfigCacheDto  companyConfigCacheDto = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.COMPANY_NAME.name());
-        if(companyConfigCacheDto != null && "WZOPPO".equals(companyConfigCacheDto.getValue())) {
+        if(companyConfigCacheDto != null && CompanyNameEnum.WZOPPO.name().equals(companyConfigCacheDto.getValue())) {
             reportQuery.setOutType(ProductImeStockReportOutTypeEnum.核销.name());
         }else{
             reportQuery.setOutType(ProductImeStockReportOutTypeEnum.电子保卡.name());

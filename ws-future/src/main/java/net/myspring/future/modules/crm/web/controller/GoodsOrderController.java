@@ -41,6 +41,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -64,6 +65,14 @@ public class GoodsOrderController {
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
     public Page<GoodsOrderDto> list(Pageable pageable, GoodsOrderQuery goodsOrderQuery){
+        if (goodsOrderQuery.getExpressCodes() != null) {
+            goodsOrderQuery.setExpresscodeList(Arrays.asList(goodsOrderQuery.getExpressCodes().split("[\n,]")));
+        }
+        if (goodsOrderQuery.getBusinessIds() != null) {
+            goodsOrderQuery.setBusinessIdList(Arrays.asList(goodsOrderQuery.getBusinessIds().split("[\n,]")));
+        }
+        goodsOrderQuery.setDepotIdList(depotService.filterDepotIds());
+
         return goodsOrderService.findAll(pageable, goodsOrderQuery);
     }
 

@@ -3,6 +3,7 @@ package net.myspring.basic.modules.hr.web.query;
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.query.BaseQuery;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
@@ -25,6 +26,27 @@ public class EmployeeQuery extends BaseQuery {
     private String officeId;
     private String leaveDateMonth;
     private String areaId;
+    private String nameStr;
+    private List<String> nameList=Lists.newArrayList();
+
+    public String getNameStr() {
+        return nameStr;
+    }
+
+    public void setNameStr(String nameStr) {
+        this.nameStr = nameStr;
+    }
+
+    public List<String> getNameList() {
+        if(CollectionUtil.isEmpty(nameList)&&StringUtils.isNotBlank(nameStr)){
+            this.nameList=StringUtils.getFilterList(nameStr);
+        }
+        return nameList;
+    }
+
+    public void setNameList(List<String> nameList) {
+        this.nameList = nameList;
+    }
 
     public String getAreaId() {
         return areaId;

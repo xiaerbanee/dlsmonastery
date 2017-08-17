@@ -14,6 +14,8 @@ public class ShopAdForm extends BaseForm<ShopAd> {
     private String shopAdTypeId;
     private BigDecimal length;
     private BigDecimal width;
+    private BigDecimal thickness;
+    private BigDecimal area;
     private Integer qty;
     private String content;
     private Boolean specialArea;
@@ -102,11 +104,23 @@ public class ShopAdForm extends BaseForm<ShopAd> {
         this.price = price;
     }
 
+    public BigDecimal getThickness() {
+        return thickness;
+    }
+
+    public void setThickness(BigDecimal thickness) {
+        this.thickness = thickness;
+    }
+
+    public void setArea(BigDecimal area) {
+        this.area = area;
+    }
+
     public BigDecimal getArea() {
-        if(this.length !=null&&this.width!=null&&this.qty!=null){
+        if(this.length !=null&&this.width!=null&&this.qty!=null&&this.area==null){
             return length.multiply(width).multiply(BigDecimal.valueOf(qty));
         }else{
-            return null;
+            return area;
         }
     }
 }

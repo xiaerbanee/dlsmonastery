@@ -16,6 +16,9 @@ const adPricesystemChangeForm = r => require.ensure([], () => r(require('pages/f
 const shopAdList= r => require.ensure([], () => r(require('pages/future/layout/shopAdList.vue')));
 const shopAdForm= r => require.ensure([], () => r(require('pages/future/layout/shopAdForm.vue')));
 const shopAdDetail= r => require.ensure([], () => r(require('pages/future/layout/shopAdDetail.vue')));
+const shopAdDoorList= r => require.ensure([], () => r(require('pages/future/layout/shopAdDoorList.vue')));
+const shopAdDoorForm= r => require.ensure([], () => r(require('pages/future/layout/shopAdDoorForm.vue')));
+const shopAdDoorDetail= r => require.ensure([], () => r(require('pages/future/layout/shopAdDoorDetail.vue')));
 const shopAllotList = r => require.ensure([], () => r(require('pages/future/layout/shopAllotList.vue')));
 const shopAllotShipPrint = r => require.ensure([], () => r(require('pages/future/layout/shopAllotShipPrint.vue')));
 const shopAllotForm = r => require.ensure([], () => r(require('pages/future/layout/shopAllotForm.vue')));
@@ -63,6 +66,9 @@ let routes = [
   {path:'/future/layout/shopAdList',component:shopAdList,name:'shopAdList'},
   {path:'/future/layout/shopAdForm',component:shopAdForm,name:'shopAdForm',meta: {menu:"shopAdList",keepAlive:true}},
   {path:'/future/layout/shopAdDetail',component:shopAdDetail,name:'shopAdDetail',meta: {menu:"shopAdList"}},
+  {path:'/future/layout/shopAdDoorList',component:shopAdDoorList,name:'shopAdDoorList'},
+  {path:'/future/layout/shopAdDoorForm',component:shopAdDoorForm,name:'shopAdDoorForm',meta: {menu:"shopAdDoorList",keepAlive:true}},
+  {path:'/future/layout/shopAdDoorDetail',component:shopAdDoorDetail,name:'shopAdDoorDetail',meta: {menu:"shopAdDoorList",keepAlive:true}},
   {path:'/future/layout/shopAllotList',component:shopAllotList,name:'shopAllotList'},
   {path:'/future/layout/shopAllotShipPrint',component:shopAllotShipPrint,name:'shopAllotShipPrint',meta: {hidden: true}},
   {path:'/future/layout/shopAllotForm',component:shopAllotForm,name:'shopAllotForm',meta: {menu:"shopAllotList",keepAlive:true}},

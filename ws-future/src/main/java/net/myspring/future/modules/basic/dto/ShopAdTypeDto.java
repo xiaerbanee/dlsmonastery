@@ -11,6 +11,15 @@ public class ShopAdTypeDto extends DataDto<ShopAdType> {
     private String name;
     private String totalPriceType;
     private BigDecimal price;
+    private Boolean doorType;
+
+    public Boolean getDoorType() {
+        return doorType;
+    }
+
+    public void setDoorType(Boolean doorType) {
+        this.doorType = doorType;
+    }
 
     public String getName() {
         return name;

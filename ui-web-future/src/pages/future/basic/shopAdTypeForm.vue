@@ -19,6 +19,9 @@
         <el-form-item :label="$t('shopAdTypeForm.remarks')" prop="remarks">
           <el-input v-model="formData.remarks" type="textarea" :rows="5"></el-input>
         </el-form-item>
+        <el-form-item :label="$t('shopAdTypeForm.doorType')" prop="doorType">
+          <bool-radio-group v-model="formData.doorType"></bool-radio-group>仅限印尼大牌门头类选择是,其余都选否
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('shopAdTypeForm.save')}}</el-button>
         </el-form-item>
@@ -27,7 +30,9 @@
   </div>
 </template>
 <script>
+  import boolRadioGroup from 'components/common/bool-radio-group';
     export default{
+      components:{boolRadioGroup},
       data(){
         return this.getData()
       },

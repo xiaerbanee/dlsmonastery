@@ -102,9 +102,44 @@ public class ShopAdService {
         return shopAd;
     }
 
+    @Transactional
+    public void doorSave(ShopAdForm shopAdForm){
+        ShopAd shopAd;
+        ShopAdType shopAdType = shopAdTypeRepository.findOne(shopAdForm.getShopAdTypeId());
+        BigDecimal price=BigDecimal.ZERO;
+        if(TotalPriceTypeEnum.按数量.toString().equals(shopAdType.getTotalPriceType())){
+            price=shopAdType.getPrice().multiply(new BigDecimal(shopAdForm.getQty()));
+        }
+        if(TotalPriceTypeEnum.按面积.toString().equals(shopAdType.getTotalPriceType())){
+            price=shopAdForm.getArea().multiply(shopAdType.getPrice()).multiply(new BigDecimal(shopAdForm.getQty()));
+        }
+        price = price.setScale(0,BigDecimal.ROUND_HALF_UP);
+        shopAdForm.setPrice(price);
+
+        if(shopAdForm.isCreate()){
+            shopAd = BeanUtil.map(shopAdForm,ShopAd.class);
+            shopAdRepository.save(shopAd);
+            //启动流程
+            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("大牌门头",shopAd.getId(),"ShopAdDoor",shopAdForm.getPrice().toString()));
+            if(activitiStartDto!=null){
+                shopAd.setProcessPositionId(activitiStartDto.getPositionId());
+                shopAd.setProcessStatus(activitiStartDto.getProcessStatus());
+                shopAd.setProcessFlowId(activitiStartDto.getProcessFlowId());
+                shopAd.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
+                shopAd.setProcessTypeId(activitiStartDto.getProcessTypeId());
+                shopAdRepository.save(shopAd);
+            }
+        }else {
+            shopAd = shopAdRepository.findOne(shopAdForm.getId());
+            ReflectionUtil.copyProperties(shopAdForm,shopAd);
+            shopAdRepository.save(shopAd);
+        }
+    }
+
     public ShopAdQuery getQuery(ShopAdQuery shopAdQuery) {
         shopAdQuery.getExtra().put("areaList",officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         shopAdQuery.getExtra().put("shopAdTypes",shopAdTypeRepository.findAllByEnabled());
+        shopAdQuery.getExtra().put("shopAdTypeDoor",shopAdTypeRepository.findAllDoorType());
         return shopAdQuery;
     }
 
@@ -168,6 +203,7 @@ public class ShopAdService {
 
     public ShopAdForm getForm(ShopAdForm shopAdForm){
         shopAdForm.getExtra().put("shopAdTypeFormList",shopAdTypeRepository.findAllByEnabled());
+        shopAdForm.getExtra().put("shopAdTypeFormDoorList",shopAdTypeRepository.findAllDoorType());
         return shopAdForm;
     }
 

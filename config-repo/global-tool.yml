@@ -1,5 +1,6 @@
 server:
   port: 2100
+  connection-timeout: -1
 
 security:
   oauth2:

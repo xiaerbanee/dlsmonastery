@@ -61,12 +61,7 @@ interface OfficeRuleRepository  : BaseRepository<OfficeRule, String> ,OfficeRule
      """)
     fun findLastOfficeRule(pageable: Pageable): Page<OfficeRule>
 
-    @Query("""
-        SELECT t
-        FROM  #{#entityName} t
-        where t.enabled=1
-     """)
-    fun findAllEnabled():MutableList<OfficeRule>
+    fun findByEnabledIsTrue():MutableList<OfficeRule>
 }
 
 

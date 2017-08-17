@@ -59,10 +59,10 @@ public class ActivitiService {
     @Autowired
     private ProcessTypeRepository processTypeRepository;
 
-    public ActivitiStartDto start(ActivitiStartForm activitiStartForm){
+    public ActivitiStartDto start(ActivitiStartForm activitiStartForm) {
         //启动流程
-        ActivitiStartDto activitiStartDto=new ActivitiStartDto();
-        ProcessType processType=processTypeRepository.findByName(activitiStartForm.getProcessTypeName());
+        ActivitiStartDto activitiStartDto = new ActivitiStartDto();
+        ProcessType processType = processTypeRepository.findByName(activitiStartForm.getProcessTypeName());
         activitiStartDto.setProcessTypeId(processType.getId());
         identityService.setAuthenticatedUserId(RequestUtils.getAccountId());
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process_type_" + processType.getId(), activitiStartForm.getBusinessKey());
@@ -71,7 +71,7 @@ public class ActivitiService {
         String processStatus = taskService.createTaskQuery().processInstanceId(processInstanceId).singleResult().getName();
         activitiStartDto.setProcessStatus(processStatus);
         ProcessFlow processFlow = processFlowRepository.findByProcessTypeIdAndName(processType.getId(), processStatus);
-        activitiStartDto.setProcessFlowId(processFlow==null?"":processFlow.getId());
+        activitiStartDto.setProcessFlowId(processFlow == null ? "" : processFlow.getId());
         activitiStartDto.setPositionId(processFlow.getPositionId());
         //创建任务
         ProcessTask processTask = new ProcessTask();
@@ -85,8 +85,17 @@ public class ActivitiService {
         return activitiStartDto;
     }
 
+    public Map<String, ActivitiCompleteDto> completeBatch(List<ActivitiCompleteForm> activitiCompleteFormList) {
+        Map<String, ActivitiCompleteDto> map = Maps.newHashMap();
+        for (ActivitiCompleteForm activitiCompleteForm : activitiCompleteFormList) {
+            ActivitiCompleteDto activitiCompleteDto = complete(activitiCompleteForm);
+            map.put(activitiCompleteDto.getProcessInstanceId(), activitiCompleteDto);
+        }
+        return map;
+    }
+
     public ActivitiCompleteDto complete(ActivitiCompleteForm activitiCompleteForm) {
-        ActivitiCompleteDto activitiCompleteDto=new ActivitiCompleteDto();
+        ActivitiCompleteDto activitiCompleteDto = new ActivitiCompleteDto();
         Task task = taskService.createTaskQuery().processInstanceId(activitiCompleteForm.getProcessInstanceId()).singleResult();
         if (!activitiUtils.claim(task)) {
             throw new ServiceException("无法签收任务，您没有办理此任务的权限或者已经被其他人签收");
@@ -104,14 +113,15 @@ public class ActivitiService {
             activitiCompleteDto.setPositionId(processFlow.getPositionId());
         }
         activitiCompleteDto.setProcessStatus(getProcessStatus(processFlow, activitiCompleteForm.getPass()));
+        activitiCompleteDto.setProcessInstanceId(activitiCompleteForm.getProcessInstanceId());
         ProcessTask processTask = processTaskRepository.findByProcessInstanceId(activitiCompleteForm.getProcessInstanceId());
-        if(processTask!=null){
-            if(activitiCompleteForm.getPass()){
+        if (processTask != null) {
+            if (activitiCompleteForm.getPass()) {
                 String processStatus = getProcessStatus(processFlow, activitiCompleteForm.getPass());
-                if(AuditTypeEnum.PASS.getValue().equals(processStatus)){
+                if (AuditTypeEnum.PASS.getValue().equals(processStatus)) {
                     processTask.setStatus(AuditTypeEnum.PASS.getValue());
                     processTask.setEnabled(false);
-                }else{
+                } else {
                     processTask.setPositionId(processFlow.getPositionId());
                     processTask.setStatus(processStatus);
                 }
@@ -124,17 +134,15 @@ public class ActivitiService {
         return activitiCompleteDto;
     }
 
-    public List<ActivitiDetailDto> getActivitiDetail(String processInstanceId){
-        List<ActivitiDetailDto> activitiDetailDtoList= Lists.newArrayList();
+    public List<ActivitiDetailDto> getActivitiDetail(String processInstanceId) {
+        List<ActivitiDetailDto> activitiDetailDtoList = Lists.newArrayList();
         ActivitiEntity activitiEntity = activitiUtils.getActivitiEntity(processInstanceId);
         if (CollectionUtil.isNotEmpty(activitiEntity.getHistoricTaskInstances())) {
             for (HistoricTaskInstance historicTaskInstance : activitiEntity.getHistoricTaskInstances()) {
-                if (StringUtils.isNotBlank(historicTaskInstance.getAssignee())) {
-                    ActivitiDetailDto activitiDetailDto=new ActivitiDetailDto();
+                if (StringUtils.isNotBlank(historicTaskInstance.getAssignee()) && historicTaskInstance.getEndTime() != null) {
+                    ActivitiDetailDto activitiDetailDto = new ActivitiDetailDto();
                     activitiDetailDto.setAuditBy(historicTaskInstance.getAssignee());
-                    if(historicTaskInstance.getEndTime()!=null){
-                        activitiDetailDto.setAuditDate(LocalDateTime.ofInstant(historicTaskInstance.getEndTime().toInstant(), ZoneId.systemDefault()));
-                    }
+                    activitiDetailDto.setAuditDate(LocalDateTime.ofInstant(historicTaskInstance.getEndTime().toInstant(), ZoneId.systemDefault()));
                     activitiDetailDto.setProcessStatus(historicTaskInstance.getName());
                     activitiDetailDto.setComment(activitiEntity.getCommonMap().get(historicTaskInstance.getId()));
                     activitiDetailDtoList.add(activitiDetailDto);
@@ -145,7 +153,7 @@ public class ActivitiService {
         return activitiDetailDtoList;
     }
 
-    private  String getProcessStatus(ProcessFlow processFlow, Boolean pass) {
+    private String getProcessStatus(ProcessFlow processFlow, Boolean pass) {
         if (processFlow != null) {
             return processFlow.getName();
         } else {

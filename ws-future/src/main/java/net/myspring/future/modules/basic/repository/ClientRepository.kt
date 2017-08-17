@@ -143,6 +143,7 @@ class ClientRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
                 crm_client t1,crm_depot t2
             WHERE
                 t1.enabled=1
+                and t2.enabled=1
                 and t2.client_id=t1.id
         """)
         if (StringUtils.isNotEmpty(clientQuery.name)) {
