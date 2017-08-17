@@ -17,6 +17,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
@@ -38,6 +39,8 @@ interface ProductImeSaleRepositoryCustom{
     fun findProductImeForSaleDto(imeList: List<String>): List<ProductImeForSaleDto>
 
     fun setDepotIdForMerge(fromDepotId:String,toDepotId:String):Int
+
+    fun findSaleQty(dateStart: LocalDate,dateEnd: LocalDate,employeeId: String):Int
 }
 
 class ProductImeSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeSaleRepositoryCustom {
@@ -200,5 +203,27 @@ class ProductImeSaleRepositoryImpl @Autowired constructor(val namedParameterJdbc
         val sb = java.lang.StringBuilder()
         sb.append(""" update crm_product_ime_sale t set t.shop_id = :toDepotId where t.shop_id = :fromDepotId """)
         return namedParameterJdbcTemplate.update(sb.toString(),params)
+    }
+
+    override fun findSaleQty(dateStart: LocalDate,dateEnd: LocalDate,employeeId: String):Int{
+        val params = HashMap<String, Any>()
+        params.put("dateStart", dateStart)
+        params.put("dateEnd", dateEnd)
+        params.put("employeeId",employeeId)
+
+        return namedParameterJdbcTemplate.queryForObject("""
+            SELECT
+              count(*)
+            FROM
+              crm_product_ime_sale t
+            WHERE
+              t.enabled = 1
+            AND
+              t.created_date >= :dateStart
+            AND
+              t.created_date < :dateEnd
+            AND
+              t.employee_id = :employeeId
+        """,params,Int::class.java)
     }
 }
