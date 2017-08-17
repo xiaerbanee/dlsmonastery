@@ -26,7 +26,7 @@ import suAlert from './components/common/su-alert.vue';
 import suSelect from './components/common/su-select.vue';
 
 import './filters'
-
+import './styles/style.scss';
 import axios from 'axios'
 import qs from 'qs'
 import util from "./utils/util"
