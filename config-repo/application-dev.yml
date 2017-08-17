@@ -15,6 +15,32 @@ spring:
         username: root
         password: bbk@123456
         driver-class-name: com.mysql.jdbc.Driver
+    summer-report:
+      JXOPPO:
+        url: jdbc:mysql://168.192.1.243:3326/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
+      IDVIVO:
+        url: jdbc:mysql://168.192.1.243:3306/db_idvivo_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
+      JXDJ:
+        url: jdbc:mysql://168.192.1.243:3306/db_dj_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
+      JXVIVO:
+        url: jdbc:mysql://168.192.1.243:3336/db_vivo_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
+      WZOPPO:
+        url: jdbc:mysql://168.192.1.243:3346/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+        username: root
+        password: bbk@123456
+        driver-class-name: com.mysql.jdbc.Driver
     ws-future:
       JXOPPO:
         url: jdbc:mysql://168.192.1.243:3326/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
