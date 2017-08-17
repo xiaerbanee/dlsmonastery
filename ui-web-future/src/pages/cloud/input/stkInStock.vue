@@ -2,7 +2,7 @@
   <div>
     <head-tab active="stkInStock"></head-tab>
     <div>
-      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true" label-width="80px">
         <el-form-item label="日期"  prop="billDate">
           <date-picker v-model="formData.billDate"></date-picker>
         </el-form-item>

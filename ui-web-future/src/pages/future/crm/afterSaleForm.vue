@@ -70,7 +70,7 @@
           rowHeaders:true,
           maxRows:1000,
           columns: [
-            {data: "ime",strict:true, readOnly: true,width:120},
+            {data: "ime",strict:true, readOnly: true,width:150},
             {data: "productName",strict:true, readOnly: true,width:120},
             {data: "retailDepotName",strict:true, readOnly: true,width:120},
             {data:"toAreaProductIme",type: "autocomplete",strict:true, allowEmpty:true,
