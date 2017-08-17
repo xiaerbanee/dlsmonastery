@@ -12,6 +12,8 @@ public class ShopAd extends DataEntity<ShopAd> {
     private String shopId;
     private BigDecimal length;
     private BigDecimal width;
+    private BigDecimal thickness;
+    private BigDecimal area;
     private Integer qty;
     private String content;
     private Boolean specialArea;
@@ -59,6 +61,22 @@ public class ShopAd extends DataEntity<ShopAd> {
 
     public void setWidth(BigDecimal width) {
         this.width = width;
+    }
+
+    public BigDecimal getThickness() {
+        return thickness;
+    }
+
+    public void setThickness(BigDecimal thickness) {
+        this.thickness = thickness;
+    }
+
+    public BigDecimal getArea() {
+        return area;
+    }
+
+    public void setArea(BigDecimal area) {
+        this.area = area;
     }
 
     public Integer getQty() {

@@ -15,6 +15,7 @@ public class DepotReportDto {
     private String depotId;
     private String depotName;
     private String saleDate;
+    private String uploadDate;
     private LocalDate retailDate;
     private String employeeId;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "name")
@@ -244,6 +245,14 @@ public class DepotReportDto {
         this.employeeAccountId = employeeAccountId;
     }
 
+    public String getUploadDate() {
+        return uploadDate;
+    }
+
+    public void setUploadDate(String uploadDate) {
+        this.uploadDate = uploadDate;
+    }
+
     public String getEmployeePositionId() {
         return employeePositionId;
     }
@@ -283,4 +292,6 @@ public class DepotReportDto {
     public void setDistrictName(String districtName) {
         this.districtName = districtName;
     }
+
+
 }

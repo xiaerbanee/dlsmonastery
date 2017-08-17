@@ -111,4 +111,22 @@ public class ShopAdController {
     public ModelAndView export(ShopAdQuery shopAdQuery) throws IOException{
         return new ModelAndView(new ExcelView(),"simpleExcelBook",shopAdService.export(shopAdQuery));
     }
+
+    //印尼大牌门头接口
+    @RequestMapping(value = "doorList")
+    public Page<ShopAdDto> doorList(Pageable pageable,ShopAdQuery shopAdQuery){
+        shopAdQuery.setDoorType(true);
+        Page<ShopAdDto> page = shopAdService.findPage(pageable,shopAdQuery);
+        return page;
+    }
+
+    @RequestMapping(value = "doorSave")
+    public RestResponse doorSave(ShopAdForm shopAdForm, BindingResult bindingResult) {
+        shopAdValidator.validate(shopAdForm,bindingResult);
+        if(bindingResult.hasErrors()){
+            return  new RestResponse(bindingResult,"保存失败", null);
+        }
+        shopAdService.doorSave(shopAdForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
 }

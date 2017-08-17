@@ -41,6 +41,8 @@ interface ShopAdTypeRepositoryCustom{
 
     fun findAllByEnabled(): MutableList<ShopAdTypeDto>
 
+    fun findAllDoorType(): MutableList<ShopAdTypeDto>
+
     fun findPage(pageable: Pageable, shopAdTypeQuery: ShopAdTypeQuery): Page<ShopAdTypeDto>
 }
 
@@ -54,6 +56,19 @@ class ShopAdTypeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                             crm_shop_ad_type t1
                         where
                             t1.enabled=1
+                        and t1.door_type is null or t1.door_type = 0
+        """,HashMap<String, Any>(),BeanPropertyRowMapper(ShopAdTypeDto::class.java))
+    }
+
+    override fun findAllDoorType(): MutableList<ShopAdTypeDto>{
+        return namedParameterJdbcTemplate.query("""
+                        SELECT
+                            t1.*
+                        FROM
+                            crm_shop_ad_type t1
+                        where
+                            t1.enabled=1
+                        and t1.door_type = 1
         """,HashMap<String, Any>(),BeanPropertyRowMapper(ShopAdTypeDto::class.java))
     }
 

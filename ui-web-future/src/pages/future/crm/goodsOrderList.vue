@@ -259,8 +259,7 @@
           window.location.href='/api/ws/future/crm/goodsOrder/export?'+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
       }
-    },
-    moneyFormatter(row,col){
+    }, moneyFormatter(row,col){
       return util.moneyFormatter(row,col)
     }
  },created () {
@@ -269,7 +268,7 @@
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);
       });
-  },activated(){
+ },activated(){
       this.initPromise.then(()=>{
         this.pageRequest();
       });

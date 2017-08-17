@@ -18,7 +18,7 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('clientList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="name" :label="$t('clientList.name')" sortable ></el-table-column>
+        <el-table-column prop="name" :label="$t('clientList.name')" sortable ></el-table-column>
         <el-table-column prop="outId" label="财务编号"  sortable></el-table-column>
         <el-table-column prop="outCode" label="财务编码" ></el-table-column>
         <el-table-column prop="outGroupId" label="财务分组编号"></el-table-column>

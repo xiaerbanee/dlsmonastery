@@ -319,13 +319,13 @@ public class ProductImeService {
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productTypeName", "产品型号"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "qty", "数量"));
         } else if ("按串码".equals(reportQuery.getExportType())) {
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaType", "区域属性"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productTypeName", "产品型号"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productName", "产品名称"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "ime", "串码"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employeeName", "核销人"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employeePositionName", "岗位"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "saleDate", "核销时间"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "uploadDate", "上报时间"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "retailDate", "工厂注册时间"));
         } else if ("按合计".equals(reportQuery.getExportType())) {
             List<ProductType> productTypeList = productTypeRepository.findByScoreType(reportQuery.getScoreType());
