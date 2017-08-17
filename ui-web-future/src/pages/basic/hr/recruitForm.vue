@@ -63,10 +63,8 @@
               <el-option v-for="item in inputForm.extra.applyFromList" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item :label="$t('recruitForm.contactById')" prop="registerBy">
-            <el-select v-model="inputForm.firstAppointBy"  clearable >
-               <el-option v-for="item in inputForm.extra.firstAppointByList"  :key="item.id" :label="item.loginName" :value="item.id"></el-option>
-            </el-select>
+          <el-form-item :label="$t('recruitForm.registerBy')" prop="registerBy">
+            <el-input v-model="inputForm.registerBy"></el-input>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.firstAppointDate')" prop="firstAppointDate">
             <date-time-picker v-model="inputForm.firstAppointDate"></date-time-picker>
@@ -147,8 +145,8 @@
           <el-form-item  :label="$t('recruitForm.secondAppoint')" prop="secondAppoint">
             <bool-select v-model="inputForm.secondAppoint"></bool-select>
           </el-form-item>
-          <el-form-item  :label="$t('recruitForm.secondRealDate')" prop="secondRealDate">
-            <date-time-picker v-model="inputForm.secondRealDate"></date-time-picker>
+          <el-form-item  :label="$t('recruitForm.secondAppointDate')" prop="secondAppointDate">
+            <date-time-picker v-model="inputForm.secondAppointDate"></date-time-picker>
           </el-form-item>
           <el-form-item  :label="$t('recruitForm.secondAppointBy')" prop="secondAppointBy">
             <el-select v-model="inputForm.secondAppointBy"  clearable >
@@ -180,7 +178,7 @@
       <div  style="margin-top: 20px"  v-if="inputForm.active==3">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
           <el-form-item :label="$t('recruitForm.auditAppointDate')" prop="auditAppointDate">
-            <date-picker v-model="inputForm.auditAppointDate"></date-picker>
+            <date-time-picker v-model="inputForm.auditAppointDate"></date-time-picker>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.auditAppoint ')" prop="auditAppoint">
             <bool-select v-model="inputForm.auditAppoint"></bool-select>
@@ -197,8 +195,8 @@
       <!--资审开始-->
       <div style="margin-top: 20px"  v-if="inputForm.active==4">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-          <el-form-item :label="$t('recruitForm.entryRealDate')" prop="entryRealDate">
-            <date-time-picker v-model="inputForm.entryRealDate"></date-time-picker>
+          <el-form-item :label="$t('recruitForm.entryAppointDate')" prop="entryAppointDate">
+            <date-time-picker v-model="inputForm.entryAppointDate"></date-time-picker>
           </el-form-item>
           <el-form-item :label="$t('recruitForm.entryAppoint')"  prop="entryAppoint">
             <bool-select v-model="inputForm.entryAppoint"></bool-select>

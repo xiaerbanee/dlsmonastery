@@ -34,6 +34,77 @@ class RecruitRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
                 from hr_recruit t1
                 where t1.enabled=1
         """);
+        if(StringUtils.isNotBlank(recruitQuery.name)){
+            sb.append("""
+                   AND t1.name LIKE CONCAT ('%',:name,'%')
+                """);
+        }
+        if(StringUtils.isNotBlank(recruitQuery.mobilePhone)){
+            sb.append("""
+                   AND t1.mobile_phone LIKE CONCAT ('%',:mobilePhone,'%')
+                """);
+        }
+        if(recruitQuery.onJob!=null){
+            sb.append("""
+                   AND t1.on_job =:onJob
+                """);
+        }
+        if(StringUtils.isNotBlank(recruitQuery.registerBy)){
+            sb.append("""
+                   AND t1.register_by LIKE CONCAT ('%',:registerBy,'%')
+                """);
+        }
+        if(StringUtils.isNotBlank(recruitQuery.firstAppointBy)){
+            sb.append("""
+                   AND t1.first_appoint_by = :firstAppointBy
+                """);
+        }
+        if(StringUtils.isNotBlank(recruitQuery.secondAppointBy)){
+            sb.append("""
+                   AND t1.second_appoint_by = :secondAppointBy
+                """);
+        }
+        if(recruitQuery.firstAppointDateStart!=null){
+            sb.append("""
+                   AND t1.first_appoint_date >= :firstAppointDateStart
+                """);
+        }
+        if(recruitQuery.firstAppointDateEnd!=null){
+            sb.append("""
+                   AND t1.first_appoint_date < :firstAppointDateEnd
+                """);
+        }
+        if(recruitQuery.secondAppointDateStart!=null){
+            sb.append("""
+                   AND t1.second_appoint_date >= :secondAppointDateStart
+                """);
+        }
+        if(recruitQuery.secondAppointDateEnd!=null){
+            sb.append("""
+                   AND t1.second_appoint_date < :secondAppointDateEnd
+                """);
+        }
+        if(recruitQuery.auditAppointDateStart!=null){
+            sb.append("""
+                   AND t1.audit_appoint_date >= :auditAppointDateStart
+                """);
+        }
+        if(recruitQuery.auditAppointDateEnd!=null){
+            sb.append("""
+                   AND t1.audit_appoint_date < :auditAppointDateEnd
+                """);
+        }
+        if(recruitQuery.entryAppointDateStart!=null){
+            sb.append("""
+                   AND t1.entry_appoint_date >= :entryAppointDateStart
+                """);
+        }
+        if(recruitQuery.entryAppointDateEnd!=null){
+            sb.append("""
+                   AND t1.entry_appoint_date >= :entryAppointDateEnd
+                """);
+        }
+
 
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());

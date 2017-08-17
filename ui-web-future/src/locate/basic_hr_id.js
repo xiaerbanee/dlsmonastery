@@ -980,7 +980,7 @@ export default {
     mobilePhone: "nomor telepon",
     applyPositionName: "lamar jabatan",
     applyFrom: "formulir lamaran",
-    contactById: "hubungi dengan ID",
+    registerBy: "hubungi dengan ID",
     firstAppointDate: "tanggal perjanjian pertama",
     selectFirstAppointDate: "pilih tanggal perjanjuan pertama",
     selectContactById: "pilih kontak ID",

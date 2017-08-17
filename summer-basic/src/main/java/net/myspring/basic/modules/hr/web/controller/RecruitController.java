@@ -35,6 +35,8 @@ public class RecruitController {
 
     @RequestMapping(value = "getQuery")
     public RecruitQuery findQuery(RecruitQuery recruitQuery){
+        recruitQuery.getExtra().put("firstAppointByList", accountService.findByIds(recruitEnumService.findValueByCategory((RecruitTypeEnum.初试人.name()))));
+        recruitQuery.getExtra().put("secondAppointByList",accountService.findByIds(recruitEnumService.findValueByCategory((RecruitTypeEnum.复试人.name()))));
         return recruitQuery;
     }
 

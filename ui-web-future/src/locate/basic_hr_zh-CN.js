@@ -981,7 +981,7 @@ export default {
     mobilePhone: "手机号",
     applyPositionName: "应聘岗位",
     applyFrom: "应聘来源",
-    contactById: "初试邀约人",
+    registerBy: "初试邀约人",
     firstAppointDate: "初试预约时间",
     selectFirstAppointDate: "选择预约时间",
     selectContactById: "请输入预约人",

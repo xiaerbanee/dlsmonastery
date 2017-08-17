@@ -17,16 +17,16 @@
                 <el-input v-model="formData.name"></el-input>
               </el-form-item>
               <el-form-item :label="$t('recruitList.firstAppointDate')">
-                   <date-picker v-model="formData.firstAppointDate"></date-picker>
+                   <date-range-picker v-model="formData.firstAppointDate"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('recruitList.secondAppointDate')">
-                <date-picker v-model="formData.secondAppointDate"></date-picker>
+                <date-range-picker v-model="formData.secondAppointDate"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('recruitList.auditAppointDate')">
-                <date-picker v-model="formData.auditAppointDate"></date-picker>
+                <date-range-picker v-model="formData.auditAppointDate"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('recruitList.entryAppointDate')">
-                <date-picker v-model="formData.entryAppointDate"></date-picker>
+                <date-range-picker v-model="formData.entryAppointDate"></date-range-picker>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -37,10 +37,14 @@
                 <el-input v-model="formData.registerBy"></el-input>
               </el-form-item>
               <el-form-item :label="$t('recruitList.firstAppointBy')">
-                <el-input v-model="formData.firstAppointBy"></el-input>
+                <el-select v-model="formData.firstAppointBy"  clearable >
+                  <el-option v-for="item in formData.extra.firstAppointByList"  :key="item.id" :label="item.loginName" :value="item.id"></el-option>
+                </el-select>
               </el-form-item>
               <el-form-item :label="$t('recruitList.secondAppointBy')">
-                <el-input v-model="formData.secondAppointBy"></el-input>
+                <el-select v-model="formData.secondAppointBy"  clearable >
+                  <el-option v-for="item in formData.extra.secondAppointByList"  :key="item.id" :label="item.loginName" :value="item.id"></el-option>
+                </el-select>
               </el-form-item>
               <el-form-item :label="$t('recruitList.onJob')">
                 <bool-select v-model="formData.onJob"></bool-select>
@@ -57,7 +61,7 @@
         <el-table-column  prop="name"  :label="$t('recruitList.name')"></el-table-column>
         <el-table-column prop="sex" :label="$t('recruitList.sex')"></el-table-column>
         <el-table-column prop="mobilePhone" :label="$t('recruitList.mobilePhone')"></el-table-column>
-        <el-table-column prop="applyPositionId" :label="$t('recruitList.positionName')"></el-table-column>
+        <el-table-column prop="applyPositionName" :label="$t('recruitList.positionName')"></el-table-column>
         <el-table-column prop="firstAppointDate" :label="$t('recruitList.firstAppointDate')"></el-table-column>
         <el-table-column prop="secondAppointDate" :label="$t('recruitList.secondAppointDate')"></el-table-column>
         <el-table-column prop="auditAppointDate" :label="$t('recruitList.auditAppointDate')"></el-table-column>
@@ -108,6 +112,7 @@ import boolSelect from "components/common/bool-select"
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("recruitList",submitData);
         axios.get('/api/basic/hr/recruit?'+qs.stringify(submitData)).then((response) => {
+          console.log(response.data)
           this.page = response.data;
           this.pageLoading = false;
         })
