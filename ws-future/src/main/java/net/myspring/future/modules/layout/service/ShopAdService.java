@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.OfficeRuleEnum;
 import net.myspring.future.common.enums.TotalPriceTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
@@ -21,6 +22,7 @@ import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
 import net.myspring.general.modules.sys.dto.ActivitiStartDto;
 import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
 import net.myspring.general.modules.sys.form.ActivitiStartForm;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
@@ -42,6 +44,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(readOnly = true)
@@ -173,23 +176,38 @@ public class ShopAdService {
     }
 
     @Transactional
-    public String batchAudit(String[] ids, Boolean pass){
+    public void batchAudit(String[] ids, Boolean pass){
         if(ids==null){
-            return null;
+            throw new ServiceException("未选中任何记录");
         }
         List<String> idList = Arrays.asList(ids);
-        ShopAdAuditForm shopAdAuditForm = new ShopAdAuditForm();
-        shopAdAuditForm.setPass(pass);
-        shopAdAuditForm.setPassRemarks("批量操作");
-        String message = null;
-        for (String id:idList){
-            shopAdAuditForm.setId(id);
-            message = audit(shopAdAuditForm);
-            if(message!=null){
-                message += StringUtils.join(message, CharConstant.COMMA);
-            }
+        List<ShopAd> shopAds = shopAdRepository.findAll(idList);
+        Map<String,ShopAd> shopAdMap = CollectionUtil.extractToMap(shopAds,"processInstanceId");
+        List<ActivitiCompleteForm> activitiCompleteForms = Lists.newArrayList();
+        for(ShopAd shopAd:shopAds){
+            ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
+            activitiCompleteForm.setProcessInstanceId(shopAd.getProcessInstanceId());
+            activitiCompleteForm.setProcessTypeId(shopAd.getProcessTypeId());
+            activitiCompleteForm.setPass(pass);
+            activitiCompleteForm.setComment("批量操作");
+            activitiCompleteForms.add(activitiCompleteForm);
         }
-        return message;
+        try {
+            Map<String,ActivitiCompleteDto> activitiCompleteDtoMap = activitiClient.completeBatch(activitiCompleteForms);
+            for(ShopAd shopAd:shopAds){
+                ActivitiCompleteDto activitiCompleteDto = activitiCompleteDtoMap.get(shopAd.getProcessInstanceId());
+                if(activitiCompleteDto!=null){
+                    shopAd.setLocked(true);
+                    shopAd.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
+                    shopAd.setProcessStatus(activitiCompleteDto.getProcessStatus());
+                    shopAd.setProcessPositionId(activitiCompleteDto.getPositionId());
+                    shopAdRepository.save(shopAd);
+                }
+            }
+        }catch (Exception e){
+            throw new ServiceException(e.getMessage());
+        }
+
     }
 
     public ShopAdDto findOne(String id) {
