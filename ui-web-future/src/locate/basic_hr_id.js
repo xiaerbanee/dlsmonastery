@@ -953,14 +953,11 @@ export default {
     audit: "ubah"
   },
   recruitBatchForm: {
-    recruitBatchForm:"招聘信息批量编辑",
-    name: "nama",
-    applyPositionName: "应聘岗位",
-    applyFrom: "应聘来源",
-    workArea: "工作地点",
-    workCategory: "所属品类",
-    education: "学历",
-    entryRealDate: "入职实际时间",
+    recruitBatchForm:"批量编辑",
+    name: "调整项",
+    oldValue: "调整前",
+    newValue:"调整后",
+    save:"simpan"
   },
   recruitForm: {
     recruitForm: "formulir perekrutan",

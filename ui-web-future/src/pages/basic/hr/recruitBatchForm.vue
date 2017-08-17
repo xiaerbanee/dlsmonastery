@@ -3,31 +3,23 @@
     <head-tab active="recruitBatchForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-            <el-form-item :label="$t('recruitBatchForm.name')">
-              {{nameList}}
-            </el-form-item>
-            <el-form-item  :label="$t('recruitBatchForm.applyPositionName')" prop="applyPositionName">
-              <el-input v-model="inputForm.applyPositionName"></el-input>
-            </el-form-item>
-          <el-form-item  :label="$t('recruitBatchForm.applyFrom')" prop="applyFrom">
-            <el-input v-model="inputForm.applyFrom"></el-input>
-          </el-form-item>
-          <el-form-item  :label="$t('recruitBatchForm.workArea')" prop="workArea">
-            <el-input v-model="inputForm.workArea"></el-input>
-          </el-form-item>
-          <el-form-item  :label="$t('recruitBatchForm.workCategory')" prop="workCategory">
-            <el-input v-model="inputForm.workCategory"></el-input>
-          </el-form-item>
-          <el-form-item  :label="$t('recruitBatchForm.education')" prop="education">
-            <el-select v-model="inputForm.education" >
-              <el-option v-for="item in inputForm.extra.educationsList"  :key="item" :label="item" :value="item"></el-option>
+          <el-form-item  :label="$t('recruitBatchForm.name')" prop="applyFrom">
+            <el-select v-model="inputForm.name"  clearable >
+              <el-option v-for="item in inputForm.extra.nameList"  :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item  :label="$t('recruitBatchForm.entryRealDate')" prop="entryRealDate">
-            <el-date-picker  v-model="inputForm.entryRealDate" type="datetime" align="left" ></el-date-picker>
+          <el-form-item  :label="$t('recruitBatchForm.oldValue')" prop="oldValue">
+            <el-select v-model="inputForm.name"  clearable >
+              <el-option v-for="item in inputForm.extra.nameList"  :key="item" :label="item" :value="item"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item  :label="$t('recruitBatchForm.newValue')" prop="newValue">
+            <el-select v-model="inputForm.name"  clearable >
+              <el-option v-for="item in inputForm.extra.nameList"  :key="item" :label="item" :value="item"></el-option>
+            </el-select>
           </el-form-item>
         <el-form-item>
-          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('expressOrderList.save')}}</el-button>
+          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('recruitBatchForm.save')}}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -41,18 +33,9 @@
     methods:{
       getData(){
         return {
-          isInit: false,
           isCreate: this.$route.query.ids == null,
           submitDisabled: false,
-          nameList: "",
           inputForm: {
-            ids: this.$route.query.ids,
-            applyPositionName: '',
-            applyFrom: '',
-            workArea: "",
-            workCategory: "",
-            education: '',
-            entryRealDate: "",
             extra: {}
           },
           rules: {},
@@ -80,17 +63,9 @@
 
       }
     },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-
         axios.get('/api/basic/hr/recruit/getForm').then((response)=>{
           this.inputForm.extra = response.data;
         });
-        console.log(this.inputForm.ids)
-        axios.get('/api/basic/hr/recruit/findNameByIds',{params:{ids:this.inputForm.ids}}).then((response)=>{
-          this.nameList=response.data;
-        });
       }
-      this.isInit = true;
-    }
   }
 </script>

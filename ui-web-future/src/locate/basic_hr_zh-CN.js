@@ -954,14 +954,11 @@ export default {
     audit: "审核",
   },
   recruitBatchForm: {
-    recruitBatchForm:"招聘信息批量编辑",
-    name: "名称",
-    applyPositionName: "应聘岗位",
-    applyFrom: "应聘来源",
-    workArea: "工作地点",
-    workCategory: "所属品类",
-    education: "学历",
-    entryRealDate: "入职实际时间",
+    recruitBatchForm:"批量编辑",
+    name: "调整项",
+    oldValue: "调整前",
+    newValue:"调整后",
+    save:"保存"
   },
   recruitForm: {
     recruitForm: "招聘信息编辑",
