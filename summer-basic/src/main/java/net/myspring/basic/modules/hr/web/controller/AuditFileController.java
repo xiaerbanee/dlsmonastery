@@ -84,7 +84,7 @@ public class AuditFileController {
     public RestResponse audit(String id, boolean pass, String comment) {
         RestResponse restResponse = new RestResponse("文件审核成功",null);
         AuditFile auditFile=auditFileService.findOne(id);
-        if(!RequestUtils.getPositionIdList().contains(auditFile.getPositionId())){
+        if(!(RequestUtils.getPositionIdList().contains(auditFile.getPositionId())||RequestUtils.getAdmin())){
             return new RestResponse("文件审核失败,当前审批岗位与你的岗位不符",null);
         }
         auditFileService.audit(id, pass, comment);
