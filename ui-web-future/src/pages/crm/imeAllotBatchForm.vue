@@ -91,7 +91,7 @@
               strict: true,
               width: 200
             }],
-            contextMenu: true,
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
           },
 
         };

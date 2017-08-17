@@ -2,7 +2,7 @@
   <div>
     <head-tab active="stkInStock"></head-tab>
     <div>
-      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true" label-width="80px">
         <el-form-item label="日期"  prop="billDate">
           <date-picker v-model="formData.billDate"></date-picker>
         </el-form-item>
@@ -63,7 +63,7 @@
               {type: 'text',readOnly: true, strict: true},
               {type: 'numeric', format:"0,0.00", strict: true}
             ],
-             contextMenu: util.contextMenu(this.$store.state.global.lang),
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
             afterChange: function (changes, source) {
               if (source !== 'loadData') {
                 for (let i = changes.length - 1; i >= 0; i--) {

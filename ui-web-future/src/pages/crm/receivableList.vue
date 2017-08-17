@@ -30,8 +30,8 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('receivableList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column prop="depotOfficeNames" :label="$t('receivableList.officeName')"></el-table-column>
         <el-table-column prop="depotAreaNames" :label="$t('receivableList.areaName')"></el-table-column>
+        <el-table-column prop="depotOfficeNames" :label="$t('receivableList.officeName')"></el-table-column>
         <el-table-column prop="name" :label="$t('receivableList.name')" sortable></el-table-column>
         <el-table-column prop="qcys" :label="$t('receivableList.qcys')"></el-table-column>
         <el-table-column prop="qmys" :label="$t('receivableList.qmys')" ></el-table-column>

@@ -39,7 +39,7 @@
               {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true},
               {type: "autocomplete", strict: true, allowEmpty: false, source: []},
             ],
-             contextMenu: util.contextMenu(this.$store.state.global.lang),
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
           },
           formData:{
           },rules: {

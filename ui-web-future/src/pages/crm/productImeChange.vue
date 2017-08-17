@@ -79,7 +79,7 @@
               source: [],
               width: 300
             }],
-            contextMenu: true,
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
           }, rules: {},
           submitDisabled: false,
         };

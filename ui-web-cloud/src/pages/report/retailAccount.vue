@@ -54,7 +54,7 @@
           currentRowClassName: 'currentRow',
           currentColClassName: 'currentCol',
           fixedColumnsLeft: 1,
-           contextMenu: util.contextMenu(this.$store.state.global.lang),
+         contextMenu: util.contextMenu(this.$store.state.global.lang),
           autoColumnSize:true,
           nestedHeaders:[[{"label":"","colspan":0},{"label":"00","colspan":8},{"label":"BM000000","colspan":8},{"label":"BM000001","colspan":8}],
             [{"label":"","colspan":0},{"label":"所有部门合计","colspan":8},{"label":"其他","colspan":8},{"label":"南昌八一大道万达店体验店直营（LX）","colspan":8}],

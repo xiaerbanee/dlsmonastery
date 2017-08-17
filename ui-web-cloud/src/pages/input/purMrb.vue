@@ -58,7 +58,7 @@
               {type: 'numeric', format:"0,0", allowEmpty: false, strict: true},
               {allowEmpty: false, strict:true, type: 'text'}
             ],
-             contextMenu: util.contextMenu(this.$store.state.global.lang),
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
           },
           formData:{
           },

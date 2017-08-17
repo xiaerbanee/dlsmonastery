@@ -52,7 +52,7 @@
               {type: "autocomplete", strict: true, allowEmpty: false, source: [], width:120},
               {type: "autocomplete", strict: true, allowEmpty: false, source: [], width:120},
             ],
-             contextMenu: util.contextMenu(this.$store.state.global.lang),
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
             afterChange: function (changes, source) {
               if (source !== 'loadData') {
                 for (let i = changes.length - 1; i >= 0; i--) {

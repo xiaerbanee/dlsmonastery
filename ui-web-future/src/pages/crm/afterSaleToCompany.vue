@@ -17,7 +17,7 @@
               <el-alert :title="message" type="error" show-icon v-if="message !==''"> </el-alert>
               <el-table :data="product" style="width: 100%" border>
                 <el-table-column prop="name" :label="$t('afterSaleToCompany.productType')"></el-table-column>
-                <el-table-column prop="qty" :label="$t('afterSaleToCompany.qty')"></el-table-column>
+                <el-table-column prop="qty" :label="$t('afterSaleToCompany.qty') " :render-header="count"></el-table-column>
               </el-table>
             </template>
             <div style="height:30px"></div>
@@ -97,6 +97,9 @@
         this.message = response.data.message;
         this.inputForm.toCompanyDate=response.data.toCompanyDate
         })
+      },
+      count(createElement,cols){
+        return util.countTotal(createElement,cols)
       }
     },created(){
     }

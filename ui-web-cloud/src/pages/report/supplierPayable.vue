@@ -123,7 +123,6 @@
           if (submitData.supplierIdList.length !== 0) {
             axios.get('/api/global/cloud/report/supplierPayable/list?' + qs.stringify(submitData)).then((response) => {
               this.summary = response.data;
-              submitData.supplierIdList = [];
             });
           }
           this.page = response.data;
@@ -199,7 +198,6 @@
       that.initPromise = axios.get('/api/global/cloud/kingdee/bdSupplier/getQueryForSupplierPayable').then((response) =>{
         that.formData = response.data;
         util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
       });
     }
   };

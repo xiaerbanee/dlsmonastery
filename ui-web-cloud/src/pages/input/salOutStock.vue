@@ -49,7 +49,7 @@
               {type: "numeric", allowEmpty: false},
               {type: "text", allowEmpty: true, strict: true }
             ],
-             contextMenu: util.contextMenu(this.$store.state.global.lang),
+            contextMenu: util.contextMenu(this.$store.state.global.lang),
             afterChange: function (changes, source) {
               if (source !== 'loadData') {
                 for (let i = changes.length - 1; i >= 0; i--) {
