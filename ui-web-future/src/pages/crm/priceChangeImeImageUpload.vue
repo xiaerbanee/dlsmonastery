@@ -27,7 +27,6 @@
   </div>
 </template>
 <script>
-  import $util from '../../../utils/util.js'
   export default {
     data(){
       return {
