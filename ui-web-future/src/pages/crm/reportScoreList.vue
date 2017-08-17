@@ -76,7 +76,6 @@
           this.searchText = util.getSearchText(this.$refs.searchDialog);
         })
       },   tableRowClassName(row, index) {
-        console.log(row.scoreDate+":"+row.cardQtyDiff)
         if (row.cardQtyDiff>10) {
           return "danger-row";
         }
