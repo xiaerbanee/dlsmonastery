@@ -63,7 +63,7 @@ public class OppoPushController {
     //将需要上抛的数据先同步到本地数据库
     @RequestMapping(value = "pushToLocal")
     public String pushToLocal(String companyName,String date) {
-        logger.info("开始同步JXOPPO数据至本地:"+ LocalDateTime.now());
+        logger.info("开始同步OPPO数据至本地:"+ LocalDateTime.now());
         DbContextHolder.get().setCompanyName(companyName);
         OppoPushDto oppoPushDto = new OppoPushDto();
         oppoPushDto.setDate(date);
@@ -80,7 +80,7 @@ public class OppoPushController {
         oppoPushDto.setOppoCustomerDemoPhones(futureDemoPhoneService.getFutureOppoCustomerDemoPhone(date));
         oppoPushDto.setAccountDepotDtos(futureAccountDepotService.findAll());
         oppoPushSerivce.pushToLocal(oppoPushDto,companyName);
-        logger.info("同步JXOPPO数据至本地成功:"+ LocalDateTime.now());
+        logger.info("同步OPPO数据至本地成功:"+ LocalDateTime.now());
         return "OPPO同步成功";
     }
 
