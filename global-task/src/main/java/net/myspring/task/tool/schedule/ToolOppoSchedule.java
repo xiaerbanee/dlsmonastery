@@ -48,18 +48,18 @@ public class ToolOppoSchedule {
     }
 
     @Scheduled(cron = "0 0 20,21,22 * * ?")
-    public void pushJxoppoToLocal(){
-        List<String> companyNameList = Arrays.asList(companyNames);
-        if(companyNameList.contains(CompanyNameEnum.JXOPPO.name())) {
-            logger.info("工厂上抛数据开始");
-            String date= LocalDateUtils.format(LocalDate.now());
-            toolOppoClient.pushToLocal(CompanyNameEnum.JXOPPO.name(),date);
-            logger.info("工厂上抛数据结束");
+        public void pushJxoppoToLocal(){
+            List<String> companyNameList = Arrays.asList(companyNames);
+            if(companyNameList.contains(CompanyNameEnum.JXOPPO.name())) {
+                logger.info("工厂上抛数据开始");
+                String date= LocalDateUtils.format(LocalDate.now());
+                toolOppoClient.pushToLocal(CompanyNameEnum.JXOPPO.name(),date);
+                logger.info("工厂上抛数据结束");
+            }
         }
-    }
 
-    @Scheduled(cron = "0 20 20,21,22 * * ?")
-    public void pushWzoppoToLocal(){
+        @Scheduled(cron = "0 30 20,21,22 * * ?")
+        public void pushWzoppoToLocal(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.WZOPPO.name())) {
             logger.info("工厂上抛数据开始");
