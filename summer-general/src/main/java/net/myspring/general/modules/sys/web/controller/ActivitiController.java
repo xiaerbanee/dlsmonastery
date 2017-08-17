@@ -1,6 +1,7 @@
 package net.myspring.general.modules.sys.web.controller;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
 import net.myspring.general.modules.sys.dto.ActivitiDetailDto;
 import net.myspring.general.modules.sys.dto.ActivitiDto;
@@ -8,6 +9,7 @@ import net.myspring.general.modules.sys.dto.ActivitiStartDto;
 import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
 import net.myspring.general.modules.sys.form.ActivitiStartForm;
 import net.myspring.general.modules.sys.service.ActivitiService;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Deployment;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wangzm on 2017/4/25.
@@ -38,6 +41,16 @@ public class ActivitiController {
             activitiStartDto=activitiService.start(activitiStartForm);
         }
         return activitiStartDto;
+    }
+
+
+    @RequestMapping(value = "completeBatch")
+    public Map<String,ActivitiCompleteDto> completeBatch(@RequestBody List<ActivitiCompleteForm> activitiCompleteFormList){
+        Map<String,ActivitiCompleteDto> map= Maps.newHashMap();
+        if(CollectionUtil.isNotEmpty(activitiCompleteFormList)){
+            map=activitiService.completeBatch(activitiCompleteFormList);
+        }
+        return map;
     }
 
     @RequestMapping(value = "complete")

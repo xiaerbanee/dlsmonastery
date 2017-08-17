@@ -36,7 +36,7 @@
           manualColumnResize:true,
           filters: true,
           dropdownMenu: true,
-          contextMenu: true,
+         contextMenu: util.contextMenu(this.$store.state.global.lang),
           stretchH: 'all',
           height: 650,
           fixedRowsTop:0,
@@ -69,8 +69,6 @@
           dateStart: [{ required: true, message: '必填项'}],
           dateEnd: [{ required: true, message: '必填项'}],
         },
-        formLabelWidth: '28%',
-        formVisible: false,
       };
     },
     methods: {
@@ -80,7 +78,7 @@
       initPage() {
         this.formData.dateStart = util.formatLocalDate(this.formData.dateStart);
         this.formData.dateEnd = util.formatLocalDate(this.formData.dateEnd);
-        axios.get("/api/global/cloud/report/consignmentWZ/list",qs.stringify(this.formData,{allowDots:true})).then((response)=>{
+        axios.post("/api/global/cloud/report/consignmentWZ/list",qs.stringify(this.formData,{allowDots:true})).then((response)=>{
           this.settings.data = response.data;
           table = new Handsontable(this.$refs["handsontable"], this.settings)
         })

@@ -1,19 +1,24 @@
 package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
+import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
+import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.ClientDto;
+import net.myspring.future.modules.basic.dto.ReceivableDto;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.web.form.ClientForm;
 import net.myspring.future.modules.basic.web.query.ClientQuery;
+import net.myspring.future.modules.basic.web.query.ReceivableQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
@@ -23,11 +28,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.format.support.FormattingConversionServiceFactoryBean;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +50,8 @@ public class ClientService {
     private CacheUtils cacheUtils;
     @Autowired
     private CloudClient cloudClient;
+    @Autowired
+    private OfficeClient officeClient;
 
     public Page<ClientDto> findPage(Pageable pageable, ClientQuery clientQuery) {
         Page<ClientDto> page = clientRepository.findPage(pageable, clientQuery);
@@ -133,4 +140,57 @@ public class ClientService {
             }
         }
     }
+
+    public Page<ReceivableDto> findReceivableList(Pageable pageable, ReceivableQuery receivableQuery, boolean queryDetail) {
+
+        Page<ReceivableDto> page = clientRepository.findReceivableList(pageable, receivableQuery);
+        cacheUtils.initCacheInput(page.getContent());
+
+        List<OfficeDto> officeDtoList = officeClient.findAll();
+        Map<String, OfficeDto> officeMap = CollectionUtil.extractToMap(officeDtoList, "id");
+        for(ReceivableDto receivableDto : page.getContent()){
+            receivableDto.setDepotOfficeNames(getOfficeNames(receivableDto.getDepotOfficeIds(), officeMap));
+            receivableDto.setDepotAreaNames(getOfficeNames(receivableDto.getDepotAreaIds(), officeMap));
+        }
+
+        CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
+        customerReceiveQuery.setQueryDetail(queryDetail);
+        if (StringUtils.isNotBlank(receivableQuery.getDutyDateRange())) {
+            String[] tempParamValues = receivableQuery.getDutyDateRange().split(" - ");
+            customerReceiveQuery.setDateStart(LocalDate.parse(tempParamValues[0]));
+            customerReceiveQuery.setDateEnd(LocalDate.parse(tempParamValues[1]));
+        }
+        customerReceiveQuery.setCustomerIdList(CollectionUtil.extractToList(page.getContent(), "outId"));
+        List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
+        Map<String, CustomerReceiveDto> customerReceiveDtoMap = CollectionUtil.extractToMap(customerReceiveDtoList, "customerId");
+
+        for (ReceivableDto receivableDto : page.getContent()) {
+            CustomerReceiveDto customerReceiveDto = customerReceiveDtoMap.get(receivableDto.getOutId());
+            if (customerReceiveDto != null) {
+                receivableDto.setCustomerReceiveDetailDtoList(customerReceiveDto.getCustomerReceiveDetailDtoList());
+                receivableDto.setQcys(customerReceiveDto.getBeginShouldGet());
+                receivableDto.setQmys(customerReceiveDto.getEndShouldGet());
+            } else {
+                receivableDto.setCustomerReceiveDetailDtoList(null);
+                receivableDto.setQcys(BigDecimal.ZERO);
+                receivableDto.setQmys(BigDecimal.ZERO);
+            }
+
+        }
+
+        return page;
+    }
+
+    private String getOfficeNames(String officeIds, Map<String, OfficeDto> officeMap) {
+        if(StringUtils.isBlank(officeIds)){
+            return null;
+        }
+        List<String> officeNameList = new ArrayList<>();
+        String[] officeIdList = officeIds.split(",");
+        for(String officeId : officeIdList){
+            officeNameList.add(officeMap.get(officeId).getName());
+        }
+        return StringUtils.join(officeNameList, ",");
+    }
+
 }

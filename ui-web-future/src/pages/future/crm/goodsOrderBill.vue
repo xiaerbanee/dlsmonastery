@@ -32,7 +32,6 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-
             <el-form-item :label="$t('goodsOrderBill.contact')" prop="contator">
               <el-input v-model="inputForm.contator"></el-input>
             </el-form-item>
@@ -74,9 +73,13 @@
           </el-col>
         </el-row>
       </el-form>
-      <el-input v-model="filterValue" @change="filterProducts" :placeholder="$t('goodsOrderBill.selectTowKey')" style="width:200px;"></el-input>
+      <el-input v-model="filterValue" @change="filterProducts" placeholder="货品名称搜索" style="width:200px;"></el-input>
+      <el-tooltip placement="top" effect="light">
+        <div slot="content">搜索框输入关键字时，下面显示搜索结果，最多100行。<br/>当搜索框为空时，下面显示所有有效订货或开单明细。<br/>页面保存前请清空搜索框，检查明细是否正确。</div>
+        <el-button type="text">说明</el-button>
+      </el-tooltip>
       <el-table :data="filterDetailList" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('goodsOrderBill.loading')" :row-class-name="tableRowClassName" stripe border>
-        <el-table-column  prop="productName" :label="$t('goodsOrderBill.productName')" sortable width="300"></el-table-column>
+        <el-table-column prop="productName" :label="$t('goodsOrderBill.productName')" sortable width="300"></el-table-column>
         <el-table-column prop="areaQty" sortable :label="$t('goodsOrderBill.areaBillQty')"></el-table-column>
         <el-table-column prop="storeQty" :label="$t('goodsOrderBill.stock')"></el-table-column>
         <el-table-column prop="allowOrder" :label="$t('goodsOrderBill.allowOrder')">
@@ -114,7 +117,6 @@
     },
     data(){
       return{
-        isCreate:this.$route.query.id==null,
         submitDisabled:false,
         filterValue:"",
         filterDetailList:[],
@@ -158,14 +160,17 @@
     methods:{
       tableRowClassName(row){
         if(this.inputForm.storeId && row.qty){
-          if(row.storeQty && (row.qty < row.storeQty)){
+          if(row.storeQty && (row.qty <= row.storeQty)){
             return ""
           }else{
             return "danger-row"
           }
         }
-      },
-      formSubmit(){
+      }, formSubmit(){
+        if(util.isNotBlank(this.filterValue)){
+          this.$message("请清空货品搜索条件，确认开单明细无误后提交");
+          return;
+        }
         this.submitDisabled = true;
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -175,7 +180,7 @@
             axios.post('/api/ws/future/crm/goodsOrder/bill', qs.stringify(submitData, {allowDots:true})).then((response)=> {
               util.setLatestGoodsOrderBillDate(this.inputForm.billDate);
               this.$message(response.data.message);
-              this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList"), params:{_closeFrom:true}})
+              this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList"), params:{_closeFrom:true}});
             }).catch( () => {
               this.submitDisabled = false;
             });
@@ -183,23 +188,25 @@
             this.submitDisabled = false;
           }
         })
-
       },filterProducts(){
-
         let filterVal = _.trim(this.filterValue);
-        let filterValNotBlank = util.isNotBlank(filterVal);
         let tempList=[];
-        let tempPostList=[];
-        for(let detail of this.inputForm.goodsOrderBillDetailFormList){
-          if(util.isNotBlank(detail.billQty) || util.isNotBlank(detail.id) || detail.productId === this.formProperty.expressProductId){
-            tempList.push(detail);
-          }else if(filterValNotBlank && util.contains(detail.productName, filterVal) ){
-            tempPostList.push(detail);
+        if(util.isNotBlank(filterVal)){
+          for(let detail of this.inputForm.goodsOrderBillDetailFormList){
+             if(util.contains(detail.productName, filterVal) ){
+               tempList.push(detail);
+            }
+          }
+          this.filterDetailList = tempList.slice(0, util.MAX_FILTER_DETAIL_ROW);
+        }else{
+          for(let detail of this.inputForm.goodsOrderBillDetailFormList){
+            if(util.isNotBlank(detail.billQty) || util.isNotBlank(detail.id) || detail.productId === this.formProperty.expressProductId){
+              tempList.push(detail);
+            }
           }
         }
-        this.filterDetailList = tempList.concat(tempPostList).slice(0, util.MAX_DETAIL_ROW);
-      }
-      ,initSummary(row){
+        this.filterDetailList = tempList;
+      }, initSummary(row){
         let tmpTotalBillQty = 0;
         let tmpTotalBillAmount = 0;
         let tmpTotalProductBillQty = 0;
@@ -241,8 +248,7 @@
               }
             }
           });
-      },
-      getDetailListForSubmit(){
+      }, getDetailListForSubmit(){
         let  tmpList = [];
         for(let detail of this.inputForm.goodsOrderBillDetailFormList) {
           if(util.isNotBlank(detail.id) || util.isNotBlank(detail.billQty)) {
@@ -250,7 +256,7 @@
           }
         }
         return tmpList;
-      },refreshExpressShouldGet(row){
+      }, refreshExpressShouldGet(row){
         //当无运费计算规则，或者发货类型为总部自提时，或者修改的是代收运费这一行，不会触发运费计算
         if(util.isBlank(this.formProperty.expressProductId) || !this.formProperty.expressRuleList || this.goodsOrder.shipType==="总部自提" || (row && row.productId === this.formProperty.expressProductId)){
           return ;
@@ -281,7 +287,7 @@
             return;
           }
         }
-      },billQtyChanged(row){
+      }, billQtyChanged(row){
         this.initSummary(row);
         this.refreshExpressShouldGet(row);
       }
@@ -305,7 +311,11 @@
         this.inputForm.contator = response.data.contator;
         this.inputForm.address = response.data.address;
         this.inputForm.mobilePhone = response.data.mobilePhone;
+
         this.inputForm.goodsOrderBillDetailFormList = response.data.goodsOrderDetailDtoList;
+        for(let each of this.inputForm.goodsOrderBillDetailFormList){
+          each.billQty = each.qty;
+        }
       });
       let shopAccountPromise = axios.get('/api/ws/future/crm/goodsOrder/findShopAccountByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
         this.shopAccount = response.data;

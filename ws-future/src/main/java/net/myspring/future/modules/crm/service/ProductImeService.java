@@ -3,15 +3,18 @@ package net.myspring.future.modules.crm.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
+import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.enums.CompanyNameEnum;
+import net.myspring.future.common.constant.ServiceConstant;
 import net.myspring.future.common.enums.InputTypeEnum;
 import net.myspring.future.common.enums.OutTypeEnum;
 import net.myspring.future.common.enums.SumTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
+import net.myspring.future.modules.basic.client.OfficeRuleClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.domain.ProductType;
@@ -72,6 +75,8 @@ public class ProductImeService {
     private DepotManager depotManager;
     @Autowired
     private ProductTypeRepository productTypeRepository;
+    @Autowired
+    private OfficeRuleClient officeRuleClient;
 
     //分页，但不查询总数
     public Page<ProductImeDto> findPage(Pageable pageable, ProductImeQuery productImeQuery) {
@@ -219,7 +224,7 @@ public class ProductImeService {
         Map<String, List<String>> lastRuleMap = Maps.newHashMap();
         if (StringUtils.isNotBlank(reportQuery.getOfficeId())) {
             reportQuery.setOfficeIds(officeClient.getChildOfficeIds(reportQuery.getOfficeId()));
-            lastRuleMap = officeClient.getLastRuleMapByOfficeId(reportQuery.getOfficeId());
+            lastRuleMap = officeClient.geMapByOfficeId(reportQuery.getOfficeId());
         }
         List<ProductImeReportDto> productImeSaleReportList = getProductImeReportList(reportQuery);
         Integer sum;
@@ -263,7 +268,7 @@ public class ProductImeService {
                 }
             }
         }
-        return null;
+        return officeId;
     }
 
     private List<ProductImeReportDto> getProductImeReportList(ReportQuery reportQuery) {
@@ -296,10 +301,16 @@ public class ProductImeService {
     }
 
     public SimpleExcelBook getFolderFileId(List<DepotReportDto> depotReportList, ReportQuery reportQuery) {
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
+        List<OfficeRuleDto> officeRuleList = officeRuleClient.findAll();
+        Map<String,Map<String,String>> officeRuleMap=officeRuleClient.getOfficeRuleMap();
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaName", "办事处"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "officeName", "机构"));
+        for(OfficeRuleDto officeRule:officeRuleList){
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "extra", officeRule.getName(), officeRule.getCode()));
+            for(DepotReportDto depotReportDto:depotReportList){
+                depotReportDto.getExtra().put(officeRule.getCode(),officeRuleMap.get(officeRule.getCode()).get(depotReportDto.getOfficeId()));
+            }
+        }
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotName", "门店名称"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaType", "区域类型"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "districtName", "地区名称"));
@@ -308,13 +319,13 @@ public class ProductImeService {
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productTypeName", "产品型号"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "qty", "数量"));
         } else if ("按串码".equals(reportQuery.getExportType())) {
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaType", "区域属性"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productTypeName", "产品型号"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productName", "产品名称"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "ime", "串码"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employeeName", "核销人"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employeePositionName", "岗位"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "saleDate", "核销时间"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "uploadDate", "上报时间"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "retailDate", "工厂注册时间"));
         } else if ("按合计".equals(reportQuery.getExportType())) {
             List<ProductType> productTypeList = productTypeRepository.findByScoreType(reportQuery.getScoreType());
@@ -357,9 +368,9 @@ public class ProductImeService {
         cacheUtils.initCacheInput(depotReportList);
         cacheUtils.initCacheInput(depotReportList);
         cacheUtils.initCacheInput(depotReportList);
-        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("销售报表" + reportQuery.getExportType(), depotReportList, simpleExcelColumnList);
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet(reportQuery.getType() + reportQuery.getExportType(), depotReportList, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook,simpleExcelSheet);
-        return new SimpleExcelBook(workbook, "销售报表" + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
+        return new SimpleExcelBook(workbook, reportQuery.getType() + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
     }
 
     @Transactional

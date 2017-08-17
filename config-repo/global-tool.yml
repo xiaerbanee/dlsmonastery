@@ -1,5 +1,6 @@
 server:
   port: 2100
+  connection-timeout: -1
 
 security:
   oauth2:
@@ -25,7 +26,3 @@ ribbon:
 
 logging:
   file: global-tool.log
-  level:
-    org.springframework.cloud: DEBUG
-    org.springframework.security: DEBUG
-    net.myspring: DEBUG

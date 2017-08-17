@@ -43,7 +43,7 @@
               {type: "text", allowEmpty: true, strict: true},
               {type: "autocomplete", strict: true, allowEmpty: false, accountName:[],source: this.accountName},
             ],
-            contextMenu: true,
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
             afterChange: function (changes, source) {
               if (source !== 'loadData') {
                 for (let i = changes.length - 1; i >= 0; i--) {
@@ -78,7 +78,8 @@
             }
             this.formData.json = JSON.stringify(this.formData.json);
             this.formData.billDate = util.formatLocalDate(this.formData.billDate);
-            axios.post('/api/global/cloud/input/apPayBill/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
+            var submitData = util.deleteExtra(this.formData);
+            axios.post('/api/global/cloud/input/apPayBill/save', qs.stringify(submitData,{allowDots:true})).then((response)=> {
               if(response.data.success){
                 this.$message(response.data.message);
                 this.initPage();

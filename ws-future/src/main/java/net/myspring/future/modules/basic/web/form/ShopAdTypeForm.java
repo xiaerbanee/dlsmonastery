@@ -14,6 +14,15 @@ public class ShopAdTypeForm extends BaseForm<ShopAdType> {
     private String name;
     private String totalPriceType;
     private BigDecimal price;
+    private Boolean doorType = false;
+
+    public Boolean getDoorType() {
+        return doorType;
+    }
+
+    public void setDoorType(Boolean doorType) {
+        this.doorType = doorType;
+    }
 
     public String getName() {
         return name;

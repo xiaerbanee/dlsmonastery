@@ -31,7 +31,7 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
     @CachePut(key = "#p0.id")
     fun save(depot: Depot): Depot
 
-    override fun findAll(): MutableList<Depot>
+    fun findByEnabledIsTrue(): MutableList<Depot>
 
     fun findByOfficeIdIn(officeIdList:MutableList<String>):MutableList<Depot>
 
@@ -216,7 +216,7 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
         }
         if(StringUtils.isNotBlank(depotQuery.areaId)){
-            sb.append("""  and t1.area_id=:areaId """)
+            sb.append("""  and t1.office_id in (:officeIds) """)
         }
         if(StringUtils.isNotBlank(depotQuery.officeId)){
             sb.append("""  and t1.office_id=:officeId """)

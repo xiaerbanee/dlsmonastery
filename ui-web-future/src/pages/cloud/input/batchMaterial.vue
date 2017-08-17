@@ -40,7 +40,7 @@
               {type: "autocomplete", allowEmpty: false, strict: true, materialGroupNameList:[], source: this.materialGroupNameList},
               {type: "autocomplete", allowEmpty: false, strict: true, materialCategoryNameList:[], source: this.materialCategoryNameList}
             ],
-            contextMenu: true,
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
           },
           formData:{
             json:[],
@@ -62,7 +62,8 @@
               }
             }
             this.formData.json = JSON.stringify(this.formData.json);
-            axios.post('/api/global/cloud/kingdee/bdMaterial/batchSave', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
+            var submitData = util.deleteExtra(this.formData);
+            axios.post('/api/global/cloud/kingdee/bdMaterial/batchSave', qs.stringify(submitData,{allowDots:true})).then((response)=> {
               if(response.data.success){
                 this.$message(response.data.message);
                 this.initPage();

@@ -1,10 +1,12 @@
 package net.myspring.future.modules.basic.repository
 
 import net.myspring.future.common.repository.BaseRepository
-import net.myspring.future.modules.basic.domain.Bank
 import net.myspring.future.modules.basic.domain.Client
 import net.myspring.future.modules.basic.dto.ClientDto
+import net.myspring.future.modules.basic.dto.ReceivableDto
 import net.myspring.future.modules.basic.web.query.ClientQuery
+import net.myspring.future.modules.basic.web.query.ReceivableQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,7 +22,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDateTime
 import java.util.*
-import javax.persistence.EntityManager
+
 
 /**
  * Created by zhangyf on 2017/5/24.
@@ -37,8 +39,6 @@ interface ClientRepository :BaseRepository<Client,String>,ClientRepositoryCustom
     fun save(client: Client): Client
 
     fun findByOutIdIn(outIdList:MutableList<String>):MutableList<Client>
-
-    fun findByNameIn(nameList:MutableList<String>):MutableList<Client>
 
     @Query("""
         SELECT t1.*
@@ -63,9 +63,61 @@ interface ClientRepositoryCustom{
 
     fun findByDepotId(depotId: String): Client?
 
+    fun findReceivableList(pageable: Pageable, receivableQuery: ReceivableQuery): Page<ReceivableDto>
+
 }
 
 class ClientRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ClientRepositoryCustom{
+    override fun findReceivableList(pageable: Pageable, receivableQuery: ReceivableQuery): Page<ReceivableDto> {
+
+        val sb = StringBuffer()
+        sb.append("""
+        SELECT
+            t1.id,
+            t1.name,
+            t1.out_id,
+            group_concat(DISTINCT ''+t2.office_id) depotOfficeIds,
+            group_concat(DISTINCT ''+t2.area_id) depotAreaIds
+        FROM
+            crm_client t1, crm_depot t2
+
+        WHERE
+            t1.enabled =1 AND t2.client_id = t1.id AND t2.is_hidden = 0 AND t2.enabled = 1
+
+        """)
+
+        if(receivableQuery.accountTaxPermitted != null && receivableQuery.accountTaxPermitted){
+            sb.append("""
+                and t2.tax_name IS NOT NULL
+                and t2.tax_name != ''
+            """)
+        }
+        if(StringUtils.isNotBlank(receivableQuery.clientName)){
+            sb.append("""  and t1.name like concat('%', :clientName,'%') """)
+        }
+        if(CollectionUtil.isNotEmpty(receivableQuery.officeIds)){
+            sb.append("""  and t2.office_id in (:officeIds)  """)
+        }
+        if(StringUtils.isNotBlank(receivableQuery.areaId)){
+            sb.append("""  and t2.area_id = :areaId  """)
+        }
+        if(CollectionUtil.isNotEmpty(receivableQuery.depotIdList)){
+            sb.append("""  and t2.id in (:depotIdList) """)
+        }
+        if(CollectionUtil.isNotEmpty(receivableQuery.officeIdList)){
+            sb.append("""  and t2.office_id in (:officeIdList) """)
+        }
+
+        sb.append("""  group by t1.id  """)
+
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val paramMap = BeanPropertySqlParameterSource(receivableQuery)
+        val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ReceivableDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
+        return PageImpl(list,pageable,count)
+    }
+
     override fun findByDepotId(depotId: String): Client? {
         val resultList = namedParameterJdbcTemplate.query("""
         select t1.*
@@ -91,6 +143,7 @@ class ClientRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
                 crm_client t1,crm_depot t2
             WHERE
                 t1.enabled=1
+                and t2.enabled=1
                 and t2.client_id=t1.id
         """)
         if (StringUtils.isNotEmpty(clientQuery.name)) {

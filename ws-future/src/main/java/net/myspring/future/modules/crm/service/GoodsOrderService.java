@@ -15,6 +15,7 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.constant.ServiceConstant;
 import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.ExpressUtils;
@@ -111,13 +112,7 @@ public class GoodsOrderService {
     }
 
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
-        if (goodsOrderQuery.getExpressCodes() != null) {
-            goodsOrderQuery.setExpresscodeList(Arrays.asList(goodsOrderQuery.getExpressCodes().split("[\n,]")));
-        }
-        if (goodsOrderQuery.getBusinessIds() != null) {
-            goodsOrderQuery.setBusinessIdList(Arrays.asList(goodsOrderQuery.getBusinessIds().split("[\n,]")));
-        }
-        goodsOrderQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
+
         Page<GoodsOrderDto> page = goodsOrderRepository.findAll(pageable, goodsOrderQuery);
         cacheUtils.initCacheInput(page.getContent());
 
@@ -178,6 +173,9 @@ public class GoodsOrderService {
         GoodsOrder goodsOrder;
         if(StringUtils.isNotBlank(goodsOrderForm.getId())) {
             goodsOrder = goodsOrderRepository.findOne(goodsOrderForm.getId());
+            if(!GoodsOrderStatusEnum.待开单.name().equals(goodsOrder.getStatus())){
+                throw new ServiceException("订单已经开单，不能进行修改");
+            }
         } else {
             goodsOrder = new GoodsOrder();
             goodsOrder.setShopId(goodsOrderForm.getShopId());
@@ -225,13 +223,13 @@ public class GoodsOrderService {
                 goodsOrderDetail.setProductId(goodsOrderDetailForm.getProductId());
                 goodsOrderDetail.setReturnQty(0);
                 goodsOrderDetail.setShippedQty(0);
+                goodsOrderDetail.setBillQty(0);
                 goodsOrderDetail.setPrice(pricesystemDetailMap.get(goodsOrderDetail.getProductId()).getPrice());
             }
             goodsOrderDetail.setQty(goodsOrderDetailForm.getQty() == null ? 0 : goodsOrderDetailForm.getQty());
-            goodsOrderDetail.setBillQty(goodsOrderDetail.getQty());
 
             detailsToBeSaved.add(goodsOrderDetail);
-            amount = amount.add(new BigDecimal(goodsOrderDetail.getBillQty()).multiply(goodsOrderDetail.getPrice()));
+            amount = amount.add(new BigDecimal(goodsOrderDetail.getQty()).multiply(goodsOrderDetail.getPrice()));
         }
         goodsOrderDetailRepository.save(detailsToBeSaved);
 
@@ -266,6 +264,9 @@ public class GoodsOrderService {
     public  void bill(GoodsOrderBillForm goodsOrderBillForm) {
 
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderBillForm.getId());
+        if(!GoodsOrderStatusEnum.待开单.name().equals(goodsOrder.getStatus())){
+            throw new ServiceException("该订单已经开单，不能再次开单");
+        }
         Depot shop=depotRepository.findOne(goodsOrder.getShopId());
         if(goodsOrderBillForm.getSyn() && StringUtils.isBlank(shop.getClientId())){
             throw new ServiceException("门店没有对应的财务记录，不能同步财务");
@@ -277,20 +278,20 @@ public class GoodsOrderService {
         goodsOrder.setBusinessId(redisIdManager.getNextGoodsOrderBusinessId(goodsOrderBillForm.getBillDate()));
         goodsOrderRepository.save(goodsOrder);
 
-        Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderBillForm.getGoodsOrderBillDetailFormList(),"productId"));
+        Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderBillForm.getGoodsOrderBillDetailFormList(),"productId"));
 
-        List<GoodsOrderDetail> detailList = saveDetailInfoWhenBill(goodsOrder, goodsOrderBillForm);
+        saveDetailInfoWhenBill(goodsOrder, goodsOrderBillForm);
 
-        ExpressOrder expressOrder = saveExpressOrderInfoWhenBill(goodsOrder, goodsOrderBillForm, detailList, productMap);
+        ExpressOrder expressOrder = saveExpressOrderInfoWhenBill(goodsOrder, goodsOrderBillForm, productMap);
         if (Boolean.TRUE.equals(goodsOrderBillForm.getSyn())) {
             syn(goodsOrder, expressOrder);
         }
     }
 
-    private List<GoodsOrderDetail> saveDetailInfoWhenBill(GoodsOrder goodsOrder, GoodsOrderBillForm goodsOrderBillForm) {
+    private void saveDetailInfoWhenBill(GoodsOrder goodsOrder, GoodsOrderBillForm goodsOrderBillForm) {
         BigDecimal amount = BigDecimal.ZERO;
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
-        Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
+        Map<String, GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
 
         List<GoodsOrderDetail> detailsToBeSaved = new ArrayList<>();
         for (GoodsOrderBillDetailForm goodsOrderBillDetailForm : goodsOrderBillForm.getGoodsOrderBillDetailFormList()) {
@@ -316,10 +317,9 @@ public class GoodsOrderService {
         goodsOrder.setAmount(amount);
         goodsOrderRepository.save(goodsOrder);
 
-        return detailsToBeSaved;
     }
 
-    private ExpressOrder saveExpressOrderInfoWhenBill(GoodsOrder goodsOrder, GoodsOrderBillForm goodsOrderBillForm, List<GoodsOrderDetail> detailList, Map<String,Product> productMap) {
+    private ExpressOrder saveExpressOrderInfoWhenBill(GoodsOrder goodsOrder, GoodsOrderBillForm goodsOrderBillForm, Map<String,Product> productMap) {
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
         expressOrder.setExtendBusinessId(goodsOrder.getBusinessId());
         expressOrder.setContator(goodsOrderBillForm.getContator());
@@ -331,6 +331,7 @@ public class GoodsOrderService {
 
         int totalBillQty = 0;
         int mobileBillQty = 0;
+        List<GoodsOrderDetail> detailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
         for(GoodsOrderDetail goodsOrderDetail : detailList){
             totalBillQty += goodsOrderDetail.getBillQty();
             if(productMap.get(goodsOrderDetail.getProductId()).getHasIme()){
@@ -357,15 +358,21 @@ public class GoodsOrderService {
             String toStockId = storeIds.get(1);
             if (goodsOrder.getStoreId().equals(toStockId)) {
                 DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(fromStockId);
+                assert allotFromStock != null;
                 DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(toStockId);
+                assert allotToStock != null;
+
                 KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder, allotFromStock.getOutCode(), allotToStock.getOutCode());
                 goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA));
             }
         }
         if (StringUtils.isNotBlank(shop.getDelegateDepotId())) {
             DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrder.getStoreId());
+            assert allotFromStock != null;
             DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(shop.getDelegateDepotId());
-            KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder,allotFromStock.getOutCode(),allotToStock.getOutCode());
+            assert allotToStock != null;
+
+            KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder, allotFromStock.getOutCode(), allotToStock.getOutCode());
             goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA));
 
         } else {
@@ -499,7 +506,8 @@ public class GoodsOrderService {
         }
         //如果是总部发货，且下单人员是地区人员，则根据货品是否开放下单
         if(ShipTypeEnum.总部发货.name().equals(shipType) || ShipTypeEnum.总部自提.name().equals(shipType)) {
-            OfficeDto officeDto = OfficeUtil.findOne(redisTemplate,RequestUtils.getOfficeId());
+            OfficeDto officeDto = OfficeUtil.findOne(redisTemplate, RequestUtils.getOfficeId());
+            assert officeDto != null;
             if(JointLevelEnum.二级.name().equals(officeDto.getJointLevel())) {
                 return product.getAllowOrder();
             }
@@ -720,7 +728,7 @@ public class GoodsOrderService {
 
     public SimpleExcelBook export(GoodsOrderQuery goodsOrderQuery) {
 
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
         Map<String, CellStyle> cellStyleMap=ExcelUtils.getCellStyleMap(workbook);
 
         if (goodsOrderQuery.getExpressCodes() != null) {
@@ -731,7 +739,7 @@ public class GoodsOrderService {
         }
         goodsOrderQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
 
-        List<GoodsOrderDto> goodsOrderDtoList=goodsOrderRepository.findAll(new PageRequest(0,10000), goodsOrderQuery).getContent();
+        List<GoodsOrderDto> goodsOrderDtoList=goodsOrderRepository.findAll(new PageRequest(0,ServiceConstant.EXPORT_MAX_ROW_NUM), goodsOrderQuery).getContent();
         cacheUtils.initCacheInput(goodsOrderDtoList);
 
         List<String> goodsOrderIdList = CollectionUtil.extractToList(goodsOrderDtoList, "id");

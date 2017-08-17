@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.myspring.cloud.common.enums.BillTypeEnum;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.constant.ServiceConstant;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopGoodsDepositStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
@@ -78,7 +79,7 @@ public class ShopGoodsDepositService {
 
     public SimpleExcelBook export(ShopGoodsDepositQuery shopGoodsDepositQuery) {
 
-        Workbook workbook = new SXSSFWorkbook(10000);
+        Workbook workbook = new SXSSFWorkbook(ServiceConstant.EXPORT_MAX_ROW_NUM);
 
         List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
         List<SimpleExcelColumn> shopGoodsDepositColumnList = Lists.newArrayList();
@@ -96,7 +97,7 @@ public class ShopGoodsDepositService {
         shopGoodsDepositColumnList.add(new SimpleExcelColumn(workbook, "status", "状态"));
         shopGoodsDepositColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
-        List<ShopGoodsDepositDto> shopGoodsDepositDtoList = findPage(new PageRequest(0,10000), shopGoodsDepositQuery).getContent();
+        List<ShopGoodsDepositDto> shopGoodsDepositDtoList = findPage(new PageRequest(0,ServiceConstant.EXPORT_MAX_ROW_NUM), shopGoodsDepositQuery).getContent();
         SimpleExcelSheet sheet1 = new SimpleExcelSheet("订金详细", shopGoodsDepositDtoList, shopGoodsDepositColumnList);
         ExcelUtils.doWrite(workbook, sheet1);
         simpleExcelSheetList.add(sheet1);

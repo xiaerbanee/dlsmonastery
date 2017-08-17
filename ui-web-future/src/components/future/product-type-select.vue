@@ -1,85 +1,39 @@
 <template>
-  <div   :class="className">
-    <el-select v-model="innerId"  filterable remote :multiple="multiple" :disabled="disabled" :placeholder="$t('su_district.inputKey')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
-      <el-option v-for="item in itemList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
-    </el-select>
+  <div>
+    <su-select v-model="innerId" :searchByKeyMethod="searchByKeyMethod" :searchByIdsMethod="searchByIdsMethod" :remote="remote" :multiple="multiple" :disabled="disabled"  @input="handleInput"  @afterInit="handleAfterInit">
+    </su-select>
   </div>
 </template>
-<style>
-  .fixedHeight .el-select{
-    margin-right: 5px;
-    max-height: 157px;
-    overflow: auto;
-  }
-  .fixedHeight .el-select::-webkit-scrollbar{
-    width:5px;
-    height: 5px;
-    background: #ccc;
-    border-radius: 10px;
-  }
-  .fixedHeight .el-select::-webkit-scrollbar-thumb{
-    background: #4db3ff;
-    border-radius: 10px;
-  }
-</style>
 <script>
   export default {
-    props: ['value','multiple','disabled','className'],
+    props: {
+      value: {
+        required: true
+      },
+      multiple: Boolean,
+      disabled: Boolean,
+      remote: {
+        type: Boolean,
+        default: true
+      },
+    },
+
     data() {
       return {
-        innerId:this.value,
-        itemList : [],
-        remoteLoading:false,
+        innerId : this.value,
+        searchByKeyMethod : (query) => axios.get('/api/ws/future/basic/productType/search', {params:{name:query}}),
+        searchByIdsMethod : (val) => axios.get('/api/ws/future/basic/productType/searchByIds?id=' + val),
       };
     } ,methods:{
-      remoteSelect(query) {
-        if(query=="" || query == this.innerId || query == util.getLabel(this.itemList,this.innerId,"name")) {
-          return;
-        }
-        this.remoteLoading = true;
-        axios.get('/api/ws/future/basic/productType/search',{params:{name:query}}).then((response)=>{
-          this.itemList=response.data;
-          this.remoteLoading = false;
-        })
-      }, handleChange(newVal) {
-        if(newVal !== this.value) {
-          this.$emit('input', newVal);
-        }
-      },setValue(val) {
-        if(val) {
-          this.innerId=val;
-          let idStr=this.innerId;
-          if(this.multiple && this.innerId){
-            idStr=this.innerId.join();
-          }
-          if(util.isBlank(idStr)) {
-            return;
-          }
-          this.remoteLoading = true;
-          axios.get('/api/ws/future/basic/productType/searchByIds?id=' + idStr).then((response)=>{
-            this.itemList=response.data;
-            this.remoteLoading = false;
-            this.$nextTick(()=>{
-              this.$emit('afterInit');
-            });
-          })
-        }else{
-          if(this.multiple){
-            this.innerId = [];
-          }else{
-            this.innerId = val
-          }
-          this.$nextTick(()=>{
-            this.$emit('afterInit');
-          });
-        }
+      handleInput(newVal) {
+        this.$emit('input', newVal);
+      }, handleAfterInit() {
+        this.$emit('afterInit');
       }
-    },created () {
-      this.setValue(this.value);
     },watch: {
       value :function (newVal) {
-          this.setValue(newVal);
+        this.innerId = newVal;
       }
     }
-  };
+  }
 </script>

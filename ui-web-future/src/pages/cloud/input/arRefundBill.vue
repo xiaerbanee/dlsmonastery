@@ -39,7 +39,7 @@
               {type: "autocomplete",strict: true, allowEmpty: false, settleTypeName:[],source: this.settleTypeName},
               {type: "text",strict: true, allowEmpty: false }
             ],
-            contextMenu: true,
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
             afterChange: function (changes, source) {
               if (source !== 'loadData') {
                 for (let i = changes.length - 1; i >= 0; i--) {
@@ -71,7 +71,8 @@
               }
             }
             this.formData.json = JSON.stringify(this.formData.json);
-            axios.post('/api/global/cloud/input/arRefundBill/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
+            var submitData = util.deleteExtra(this.formData);
+            axios.post('/api/global/cloud/input/arRefundBill/save', qs.stringify(submitData,{allowDots:true})).then((response)=> {
               if(response.data.success){
                 this.$message(response.data.message);
                 this.initPage();

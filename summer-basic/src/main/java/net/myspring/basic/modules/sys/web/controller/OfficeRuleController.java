@@ -1,6 +1,5 @@
 package net.myspring.basic.modules.sys.web.controller;
 
-import net.myspring.common.enums.BoolEnum;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.basic.modules.sys.service.OfficeRuleService;
 import net.myspring.basic.modules.sys.web.form.OfficeRuleForm;
@@ -14,6 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wangzm on 2017/4/22.
@@ -62,5 +64,15 @@ public class OfficeRuleController {
     @RequestMapping(value = "getQuery")
     public OfficeRuleQuery getQuery(OfficeRuleQuery officeRuleQuery) {
         return officeRuleQuery;
+    }
+
+    @RequestMapping(value = "findAll")
+    public List<OfficeRuleDto> findAll() {
+        return officeRuleService.findAll();
+    }
+
+    @RequestMapping(value = "getOfficeRuleMap")
+    public Map<String,Map<String,String>> getOfficeRuleMap(){
+        return officeRuleService.getOfficeRuleMap();
     }
 }

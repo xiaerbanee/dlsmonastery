@@ -58,7 +58,7 @@
                   <district-select v-model="employeeForm.originId"></district-select>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.salerName')" prop="salerName">
-              <el-input v-model.number="employeeForm.salerName"></el-input>
+              <el-input v-model="employeeForm.salerName"></el-input>
             </el-form-item>
           </el-col>
         </el-row>

@@ -80,7 +80,7 @@ public class OfficeService {
 
     public List<String> getTopOfficeListByIdList(){
         List<Office> officeList=officeRepository.findByEnabledIsTrueAndIdIn(RequestUtils.getOfficeIdList());
-        List<OfficeRule> officeRuleList=officeRuleRepository.findAllEnabled();
+        List<OfficeRule> officeRuleList=officeRuleRepository.findByEnabledIsTrue();
         Map<String,OfficeRule> officeRuleMap=officeRuleList.stream().collect(Collectors.toMap(OfficeRule::getId,OfficeRule -> OfficeRule));
         Map<Integer, List<String>> levelMap = Maps.newTreeMap();
         for(Office office:officeList){
@@ -134,23 +134,21 @@ public class OfficeService {
         return BeanUtil.map(topOfficeRule,OfficeRuleDto.class);
     }
 
-    public Map<String,List<String>> getLastRuleMapByOfficeId(String officeId){
+    public Map<String,List<String>> geMapByOfficeId(String officeId){
         List<Office> officeList=officeRepository.findByEnabledIsTrueAndParentId(officeId);
-        OfficeRule officeRule=officeRuleRepository.findLastOfficeRule(new PageRequest(0,1)).getContent().get(0);
-        List<Office> lastRuleOfficeList=officeRepository.findByParentIdsListLikeAndOfficeRuleId(CollectionUtil.extractToList(officeList,"id"),officeRule.getId());
+        List<Office> lastRuleOfficeList=officeRepository.findAllByParentIdsListLike(CollectionUtil.extractToList(officeList,"id"));
         return getOfficeMap(officeList,lastRuleOfficeList);
     }
 
-    public Map<String,List<String>> getLastRuleMapByOfficeRuleName(String officeRuleName){
+    public Map<String,List<String>> getMapByOfficeRuleName(String officeRuleName){
         List<Office> officeList=officeRepository.findByOfficeRuleName(officeRuleName);
         for(int i=officeList.size()-1;i>0;i--){
             if(officeList.get(i).getPoint()==null||officeList.get(i).getPoint().compareTo(BigDecimal.ZERO)<=0){
                 officeList.remove(i);
             }
         }
-        OfficeRule officeRule=officeRuleRepository.findLastOfficeRule(new PageRequest(0,1)).getContent().get(0);
-        List<Office> lastRuleOfficeList=officeRepository.findByParentIdsListLikeAndOfficeRuleId(CollectionUtil.extractToList(officeList,"id"),officeRule.getId());
-        return getOfficeMap(officeList,lastRuleOfficeList);
+        List<Office> ruleOfficeList=officeRepository.findAllByParentIdsListLike(CollectionUtil.extractToList(officeList,"id"));
+        return getOfficeMap(officeList,ruleOfficeList);
     }
 
     private Map<String,List<String>> getOfficeMap(List<Office> officeList,List<Office> lastRuleOfficeList){
@@ -171,6 +169,15 @@ public class OfficeService {
             }
         }
         return map;
+    }
+
+    private String getTopOfficeIdByParentIds(List<Office> officeList ,String parentIds){
+        for(Office office:officeList){
+            if(parentIds.contains(','+office.getId()+',')){
+                return office.getId();
+            }
+        }
+        return null;
     }
 
     public RestResponse checkSave(OfficeForm officeForm) {
@@ -305,7 +312,7 @@ public class OfficeService {
     }
 
     public List<OfficeRuleDto> findOfficeRuleList() {
-        List<OfficeRule> officeRuleList = officeRuleRepository.findAllEnabled();
+        List<OfficeRule> officeRuleList = officeRuleRepository.findByEnabledIsTrue();
         List<OfficeRuleDto> officeRuleDtoList = BeanUtil.map(officeRuleList, OfficeRuleDto.class);
         return officeRuleDtoList;
     }
@@ -334,14 +341,7 @@ public class OfficeService {
         return officeDtoList;
     }
 
-    private String getTopOfficeIdByParentIds(List<Office> officeList ,String parentIds){
-        for(Office office:officeList){
-            if(parentIds.contains(','+office.getId()+',')){
-                return office.getId();
-            }
-        }
-        return null;
-    }
+
 
     public boolean checkLastLevel(String officeId){
         OfficeRule lastOfficeRule = officeRuleRepository.findLastOfficeRule(new PageRequest(0,1)).getContent().get(0);

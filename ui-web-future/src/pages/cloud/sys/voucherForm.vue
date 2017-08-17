@@ -61,7 +61,7 @@
           colHeaders: [],
           columns: [],
           data:{},
-          contextMenu: true,
+         contextMenu: util.contextMenu(this.$store.state.global.lang),
           fixedRowsTop:0,
           afterChange: function (changes, source) {
             if (source !== 'loadData') {

@@ -26,6 +26,15 @@ public class ShopAdQuery extends BaseQuery{
     private String processStatus;
     private LocalDate createdDateStart;
     private LocalDate createdDateEnd;
+    private Boolean doorType;
+
+    public Boolean getDoorType() {
+        return doorType;
+    }
+
+    public void setDoorType(Boolean doorType) {
+        this.doorType = doorType;
+    }
 
     public String getLastModifiedBy() {
         return lastModifiedBy;

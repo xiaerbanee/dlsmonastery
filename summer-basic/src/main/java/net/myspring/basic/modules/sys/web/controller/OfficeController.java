@@ -5,10 +5,7 @@ import com.google.common.collect.Maps;
 import net.myspring.basic.common.datasource.DbContextHolder;
 import net.myspring.basic.common.enums.JointTypeEnum;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
-import net.myspring.basic.common.utils.RequestUtils;
-import net.myspring.basic.modules.hr.dto.OfficeChangeDto;
 import net.myspring.basic.modules.sys.domain.Office;
-import net.myspring.basic.modules.sys.domain.OfficeBusiness;
 import net.myspring.basic.modules.sys.dto.OfficeChildDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
@@ -28,16 +25,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "sys/office")
@@ -155,27 +149,25 @@ public class OfficeController {
             List<Office> officeList = officeService.findByParentIdsLike(officeId);
             if(CollectionUtil.isNotEmpty(officeList)){
                 officeIds=CollectionUtil.extractToList(officeList,"id");
-            }else {
-                officeIds=Lists.newArrayList(officeId);
             }
         }
         return officeIds;
     }
 
-    @RequestMapping(value = "getLastRuleMapByOfficeId")
-    public Map<String,List<String>> getLastRuleMapByOfficeId(String officeId){
+    @RequestMapping(value = "geMapByOfficeId")
+    public Map<String,List<String>> geMapByOfficeId(String officeId){
         Map<String,List<String>> map= Maps.newHashMap();
         if(StringUtils.isNotBlank(officeId)){
-            map = officeService.getLastRuleMapByOfficeId(officeId);
+            map = officeService.geMapByOfficeId(officeId);
         }
         return map;
     }
 
-    @RequestMapping(value = "getLastRuleMapByOfficeRuleName")
-    public Map<String,List<String>> getLastRuleMapByOfficeRuleName(String officeRuleName){
+    @RequestMapping(value = "getMapByOfficeRuleName")
+    public Map<String,List<String>> getMapByOfficeRuleName(String officeRuleName){
         Map<String,List<String>> map= Maps.newHashMap();
         if(StringUtils.isNotBlank(officeRuleName)){
-            map = officeService.getLastRuleMapByOfficeRuleName(officeRuleName);
+            map = officeService.getMapByOfficeRuleName(officeRuleName);
         }
         return map;
     }
