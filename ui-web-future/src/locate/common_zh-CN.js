@@ -114,5 +114,6 @@ export default {
     synFactory: "同步",
     factoryOrder: "工厂下单",
   },
+
 }
 

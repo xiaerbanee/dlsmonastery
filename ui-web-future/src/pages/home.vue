@@ -71,6 +71,7 @@
     import Vue from 'vue';
     import suKeepAlive from 'components/common/su-keep-alive.vue';
     import { mapState } from 'vuex'
+	import img from '../assets/user.png'
 	export default {
         components:{
             suKeepAlive,
@@ -83,7 +84,7 @@
 				sysName:'BASIC',
 				collapsed:true,
 				sysUserName: '',
-				sysUserAvatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png'
+				sysUserAvatar: img
 			}
 		},computed: mapState({
             account: state => state.global.account,
@@ -128,7 +129,6 @@
 			}
 
 		},created() {
-            console.log(`created`)
 		    var that = this;
             axios.get('/user/isLogin').then((response)=>{
                 if(response.data) {
