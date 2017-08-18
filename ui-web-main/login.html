@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>OA LOGIN
+</title>
+<link rel="stylesheet" type="text/css" href="./static/sweetalert/dist/sweetalert.css">
+<link rel="stylesheet" type="text/css" href="./static/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="./static//css/common.css">
+<script type="text/javascript" src='./static/jquery-2.1.4/jquery.min.js'></script>
+<script type="text/javascript" src='./static/sweetalert/dist/sweetalert.min.js'></script>
+<style>
+ .login-form{
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 500px;
+    height: 400px;
+    border-radius: 5px;
+    background: white;
+    border: 2px solid #8492a6;
+ }
+ .login-form .form{
+ 	width: 100%;
+ 	padding: 25px 50px;
+ }
+ .title{
+ 	color: #20a0ff;
+    font-weight: bold;
+    font-size: 40px;
+    text-align: center;
+    line-height: 2.2;
+    font-family: sans-serif;
+    margin-top: 25px;
+ }
+ .form-group{
+ 	width: 100%;
+ 	margin-bottom: 25px;
+ }
+ .btn-info{
+ 	background: #20a0ff;
+ }
+ .default{
+ 	color:#eee;
+ }
+</style>
+</head>
+<body>
+   	<div class="container outer">
+   		<div class="login-form">
+   			<div class="title">
+   				OA SYSTEM
+   			</div>
+			<div class="form">
+				<div class="form-group">
+					<select class="form-control com_selecter" name="companyName">
+				</select>
+				</div>
+				<div class="form-group">
+					<input type="text" name="username" class="form-control" placeholder="请输入用户名">
+				</div>
+				<div class="form-group">
+					<input type="password" name="password" class="form-control" placeholder="请输入密码">
+				</div>
+				<div class="form-group">
+					<button class="btn btn-block btn-info">登录</button>
+				</div>
+			</div>
+   		</div>
+   	</div>
+</body>
+<script type="text/javascript">
+	$(function(){
+		//check login
+		$.get('/user/isLogin', (res) => {
+		    if(res){
+				location.href = 'index.html';
+			}
+		});
+		//get company names
+		$.get('/user/getCompanyNames',(res) => {
+			res.forEach(function(item){
+					$('.com_selecter').append(`<option>${item}</option>`)
+				})
+			});
+		//login when click
+		$('button').on({
+			click:login
+		})
+		//login when press enter
+		$("input[name='password']").on({
+			keypress(e){
+				if(e.keyCode === 13){
+					login();
+				}
+			}
+		})
+	})
+	//login
+	function login(){
+		let username = $("input[name='username']").val();
+		let password = $("input[name='password']").val();
+		let companyName = $('select').val();
+		let form  = {username,password,companyName}
+		//validate the form data
+		try{
+			for(let key in form){
+				if(form[key].trim() === ''){
+					throw `${key} is empty`
+				}
+			}
+		}catch(e){
+			switch (e){
+				case 'username is empty':
+					swal('请输入用户名!','','error');
+					break;
+				case 'password is empty':
+					swal('请输入密码!','','error');
+					break;
+			}
+		}
+		$.post('/user/login',form, (res) => {
+			if(res.success){
+					$.get('/api/basic/hr/account/getAccountInfo', (res) => {
+						localStorage.setItem('menus',JSON.stringify(res.menus))
+
+						location.reload();
+					});
+				}else{
+					swal('用户名或者密码错误!','','error');
+				}
+		});
+	}
+</script>
+</html>

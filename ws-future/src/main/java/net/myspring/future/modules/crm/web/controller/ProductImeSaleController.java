@@ -13,6 +13,7 @@ import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
 import net.myspring.future.modules.crm.service.ProductImeSaleService;
 import net.myspring.future.modules.crm.web.form.ProductImeSaleBackForm;
 import net.myspring.future.modules.crm.web.form.ProductImeSaleForm;
+import net.myspring.future.modules.crm.web.form.ProductImeSaleQtyForm;
 import net.myspring.future.modules.crm.web.query.ProductImeSaleQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelView;
@@ -99,9 +100,6 @@ public class ProductImeSaleController {
         if(CollectionUtil.isEmpty(imeList)){
             throw new ServiceException("没有输入任何有效的串码");
         }
-        if(StringUtils.isBlank(productImeSaleForm.getSaleShopId())){
-            throw new ServiceException("核销门店不可以为空");
-        }
 
         productImeSaleService.saleIme(productImeSaleForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
@@ -142,5 +140,11 @@ public class ProductImeSaleController {
     @RequestMapping(value="getSaleBackForm")
     public  ProductImeSaleBackForm getSaleBackForm(ProductImeSaleBackForm productImeSaleBackForm) {
         return productImeSaleBackForm;
+    }
+
+    //vivo延保系统调用(获取该导购日销量和月销量)
+    @RequestMapping(value = "getSaleQty")
+    public ProductImeSaleQtyForm getSaleQty(){
+        return productImeSaleService.getSaleQty();
     }
 }

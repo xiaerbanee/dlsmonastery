@@ -538,7 +538,7 @@ public class OppoPushSerivce {
             oppoPushEmployeeList.add(oppoPushEmployee);
         }
         logger.info("同步员工信息数据开始:"+ LocalDateTime.now());
-        oppoPushEmployeeRepository.deleteAll();
+        oppoPushEmployeeRepository.deleteByCompanyName(DbContextHolder.get().getCompanyName());
         oppoPushEmployeeRepository.save(oppoPushEmployeeList);
         logger.info("同步员工信息数据结束:"+ LocalDateTime.now());
     }
@@ -555,7 +555,7 @@ public class OppoPushSerivce {
             oppoPushCustomerEmployeeList.add(oppoPushCustomerEmployee);
         }
         logger.info("员工绑定门店数据上抛开始:"+LocalDateTime.now());
-        oppoPushCustomerEmployeeRepository.deleteAll();
+        oppoPushCustomerEmployeeRepository.deleteByCompanyName(DbContextHolder.get().getCompanyName());
         oppoPushCustomerEmployeeRepository.save(oppoPushCustomerEmployeeList);
         logger.info("员工绑定门店数据上抛结束:"+LocalDateTime.now());
     }

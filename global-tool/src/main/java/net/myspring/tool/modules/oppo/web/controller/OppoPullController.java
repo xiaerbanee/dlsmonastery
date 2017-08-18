@@ -56,6 +56,11 @@ public class OppoPullController {
         return "OPPO同步成功";
     }
 
+    @RequestMapping(value = "pullExperienceShops")
+    public String pullExperienceShops(){
+        oppoPullService.pullExperienceShops();
+        return "下拉工厂体验店接口数据成功";
+    }
 
     @RequestMapping(value = "getSendImeList")
     public List<OppoPlantSendImeiPpselDto> getSendImeList(String companyName,String date, String agentCode) {
@@ -71,5 +76,4 @@ public class OppoPullController {
         List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoPullService.getItemelectronSelList(date,agentCode);
         return oppoPlantProductItemelectronSels;
     }
-
 }

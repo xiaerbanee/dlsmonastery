@@ -28,6 +28,15 @@ public class EmployeeQuery extends BaseQuery {
     private String areaId;
     private String nameStr;
     private List<String> nameList=Lists.newArrayList();
+    private String idCard;
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
 
     public String getNameStr() {
         return nameStr;

@@ -10,14 +10,11 @@ import org.springframework.stereotype.Component
 
 @Component
 class SProductItemStocksRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
-    fun deleteByUpdateTime(dateStart : String,dateEnd : String):Int{
+    fun deleteAll():Int{
         val map = Maps.newHashMap<String,String>()
-        map.put("dateStart",dateStart)
-        map.put("dateEnd",dateEnd)
         val sb = StringBuilder()
         sb.append("""
             DELETE FROM vivo_push_productitemstocks
-            WHERE UpdateTime >=  :dateStart and UpdateTime < :dateEnd
         """)
         return namedParameterJdbcTemplate.update(sb.toString(),map)
     }

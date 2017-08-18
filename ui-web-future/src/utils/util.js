@@ -2,7 +2,7 @@ import store from '../store/'
 
 var util = {};
 
-util.MAX_FILTER_DETAIL_ROW = 100;
+util.MAX_DETAIL_ROW = 100;
 util.pickerDateOption = {
   shortcuts: [{
     text: '今天',
@@ -179,7 +179,7 @@ util.setLatestShipStatus = function (latestShipStatus) {
 };
 util.getQuery = function (routerName) {
   var query = {};
-  if (routerName != "home") {
+  if (routerName != "index") {
     var tabs = store.state.global.tabs;
     query = tabs.get(routerName);
   }
@@ -195,7 +195,12 @@ util.isPermit = function (permissionName) {
 }
 
 util.setQuery = function (routerName, query) {
-  if (routerName != "home") {
+  if (routerName && routerName != "index") {
+    for (var key in query) {
+      if(!query[key]) {
+          delete query[key];
+      }
+    }
     var params = {routerName: routerName, query: query};
     store.dispatch("setQuery", params);
   }
@@ -439,45 +444,73 @@ util.moneyFormatter = function(row,col){
   }else{
     return row[pro];
   }
-}
+
+};
+
 util.countTotal = function(fn,cols){
-  const a = 'label';
-  const b = {
-    domProps: {
-           innerHTML: `${cols.column.label} (合计:${util.countByProp(cols)})`,
-         }
+    const a = 'label';
+    const b = {
+        domProps: {
+            innerHTML: `${cols.column.label} (合计:${util.countByProp(cols)})`,
+        }
     };
-  return fn(a,b);
-}
+    return fn(a,b);
+};
+
 util.countByProp = function(columns){
-  const prop = columns.column.property;
-  const data = columns.store.states.data;
-  let sum = 0;
-  data.forEach((col) => {
-    sum += col[prop];
-  })
-  return sum;
-}
+    const prop = columns.column.property;
+    const data = columns.store.states.data;
+    let sum = 0;
+    data.forEach((col) => {
+        sum += col[prop];
+    });
+    return sum;
+};
+
 util.contextMenu = function(lang){
-  console.log(lang);
-  let menus = {
-    items:{
-      "row_above":{
-        name:'插入行(上方)'
-      },
-      "row_below":{
-        name:'插入行(下方)'
-      },
-      "remove_row":{
-        name:"删除行"
-      }
+    let menus = {
+        items:{
+            "row_above":{
+                name:'插入行(上方)'
+            },
+            "row_below":{
+                name:'插入行(下方)'
+            },
+            "remove_row":{
+                name:"删除行"
+            }
+        }
+    };
+    if(lang === 'id'){
+        return true;
+    }else{
+        return menus;
     }
-  }
-  if(lang === 'id'){
-    return true;
-  }else{
-    return menus;
-  }
-}
+};
+
+util.contextMenu = function(lang){
+    let menus = {
+        items:{
+            "row_above":{
+                name:'插入行(上方)'
+            },
+            "row_below":{
+                name:'插入行(下方)'
+            },
+            "remove_row":{
+                name:"删除行"
+            }
+        }
+    };
+    if(lang === 'id'){
+        return true;
+    }else{
+        return menus;
+    }
+};
+
+util.closeAndBackToPage = function (route, toRouteName) {
+    route.push({name:toRouteName,query:util.getQuery(toRouteName), params:{_closeFrom:true, _keep:true}});
+};
 
 export default util;

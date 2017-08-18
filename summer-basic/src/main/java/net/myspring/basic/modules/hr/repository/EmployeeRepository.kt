@@ -210,6 +210,9 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         if(StringUtils.isNotBlank(employeeQuery.mobilePhone)) {
             sb.append(" and employee.mobile_phone like CONCAT('%',:mobilePhone,'%')");
         }
+        if(StringUtils.isNotBlank(employeeQuery.idCard)) {
+            sb.append(" and employee.idcard like CONCAT('%',:idCard,'%')")
+        }
         if(employeeQuery.entryDateStart!=null) {
             sb.append(" AND employee.entry_date > :entryDateStart");
         }

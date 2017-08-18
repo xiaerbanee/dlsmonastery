@@ -1,0 +1,43 @@
+@media screen and (min-width: 900px){
+  .search-form {
+    input {
+      width:217px;
+    }
+  }
+  .el-form{
+    input,textarea {
+      width:217px;
+    }
+  }
+  .el-select{
+    width: 217px;
+  }
+  .el-textarea{
+    width: 217px;
+  }
+}
+@media screen and (max-width: 900px){
+  .search-form {
+    input {
+      width:100%;
+    }
+  }
+  .el-form{
+    input,textarea {
+      width:100%;
+    }
+  }
+  .el-select{
+    width: 100%;
+  }
+  .el-date-editor.el-input{
+    width: 100%;
+  }
+}
+.login-container{
+  .el-select,.el-input{
+    input{
+      width: 100%;
+    }
+  }
+}

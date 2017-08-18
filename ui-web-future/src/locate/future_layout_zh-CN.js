@@ -425,8 +425,6 @@ export default {
     shopId: "门店",
     length: "长度",
     width: "高度",
-    thickness:"厚度",
-    area:"面积",
     qty: "数量",
     content: "内容说明",
     specialArea: "是否带logo",
@@ -444,9 +442,7 @@ export default {
     inputLegalValue: "请输入合法的数值",
     transverseDimensions:"横向尺寸,默认单位:米",
     longitudinalDimension:"纵向尺寸,默认单位:米",
-    thicknessDimension:"厚度，默认单位：米",
     placeRemarks:"说明具体位置、使用范围、使用周期【例1：玻璃贴，墙体玻璃下方；例2：喷绘，舞台背景，活动用等】",
-    placeRemarksForDoor:"例一：纯 LOGO 画面；例二：LOGO + 代言人画面；例三：纯代言人画面",
   },
   shopAdList: {
     shopAdList: "广告申请",

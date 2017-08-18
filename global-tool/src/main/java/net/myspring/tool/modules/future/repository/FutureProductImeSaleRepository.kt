@@ -97,7 +97,7 @@ class FutureProductImeSaleRepository @Autowired constructor(val namedParameterJd
         val sb = StringBuilder()
         sb.append("""
              select
-                    de.province_id as provinceId,
+                    de.area_id as provinceId,
                     im.ime as imei,
                     im.product_id as productId,
                     sa.shop_id as shopId,

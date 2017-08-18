@@ -512,7 +512,6 @@ export default {
     filter: "过滤",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
-    doorType:"是否为大牌门头",
   },
   shopAdTypeList: {
     shopAdTypeList: "广告类型",
@@ -543,4 +542,15 @@ export default {
     delete: "删除",
     audit: "审核",
   },
+    shopForm:{
+      save:"保存",
+      prerequisiteMessage:"必填信息"
+    },
+    depotShopList:{
+      inputKey:"请输入关键字",
+      filter:"过滤"
+    },
+    accountChangeForm:{
+      inputWord:"请输入关键字"
+    }
 }

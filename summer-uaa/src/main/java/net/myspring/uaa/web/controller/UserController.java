@@ -66,6 +66,12 @@ public class UserController {
         return "login";
     }
 
+    @RequestMapping("/user/isLogin")
+    @ResponseBody
+    public Boolean isLogin(Principal user) {
+        return user != null;
+    }
+
     //模拟UAA登陆，不需要跳转页面
     @RequestMapping(value = "/user/login")
     @ResponseBody

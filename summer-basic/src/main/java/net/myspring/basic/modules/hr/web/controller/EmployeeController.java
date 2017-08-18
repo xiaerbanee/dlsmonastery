@@ -146,4 +146,10 @@ public class EmployeeController {
         List<EmployeeDto> employeeDtoList = employeeService.findEmployeeInfo();
         return employeeDtoList;
     }
+
+    //vivo延保系统调用接口(检查该导购是否在系统中)
+    @RequestMapping(value = "checkEmployee")
+    public EmployeeDto checkEmployee(EmployeeQuery employeeQuery){
+        return employeeService.checkEmployee(employeeQuery);
+    }
 }
