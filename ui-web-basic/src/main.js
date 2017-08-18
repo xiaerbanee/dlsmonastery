@@ -129,6 +129,34 @@ Vue.directive('title', {
     }
 })
 
+
+axios.interceptors.response.use((resp) => {
+    return resp;
+}, (error) => {
+    if (error.response) {
+
+        switch (error.response.status) {
+            case 401:
+                store.dispatch('clearGlobal');
+                window.location.assign('/');
+                break;
+            case 404:
+                if(error.response.request.responseURL.indexOf("login")>=0){
+                    store.dispatch('clearGlobal');
+                    window.location.assign('/');
+                    break;
+                }
+            case 500:
+                ElementUI.Message.error({
+                    title: 'System Error',
+                    message:error.response.data
+                });
+        }
+    }
+    return Promise.reject(error)
+})
+
+
 new Vue({
   //el: '#app',
   //template: '<App/>',
