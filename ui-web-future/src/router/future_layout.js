@@ -14,6 +14,9 @@ const adGoodsOrderSign= r => require.ensure([], () => r(require('../pages/layout
 const adGoodsOrderPrint= r => require.ensure([], () => r(require('../pages/layout/adGoodsOrderPrint.vue')));
 const adPricesystemChangeList  = r => require.ensure([], () => r(require('../pages/layout/adPricesystemChangeList.vue')));
 const adPricesystemChangeForm = r => require.ensure([], () => r(require('../pages/layout/adPricesystemChangeForm.vue')));
+const shopAdDoorList= r => require.ensure([], () => r(require('../pages/layout/shopAdDoorList.vue')));
+const shopAdDoorForm= r => require.ensure([], () => r(require('../pages/layout/shopAdDoorForm.vue')));
+const shopAdDoorDetail= r => require.ensure([], () => r(require('../pages/layout/shopAdDoorDetail.vue')));
 const shopAdList= r => require.ensure([], () => r(require('../pages/layout/shopAdList.vue')));
 const shopAdForm= r => require.ensure([], () => r(require('../pages/layout/shopAdForm.vue')));
 const shopAdDetail= r => require.ensure([], () => r(require('../pages/layout/shopAdDetail.vue')));
@@ -59,6 +62,9 @@ let routes = [
             {path:'/layout/adGoodsOrderPrint',component:adGoodsOrderPrint,name:'adGoodsOrderPrint',meta: {hidden: true}},
             {path:'/layout/adPricesystemChangeList',component:adPricesystemChangeList,name:'adPricesystemChangeList'},
             {path:'/layout/adPricesystemChangeForm',component:adPricesystemChangeForm,name:'adPricesystemChangeForm',meta: {menu:"adPricesystemChangeList",keepAlive:true}},
+            {path:'/layout/shopAdDoorList',component:shopAdDoorList,name:'shopAdDoorList'},
+            {path:'/layout/shopAdDoorForm',component:shopAdDoorForm,name:'shopAdDoorForm',meta: {menu:"shopAdDoorList",keepAlive:true}},
+            {path:'/layout/shopAdDoorDetail',component:shopAdDoorDetail,name:'shopAdDoorDetail',meta: {menu:"shopAdDoorList",keepAlive:true}},
             {path:'/layout/shopAdList',component:shopAdList,name:'shopAdList'},
             {path:'/layout/shopAdForm',component:shopAdForm,name:'shopAdForm',meta: {menu:"shopAdList",keepAlive:true}},
             {path:'/layout/shopAdDetail',component:shopAdDetail,name:'shopAdDetail',meta: {menu:"shopAdList"}},

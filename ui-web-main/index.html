@@ -136,7 +136,7 @@
 						<li class="loginName"></li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle avatar" data-toggle="dropdown">
-								<img src="">
+								<img src="static/images/user.png">
 							</a>
 							<ul class="dropdown-menu">
 								<li>
@@ -224,7 +224,7 @@
 														待批考勤	
 													</div>
 													<div class="col-md-6 col-sm-6 col-xs-6">
-														<a href="/basic/hr/dutyTaskList"><span class="badge dutySize"></span></a>
+														<a href="/basic/#/hr/dutyTaskList"><span class="badge dutySize"></span></a>
 													</div>
 												</div>
 											</div>
@@ -234,7 +234,7 @@
 														待批文件	
 													</div>
 													<div class="col-md-6 col-sm-6 col-xs-6">
-														<a href="/basic/hr/auditFileList"><span class="badge auditFileSize"></span></a>
+														<a href="/basic/#/hr/auditFileList"><span class="badge auditFileSize"></span></a>
 													</div>
 												</div>
 											</div>
@@ -361,13 +361,13 @@ function getMenus(){
 		name = item.name;
 		switch(item.code){
 			case 'basicManager':
-				path = 'basic';
+				path = '/basic';
 				break;
 			case 'businessManager':
-				path = 'future';
+				path = '/future';
 				break;
 			case 'factoryManager':
-				path = 'tool';
+				path = '/tool';
 				break;
 			case 'cloudManager':
 				path = '/cloud';
