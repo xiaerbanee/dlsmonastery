@@ -57,7 +57,7 @@
                 if(!this.inputForm.id){
                   form.resetFields();
                 } else {
-                  this.$router.push({name:'kingdeeBookList',query:util.getQuery("kingdeeBookList"),params:{_closeFrom:true}});
+                   util.closeAndBackToPage(this.$router, "kingdeeBookList");
                 }
               }).catch(function () {
                 this.submitDisabled = false;

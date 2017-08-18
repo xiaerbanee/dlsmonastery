@@ -112,7 +112,6 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("supplierPayable",submitData);
         axios.get('/api/global/cloud/kingdee/bdSupplier?'+ qs.stringify(submitData)).then((response) => {
           let supplierIdList = new Array();
           let suppliers = response.data.content;

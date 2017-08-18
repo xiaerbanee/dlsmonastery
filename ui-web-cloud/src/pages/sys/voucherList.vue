@@ -90,7 +90,6 @@
         this.pageLoading = true;
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
-        util.setQuery("voucherList",submitData);
         axios.get('/api/global/cloud/sys/voucher?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;

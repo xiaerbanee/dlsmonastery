@@ -113,7 +113,6 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("supplierPayableZMD",submitData);
         axios.get('/api/global/cloud/kingdee/bdDepartment?'+ qs.stringify(submitData)).then((response) => {
           let departmentIdList = new Array();
           let departments = response.data.content;
