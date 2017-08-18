@@ -91,7 +91,7 @@
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }else{
-                  this.$router.push({name: 'shopPrintList', query: util.getQuery("shopPrintList"), params:{_closeFrom:true}})
+                  util.closeAndBackToPage(this.$router,'shopPrintList')
                 }
               }
             }).catch(() => {

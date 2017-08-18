@@ -152,7 +152,6 @@
       },initPage(){
         axios.get('/api/ws/future/crm/bankIn/getBatchForm').then((response)=>{
           this.inputForm = response.data;
-          console.log(response.data);
           this.settings.columns[1].source=response.data.extra.bankNameList;
           this.settings.columns[4].source=response.data.extra.typeList;
           this.settings.columns[6].source=response.data.extra.transferTypeList;

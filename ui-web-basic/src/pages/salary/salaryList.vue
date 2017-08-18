@@ -35,7 +35,6 @@
       pageRequest() {
         this.pageLoading = true;
         var submitData=util.deleteExtra(this.formData);
-        util.setQuery("salaryList",submitData);
         if(util.isNotBlank(this.formData.password)){
           axios.get('/api/basic/hr/salary?'+qs.stringify(submitData)).then((response) => {
             this.page=response.data
@@ -63,7 +62,6 @@
       that.pageHeight = 0.74*window.innerHeight;
       this.initPromise = axios.get('/api/basic/hr/salary/getQuery').then((response) =>{
         that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

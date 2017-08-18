@@ -73,7 +73,7 @@
             axios.post('/api/basic/sys/role/saveAuthorityList',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
-              this.$router.push({name: 'roleList', query: util.getQuery("roleList"), params:{_closeFrom:true}})
+                util.closeAndBackToPage(this.$router,"roleList")
             }).catch(function () {
                 that.submitDisabled = false;
             });

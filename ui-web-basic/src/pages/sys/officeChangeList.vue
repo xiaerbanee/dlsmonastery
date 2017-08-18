@@ -78,7 +78,6 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("officeChangeList",submitData);
         axios.get('/api/basic/hr/officeChange?'+qs.stringify(submitData)).then((response) => {
           console.log(response.data)
           this.page = response.data;
@@ -155,7 +154,6 @@
       this.initPromise = axios.get('/api/basic/hr/officeChange/getQuery').then((response) =>{
         that.formData=response.data;
         console.log(this.formData.extra.typeList);
-        util.copyValue(that.$route.query,that.formData);
       });
     },activated() {
       this.initPromise.then(()=> {

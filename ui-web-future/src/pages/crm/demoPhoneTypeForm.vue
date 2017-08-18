@@ -79,7 +79,7 @@
             axios.post('/api/ws/future/crm/demoPhoneType/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
                 this.$message(response.data.message);
                 if(!this.isCreate){
-                  this.$router.push({name:'demoPhoneTypeList',query:util.getQuery("demoPhoneTypeList"), params:{_closeFrom:true}});
+                  util.closeAndBackToPage(this.$router,'demoPhoneTypeList')
                 }else{
                   Object.assign(this.$data, this.getData());
                   this.initPage();

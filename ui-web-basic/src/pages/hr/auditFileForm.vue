@@ -69,7 +69,7 @@
               this.$message(response.data.message);
               if(!this.isCreate){
                 this.submitDisabled = false;
-                this.$router.push({name:'auditFileList',query:util.getQuery("auditFileList")})
+                  util.closeAndBackToPage(this.$router,"auditFileList")
               } else {
                 Object.assign(this.$data, this.getData());
                 this.initPage();

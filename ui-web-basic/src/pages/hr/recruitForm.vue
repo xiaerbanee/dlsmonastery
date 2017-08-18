@@ -277,7 +277,7 @@
                 this.$message(response.data.message);
                 Object.assign(this.$data, this.getData());
                 if(!this.isCreate){
-                  this.$router.push({name:'recruitList',query:util.getQuery("recruitList")})
+                    util.closeAndBackToPage(this.$router,"recruitList")
                 }
               }).catch( ()=> {
                 that.submitDisabled = false;

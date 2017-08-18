@@ -67,7 +67,7 @@
                 Object.assign(this.$data, this.getData);
                 this.initPage();
               }else{
-                this.$router.push({name:'officeRuleList',query:util.getQuery("officeRuleList"), params:{_closeFrom:true}})
+                  util.closeAndBackToPage(this.$router,"officeRuleList")
               }
             }).catch( ()=> {
               this.submitDisabled = false;

@@ -20,6 +20,7 @@
 				</el-row>
 			</el-col>
 			<el-col :span="4" class="userinfo">
+				<span class="inter"><a href="javscript:void(0);" @click="changeLang('zh-cn')">中文</a> / <a href="javscript:void(0);" @click="changeLang('id')">Indonesia</a></span>
 				<el-dropdown trigger="hover">
 					<span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar" /> {{account.loginName}}</span>
 					<el-dropdown-menu slot="dropdown">
@@ -37,7 +38,7 @@
 					<template v-for="(module,i) in backend.backendModuleList" v-if="module.code == activeModule">
 						<template v-for="(item,index) in module.menuCategoryList">
 							<el-submenu :index="index+''">
-								<template slot="title"><i class="fa fa-id-card-o"></i>{{item.name}}</template>
+								<template slot="title"><i :class="'fa fa-'+module.icon"></i>{{item.name}}</template>
 								<el-menu-item v-for="(menu,index) in item.menuList" :index="menu.code" :key="menu.code" :data-code="menu.code" :class="code === menu.code?'is-active':''"   @click="jump(menu,$event)">{{menu.name}}</el-menu-item>
 							</el-submenu>
 						</template>
@@ -48,7 +49,7 @@
 					<template v-for="modules in backend.backendModuleList" v-if="modules.code == activeModule">
 						<li v-for="(module,i) in modules.menuCategoryList"  class="el-submenu item">
 							<template >
-								<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(i,true)" @mouseout="showMenu(i,false)"><i class="fa fa-id-card-o"></i></div>
+								<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(i,true)" @mouseout="showMenu(i,false)"><i :class="'fa fa-'+module.icon"></i></div>
 								<ul class="el-menu submenu" :class="'submenu-hook-'+i" @mouseover="showMenu(i,true)" @mouseout="showMenu(i,false)">
 									<li v-for="menu in module.menuList"  :key="menu.code" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==menu.path?'is-active':''" @click="$router.push({name:menu.code})">{{menu.name}}</li>
 								</ul>
@@ -91,7 +92,8 @@
 			}
 		},computed: mapState({
             account: state => state.global.account,
-            menus: state => state.global.menus
+            menus: state => state.global.menus,
+            lang: state => state.global.lang,
         }),
 		methods: {
             jump(m,e){
@@ -113,6 +115,10 @@
                     }).catch(function () {
                     });
                 }).catch(() => {});
+            },changeLang(lang) {
+                this.$store.dispatch('setLang',lang);
+                Vue.config.lang = lang;
+                this.$router.push({ name: "index"});
             },
 			//折叠导航栏
 			collapse:function(){
@@ -147,6 +153,7 @@
                             }
                         }
                         that.$router.push({path: "/index"});
+                        that.$store.dispatch('setTabs',new Map());
                     }
                 } else {
                     that.$store.dispatch('clearGlobal');
@@ -273,7 +280,7 @@
 				// top: 0px;
 				// bottom: 0px;
 				// left: 230px;
-
+				overflow: auto;
 				padding: 20px;
 				.breadcrumb-container {
 					//margin-bottom: 15px;
@@ -306,6 +313,10 @@
 		.el-menu-item.is-active{
 			color:#184E7E;
 		}
+	}
+	.inter a{
+		color:#fff;
+		text-decoration: none;
 	}
 
 </style>

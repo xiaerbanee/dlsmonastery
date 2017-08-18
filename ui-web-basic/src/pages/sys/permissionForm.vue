@@ -64,7 +64,7 @@
                   this.initPage();
                 }else{
                   this.submitDisabled = false;
-                  this.$router.push({name:'permissionList',query:util.getQuery("permissionList"),params:{_closeFrom:true}});
+                    util.closeAndBackToPage(this.$router,"permissionList")
                 }
               }).catch(function () {
                 that.submitDisabled = false;

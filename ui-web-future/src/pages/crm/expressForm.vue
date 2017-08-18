@@ -55,7 +55,6 @@
           form.validate((valid) => {
             if (valid) {
               this.submitDisabled = true;
-              util.copyValue(this.express,this.submitData);
               axios.post('/api/ws/future/crm/express/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
                 if(response.data.success) {
@@ -75,7 +74,7 @@
         axios.get('/api/ws/future/crm/express/getForm').then((response)=> {
           this.inputForm = response.data;
           axios.get('/api/ws/future/crm/express/findDto', {params: {id: this.$route.query.id}}).then((response) => {
-            util.copyValue(response.data,this.inputForm);``
+            util.copyValue(response.data,this.inputForm);
           });
         });
         }

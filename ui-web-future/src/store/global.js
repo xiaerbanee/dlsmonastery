@@ -1,12 +1,14 @@
 const getTabs = function () {
   var tabs = new Map();
-  let local = window.localStorage.getItem("businessManager_tabs");
-  if(local != null) {
-    tabs = new Map(JSON.parse(local));
-  }
   return tabs;
 }
-
+const getLang = function () {
+    var local = window.localStorage.getItem("lang");
+    if(!local) {
+        local = "zh-cn";
+    }
+    return local;
+}
 const getMenus = function () {
   var local = window.localStorage.getItem("menus");
   if(local) {
@@ -40,6 +42,7 @@ const getAuthorityList = function () {
 export default {
   state: {
     tabs: getTabs(),
+    lang: getLang(),
     menus:getMenus(),
     account:getAccount(),
     authorityList:getAuthorityList()
@@ -50,7 +53,6 @@ export default {
       if(tabArray.length>=8) {
         tabArray = tabArray.splice(tabArray.length-8);
       }
-      localStorage.setItem('businessManager_tabs', JSON.stringify(tabArray))
       state.tabs = new Map(tabArray);
     },
     setMenus(state,menus) {
@@ -74,6 +76,10 @@ export default {
             commit('setTabs', tabs);
         }
     },
+      setLang(state,lang){
+          localStorage.setItem('lang', lang)
+          state.lang = lang;
+      },
       closeTab({ commit, state }, tabName) {
           var tabs = state.tabs;
           tabs.delete(tabName);
@@ -99,6 +105,9 @@ export default {
           var tabs = state.tabs;
           tabs.delete(tabName);
           commit('setTabs', tabs);
+      },
+      setLang({ commit, state }, lang) {
+          commit('setLang', lang);
       },
   }
 }

@@ -100,7 +100,6 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("depotInventoryReport",this.formData);
         axios.get('/api/ws/future/basic/depotShop/depotReportDate?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -124,7 +123,6 @@
       this.initPromise =axios.get('/api/ws/future/basic/depotShop/getReportQuery').then((response) => {
         this.formData = response.data;
         console.log(this.formData)
-        util.copyValue(this.$route.query, this.formData);
         this.pageRequest();
       })
     },activated(){

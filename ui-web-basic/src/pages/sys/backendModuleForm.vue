@@ -57,7 +57,7 @@
                   this.initPage();
                 }else{
                   this.submitDisabled = false;
-                  this.$router.push({name:'backendModuleList',query:util.getQuery("backendModuleList"),params:{_closeFrom:true}});
+                    util.closeAndBackToPage(this.$router,"backendModuleList")
                 }
               }).catch(function () {
                 that.submitDisabled = false;

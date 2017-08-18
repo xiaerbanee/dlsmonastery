@@ -68,7 +68,6 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("dutyLeaveList",submitData);
         axios.get('/api/basic/hr/dutyLeave?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -89,7 +88,6 @@
        this.pageHeight = 0.74*window.innerHeight;
       this.initPromise = axios.get('/api/basic/hr/dutyLeave/getQuery').then((response) =>{
         this.formData = response.data;
-        util.copyValue(this.$route.query,this.formData);
       });
     },activated() {
         this.initPromise.then(()=>{

@@ -54,7 +54,9 @@
                   this.initPage();
                 }else{
                   this.submitDisabled = false;
-                  this.$router.push({name:'companyConfigList',query:util.getQuery("companyConfigList"),params:{_closeFrom:true}});
+                    util.closeAndBackToPage(this.$router,"companyConfigList")
+
+                    this.$router.push({name:'companyConfigList',query:util.getQuery("companyConfigList"),params:{_closeFrom:true}});
                 }
               }).catch(function () {
                 that.submitDisabled = false;

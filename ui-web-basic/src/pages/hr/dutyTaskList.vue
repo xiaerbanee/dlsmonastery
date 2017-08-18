@@ -35,7 +35,6 @@
     methods: {
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("dutyTaskList");
         axios.get('/api/basic/hr/duty').then((response) => {
           this.page = response.data;
           this.pageLoading = false;

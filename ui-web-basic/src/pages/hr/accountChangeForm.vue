@@ -109,7 +109,8 @@
             axios.post('/api/basic/hr/accountChange/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
-              this.$router.push({name:'accountChangeList',query:util.getQuery("accountChangeList")})
+                util.closeAndBackToPage(this.$router,"accountChangeList")
+
           }).catch( ()=> {
               that.submitDisabled = false;
             });

@@ -82,18 +82,6 @@ public class ProductImeSaleController {
         return productImeSaleService.findProductImeForSaleDto(imeStr);
     }
 
-    @RequestMapping(value = "sale")
-    @Deprecated
-    public RestResponse sale(ProductImeSaleForm productImeSaleForm) {
-        List<String> imeList = productImeSaleForm.getImeList();
-        if(CollectionUtil.isEmpty(imeList)){
-            throw new ServiceException("没有输入任何有效的串码");
-        }
-
-        productImeSaleService.sale(productImeSaleForm);
-        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
-    }
-
     @RequestMapping(value = "saleIme")
     public RestResponse saleIme(ProductImeSaleForm productImeSaleForm) {
         List<String> imeList = productImeSaleForm.getImeList();

@@ -80,7 +80,6 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("dataReportList",submitData);
         if(this.parentIdArr.length!=0){
             this.formData.parentOfficeId=this.parentIdArr[this.parentIdArr.length-1]
         }else{
@@ -123,7 +122,6 @@
       }
     },created () {
        this.pageHeight = 0.74*window.innerHeight;
-      util.copyValue(this.$route.query,this.formData);
       this.actionButton.hasEdit = util.isPermit("crm:demoPhone:edit");
       this.pageRequest();
     }

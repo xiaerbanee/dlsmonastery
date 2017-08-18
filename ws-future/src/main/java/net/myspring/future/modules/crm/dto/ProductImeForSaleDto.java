@@ -1,13 +1,10 @@
 package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
-import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class ProductImeForSaleDto extends DataDto<ProductIme> {
@@ -29,20 +26,9 @@ public class ProductImeForSaleDto extends DataDto<ProductIme> {
     private String productImeSaleEmployeeName;
     private LocalDateTime productImeSaleCreatedDate;
     private LocalDateTime productImeUploadCreatedDate;
-    private Boolean editable;
-    private Boolean fromChain;
+
     private String depotChainId;
     private String depotDepotStoreId;
-    private String saleShopId;
-    private List<DepotDto> accessChainDepotList = new ArrayList<>();
-
-    public String getSaleShopId() {
-        return saleShopId;
-    }
-
-    public void setSaleShopId(String saleShopId) {
-        this.saleShopId = saleShopId;
-    }
 
     public String getDepotDepotStoreId() {
         return depotDepotStoreId;
@@ -66,30 +52,6 @@ public class ProductImeForSaleDto extends DataDto<ProductIme> {
 
     public void setProductImeSaleId(String productImeSaleId) {
         this.productImeSaleId = productImeSaleId;
-    }
-
-    public Boolean getEditable() {
-        return editable;
-    }
-
-    public void setEditable(Boolean editable) {
-        this.editable = editable;
-    }
-
-    public Boolean getFromChain() {
-        return fromChain;
-    }
-
-    public void setFromChain(Boolean fromChain) {
-        this.fromChain = fromChain;
-    }
-
-    public List<DepotDto> getAccessChainDepotList() {
-        return accessChainDepotList;
-    }
-
-    public void setAccessChainDepotList(List<DepotDto> accessChainDepotList) {
-        this.accessChainDepotList = accessChainDepotList;
     }
 
     public String getIme() {

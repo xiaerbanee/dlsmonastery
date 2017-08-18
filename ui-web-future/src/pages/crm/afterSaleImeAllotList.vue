@@ -70,7 +70,6 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("dictEnumList",submitData);
         axios.get('/api/crm/afterSaleImeAllot',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -91,7 +90,6 @@
        this.pageHeight = 0.74*window.innerHeight;
       this.initPromise = axios.get('/api/ws/future/crm/afterSale/getQuery').then((response) =>{
         that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

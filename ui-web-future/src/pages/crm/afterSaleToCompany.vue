@@ -83,7 +83,7 @@
             this.inputForm.toCompanyDate=util.formatLocalDate(this.inputForm.toCompanyDate)
             axios.post('/api/ws/future/crm/afterSale/toCompany',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
-              this.$router.push({name:'afterSaleList',query:util.getQuery("afterSaleList"),params:{_closeFrom:true}})
+              util.closeAndBackToPage(this.$router,'afterSaleList')
             });
           }
         })

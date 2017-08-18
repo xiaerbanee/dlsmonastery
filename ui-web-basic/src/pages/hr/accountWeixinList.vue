@@ -55,7 +55,6 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("accountWeixinList",submitData);
         axios.get('/api/basic/hr/accountWeixin?'+qs.stringify(submitData)).then((response) => {
             console.log(response.data)
           this.page = response.data;
@@ -88,7 +87,6 @@
       that.pageHeight = 0.74*window.innerHeight;
       this.initPromise = axios.get('/api/basic/hr/accountWeixin/getQuery').then((response) =>{
         that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
       });
 
     },activated(){

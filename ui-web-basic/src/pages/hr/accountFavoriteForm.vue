@@ -51,7 +51,7 @@
                 Object.assign(this.$data, this.getData());
                 this.initPage();
               }else{
-                this.$router.push({name:'accountFavoriteList',query:util.getQuery("accountFavoriteList"), params:{_closeFrom:true}})
+                  util.closeAndBackToPage(this.$router,"accountFavoriteList")
               }
             }).catch(function () {
               that.submitDisabled = false;

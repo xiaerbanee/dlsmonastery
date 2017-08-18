@@ -20,14 +20,9 @@
 				</el-row>
 			</el-col>
 			<el-col :span="4" class="userinfo">
-				<el-dropdown trigger="hover">
-					<span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar" /> {{account.loginName}}</span>
-					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item>我的消息</el-dropdown-item>
-						<el-dropdown-item>设置</el-dropdown-item>
-						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
-					</el-dropdown-menu>
-				</el-dropdown>
+				<span class="el-dropdown-link userinfo-inner">{{account.loginName}}</span>
+				<span>/</span>
+				<span  @click="logout()" class="logout">退出登录</span>
 			</el-col>
 		</el-col>
 		<el-col :span="24" class="main">
@@ -37,7 +32,7 @@
 					<template v-for="(module,i) in backend.backendModuleList" v-if="module.code == activeModule">
 						<template v-for="(item,index) in module.menuCategoryList">
 							<el-submenu :index="index+''">
-								<template slot="title"><i class="fa fa-id-card-o"></i>{{item.name}}</template>
+								<template slot="title"><i :class="'fa fa-'+module.icon"></i>{{item.name}}</template>
 								<el-menu-item v-for="(menu,index) in item.menuList" :index="menu.code" :key="menu.code" :data-code="menu.code" :class="code === menu.code?'is-active':''"   @click="jump(menu,$event)">{{menu.name}}</el-menu-item>
 							</el-submenu>
 						</template>
@@ -48,7 +43,7 @@
 					<template v-for="modules in backend.backendModuleList" v-if="modules.code == activeModule">
 						<li v-for="(module,i) in modules.menuCategoryList"  class="el-submenu item">
 							<template >
-								<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(i,true)" @mouseout="showMenu(i,false)"><i class="fa fa-id-card-o"></i></div>
+								<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(i,true)" @mouseout="showMenu(i,false)"><i :class="'fa fa-'+module.icon"></i></div>
 								<ul class="el-menu submenu" :class="'submenu-hook-'+i" @mouseover="showMenu(i,true)" @mouseout="showMenu(i,false)">
 									<li v-for="menu in module.menuList"  :key="menu.code" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==menu.path?'is-active':''" @click="$router.push({name:menu.code})">{{menu.name}}</li>
 								</ul>
@@ -157,6 +152,7 @@
                             }
                         }
                         that.$router.push({path: "/index"});
+                        that.$store.dispatch('setTabs',new Map());
                     }
                 } else {
                     that.$store.dispatch('clearGlobal');
@@ -283,7 +279,7 @@
 				// top: 0px;
 				// bottom: 0px;
 				// left: 230px;
-
+				overflow: auto;
 				padding: 20px;
 				.breadcrumb-container {
 					//margin-bottom: 15px;
@@ -317,5 +313,13 @@
 			color:#184E7E;
 		}
 	}
+	.logout:hover{
+		background: none;
+		color:#184E7E;
+	}
+	.logout.is-active{
+		color:#184E7E;
+	}
+
 
 </style>

@@ -62,7 +62,7 @@
                 Object.assign(this.$data, this.getData());
                 this.initPage();
               }else{
-                this.$router.push({name:'salaryList',query:util.getQuery("salaryList"), params:{_closeFrom:true}})
+                  util.closeAndBackToPage(this.$router,"salaryList")
               }
             }).catch(function () {
               that.submitDisabled = false;
