@@ -251,7 +251,11 @@ public class AdGoodsOrderService {
 
     @Transactional
     public void logicDelete(String id) {
+        AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(id);
         adGoodsOrderRepository.logicDelete(id);
+        if(StringUtils.isNotBlank(adGoodsOrder.getExpressOrderId())){
+            expressOrderRepository.logicDelete(adGoodsOrder.getExpressOrderId());
+        }
     }
 
     public List<AdGoodsOrderDetailSimpleDto> findDetailListForNewOrEdit(String adGoodsOrderId,String outShopId) {
