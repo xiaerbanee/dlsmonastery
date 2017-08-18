@@ -5,21 +5,21 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-row :gutter = "20">
           <el-col :span = "10">
-            <el-form-item label="名称" prop="name">
+            <el-form-item :label="$t('roleForm.name')" prop="name">
               <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="权限" prop="permission">
+            <el-form-item :label="$t('roleForm.permission')" prop="permission">
               <el-input v-model="inputForm.permission"></el-input>
             </el-form-item>
-            <el-form-item label="备注" prop="remarks">
+            <el-form-item :label="$t('roleForm.remarks')" prop="remarks">
               <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">保存</el-button>
+              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('roleForm.save')}}</el-button>
             </el-form-item>
           </el-col>
           <el-col :span = "10">
-            <el-form-item  label="授权" prop="moduleIdList">
+            <el-form-item  :label="$t('roleForm.moduleIdList')" prop="moduleIdList">
               <el-tree
                 :data="treeData"
                 show-checkbox

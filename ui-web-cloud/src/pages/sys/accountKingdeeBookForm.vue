@@ -48,7 +48,7 @@
                   this.initPage();
                 } else {
                   this.submitDisabled = false;
-                  this.$router.push({name:'accountKingdeeBookList',query:util.getQuery("accountKingdeeBookList"),params:{_closeFrom:true}});
+                  util.closeAndBackToPage(this.$router, "accountKingdeeBookList");
                 }
               }).catch(function () {
                 this.submitDisabled = false;

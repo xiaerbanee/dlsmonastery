@@ -233,7 +233,7 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
                     t3.id as 'categoryId',
                     t3.name as 'categoryName',
                     t3.code as 'categoryCode',
-                    t3.icon as 'moduleIcon',
+                    t3.icon as 'categoryIcon',
                     t4.id as 'menuId',
                     t4.name as 'menuName',
                     t4.code as 'menuCode',

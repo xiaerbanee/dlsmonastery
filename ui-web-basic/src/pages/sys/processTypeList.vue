@@ -32,9 +32,9 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('processTypeList.operation')" width="200">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'详细')" v-permit="'sys:processType:view'">详细</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')" v-permit="'sys:processType:view'">修改</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'删除')" v-permit="'sys:processType:delete'">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'detail')" v-permit="'sys:processType:view'">{{$t('processTypeList.detail')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'sys:processType:view'">{{$t('processTypeList.edit')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'sys:processType:delete'">{{$t('processTypeList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -87,12 +87,12 @@
       },itemAdd(){
         this.$router.push({ name: 'processTypeForm'})
       },itemAction:function(id,action){
-        if(action=="详细") {
+        if(action=="detail") {
           this.$router.push({ name: 'processTypeForm', query: { id: id }})
-        }else if(action === '修改'){
+        }else if(action === 'edit'){
           this.$router.push({ name: 'processTypeForm', query: { id: id,editable:true }})
         }
-        else if(action=="删除") {
+        else if(action=="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/general/sys/processType/delete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);

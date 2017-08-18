@@ -179,7 +179,7 @@
             axios.post('/api/global/cloud/sys/voucher/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
               if(response.data.success === true){
                 this.$message(response.data.message);
-                this.$router.push({name:'voucherList',query:util.getQuery("voucherList"), params:{_closeFrom:true}})
+                  util.closeAndBackToPage(this.$router, 'voucherList');
               }else {
                 this.$alert(response.data.message);
                 this.submitDisabled = false;
@@ -211,7 +211,7 @@
             axios.post('/api/global/cloud/sys/voucher/audit', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
               if(response.data.success){
                 this.$message(response.data.message);
-                this.$router.push({name:'voucherList',query:util.getQuery("voucherList"), params:{_closeFrom:true}})
+                util.closeAndBackToPage(this.$router, 'voucherList');
               }else{
                 this.$alert(response.data.message);
                 this.submitDisabled = false;
