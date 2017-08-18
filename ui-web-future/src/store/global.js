@@ -94,6 +94,11 @@ export default {
       commit('setMenus', []);
       commit('setAccount', {});
       commit('setAuthorityList', []);
-    }
+    },
+      closeTab({ commit, state }, tabName) {
+          var tabs = state.tabs;
+          tabs.delete(tabName);
+          commit('setTabs', tabs);
+      },
   }
 }
