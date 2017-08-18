@@ -54,7 +54,7 @@
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }else {
-                  this.$router.push({name: 'bankList', query: util.getQuery("bankList"),params:{_closeFrom:true}})
+                  util.closeAndBackToPage(this.$router,'bankList')
                 }
               }
             }).catch(() => {

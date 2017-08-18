@@ -147,7 +147,7 @@
           if(this.continueShip){
             this.initPage(null, true);
           } else {
-            this.$router.push({name:'goodsOrderShipList',query:util.getQuery("goodsOrderShipList"), params:{_closeFrom:true}});
+            util.closeAndBackToPage(this.$router,'goodsOrderShipList')
           }
         }).catch(()=> {
           this.submitDisabled = false;

@@ -144,11 +144,7 @@
                     Object.assign(this.$data, this.getData());
                     this.initPage();
                   } else {
-                    this.$router.push({
-                      name: 'goodsOrderShipList',
-                      query: util.getQuery("goodsOrderShipList"),
-                      params: {_closeFrom: true}
-                    })
+                    util.closeAndBackToPage(this.$router,'goodsOrderShipList')
                   }
                 } else {
                   this.submitDisabled = false;

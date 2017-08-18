@@ -127,7 +127,6 @@
         this.setSearchText();
         this.formData.type=this.type;
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("productImeStockReport",submitData);
         if(!this.nextIsShop){
           this.formData.depotId=""
           axios.post('/api/ws/future/crm/productIme/productImeReport',qs.stringify(submitData)).then((response) => {
@@ -200,7 +199,6 @@
           this.officeIds.push(response.data.officeId);
           this.officeId=response.data.officeId;
         }
-        util.copyValue(this.$route.query, this.formData);
         this.pageRequest();
       })
     }

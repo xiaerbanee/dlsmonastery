@@ -89,7 +89,6 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("bankList",submitData);
         axios.get('/api/ws/future/basic/employeePhoneDeposit?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -141,7 +140,6 @@
        this.pageHeight = 0.74*window.innerHeight;
       axios.get('/api/ws/future/basic/employeePhoneDeposit/getQuery').then((response) =>{
         this.formData=response.data;
-        util.copyValue(this.$route.query,this.formData);
         this.pageRequest();
       });
     }

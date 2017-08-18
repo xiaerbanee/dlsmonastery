@@ -84,7 +84,7 @@
                     Object.assign(this.$data, this.getData());
                     this.initPage();
                   }else{
-                    this.$router.push({name: 'productMonthPriceList', query: util.getQuery("productMonthPriceList"), params:{_closeFrom:true}})
+                    util.closeAndBackToPage(this.$router,'productMonthPriceList')
                   }
                 }
               }).catch(() => {

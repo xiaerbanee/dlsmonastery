@@ -59,7 +59,7 @@
                 Object.assign(this.$data, this.getData());
                 this.initPage();
               }else{
-                this.$router.push({name:'carrierShopList',query:util.getQuery("carrierShopList"), params:{_closeFrom:true}})
+                util.closeAndBackToPage(this.$router,'carrierShopList')
               }
             }).catch(function () {
               that.submitDisabled = false;

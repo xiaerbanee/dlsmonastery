@@ -59,7 +59,7 @@
                 form.resetFields();
                 this.submitDisabled = false;
               } else {
-                this.$router.push({name:'priceChangeList',query:util.getQuery("priceChangeList"), params:{_closeFrom:true}})
+                util.closeAndBackToPage(this.$router,'priceChangeList')
               }
             }).catch(function () {
               this.submitDisabled = false;

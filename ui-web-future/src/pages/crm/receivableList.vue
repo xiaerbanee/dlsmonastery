@@ -74,7 +74,6 @@
         this.pageLoading = true;
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
-        util.setQuery("receivableList", submitData);
         axios.get('/api/ws/future/basic/client/findReceivableList?' + qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -112,7 +111,6 @@
       this.initPromise=axios.get('/api/ws/future/basic/client/getReceivableQuery').then((response) =>{
         this.formData=response.data;
         this.formData.accountTaxPermitted = util.isPermit("crm:depot:depotAccountTax");
-        util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

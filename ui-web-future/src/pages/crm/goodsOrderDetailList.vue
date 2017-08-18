@@ -77,7 +77,6 @@
         this.pageLoading = true;
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
-        util.setQuery("goodsOrderImeList",submitData);
         axios.get('/api/ws/future/crm/goodsOrderDetail?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -103,7 +102,6 @@
       this.pageHeight = 0.74*window.innerHeight;
       this.initPromise=axios.get('/api/ws/future/crm/goodsOrderDetail/getQuery').then((response) =>{
         this.formData=response.data;
-        util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{
