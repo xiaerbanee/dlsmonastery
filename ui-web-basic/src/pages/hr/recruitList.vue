@@ -66,7 +66,7 @@
         <el-table-column prop="auditAppointDate" :label="$t('recruitList.auditAppointDate')"></el-table-column>
         <el-table-column prop="entryAppointDate" :label="$t('recruitList.entryAppointDate')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('recruitList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('expressOrderList.operation')" width="140">
+        <el-table-column fixed="right" :label="$t('recruitList.operation')" width="140">
           <template scope="scope">
             <div class="action"> <el-button size="small" @click.native="itemAction(scope.row.id,'edit')"  v-permit="'hr:recruit:edit'">修改</el-button> </div>
             <div class="action"> <el-button size="small" @click.native="itemAction(scope.row.id,'delete')"  v-permit="'hr:recruit:delete'">删除</el-button></div>
