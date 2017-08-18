@@ -1,9 +1,5 @@
 const getTabs = function () {
   var tabs = new Map();
-  let local = window.localStorage.getItem("cloudManager_tabs");
-  if(local != null) {
-    tabs = new Map(JSON.parse(local));
-  }
   return tabs;
 }
 
@@ -50,7 +46,6 @@ export default {
       if(tabArray.length>=8) {
         tabArray = tabArray.splice(tabArray.length-8);
       }
-      localStorage.setItem('cloudManager_tabs', JSON.stringify(tabArray))
       state.tabs = new Map(tabArray);
     },
     setMenus(state,menus) {
