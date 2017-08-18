@@ -31,7 +31,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()" icon="search">搜索</el-button>
-          <el-button type="primary" @click="exportData()" icon="upload">导出</el-button>
+          <el-button type="primary" @click="exportData()" :class="'fa fa-download'"> 导出</el-button>
         </div>
       </search-dialog>
       <el-dialog v-model="detailVisible" size="large">

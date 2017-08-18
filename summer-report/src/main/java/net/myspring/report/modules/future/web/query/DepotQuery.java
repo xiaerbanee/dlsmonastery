@@ -1,7 +1,7 @@
 package net.myspring.report.modules.future.web.query;
 
 import com.google.common.collect.Lists;
-import net.myspring.future.common.query.BaseQuery;
+import net.myspring.report.common.query.BaseQuery;
 
 import java.util.List;
 

@@ -15,6 +15,16 @@ public class SimpleExcelColumn {
     private String fieldKey;
     private Object value;
 
+    public SimpleExcelColumn() {
+        this.label = "";
+    }
+
+    public SimpleExcelColumn(Workbook workbook,String label) {
+        this.label = label;
+        this.headerStyle = ExcelUtils.getCellStyleMap(workbook).get(ExcelCellStyle.HEADER.name());
+        this.cellStyle =  ExcelUtils.getCellStyleMap(workbook).get(ExcelCellStyle.DATA.name());
+}
+
     public SimpleExcelColumn(String fieldName,String label) {
         this.fieldName = fieldName;
         this.label = label;
