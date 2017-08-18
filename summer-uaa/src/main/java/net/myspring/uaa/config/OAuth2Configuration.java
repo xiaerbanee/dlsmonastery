@@ -76,6 +76,13 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
                 .accessTokenValiditySeconds(3600) // 1 hour
                 .refreshTokenValiditySeconds(2592000) // 30 days
                 .and()
+                .withClient("summer-report-service")
+                .secret("summer-report-password")
+                .authorizedGrantTypes("client_credentials", "refresh_token")
+                .scopes("server","read")
+                .accessTokenValiditySeconds(3600) // 1 hour
+                .refreshTokenValiditySeconds(2592000) // 30 days
+                .and()
                 .withClient("general-service")
                 .secret("general-password")
                 .authorizedGrantTypes("client_credentials", "refresh_token")

@@ -1,159 +1,18 @@
-package net.myspring.future.modules.basic.repository
-
-import net.myspring.future.common.repository.BaseRepository
-import net.myspring.future.modules.basic.domain.DepotShop
-import net.myspring.future.modules.basic.dto.DepotReportDto
-import net.myspring.future.modules.basic.dto.DepotShopDto
-import net.myspring.future.modules.basic.web.query.DepotShopQuery
-import net.myspring.future.modules.crm.web.query.ReportQuery
+package net.myspring.report.modules.future.repository
+import net.myspring.report.modules.future.dto.DepotReportDto
+import net.myspring.report.modules.future.web.query.ReportQuery
 import net.myspring.util.collection.CollectionUtil
-import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
-import org.springframework.data.domain.Pageable
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import java.util.*
+import org.springframework.stereotype.Component
 
-/**
- * Created by zhangyf on 2017/5/24.
- */
-interface DepotShopRepository : BaseRepository<DepotShop,String>,DepotShopRepositoryCustom {
+@Component
+class DepotShopRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
 
-}
-
-
-interface DepotShopRepositoryCustom{
-
-    fun findPage(pageable: Pageable, depotShopQuery: DepotShopQuery): Page<DepotShopDto>?
-
-    fun findFilter(depotShopQuery: DepotShopQuery): MutableList<DepotShopDto>
-
-    fun findSaleReport(reportQuery: ReportQuery):MutableList<DepotReportDto>
-
-    fun findBaokaSaleReport(reportQuery: ReportQuery):MutableList<DepotReportDto>
-
-    fun findStoreReport(reportQuery: ReportQuery):MutableList<DepotReportDto>
-
-    fun findBaokaStoreReport(reportQuery: ReportQuery):MutableList<DepotReportDto>
-    
-    fun findDto(id:String):DepotShopDto
-}
-
-class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DepotShopRepositoryCustom{
-
-    override fun findFilter(depotShopQuery: DepotShopQuery): MutableList<DepotShopDto> {
-        val sb = StringBuffer()
-        sb.append("""
-            SELECT
-                t1.id AS 'depotId',
-                t1.name as 'depotName',
-                t1.area_id areaId,
-                t1.office_id officeId,
-                t1.contator,
-                t1.mobile_phone mobilePhone,
-                t1.address address,
-                t2.*,
-                t3.name as 'pricesystemName',
-                t4.name as 'clientName',
-                t5.name as 'chainName',
-                t6.name as 'parentName',
-                group_concat(DISTINCT t7.account_id) as accountIds
-            FROM
-                crm_depot t1 left join crm_pricesystem t3 on t1.pricesystem_id=t3.id
-                left join crm_client t4 on t1.client_id=t4.id
-                left join crm_chain t5 on t1.chain_id =t5.id
-                left join crm_depot t6 on t1.parent_id=t6.id
-                left join crm_account_depot t7 on t7.depot_id=t1.id,
-                crm_depot_shop t2
-            WHERE
-                t1.enabled = 1
-            AND t2.enabled = 1
-            AND t1.depot_shop_id = t2.id
-        """)
-        if (StringUtils.isNotEmpty(depotShopQuery.name)) {
-            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.clientName)) {
-            sb.append("""  and t4.name LIKE CONCAT('%',:clientName,'%') """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.areaType)) {
-            sb.append("""  and t1.area_type =:areaType  """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.pricesystemId)) {
-            sb.append("""  and t1.pricesystem_id =:pricesystemId """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.contator)) {
-            sb.append("""  and t1.contator LIKE CONCAT('%',:contator,'%') """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.mobilePhone)) {
-            sb.append("""  and t1.mobile_phone LIKE CONCAT('%',:mobilePhone,'%') """)
-        }
-        if (depotShopQuery.specialityStore !=null) {
-            sb.append("""  and t1.speciality_store =:specialityStore """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.specialityStoreType)) {
-            sb.append("""  and t1.speciality_store_type =:specialityStoreType """)
-        }
-        if (CollectionUtil.isNotEmpty(depotShopQuery.childOfficeIds)) {
-            sb.append("""  and t1.office_id in (:childOfficeIds) """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.chainId)) {
-            sb.append("""  and t1.chain_id =:chainId """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.adPricesystemId)) {
-            sb.append("""  and t1.ad_pricesystem_id =:adPricesystemId """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.expressCompanyId)) {
-            sb.append("""  and t1.express_company_id =:expressCompanyId """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.districtId)) {
-            sb.append("""  and t1.district_id =:districtId """)
-        }
-        if (depotShopQuery.adShopBsc !=null) {
-            sb.append("""  and t1.ad_shop_bsc =:adShopBsc  """)
-        }
-        if (depotShopQuery.adShop !=null) {
-            sb.append("""  and t1.ad_shop =:adShop""")
-        }
-        if (depotShopQuery.hidden !=null) {
-            sb.append("""  and t1.is_hidden =:hidden """)
-        }
-        if (CollectionUtil.isNotEmpty(depotShopQuery.depotIdList)) {
-            sb.append("""  and t1.id  in (:depotIdList) """)
-        }
-        if (CollectionUtil.isNotEmpty(depotShopQuery.officeIdList)) {
-            sb.append("""  and t1.office_id  in (:officeIdList) """)
-        }
-        sb.append("""   group by t1.id""")
-        return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(depotShopQuery), BeanPropertyRowMapper(DepotShopDto::class.java))
-    }
-
-    override fun findDto(id: String): DepotShopDto {
-        return namedParameterJdbcTemplate.queryForObject("""
-              SELECT
-                t1.id AS 'depotId',
-                t1.name as 'depotName',
-                t1.contator,
-                t1.mobile_phone,
-                t1.address,
-                t1.office_id,
-                t2.*
-            FROM
-                crm_depot t1,
-                crm_depot_shop t2
-            WHERE
-                t1.enabled = 1
-            AND t2.enabled = 1
-            AND t1.depot_shop_id = t2.id
-            AND t2.id=:id
-          """, Collections.singletonMap("id", id), BeanPropertyRowMapper(DepotShopDto::class.java))
-    }
-
-    override fun findBaokaStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
+     fun findBaokaStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
             sb.append("""   SELECT t6.id as depotId,t6.name as 'depotName',t6.town_id as 'townId', COUNT(t1.id) AS qty,t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type,t6.district_id as 'districtId'""")
@@ -223,7 +82,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
     }
 
-    override fun findStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
+     fun findStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
             sb.append("""  SELECT t6.id as depotId,t6.name as depotName,t6.town_id as 'townId',COUNT(t1.id) AS qty ,t8.name as 'chainName',t5.name as 'productTypeName',t6.office_id as 'officeId',t6.area_id as 'areaId',t6.area_type,t6.district_id as 'districtId'""")
@@ -293,7 +152,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     }
 
 
-    override fun findBaokaSaleReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
+     fun findBaokaSaleReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
             sb.append("""  SELECT t4.id as 'depotId',t4.name as 'depotName', t4.town_id as 'townId',COUNT(t1.id) AS qty,t7.name as 'chainName',t3.name as 'productTypeName',t4.office_id as 'officeId',t4.area_id as 'areaId',t4.area_type, t4.district_id as 'districtId' """)
@@ -358,7 +217,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
     }
 
-    override fun findSaleReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
+     fun findSaleReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
             sb.append("""  SELECT t5.id as 'depotId',t5.name as 'depotName', COUNT(t1.id) AS qty,t7.name as 'chainName',t4.name as 'productTypeName',t5.town_id as 'townId',t5.office_id as 'officeId',t5.area_id as 'areaId',t5.area_type,t5.district_id as 'districtId'""")
@@ -425,92 +284,5 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
     }
 
-    override fun findPage(pageable: Pageable, depotShopQuery: DepotShopQuery): Page<DepotShopDto>? {
-        val sb = StringBuffer()
-        sb.append("""
-            SELECT
-                t1.id AS 'depotId',
-                t1.name as 'depotName',
-                t1.area_id areaId,
-                t1.office_id officeId,
-                t1.contator,
-                t1.mobile_phone mobilePhone,
-                t2.*,
-                t3.name as 'pricesystemName',
-                t5.name as 'chainName',
-                t4.name as 'clientName',
-                t6.name as 'parentName'
-            FROM
-                crm_depot t1
-                left join crm_pricesystem t3 on t1.pricesystem_id=t3.id
-                left join crm_client t4 on t1.client_id=t4.id
-                left join crm_chain t5 on t1.chain_id =t5.id
-                left join crm_depot t6 on t1.parent_id=t6.id,
-                crm_depot_shop t2
-            WHERE
-                t1.enabled = 1
-            AND t2.enabled = 1
-            AND t1.depot_shop_id = t2.id
-        """)
-        if (StringUtils.isNotEmpty(depotShopQuery.name)) {
-            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.clientName)) {
-            sb.append("""  and t4.name LIKE CONCAT('%',:clientName,'%') """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.areaType)) {
-            sb.append("""  and t1.area_type =:areaType  """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.pricesystemId)) {
-            sb.append("""  and t1.pricesystem_id =:pricesystemId """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.contator)) {
-            sb.append("""  and t1.contator LIKE CONCAT('%',:contator,'%') """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.mobilePhone)) {
-            sb.append("""  and t1.mobile_phone LIKE CONCAT('%',:mobilePhone,'%') """)
-        }
-        if (depotShopQuery.specialityStore !=null) {
-            sb.append("""  and t1.speciality_store =:specialityStore """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.specialityStoreType)) {
-            sb.append("""  and t1.speciality_store_type =:specialityStoreType """)
-        }
-        if (CollectionUtil.isNotEmpty(depotShopQuery.childOfficeIds)) {
-            sb.append("""  and t1.office_id in (:childOfficeIds)""")
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.chainId)) {
-            sb.append("""  and t1.chain_id =:chainId """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.adPricesystemId)) {
-            sb.append("""  and t1.ad_pricesystem_id =:adPricesystemId """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.expressCompanyId)) {
-            sb.append("""  and t1.express_company_id =:expressCompanyId """)
-        }
-        if (StringUtils.isNotEmpty(depotShopQuery.districtId)) {
-            sb.append("""  and t1.district_id =:districtId """)
-        }
-        if (depotShopQuery.adShopBsc !=null) {
-            sb.append("""  and t1.ad_shop_bsc =:adShopBsc  """)
-        }
-        if (depotShopQuery.adShop !=null) {
-            sb.append("""  and t1.ad_shop =:adShop""")
-        }
-        if (depotShopQuery.hidden !=null) {
-            sb.append("""  and t1.is_hidden =:hidden """)
-        }
-        if (CollectionUtil.isNotEmpty(depotShopQuery.depotIdList)) {
-            sb.append("""  and t1.id in (:depotIdList) """)
-        }
-        if (CollectionUtil.isNotEmpty(depotShopQuery.officeIdList)) {
-            sb.append("""  and t1.office_id in (:officeIdList) """)
-        }
-        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
-        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
-        val paramMap = BeanPropertySqlParameterSource(depotShopQuery)
-        val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(DepotShopDto::class.java))
-        val count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
-        return PageImpl(list,pageable,count)
-    }
+
 }
