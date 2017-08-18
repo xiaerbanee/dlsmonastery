@@ -59,7 +59,6 @@ dependencies {
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	compile group: 'com.belerweb', name: 'pinyin4j', version: '2.5.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-
 }
 
 

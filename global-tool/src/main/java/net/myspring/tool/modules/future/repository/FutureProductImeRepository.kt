@@ -233,7 +233,7 @@ class FutureProductImeRepository @Autowired constructor(val namedParameterJdbcTe
         val sb = StringBuilder()
         sb.append("""
             select
-                de.province_id as areaId,
+                de.area_id as areaId,
                 im.product_id as productId,
                 im.ime as ime,
                 im.depot_id as storeId,
@@ -258,7 +258,7 @@ class FutureProductImeRepository @Autowired constructor(val namedParameterJdbcTe
                 and de1.joint_level = '一级'
             union all
             select
-                de.province_id as areaId,
+                de.area_id as areaId,
                 im.product_id as productId,
                 im.ime as ime,
                 de.area_id as storeId,
@@ -283,7 +283,7 @@ class FutureProductImeRepository @Autowired constructor(val namedParameterJdbcTe
                 and de1.joint_level = '二级'
             union all
             select
-                de.province_id as areaId,
+                de.area_id as areaId,
                 im.product_id as productId,
                 im.ime as ime,
                 de.area_id as storeID,
