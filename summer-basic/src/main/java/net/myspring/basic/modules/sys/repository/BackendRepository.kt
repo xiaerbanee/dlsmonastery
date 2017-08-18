@@ -233,6 +233,7 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
                     t3.id as 'categoryId',
                     t3.name as 'categoryName',
                     t3.code as 'categoryCode',
+                    t3.icon as 'moduleIcon',
                     t4.id as 'menuId',
                     t4.name as 'menuName',
                     t4.code as 'menuCode',
@@ -258,10 +259,11 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
             var moduleId = StringUtils.toString(item["moduleId"]);
             var moduleName = item["moduleName"] as String;
             var moduleCode = item["moduleCode"] as String;
-            var moduleIcon = item["moduleIcon"] as String;
+            var moduleIcon = item["moduleIcon"] as String?;
             var categoryId = StringUtils.toString(item["categoryId"]);
             var categoryName = item["categoryName"] as String;
             var categoryCode = item["categoryCode"] as String;
+            var categoryIcon = item["categoryIcon"] as String?;
             var menuId = StringUtils.toString(item["menuId"]);
             var menuName = item["menuName"] as String;
             var menuCode = item["menuCode"] as String;
@@ -286,6 +288,7 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
                 menuCategoryMenuDto.id = categoryId;
                 menuCategoryMenuDto.name = categoryName;
                 menuCategoryMenuDto.code = categoryCode;
+                menuCategoryMenuDto.icon = categoryIcon;
                 backendMenuDtoMap[id]!!.backendModuleMenuDtoMap[moduleId]!!.menuCategoryMenuDtoMap.put(categoryId,menuCategoryMenuDto);
             }
             var frontendMenuDto = FrontendMenuDto();

@@ -1,5 +1,6 @@
 <template>
 	<el-row class="container">
+		<div v-title="'基础-'+account.companyName"></div>
 		<el-col :span="24" class="header">
 			<el-col :span="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
 				{{collapsed?'':sysName}}
@@ -165,6 +166,9 @@
 		top: 0px;
 		bottom: 0px;
 		width: 100%;
+		aside,.logo{
+			transition: .1s ease;
+		}
 		.header {
 			height: 60px;
 			line-height: 60px;
@@ -269,7 +273,7 @@
 				// top: 0px;
 				// bottom: 0px;
 				// left: 230px;
-				overflow-y: scroll;
+
 				padding: 20px;
 				.breadcrumb-container {
 					//margin-bottom: 15px;

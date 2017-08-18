@@ -617,7 +617,11 @@ public class GoodsOrderService {
 
     @Transactional
     public void delete(String id) {
+        GoodsOrder goodsOrder = goodsOrderRepository.findOne(id);
         goodsOrderRepository.logicDelete(id);
+        if(StringUtils.isNotBlank(goodsOrder.getExpressOrderId())){
+            expressOrderRepository.logicDelete(goodsOrder.getExpressOrderId());
+        }
     }
 
     public DepotAccountDto findShopAccountByGoodsOrderId(String goodsOrderId) {
