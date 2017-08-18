@@ -98,12 +98,8 @@ public class ShopAdController {
     @RequestMapping(value = "batchAudit")
     @PreAuthorize("hasPermission(null,'crm:shopAd:edit')")
     public RestResponse batchAudit(@RequestParam(value = "ids[]")String[] ids, Boolean pass) {
-        String message = shopAdService.batchAudit(ids,pass);
-        if(message !=null){
-            return new RestResponse("批量审批部分失败,原因："+message, ResponseCodeEnum.audited.name(),false);
-        }else{
-            return new RestResponse("批量审批成功", ResponseCodeEnum.audited.name());
-        }
+        shopAdService.batchAudit(ids,pass);
+        return new RestResponse("审批成功",ResponseCodeEnum.audited.name());
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)

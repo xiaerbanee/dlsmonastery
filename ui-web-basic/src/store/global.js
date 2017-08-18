@@ -74,6 +74,11 @@ export default {
             commit('setTabs', tabs);
         }
     },
+      closeTab({ commit, state }, tabName) {
+          var tabs = state.tabs;
+          tabs.delete(tabName);
+          commit('setTabs', tabs);
+      },
     setTabs({ commit, state }, tabs) {
       commit('setTabs', tabs);
     },
