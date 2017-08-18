@@ -17,6 +17,7 @@ public class SProductItemStocks {
     private String remark;
     private String updateTime;
     private String agentCode;
+    private String isUpload;
 
     public String getId() {
         return id;
@@ -128,5 +129,13 @@ public class SProductItemStocks {
 
     public void setAgentCode(String agentCode) {
         this.agentCode = agentCode;
+    }
+
+    public String getIsUpload() {
+        return isUpload;
+    }
+
+    public void setIsUpload(String isUpload) {
+        this.isUpload = isUpload;
     }
 }

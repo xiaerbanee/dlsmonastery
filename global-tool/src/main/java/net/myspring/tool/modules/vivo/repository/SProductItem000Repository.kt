@@ -10,14 +10,11 @@ import org.springframework.stereotype.Component
 
 @Component
 class SProductItem000Repository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
-    fun deleteByUpdateTime(dateStart:String,dateEnd:String):Int{
+    fun deleteAll():Int{
         val map = Maps.newHashMap<String,String>()
-        map.put("dateStart",dateStart)
-        map.put("dateEnd",dateEnd)
         val sb = StringBuilder()
         sb.append("""
             DELETE FROM vivo_push_productitem000
-            WHERE UpdateTime >= :dateStart AND UpdateTime < :dateEnd
         """)
         return namedParameterJdbcTemplate.update(sb.toString(),map)
     }
@@ -46,11 +43,17 @@ class SProductItem000Repository @Autowired constructor(val namedParameterJdbcTem
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sProductItem000M13e00List.toTypedArray()))
     }
 
-    fun findByAgentCodeIn(agentCodeList: MutableList<String>):MutableList<SProductItem000>{
+    fun findByIsUploadAndAgentCodeIn(agentCodeList: MutableList<String>):MutableList<SProductItem000>{
         val map = Maps.newHashMap<String,Any>()
         map.put("agentCodeList",agentCodeList)
-        val sb = "select * from vivo_push_productitem000 where AgentCode in (:agentCodeList)"
+        val sb = "select * from vivo_push_productitem000 where IsUpload = 0 and AgentCode in (:agentCodeList) LIMIT 0,2000 "
         return namedParameterJdbcTemplate.query(sb, map, BeanPropertyRowMapper(SProductItem000::class.java))
+    }
+
+    fun updateIsUploadById(idList:MutableList<String>):Int{
+        val map = Maps.newHashMap<String,Any>()
+        map.put("idList",idList)
+        return namedParameterJdbcTemplate.update("update vivo_push_productitem000 set IsUpload = 1 where id in (:idList)",map)
     }
 
 }
