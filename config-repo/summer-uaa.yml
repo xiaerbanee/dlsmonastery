@@ -1,7 +1,7 @@
 spring:
   session:
     store-type: redis
-    timeout: 5
+    timeout: 120
 management:
   security:
     enabled: false

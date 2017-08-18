@@ -422,8 +422,6 @@ export default {
     length: "panjang",
     width: "lebar",
     qty: "kuantitas",
-    thickness:"厚度",
-    area:"面积",
     content: "konten",
     specialArea: "是否带logo",
     attachment: "lampiran",
@@ -440,9 +438,7 @@ export default {
     inputLegalValue: "silahkan masukkan angka yang valid",
     transverseDimensions:"横向尺寸,默认单位:米",
     longitudinalDimension:"纵向尺寸,默认单位:米",
-    thicknessDimension:"厚度，默认单位：米",
     placeRemarks:"说明具体位置、使用范围、使用周期【例1：玻璃贴，墙体玻璃下方；例2：喷绘，舞台背景，活动用等】",
-    placeRemarksForDoor:"例一：纯 LOGO 画面；例二：LOGO + 代言人画面；例三：纯代言人画面",
   },
   shopAdList: {
     shopAdList: "formulir iklan",

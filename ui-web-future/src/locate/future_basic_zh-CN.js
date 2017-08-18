@@ -512,7 +512,6 @@ export default {
     filter: "过滤",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
-    doorType:"是否为大牌门头",
   },
   shopAdTypeList: {
     shopAdTypeList: "广告类型",

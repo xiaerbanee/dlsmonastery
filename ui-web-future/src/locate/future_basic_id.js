@@ -510,8 +510,7 @@ export default {
     save: "simpan",
     filter: "saring",
     prerequisiteMessage: "Informasi yang diperlukan",
-    inputLegalValue: "silahkan masukkan angka yang valid",
-    doorType:"是否为大牌门头",
+    inputLegalValue: "silahkan masukkan angka yang valid"
   },
   shopAdTypeList: {
     shopAdTypeList: "jenis iklan",

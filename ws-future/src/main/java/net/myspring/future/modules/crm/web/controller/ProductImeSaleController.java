@@ -13,6 +13,7 @@ import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
 import net.myspring.future.modules.crm.service.ProductImeSaleService;
 import net.myspring.future.modules.crm.web.form.ProductImeSaleBackForm;
 import net.myspring.future.modules.crm.web.form.ProductImeSaleForm;
+import net.myspring.future.modules.crm.web.form.ProductImeSaleQtyForm;
 import net.myspring.future.modules.crm.web.query.ProductImeSaleQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelView;
@@ -139,5 +140,11 @@ public class ProductImeSaleController {
     @RequestMapping(value="getSaleBackForm")
     public  ProductImeSaleBackForm getSaleBackForm(ProductImeSaleBackForm productImeSaleBackForm) {
         return productImeSaleBackForm;
+    }
+
+    //vivo延保系统调用(获取该导购日销量和月销量)
+    @RequestMapping(value = "getSaleQty")
+    public ProductImeSaleQtyForm getSaleQty(){
+        return productImeSaleService.getSaleQty();
     }
 }

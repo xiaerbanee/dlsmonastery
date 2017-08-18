@@ -12,6 +12,8 @@ import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
+import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -83,15 +85,11 @@ public class EmployeeService {
         Employee employee;
         Account account;
         AccountForm accountForm=employeeForm.getAccountForm();
-        if(CollectionUtil.isEmpty(accountForm.getOfficeIdList())||accountForm.getOfficeIdList().size()==1){
-            accountForm.setOfficeIds(accountForm.getOfficeId());
-        }
-        if(CollectionUtil.isEmpty(accountForm.getPositionIdList())||accountForm.getPositionIdList().size()==1){
-            accountForm.setPositionIds(accountForm.getPositionId());
-        }
+        accountForm.setOfficeIds(CharConstant.COMMA+StringUtils.join(accountForm.getOfficeIdList(),CharConstant.COMMA)+CharConstant.COMMA);
         if(employeeForm.isCreate()) {
             employee=BeanUtil.map(employeeForm,Employee.class);
             employeeRepository.save(employee);
+            accountForm.setPositionIds(accountForm.getPositionId());
             accountForm.setPassword(StringUtils.getEncryptPassword("123456"));
             account = BeanUtil.map(accountForm, Account.class);
             account.setEmployeeId(employee.getId());
@@ -166,5 +164,17 @@ public class EmployeeService {
 
     public List<EmployeeDto> findEmployeeInfo(){
         return employeeRepository.findEmployeeInfo();
+    }
+
+    public EmployeeDto checkEmployee(EmployeeQuery employeeQuery){
+        if (StringUtils.isBlank(employeeQuery.getMobilePhone())){
+            throw new ServiceException("未获得手机号");
+        }
+        List<EmployeeDto> employeeDtos = employeeRepository.findFilter(employeeQuery);
+        if(CollectionUtil.isEmpty(employeeDtos)){
+            throw new ServiceException("未找到该导购");
+        }else {
+            return employeeDtos.get(0);
+        }
     }
 }

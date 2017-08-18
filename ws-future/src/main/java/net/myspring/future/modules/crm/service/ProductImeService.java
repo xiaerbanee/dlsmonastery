@@ -452,6 +452,23 @@ public class ProductImeService {
         return productImeRepository.findAll(ids);
     }
 
-
+    public String checkIme(String ime){
+        String message;
+        ProductIme productIme = productImeRepository.findByEnabledIsTrueAndIme(ime);
+        if(productIme == null){
+            message = "该串码不存在";
+            return message;
+        }
+        if(StringUtils.isNotBlank(productIme.getProductImeSaleId())){
+            message = "该串码已核销";
+            return message;
+        }
+        Product product = productRepository.findOne(productIme.getProductId());
+        ProductImeDto productImeDto = BeanUtil.map(productIme,ProductImeDto.class);
+        productImeDto.setProductTypeId(product.getProductTypeId());
+        cacheUtils.initCacheInput(productImeDto);
+        message = productImeDto.getProductTypeName()+CharConstant.COMMA+productImeDto.getProductName()+CharConstant.COMMA+"未核销";
+        return message;
+    }
 
 }

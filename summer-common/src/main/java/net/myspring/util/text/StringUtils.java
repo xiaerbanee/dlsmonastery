@@ -187,4 +187,25 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}
 	}
 
+	/**
+	 * 将字节数组转换为16进制形式
+	 * @param input
+	 * @return
+	 */
+	public static String toHex(byte[] input) {
+		if(input == null)
+			return null;
+		StringBuilder output = new StringBuilder(input.length * 2);
+		for(int i = 0; i < input.length; i++){
+			int current = input[i] & 0xff;
+			//小于16的需要补充一位(共2位)
+			if(current < 16) {
+				output.append('0');
+			}
+
+			output.append(Integer.toString(current, 16));
+		}
+
+		return output.toString();
+	}
 }

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>OA SYSTEM</title>
+<link rel="stylesheet" type="text/css" href="./static/sweetalert/dist/sweetalert.css">
+<link rel="stylesheet" type="text/css" href="./static/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="./static/css/common.css">
+<link rel="stylesheet" type="text/css" href="./static/fullcalendar-3.4.0/fullcalendar.min.css">
+<script type="text/javascript" src='./static/jquery-2.1.4/jquery.min.js'></script>
+<script type="text/javascript" src='./static/sweetalert/dist/sweetalert.min.js'></script>
+<script type="text/javascript" src="./static/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src='./static/fullcalendar-3.4.0/lib/moment.min.js'></script>
+<script type="text/javascript" src='./static/fullcalendar-3.4.0/fullcalendar.min.js'></script>
+<script type="text/javascript" src='./static/fullcalendar-3.4.0/locale/zh-cn.js'></script>
+<style>
+.container.outer{
+	display: block;
+	padding: 0;
+}
+.navbar {
+	border-radius: 0;
+	min-height: 60px;
+	background: #20a0ff;
+	line-height: 60px;
+	margin-bottom: 0;
+	border: none;
+}
+.navbar-header{
+	padding-left: 15px;
+}
+.navbar .navbar-brand a{
+	color:#fff;
+	font-size: 26px;
+}
+.loginName{
+	padding-left: 15px;
+}
+.navbar-nav{
+	margin-left: 20px;
+}
+.navbar-nav.menus li a{
+	padding-bottom: 10px;
+	min-height:30px;
+	line-height:30px; 
+	font-size: 18px;
+	transition: .2s linear;
+	color:#fff!important;
+}
+.navbar-nav.menus li a:hover{
+	color:#184E7E!important;
+	border-bottom: 5px solid #184E7E;
+}
+.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover{
+	background: transparent;
+}
+.userinfo{
+	margin-right: 20px;
+	color:#fff;
+}
+.navbar-brand{
+	line-height: 35px;
+}
+.avatar img{
+	width: 30px;
+	height: 30px;
+	border-radius: 30px;
+}
+.main,.inner{
+	width: 90%;
+	padding: 0;
+}
+.content{
+	padding-left: 15px;
+	padding-right: 45px;
+	padding-top: 60px;
+}
+/*.aside,.content,.personal{
+	height: 100vh;
+}*/
+.daily{
+	min-height: 69vh;
+	margin-bottom: 25px;
+	padding-right: 40px;
+}
+.daily{
+}
+.personal-info, .broadcast{
+	border-color: #20a0ff;
+}
+.personal-info>.panel-heading,.broadcast>.panel-heading{
+	background-color: #20a0ff;
+	border-color: #20a0ff;
+}
+
+.personal-info{
+	margin-bottom: 35px;
+}
+.list-group-item{
+	border:none;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 0;
+}
+.panel-heading{
+	height: 70px;
+	line-height: 50px;
+	background-color: #1f2d3d;
+}
+.badge{
+	background: #d9534f;
+}
+</style>
+</head>
+<body>
+	<div class="container outer" style="background: white">
+		<!-- navbar -->
+		<nav class="navbar navbar-inverse">
+			<div class="container-fluid inner">
+				<div class="navbar-header">
+					<div class="navbar-brand">
+						<a href="#"></a>
+					</div>
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+				        <span class="icon-bar"></span>
+				        <span class="icon-bar"></span>
+				        <span class="icon-bar"></span>
+			     	</button>
+				</div>
+				 
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav menus">
+				       
+			        </ul>
+					<ul class="nav navbar-nav navbar-right userinfo">
+						<li class="loginName"></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle avatar" data-toggle="dropdown">
+								<img src="">
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="#" class="btn-logout">注销</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<!-- main content -->
+		<div class="container main">
+			<div class="row">
+				<!-- contents -->
+				<div class="content col-md-12 col-sm-12 col-xs-12">
+				
+					<!-- daily and personal info here -->
+					<div class="row">
+						<!-- daily here -->
+						<div class="col-md-9">
+							<div class="daily" id='daily'>
+								
+							</div>
+						</div>
+						<!-- personal info here -->
+						<div class="col-md-3">
+							<div class="personal">
+								<!-- personal info -->
+								<div class="panel panel-primary personal-info">
+									<div class="panel-heading">
+										个人信息
+									</div>
+									<div class="panel-body">
+										<div class="list-group">
+											<div class="list-group-item company">
+												<div class="row">
+													<div class="col-md-6 col-sm-6 col-xs-6">公司:</div>
+													<div class="col-md-6 col-sm-6 col-xs-6"></div>
+												</div>
+											</div>
+											<div class="list-group-item name">
+												<div class="row">
+													<div class="col-md-6 col-sm-6 col-xs-6">姓名:</div>
+													<div class="col-md-6 col-sm-6 col-xs-6"></div>
+												</div>
+											</div>
+											<div class="list-group-item officeName">
+												<div class="row">
+													<div class="col-md-6 col-sm-6 col-xs-6">部门:</div>
+													<div class="col-md-6 col-sm-6 col-xs-6"></div>
+												</div>
+											</div>
+											<div class="list-group-item position">
+												<div class="row">
+													<div class="col-md-6 col-sm-6 col-xs-6">岗位:</div>
+													<div class="col-md-6 col-sm-6 col-xs-6"></div>
+												</div>
+											</div>
+											<div class="list-group-item leader">
+												<div class="row">
+													<div class="col-md-6 col-sm-6 col-xs-6">上级:</div>
+													<div class="col-md-6 col-sm-6 col-xs-6"></div>
+												</div>
+											</div>
+											<div class="list-group-item regularDate">
+												<div class="row">
+													<div class="col-md-6 col-sm-6 col-xs-6">转正日期:</div>
+													<div class="col-md-6 col-sm-6 col-xs-6"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- broadcast -->
+								<div class="panel panel-primary broadcast">
+									<div class="panel-heading">
+										通知中心
+									</div>
+									<div class="panel-body">
+										<div class="list-group">
+											<div class="list-group-item">
+												<div class="row">
+													<div class="col-md-6 col-sm-6 col-xs-6">
+														待批考勤	
+													</div>
+													<div class="col-md-6 col-sm-6 col-xs-6">
+														<a href="#"><span class="badge dutySize"></span></a>
+													</div>
+												</div>
+											</div>
+											<div class="list-group-item">
+												<div class="row">
+													<div class="col-md-6 col-sm-6 col-xs-6">
+														待批文件	
+													</div>
+													<div class="col-md-6 col-sm-6 col-xs-6">
+														<a href="#"><span class="badge auditFileSize"></span></a>
+													</div>
+												</div>
+											</div>
+											<div class="list-group-item">
+												<div class="row">
+													<div class="col-md-6 col-sm-6 col-xs-6">
+														可用调休	
+													</div>
+													<div class="col-md-6 col-sm-6 col-xs-6">
+														<a href="#"><span class="badge overtimeHour"></span></a>
+													</div>
+												</div>
+											</div>
+											<div class="list-group-item">
+												<div class="row">
+													<div class="col-md-6 col-sm-6 col-xs-6">
+														可用年假调休	
+													</div>
+													<div class="col-md-6 col-sm-6 col-xs-6">
+														<a href="#"><span class="badge annualHour"></span></a>
+													</div>
+												</div>
+											</div>
+											<div class="list-group-item">
+												<div class="row">
+													<div class="col-md-6 col-sm-6 col-xs-6">
+														即将过期	
+													</div>
+													<div class="col-md-6 col-sm-6 col-xs-6">
+														<a href="#"><span class="badge expiredHour"></span></a>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+$(function(){
+    //check login
+    $.get('/user/isLogin', (res) => {
+        if(!res){
+        	location.href = 'login.html';
+    	}else{
+			//get duties
+            $.get('/api/basic/hr/account/home', (res) => {
+                $('.dutySize').text(`${res.dutySize}条`);
+                $('.auditFileSize').text(`${res.auditFileSize}条`);
+                $('.overtimeHour').text(`${res.overtimeHour}小时`);
+                $('.annualHour').text(`${res.annualHour}小时`);
+                $('.expiredHour').text(`${res.expiredHour}小时`);
+                localStorage.setItem('account',JSON.stringify(res.account))
+                //get infos
+                let accountInfo = JSON.parse(localStorage.getItem('account'));
+                //set infos
+                $('.company div').eq(2).text(accountInfo.companyName);
+                $('.name div').eq(2).text(accountInfo.employeeName);
+                $('.officeName div').eq(2).text(accountInfo.officeName);
+                $('.position div').eq(2).text(accountInfo.positionName)
+                $('.leader div').eq(2).text(accountInfo.leaderName)
+                $('.regularDate div').eq(2).text(accountInfo.regularDate)
+                //set company name
+                $('.navbar-brand a').text(accountInfo.companyName);
+                //set username
+                $('.loginName').text(accountInfo.loginName)
+            });
+            //duty state graph
+            $('#daily').fullCalendar({
+                // put your options and callbacks here
+                events:{
+                    url:'/api/basic/hr/duty/events',
+                    method:'GET'
+                },
+                height:730,
+                textColor:'white',
+                firstDay:0,
+                moreClick(day, events, jsEvent) {
+                }
+            })
+		}
+    });
+	//logout
+	$('.btn-logout').on('click',() => {
+		swal({
+		  title: "确认注销吗？",
+		  text: "",
+		  type: "warning",
+		  showCancelButton: true,
+		  confirmButtonColor: "#DD6B55",
+		  confirmButtonText: "确认!",
+		  cancelButtonText: "取消!",
+		  closeOnConfirm: false,
+		},
+		function(isConfirm){
+		  if (isConfirm) {
+			 	$.post('/user/logout', (res) => {
+			 		if(res){
+			 			$.post('/logout',(res) => {
+			 				localStorage.removeItem('account');
+							location.reload();
+						});
+			 		}	
+			 	});
+		 }
+		});
+	})
+	//check out the menus
+	getMenus();
+})
+function getMenus(){
+	let menus = JSON.parse(localStorage.getItem('menus'));
+	let path = '';
+	let name = '';
+	menus.forEach( (item) => {
+		name = item.name;
+		switch(item.code){
+			case 'basicManager':
+				path = '';
+				break;
+			case 'businessManager':
+				path = '';
+				break;
+			case 'factoryManager':
+				path = '';
+				break;
+			case 'cloudManager':
+				path = '/cloud';
+				break;
+		}
+		let tag = `<li class='moduler'><a href='${path}' target="_blank">${name}</a></li>`;
+		$('.menus').append(tag)
+	})
+}
+</script>
+</html>

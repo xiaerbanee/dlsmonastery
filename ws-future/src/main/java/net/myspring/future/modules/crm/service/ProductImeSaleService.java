@@ -21,6 +21,7 @@ import net.myspring.future.modules.crm.repository.ProductImeSaleRepository;
 import net.myspring.future.modules.crm.web.form.ProductImeSaleBackForm;
 import net.myspring.future.modules.crm.web.form.ProductImeSaleDetailForm;
 import net.myspring.future.modules.crm.web.form.ProductImeSaleForm;
+import net.myspring.future.modules.crm.web.form.ProductImeSaleQtyForm;
 import net.myspring.future.modules.crm.web.query.ProductImeSaleQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
@@ -28,6 +29,7 @@ import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateTimeUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -417,5 +419,17 @@ public class ProductImeSaleService {
         }catch(ServiceException e){
             return e.getMessage();
         }
+    }
+
+    public ProductImeSaleQtyForm getSaleQty(){
+        ProductImeSaleQtyForm productImeSaleQtyForm = new ProductImeSaleQtyForm();
+        LocalDate nowDay = LocalDate.now();
+        LocalDate nextDay = nowDay.plusDays(1);
+        LocalDate startMonth = LocalDateTimeUtils.getFirstDayOfMonth(nowDay.atStartOfDay()).toLocalDate();
+        Integer daySaleQty = productImeSaleRepository.findSaleQty(nowDay,nextDay,RequestUtils.getEmployeeId());
+        Integer monthSaleQty = productImeSaleRepository.findSaleQty(startMonth,nextDay,RequestUtils.getEmployeeId());
+        productImeSaleQtyForm.setDaySaleQty(daySaleQty);
+        productImeSaleQtyForm.setMonthSaleQty(monthSaleQty);
+        return productImeSaleQtyForm;
     }
 }
