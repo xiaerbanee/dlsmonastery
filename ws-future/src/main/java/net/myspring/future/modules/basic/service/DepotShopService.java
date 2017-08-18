@@ -213,6 +213,10 @@ public class DepotShopService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"clientName","金蝶名称"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"areaName","办事处"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"officeName","机构"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"createdByName","创建人"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"createdDate","创建时间"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"lastModifiedByName","最后修改人"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"lastModifiedDate","最后修改时间"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"areaType","地区属性"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"pricesystemName","价格体系"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"chainName","连锁体系"));

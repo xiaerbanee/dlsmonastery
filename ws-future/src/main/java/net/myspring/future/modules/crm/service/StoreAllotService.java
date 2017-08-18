@@ -334,7 +334,11 @@ public class StoreAllotService {
 
     @Transactional
     public void delete(String id) {
+        StoreAllot storeAllot = storeAllotRepository.findOne(id);
         storeAllotRepository.logicDelete(id);
+        if(StringUtils.isNotBlank(storeAllot.getExpressOrderId())){
+            expressOrderRepository.logicDelete(storeAllot.getExpressOrderId());
+        }
     }
 
     public List<StoreAllotDetailSimpleDto> findDetailListForCommonAllot(String fromStoreId) {
