@@ -2,7 +2,7 @@
   <div>
     <head-tab active="kingdeeBookForm"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" style="margin:20px;width:40%;min-width:320px;">
         <el-form-item label="账套" prop="name">
           <el-input v-model="inputForm.name"></el-input>
         </el-form-item>

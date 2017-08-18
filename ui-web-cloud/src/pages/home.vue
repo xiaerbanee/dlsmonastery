@@ -303,11 +303,16 @@
 		.el-menu-item{
 			color:#fff;
 		}
-		.el-menu-item:hover{
+		.el-menu-item:hover,.el-menu-item.is-active{
 			background: none;
 			color:#184E7E;
 			border-bottom: 5px solid #184E7E;
 		}
+		.el-menu-item.is-active{
+			color:#184E7E;
+			border-bottom: none;
+		}
+
 	}
 
 </style>
