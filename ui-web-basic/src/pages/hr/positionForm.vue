@@ -74,7 +74,7 @@
               this.$message(response.data.message);
               this.submitDisabled = false;
               if(!this.isCreate){
-                this.$router.push({name:'positionList',query:util.getQuery("positionList"), params:{_closeFrom:true}})
+                  util.closeAndBackToPage(this.$router,"positionList")
               }else {
                 Object.assign(this.$data, this.getData());
                 this.initPage();

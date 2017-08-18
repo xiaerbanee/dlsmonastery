@@ -122,7 +122,7 @@
               if(response.data.success){
                 this.submitDisabled = false;
                 if(!this.isCreate){
-                  this.$router.push({name:'accountList',query:util.getQuery("accountList"), params:{_closeFrom:true}})
+                    util.closeAndBackToPage(this.$router,"accountList")
                 }else {
                   Object.assign(this.$data, this.getData());
                   this.initPage();

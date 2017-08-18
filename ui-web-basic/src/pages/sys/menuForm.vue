@@ -76,7 +76,7 @@
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }else{
-                  this.$router.push({name:'menuList',query:util.getQuery("menuList"), params:{_closeFrom:true}})
+                    util.closeAndBackToPage(this.$router,"menuList")
                 }
               }).catch(function () {
                 that.submitDisabled = false;

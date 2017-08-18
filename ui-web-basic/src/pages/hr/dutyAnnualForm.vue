@@ -63,7 +63,7 @@
               }
               if(!this.isCreate) {
                 this.submitDisabled = false;
-                this.$router.push({name: 'dutyAnnualList', query: util.getQuery("dutyAnnualList")})
+                  util.closeAndBackToPage(this.$router,"dutyAnnualList")
               } else{
                 Object.assign(this.$data, this.getData())
                 this.initPage();

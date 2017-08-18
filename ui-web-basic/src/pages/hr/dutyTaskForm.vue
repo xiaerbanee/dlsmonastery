@@ -182,7 +182,7 @@
             axios.post('/api/basic/hr/duty/audit',qs.stringify(this.submitData)).then((response)=> {
               if(response.data.success){
                 this.$message(response.data.message);
-                this.$router.push({name:'dutyTaskList',query:util.getQuery("dutyTaskList"), params:{_closeFrom:true}})
+                  util.closeAndBackToPage(this.$router,"dutyTaskList")
               }else {
                 this.$message.error(response.data.message);
               }

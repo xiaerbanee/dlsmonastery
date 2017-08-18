@@ -52,7 +52,7 @@
             axios.post('/api/basic/hr/account/saveAccountPosition',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
               this.submitDisabled = false;
-              this.$router.push({name:'accountList',query:util.getQuery("accountList"), params:{_closeFrom:true}})
+                util.closeAndBackToPage(this.$router,"accountList")
             }).catch( ()=> {
               that.submitDisabled = false;
             });

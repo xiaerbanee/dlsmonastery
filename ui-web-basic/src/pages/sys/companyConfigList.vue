@@ -67,7 +67,6 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("companyConfigList",submitData);
         axios.get('/api/basic/sys/companyConfig?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -102,7 +101,6 @@
       that.pageHeight = 0.74*window.innerHeight;
       this.initPromise = axios.get('/api/basic/sys/companyConfig/getQuery').then((response) =>{
         that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

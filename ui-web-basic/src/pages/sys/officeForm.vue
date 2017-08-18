@@ -97,7 +97,7 @@
                   Object.assign(this.$data, this.getData());
                   this.initPage();
                 }else {
-                  this.$router.push({name: 'officeList', query: util.getQuery("officeList"), params:{_closeFrom:true}})
+                    util.closeAndBackToPage(this.$router,"officeList")
                 }
               }else {
                 that.submitDisabled = false;

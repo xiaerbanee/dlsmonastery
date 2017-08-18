@@ -53,7 +53,7 @@
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }else {
-                  util.closeAndBackToPage(this.$router,'carrierOrderList')
+                  util.closeAndBackToPage(this.$router,'carrierOrderList');
                 }
               }else {
                 that.submitDisabled = false;

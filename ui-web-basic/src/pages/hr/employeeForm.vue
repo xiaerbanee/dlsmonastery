@@ -184,7 +184,7 @@
                     this.$message(response.data.message);
                     if(!this.isCreate){
                       this.submitDisabled = false;
-                      this.$router.push({name:'employeeList',query:util.getQuery("employeeList"), params:{_closeFrom:true}})
+                        util.closeAndBackToPage(this.$router,"employeeList")
                     } else {
                       Object.assign(this.$data, this.getData());
                       this.initPage();

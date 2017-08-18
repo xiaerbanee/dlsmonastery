@@ -37,7 +37,7 @@
 					<template v-for="(module,i) in backend.backendModuleList" v-if="module.code == activeModule">
 						<template v-for="(item,index) in module.menuCategoryList">
 							<el-submenu :index="index+''">
-								<template slot="title"><i :class="item.icon"></i>{{item.name}}</template>
+								<template slot="title"><i :class="'fa fa-'+module.icon"></i>{{item.name}}</template>
 								<el-menu-item v-for="(menu,index) in item.menuList" :index="menu.code" :key="menu.code" :data-code="menu.code" :class="code === menu.code?'is-active':''"   @click="jump(menu,$event)">{{menu.name}}</el-menu-item>
 							</el-submenu>
 						</template>
@@ -48,7 +48,7 @@
 					<template v-for="modules in backend.backendModuleList" v-if="modules.code == activeModule">
 						<li v-for="(module,i) in modules.menuCategoryList"  class="el-submenu item">
 							<template >
-								<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(i,true)" @mouseout="showMenu(i,false)"><i :class="module.icon"></i></div>
+								<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(i,true)" @mouseout="showMenu(i,false)"><i :class="'fa fa-'+module.icon"></i></div>
 								<ul class="el-menu submenu" :class="'submenu-hook-'+i" @mouseover="showMenu(i,true)" @mouseout="showMenu(i,false)">
 									<li v-for="menu in module.menuList"  :key="menu.code" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==menu.path?'is-active':''" @click="$router.push({name:menu.code})">{{menu.name}}</li>
 								</ul>
@@ -87,7 +87,8 @@
 				sysName:'BASIC',
 				collapsed:true,
 				sysUserName: '',
-				sysUserAvatar: img
+				sysUserAvatar: img,
+                clazz:"fa fa-"+module.icon
 			}
 		},computed: mapState({
             account: state => state.global.account,

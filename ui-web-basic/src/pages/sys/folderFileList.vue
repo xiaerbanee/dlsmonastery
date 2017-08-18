@@ -53,7 +53,6 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("folderFileList",submitData);
         axios.get('/api/general/sys/folderFile?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -75,7 +74,6 @@
       that.pageHeight = 0.74*window.innerHeight;
       this.initPromise = axios.get('/api/general/sys/folderFile/getQuery').then((response) =>{
         that.formData=response.data;
-      util.copyValue(that.$route.query,that.formData);
       that.pageRequest();
     });
     },activated(){
