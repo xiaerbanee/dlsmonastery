@@ -611,17 +611,14 @@ public class VivoPushService {
     @LocalDataSource
     @Transactional
     public List<SProductItem000> getStoreData(){
-        logger.info("获取渠道库存数据开始");
         List<String> agentCodeList = getAgentCodeList();
         List<SProductItem000> sProductItem000List = sProductItem000Repository.findByIsUploadAndAgentCodeIn(agentCodeList);
-        logger.info("获取渠道库存数据成功");
         return sProductItem000List;
     }
 
     @Transactional
     @FactoryDataSource
     public void pushStoreDataToFactory(int count,List<SProductItem000> sProductItem000List){
-        logger.info("上抛渠道库存数据开始");
         List<String> agentCodeList = getAgentCodeList();
         for (String agentCode : agentCodeList){
 
@@ -639,17 +636,13 @@ public class VivoPushService {
             }
             sProductItem000Repository.batchSaveToFactory(agentCode,sProductItem000List);
         }
-        logger.info("上抛渠道库存数据开始");
-
     }
 
     @LocalDataSource
     @Transactional
     public void updateStoreData(List<SProductItem000> sProductItem000List){
-        logger.info("更新已上抛渠道库存数据开始");
         List<String> idList = CollectionUtil.extractToList(sProductItem000List,"id");
         sProductItem000Repository.updateIsUploadById(idList);
-        logger.info("更新已上抛渠道库存数据开始");
     }
 
     private List<String> getAgentCodeList(){

@@ -98,6 +98,7 @@ public class VivoPushController {
                 vivoPushService.updateStoreData(sProductItem000List);
                 count += sProductItem000List.size();
             }
+            logger.info("共计上抛"+count+"条抛渠道库存明细数据");
         }catch (Exception e){
             e.printStackTrace();
             return "数据上抛失败";
