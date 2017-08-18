@@ -75,7 +75,7 @@ public class DepotShopController {
 
 
     @RequestMapping(value = "save")
-    public RestResponse list(DepotShopForm depotShopForm){
+    public RestResponse save(DepotShopForm depotShopForm){
         depotShopService.save(depotShopForm);
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }

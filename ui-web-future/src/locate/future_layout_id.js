@@ -492,6 +492,7 @@ export default {
     content: "konten",
     specialArea: "是否带logo",
     remarks: "keterangan",
+    status:"状态",
     attachment: "lampiran",
     nodeName: "nama,",
     auditMan: "orang pemeriksaan",
