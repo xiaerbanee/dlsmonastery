@@ -38,7 +38,7 @@
 					<template v-for="(module,i) in backend.backendModuleList" v-if="module.code == activeModule">
 						<template v-for="(item,index) in module.menuCategoryList">
 							<el-submenu :index="index+''">
-								<template slot="title"><i :class="'fa fa-'+module.icon"></i>{{item.name}}</template>
+								<template slot="title"><i :class="'fa fa-'+item.icon"></i>{{item.name}}</template>
 								<el-menu-item v-for="(menu,index) in item.menuList" :index="menu.code" :key="menu.code" :data-code="menu.code" :class="code === menu.code?'is-active':''"   @click="jump(menu,$event)">{{menu.name}}</el-menu-item>
 							</el-submenu>
 						</template>

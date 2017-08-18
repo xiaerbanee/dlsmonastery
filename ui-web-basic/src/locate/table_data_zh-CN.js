@@ -178,6 +178,7 @@ export default {
       accountChangeList: "员工调整",
       accountForm: "账户管理编辑",
       accountList: "账户管理",
+        accountPositionForm:"功能岗位编辑",
       accountTaskList: "待办事项",
       auditFileDetail: "文件审批详细",
       auditFileForm: "文件审批编辑",
