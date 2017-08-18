@@ -477,7 +477,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append("""  and t1.speciality_store_type =:specialityStoreType """)
         }
         if (CollectionUtil.isNotEmpty(depotShopQuery.childOfficeIds)) {
-            sb.append("""  and t1.office_id in (:childOfficeIds) """)
+            sb.append("""  and t1.office_id in (:childOfficeIds)""")
         }
         if (StringUtils.isNotEmpty(depotShopQuery.chainId)) {
             sb.append("""  and t1.chain_id =:chainId """)

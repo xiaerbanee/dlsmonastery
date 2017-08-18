@@ -17,9 +17,18 @@ public class MenuCategoryMenuDto {
     private String id;
     private String code;
     private String name;
+    private String icon;
     private List<FrontendMenuDto> menuList= Lists.newArrayList();
     @JsonIgnore
     private Map<String,FrontendMenuDto> frontendMenuDtoMap = Maps.newTreeMap();
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 
     public String getCode() {
         return code;

@@ -15,6 +15,7 @@ public class MenuCategoryDto extends DataDto<MenuCategory> {
     private String name;
     private Integer sort;
     private String code;
+    private String icon;
     private String backendModuleId;
     @CacheInput(inputKey = "backendModules",inputInstance = "backendModuleId",outputInstance = "code")
     private String backendModuleCode;
@@ -22,6 +23,14 @@ public class MenuCategoryDto extends DataDto<MenuCategory> {
     private String backendModuleName;
     private List<Menu> menuList = Lists.newArrayList();
     private List<String> menuIdList = Lists.newArrayList();
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 
     public String getName() {
         return name;

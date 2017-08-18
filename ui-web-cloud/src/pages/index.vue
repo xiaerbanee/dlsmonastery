@@ -1,7 +1,7 @@
 <template>
     <div>
         <head-tab active="index"></head-tab>
-        <el-row>
+        <el-row :gutter="20">
             <el-col :span="16">
                 <full-calendar class="test-fc"  first-day='0' lang="zh"  @eventClick="eventClick" @dayClick="dayClick" @moreClick="moreClick">
                     <template slot="fc-event-card" scope="row">
@@ -59,7 +59,7 @@
         font-size: 14px;
     }
 
-    .item {
+    .text.item {
         padding: 18px 0;
     }
     .clearfix:before,
@@ -71,8 +71,8 @@
         clear: both
     }
     .box-card {
-        width: 480px;
-        margin: 20px;
+        width: 100%;
+        margin-top: 50px;
     }
 </style>
 

@@ -12,8 +12,16 @@ public class MenuCategory extends DataEntity<MenuCategory> {
     private Integer sort;
     private Integer version = 0;
     private String code;
+    private String icon;
     private String backendModuleId;
 
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 
     public String getName() {
         return name;
