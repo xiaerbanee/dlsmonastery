@@ -18,6 +18,15 @@
             <el-form-item >
               <el-button  type="primary" @click.native="searchImeStr">{{$t('productImeSaleForm.search')}}</el-button>
               <el-button  type="primary" @click.native="reset">{{$t('productImeSaleForm.reset')}}</el-button>
+              <el-tooltip placement="top" effect="light">
+                <div slot="content">
+                  核销的权限控制有两部分组成：<br/>
+                  一是串码可以核销的门店。对于普通门店，串码只能核销在串码所在门店，对于连锁，串码可以核销在连锁体系内的各门店。<br/>
+                  二是操作员的门店权限。<br/>
+                  串码可以核销的门店由以上两个条件限制<br/>
+                  界面的核销门店字段不填写时，系统会根据权限自动判断串码要核销在哪个门店，如果判断不了，则报错。</div>
+                <el-button type="text">说明</el-button>
+              </el-tooltip>
             </el-form-item>
           </el-col>
           <div v-if="searched">
@@ -102,8 +111,6 @@
           productQtyList:[],
           rules: {
             imeStr: [{ required: true, message: this.$t('productImeSaleForm.prerequisiteMessage')}],
-            saleShopId: [{ required: true, message: this.$t('productImeSaleForm.prerequisiteMessage')}],
-
           },
         }
       },

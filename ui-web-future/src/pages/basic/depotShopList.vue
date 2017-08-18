@@ -10,7 +10,7 @@
         <el-button type="primary" @click="itemMerge" icon="setting" v-permit="'crm:depotShop:businessEdit'">门店合并</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('dutyTripList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('depotShopList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="12">
@@ -24,7 +24,7 @@
                 <dict-map-select  v-model="formData.areaType" category="门店_地区属性"></dict-map-select>
               </el-form-item>
               <el-form-item label="价格体系" >
-                <el-select v-model="formData.pricesystemId" filterable clearable :placeholder="$t('dictEnumList.inputKey')">
+                <el-select v-model="formData.pricesystemId" filterable clearable :placeholder="$t('depotShopList.inputKey')">
                   <el-option v-for="pricesystem in formData.extra.pricesystemList" :key="pricesystem.id" :label="pricesystem.name" :value="pricesystem.id"></el-option>
                 </el-select>
               </el-form-item>
@@ -46,12 +46,12 @@
                 <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
               <el-form-item label="连锁体系">
-                <el-select v-model="formData.chainId" filterable clearable :placeholder="$t('dictEnumList.inputKey')">
+                <el-select v-model="formData.chainId" filterable clearable :placeholder="$t('depotShopList.inputKey')">
                   <el-option v-for="chain in formData.extra.chainList" :key="chain.id" :label="chain.name" :value="chain.id"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="物料运费">
-                <el-select v-model="formData.adPricesystemId" filterable clearable :placeholder="$t('dictEnumList.inputKey')">
+                <el-select v-model="formData.adPricesystemId" filterable clearable :placeholder="$t('depotShopList.inputKey')">
                   <el-option v-for="adPricesystem in formData.extra.adPricesystemList" :key="adPricesystem.id" :label="adPricesystem.name" :value="adPricesystem.id"></el-option>
                 </el-select>
               </el-form-item>

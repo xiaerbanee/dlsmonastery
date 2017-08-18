@@ -24,7 +24,7 @@ public class ToolImooSchedule {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Scheduled(cron = "0 0 2-18 * * ?")
+    @Scheduled(cron = "0 30 2-18 * * ?")
     public void pullJximooData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXDJ.name())) {
