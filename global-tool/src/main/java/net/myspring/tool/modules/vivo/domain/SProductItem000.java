@@ -15,6 +15,7 @@ public class SProductItem000 {
     private String remark;
     private String updateTime;
     private String agentCode;
+    private String isUpLoad;
 
     public String getId() {
         return id;
@@ -126,5 +127,13 @@ public class SProductItem000 {
 
     public void setAgentCode(String agentCode) {
         this.agentCode = agentCode;
+    }
+
+    public String getIsUpLoad() {
+        return isUpLoad;
+    }
+
+    public void setIsUpLoad(String isUpLoad) {
+        this.isUpLoad = isUpLoad;
     }
 }

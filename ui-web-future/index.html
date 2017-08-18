@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>OA SYSTEM FUTURE</title>
+  <title></title>
 </head>
 
 <body>
@@ -12,5 +12,11 @@
   </div>
   <!-- built files will be auto injected -->
 </body>
-
+  <script>
+    window.onload = function(){
+        let account = localStorage.getItem('account');
+        let companyName = JSON.parse(account).companyName;
+        document.getElementsByTagName('title')[0].innerHTML = "业务-"+companyName;
+    }
+  </script>
 </html>

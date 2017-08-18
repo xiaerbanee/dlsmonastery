@@ -145,6 +145,8 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
 interface OfficeRepositoryCustom {
     fun findByOfficeRuleName(officeRuleName:String):MutableList<Office>
 
+    fun findAllByOfficeRuleName(officeRuleName:String):MutableList<Office>
+
     fun findByParentIdsListLike(parentIdList: MutableList<String>): MutableList<Office>
 
     fun findAllByParentIdsListLike(parentIdList: MutableList<String>): MutableList<Office>
@@ -166,6 +168,7 @@ interface OfficeRepositoryCustom {
 }
 
 class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): OfficeRepositoryCustom {
+
     override fun findDtoByParentIdsLike(parentId: String): MutableList<OfficeDto> {
         var sb = StringBuilder();
         sb.append("""
@@ -206,7 +209,18 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
         return namedParameterJdbcTemplate.query(sb.toString(),paramMap, BeanPropertyRowMapper(Office::class.java))
     }
 
-    override fun findByOfficeRuleName(officeRuleName:String):MutableList<Office>{
+    override fun findByOfficeRuleName(officeRuleName: String): MutableList<Office> {
+        return namedParameterJdbcTemplate.query("""
+          SELECT t1.*
+          FROM  sys_office t1,sys_office_rule t2
+          where t1.office_rule_id=t2.id
+          and t2.name = :officeRuleName
+          and t1.enabled=1
+          ORDER BY t1.task_point DESC
+        """,Collections.singletonMap("officeRuleName",officeRuleName),BeanPropertyRowMapper(Office::class.java))
+    }
+
+    override fun findAllByOfficeRuleName(officeRuleName:String):MutableList<Office>{
         return namedParameterJdbcTemplate.query("""
           SELECT t1.*
           FROM  sys_office t1,sys_office_rule t2

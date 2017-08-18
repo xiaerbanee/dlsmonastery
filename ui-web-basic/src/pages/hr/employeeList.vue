@@ -15,7 +15,7 @@
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('employeeList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('employeeList.employeeName')" >
-                <el-input type="textarea" v-model="formData.nameStr"  :placeholder="$t('afterSaleList.blankOrComma')"  :autosize="{ minRows: 4, maxRows: 10}"></el-input>
+                <el-input type="textarea" v-model="formData.nameStr"  :placeholder="$t('employeeList.blankOrComma')"  :autosize="{ minRows: 4, maxRows: 10}"></el-input>
               </el-form-item>
               <el-form-item :label="$t('employeeList.leader')">
                 <el-input v-model="formData.leaderName" auto-complete="off" :placeholder="$t('employeeList.likeSearch')"></el-input>

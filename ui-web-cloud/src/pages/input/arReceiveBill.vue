@@ -1,12 +1,16 @@
 <template>
   <div>
     <head-tab active="arReceiveBill"></head-tab>
-    <div>
-      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
-        <el-button type="primary" :disabled="submitDisabled" @click="formSubmit" icon="check">保存</el-button>
-        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 25px"></div>
+    <el-row :gutter="20">
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules">
+        <el-col :span="6">
+          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit" icon="check">保存</el-button>
+        </el-col>
       </el-form>
-    </div>
+    </el-row>
+    <el-row style="margin-top: 20px">
+     <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
+    </el-row>
   </div>
 </template>
 <style>
@@ -39,7 +43,7 @@
               {type: "autocomplete",strict: true, allowEmpty: false, settleTypeName:[],source: this.settleTypeName},
               {type: "text",strict: true, allowEmpty: false }
             ],
-           contextMenu: util.contextMenu(this.$store.state.global.lang),
+             contextMenu: util.contextMenu(this.$store.state.global.lang),
             afterChange: function (changes, source) {
               if (source !== 'loadData') {
                 for (let i = changes.length - 1; i >= 0; i--) {

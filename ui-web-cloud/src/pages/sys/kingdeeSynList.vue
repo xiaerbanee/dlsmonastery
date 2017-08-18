@@ -138,7 +138,7 @@
           });
         }
       },remoteAccount(query) {
-        if (query !== '') {
+        if (query) {
           this.remoteLoading = true;
           axios.get('/api/basic/hr/account/findByLoginNameLike',{params:{loginName:query}}).then((response)=>{
             this.accountCommonList = response.data;
@@ -154,6 +154,7 @@
       that.initPromise = axios.get('/api/global/cloud/sys/kingdeeSyn/getQuery').then((response) =>{
         that.formData = response.data;
         util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
       });
     },activated(){
         this.initPromise.then(()=>{

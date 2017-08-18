@@ -63,6 +63,7 @@ export default {
       roleList:"角色管理",
       roleAuthorityForm:"角色权限",
       unitsOfficeForm:"单元编辑",
+        batchUnitsForm:"单元批量编辑",
       storeInventoryReport:"仓库报表",
       depotShopList:"门店管理",
       depotStoreList:"仓库管理",
