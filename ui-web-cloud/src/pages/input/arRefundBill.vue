@@ -16,7 +16,7 @@
 </style>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js';
-  import ElRow from "element-ui/packages/row/src/row";
+
   var table = null;
   export default {
       components: {ElRow},
