@@ -141,7 +141,7 @@ public class OfficeService {
     }
 
     public Map<String,List<String>> getMapByOfficeRuleName(String officeRuleName){
-        List<Office> officeList=officeRepository.findByOfficeRuleName(officeRuleName);
+        List<Office> officeList=officeRepository.findAllByOfficeRuleName(officeRuleName);
         for(int i=officeList.size()-1;i>0;i--){
             if(officeList.get(i).getPoint()==null||officeList.get(i).getPoint().compareTo(BigDecimal.ZERO)<=0){
                 officeList.remove(i);

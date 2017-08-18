@@ -16,7 +16,7 @@
               <el-form-item label="截止日期" >
                 <date-picker placeholder="选择截止日期" v-model="formData.dateEnd"></date-picker>
               </el-form-item>
-              <el-form-item label="门店名称" >
+              <el-form-item label="部门名称" >
                 <el-select v-model="formData.departmentIdList"  multiple filterable remote placeholder="请输入关键词" :remote-method="remoteDepartment" :loading="remoteLoading">
                   <el-option v-for="item in departments" :key="item.fdeptId" :label="item.ffullName" :value="item.fdeptId"></el-option>
                 </el-select>
@@ -46,12 +46,12 @@
       </el-dialog>
       <el-table :data="summary" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." stripe border>
         <el-table-column fixed prop="supplierName" label="供应商名称" sortable width="200"></el-table-column>
-        <el-table-column prop="departmentName" label="门店名称"></el-table-column>
+        <el-table-column prop="departmentName" label="部门名称"></el-table-column>
         <el-table-column prop="beginAmount" label="期初应付" :formatter="moneyFormatter"></el-table-column>
         <el-table-column prop="payableAmount" label="应付金额" :formatter="moneyFormatter"></el-table-column>
         <el-table-column prop="actualPayAmount" label="实付金额" :formatter="moneyFormatter"></el-table-column>
         <el-table-column prop="endAmount" label="期末应付" :formatter="moneyFormatter"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="120">
+        <el-table-column fixed="right" label="操作" width="200">
           <template scope="scope">
             <el-button size="small" @click="detailAction(scope.row.supplierId,scope.row.departmentId)">详细</el-button>
             <el-button size="small" @click="exportDetailOne(scope.row.supplierId,scope.row.departmentId)">导出</el-button>
@@ -124,6 +124,7 @@
           if (submitData.departmentIdList.length !== 0) {
             axios.get('/api/global/cloud/report/supplierPayableZMD/list?' + qs.stringify(submitData)).then((response) => {
               this.summary = response.data;
+              submitData.departmentIdList = [];
             });
           }
           this.page = response.data;
@@ -200,6 +201,7 @@
       that.initPromise = axios.get('/api/global/cloud/kingdee/bdDepartment/getQueryForSupplierPayable').then((response) =>{
         that.formData = response.data;
         util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
       });
     }
   };

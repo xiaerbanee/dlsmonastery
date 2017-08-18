@@ -43,15 +43,17 @@
 					</template>
 				</el-menu>
 				<!--导航菜单-折叠后-->
-				<ul class="el-menu el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">
-					<li v-for="(module,i) in backend.backendModuleList" v-if="module.code == activeModule" class="el-submenu item">
-						<template v-for="(item,index) in module.menuCategoryList">
-							<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)"><i class="fa fa-id-card-o"></i></div>
-							<ul class="el-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">
-								<li v-for="menu in item.menuList"  :key="menu.code" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==menu.path?'is-active':''" @click="$router.push({name:menu.code})">{{menu.name}}</li>
-							</ul>
-						</template>
-					</li>
+				<ul  class="el-menu el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">
+					<template v-for="modules in backend.backendModuleList" v-if="modules.code == activeModule">
+						<li v-for="(module,i) in modules.menuCategoryList"  class="el-submenu item">
+							<template >
+								<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(i,true)" @mouseout="showMenu(i,false)"><i class="fa fa-id-card-o"></i></div>
+								<ul class="el-menu submenu" :class="'submenu-hook-'+i" @mouseover="showMenu(i,true)" @mouseout="showMenu(i,false)">
+									<li v-for="menu in module.menuList"  :key="menu.code" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==menu.path?'is-active':''" @click="$router.push({name:menu.code})">{{menu.name}}</li>
+								</ul>
+							</template>
+						</li>
+					</template>
 				</ul>
 			</aside>
 			<section class="content-container">
@@ -71,6 +73,7 @@
     import Vue from 'vue';
     import suKeepAlive from 'components/common/su-keep-alive.vue';
     import { mapState } from 'vuex'
+	import img from '../assets/user.png'
 	export default {
         components:{
             suKeepAlive,
@@ -83,7 +86,7 @@
 				sysName:'BASIC',
 				collapsed:true,
 				sysUserName: '',
-				sysUserAvatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png'
+				sysUserAvatar: img
 			}
 		},computed: mapState({
             account: state => state.global.account,
@@ -120,6 +123,7 @@
             }
 		},
 		mounted() {
+
 			var user = sessionStorage.getItem('user');
 			if (user) {
 				user = JSON.parse(user);
@@ -128,7 +132,6 @@
 			}
 
 		},created() {
-            console.log(`created`)
 		    var that = this;
             axios.get('/user/isLogin').then((response)=>{
                 if(response.data) {
@@ -294,6 +297,9 @@
 			background: none;
 			color:#184E7E;
 			border-bottom: 5px solid #184E7E;
+		}
+		.el-menu-item.is-active{
+			color:#184E7E;
 		}
 	}
 

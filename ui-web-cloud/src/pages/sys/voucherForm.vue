@@ -1,27 +1,27 @@
 <template>
   <div>
     <head-tab active="voucherForm"></head-tab>
-    <div>
-      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" label-width="80px">
-        <el-form-item label="凭证日期"  prop="fdate">
-          <date-picker v-model="formData.fdate"></date-picker>
-        </el-form-item>
-        <el-form-item label="备注"  prop="remarks">
-          <el-input v-model="formData.remarks" type="textarea" style="width: 200px;"></el-input>
-        </el-form-item>
-        <el-form-item label="借方金额" >
-          <span id="debit"></span>
-        </el-form-item>
-        <el-form-item label="贷方金额">
-          <span  id="credit"></span>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" :disabled="submitAuditDisabled" @click="formSubmit" icon="check">保存</el-button>
-          <el-button type="primary" :disabled="submitDisabled" @click="formSubmitAndAudit" icon="check">保存且审核</el-button>
-        </el-form-item>
-        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
+    <el-row :gutter="20">
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules">
+        <el-col :span="6">
+          <el-form-item label="凭证日期"  prop="fdate">
+            <date-picker v-model="formData.fdate"></date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="备注"  prop="remarks">
+            <el-input v-model="formData.remarks" type="textarea" style="width: 200px;"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+            <el-button type="primary" :disabled="submitAuditDisabled" @click="formSubmit" icon="check">保存</el-button>
+            <el-button type="primary" :disabled="submitDisabled" @click="formSubmitAndAudit" icon="check">保存且审核</el-button>
+        </el-col>
       </el-form>
-    </div>
+    </el-row>
+    <div style="width:100%;margin-bottom:20px;">借方金额: <span id="debit" style="color:red"></span></div>
+    <div style="width:100%;margin-bottom:20px;">贷方金额: <span  id="credit" style="color:red"></span></div>
+    <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
   </div>
 </template>
 <style>
@@ -61,7 +61,7 @@
           colHeaders: [],
           columns: [],
           data:{},
-         contextMenu: util.contextMenu(this.$store.state.global.lang),
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
           fixedRowsTop:0,
           afterChange: function (changes, source) {
             if (source !== 'loadData') {

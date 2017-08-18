@@ -832,7 +832,9 @@ public class GoodsOrderService {
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"产品名称"));
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"单价"));
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"开单数"));
-        headColumnList.add(new SimpleExcelColumn(headCellStyle,"金额"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"开单金额"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"订货数"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"订货金额"));
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"商城状态"));
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"商城单号"));
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"发货时间"));
@@ -860,6 +862,8 @@ public class GoodsOrderService {
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDetailDto.getPrice()));
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDetailDto.getRealBillQty()));
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,new BigDecimal(goodsOrderDetailDto.getRealBillQty()).multiply(goodsOrderDetailDto.getPrice())));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDetailDto.getQty()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,new BigDecimal(goodsOrderDetailDto.getQty()).multiply(goodsOrderDetailDto.getPrice())));
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getPullStatus()));
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,carrierOrderMap.get(goodsOrderDto.getId()) != null ? carrierOrderMap.get(goodsOrderDto.getId()).trim() : ""));
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getShipDate()));

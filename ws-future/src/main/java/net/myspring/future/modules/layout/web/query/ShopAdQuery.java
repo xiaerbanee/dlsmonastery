@@ -24,9 +24,15 @@ public class ShopAdQuery extends BaseQuery{
     private String lastModifiedBy;
     private String lastModifiedDate;
     private String processStatus;
-    private LocalDate createdDateStart;
-    private LocalDate createdDateEnd;
     private Boolean doorType;
+
+    public List<String> getIdList(){
+        if(StringUtils.isNotBlank(id)){
+            return Arrays.asList(id.split(CharConstant.COMMA+CharConstant.VERTICAL_LINE+CharConstant.ENTER+CharConstant.VERTICAL_LINE+CharConstant.SPACE));
+        }else{
+            return null;
+        }
+    }
 
     public Boolean getDoorType() {
         return doorType;
@@ -119,27 +125,17 @@ public class ShopAdQuery extends BaseQuery{
     public LocalDate getCreatedDateStart() {
         if(StringUtils.isNotBlank(createdDate)) {
             return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
-        } else if(createdDateStart!=null){
-            return createdDateStart;
+        } else {
+            return null;
         }
-        return null;
     }
 
     public LocalDate getCreatedDateEnd() {
         if(StringUtils.isNotBlank(createdDate)) {
             return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
-        } else if(createdDateEnd!=null){
-            return createdDateEnd.plusDays(1);
+        } else {
+            return null;
         }
-        return null;
-    }
-
-    public void setCreatedDateEnd(LocalDate createdDateEnd) {
-        this.createdDateEnd = createdDateEnd;
-    }
-
-    public void setCreatedDateStart(LocalDate createdDateStart) {
-        this.createdDateStart = createdDateStart;
     }
 
     public LocalDate getLastModifiedDateStart() {

@@ -12,7 +12,7 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-              <el-button type="primary" @click="batchUnits" >业务单元编辑</el-button>
+              <el-button type="primary" @click="batchUnits" >单元批量编辑</el-button>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="formSubmit"  icon="plus">保存</el-button>
@@ -31,13 +31,12 @@
           </el-form-item>
           </el-col>
         </el-row>
-
         <el-row>
         <el-col :span="24">
           <el-form-item>
             <template>
               <el-transfer v-model="inputForm.accountIds"  :props="{  key: 'id', label: 'loginName' }" filterable  @change="handleChange" :titles="['所有员工', '业务单元']"
-                           :button-texts="['', '']" :footer-format="{  noChecked: '${total}',   hasChecked: '${checked}/${total}' }"  :data="accountList">
+                           :button-texts="['', '']" :footer-format="{  noChecked: '${total}',   hasChecked: '${checked}/${total}' }" :data="accountList.allAccount">
                 <el-button class="transfer-footer" slot="left-footer" size="small">操作</el-button>
                 <el-button class="transfer-footer" slot="right-footer" size="small">操作</el-button>
               </el-transfer>
@@ -46,8 +45,6 @@
           </el-col>
         </el-row>
         </el-form>
-
-
     </div>
   </div>
 </template>
@@ -62,7 +59,7 @@
               depotIds:[],
               accountIds:[]
             },
-          accountList:[],
+          accountList:{},
           depotList:[],
           officeList:[],
           remoteLoading:false,
@@ -91,7 +88,6 @@
           this.$router.push({ name: 'batchUnitsForm'})
         },
         formSubmit(){
-
           var that = this;
           this.submitDisabled = true;
           var form = this.$refs["inputForm"];

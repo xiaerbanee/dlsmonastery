@@ -261,6 +261,9 @@ class ProductRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         if (StringUtils.isNotEmpty(productQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
         }
+        if (StringUtils.isNotEmpty(productQuery.expiryDateRemarks)) {
+            sb.append("""  and t1.expiry_date_remarks LIKE CONCAT('%',:expiryDateRemarks,'%') """)
+        }
         if (productQuery.hasIme != null && productQuery.hasIme) {
             sb.append("""  and t1.has_ime = 1 """)
         }

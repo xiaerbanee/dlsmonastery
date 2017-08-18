@@ -41,6 +41,9 @@
                   <el-option v-for="netType in formData.extra.netTypeList" :key="netType" :label="netType" :value="netType"></el-option>
                 </el-select>
               </el-form-item>
+              <el-form-item :label="$t('productAdEdit.expiryDateRemarks')" :label-width="formLabelWidth">
+                <el-input v-model="formData.expiryDateRemarks" auto-complete="off" :placeholder="$t('productAdEdit.likeSearch')"></el-input>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
