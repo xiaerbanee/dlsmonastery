@@ -20,9 +20,9 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('officeRuleList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('officeRuleList.id')" sortable width="150"></el-table-column>
         <el-table-column prop="name" :label="$t('officeRuleList.name')" ></el-table-column>
-        <el-table-column prop="code" label="Code" ></el-table-column>
-        <el-table-column prop="parentName" label="上级" ></el-table-column>
-        <el-table-column prop="hasPoint" label="是否有点位" width="100">
+        <el-table-column prop="code" :label="$t('officeRuleList.code')" ></el-table-column>
+        <el-table-column prop="parentName" :label="$t('officeRuleList.parentName')" ></el-table-column>
+        <el-table-column prop="hasPoint" :label="$t('officeRuleList.hasPoint')" width="100">
           <template scope="scope">
             <el-tag :type="scope.row.hasPoint? 'primary' : 'danger'">{{scope.row.hasPoint | bool2str}}</el-tag>
           </template>
@@ -30,8 +30,8 @@
         <el-table-column prop="remarks" :label="$t('officeRuleList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('officeRuleList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')"  v-permit="'sys:officeRule:edit'">修改</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')"  v-permit="'sys:officeRule:delete'">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')"  v-permit="'sys:officeRule:edit'">{{$t('officeRuleList.edit')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')"  v-permit="'sys:officeRule:delete'">{{$t('officeRuleList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>

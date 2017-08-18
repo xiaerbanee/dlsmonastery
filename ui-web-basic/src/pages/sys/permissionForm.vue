@@ -14,8 +14,8 @@
         <el-form-item :label="$t('permissionForm.permission')" prop="permission">
           <el-input v-model="inputForm.permission"></el-input>
         </el-form-item>
-        <el-form-item label="角色" prop="roleIdList">
-          <el-select v-model="inputForm.roleIdList" multiple filterable  :placeholder="$t('accountForm.inputWord')" >
+        <el-form-item :label="$t('permissionForm.roleIdList')" prop="roleIdList">
+          <el-select v-model="inputForm.roleIdList" multiple filterable  :placeholder="$t('permissionForm.inputWord')" >
             <el-option v-for="item in inputForm.extra.roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>

@@ -91,6 +91,7 @@ public class DepotShopService {
     public Page<DepotShopDto> findPage(Pageable pageable, DepotShopQuery depotShopQuery) {
         if(StringUtils.isNotBlank(depotShopQuery.getOfficeId())){
             List<String> childOffices = officeClient.getChildOfficeIds(depotShopQuery.getOfficeId());
+            childOffices.add(depotShopQuery.getOfficeId());
             depotShopQuery.setChildOfficeIds(childOffices);
         }
         depotShopQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
@@ -203,6 +204,7 @@ public class DepotShopService {
         Workbook workbook = new SXSSFWorkbook(10000);
         if(StringUtils.isNotBlank(depotShopQuery.getOfficeId())){
             List<String> childOffices = officeClient.getChildOfficeIds(depotShopQuery.getOfficeId());
+            childOffices.add(depotShopQuery.getOfficeId());
             depotShopQuery.setChildOfficeIds(childOffices);
         }
         depotShopQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));

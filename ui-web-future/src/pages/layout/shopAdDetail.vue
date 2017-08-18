@@ -29,6 +29,9 @@
             <el-form-item :label="$t('shopAdDetail.remarks')" prop="remarks">
               {{inputForm.remarks}}
             </el-form-item>
+            <el-form-item :label="$t('shopAdDetail.status')" prop="status">
+              {{inputForm.processStatus}}
+            </el-form-item>
             <el-form-item :label="$t('shopAdDetail.attachment')" prop="attachment">
               <el-upload  action="/api/basic/sys/folderFile/upload?uploadPath=/广告申请" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
               </el-upload>

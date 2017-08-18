@@ -9,6 +9,8 @@ export default{
     productName:"项目",
     productValue:"值",
     loading: "memuat",
+      inputPassword:"请输入用户密码",
+      operation: "操作",
   },
   salaryForm:{
     salaryForm:"工资条添加",

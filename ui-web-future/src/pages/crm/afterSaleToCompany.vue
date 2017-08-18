@@ -33,6 +33,7 @@
                 <el-table-column prop="toStoreRemarks" :label="$t('afterSaleToCompany.remarks')"></el-table-column>
               </el-table>
             </template>
+            <div style="height:30px"></div>
             <el-form-item :label="$t('afterSaleToCompany.toCompanyDate')" prop="toCompanyDate">
               <el-date-picker  v-model="inputForm.toCompanyDate" type="date" align="left" :placeholder="$t('afterSaleToCompany.selectDate')" format="yyyy-MM-dd" ></el-date-picker>
             </el-form-item>

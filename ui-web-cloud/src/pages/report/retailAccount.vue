@@ -91,8 +91,6 @@
     methods: {
       search(){
         this.formVisible = false;
-        util.getQuery("retailAccount");
-        util.setQuery("retailAccount",this.formData);
         util.copyValue(this.formData,this.submitData);
         axios.get("/api/global/cloud/report/retailAccount/report",{params:this.submitData}).then((response)=>{
           this.settings.data = response.data.consignmentDtoList;
