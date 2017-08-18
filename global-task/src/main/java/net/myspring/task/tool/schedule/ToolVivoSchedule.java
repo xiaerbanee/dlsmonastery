@@ -47,7 +47,7 @@ public class ToolVivoSchedule {
         }
     }
 
-    @Scheduled(cron = "0 30 20,21,22 * * ?")
+    @Scheduled(cron = "0 30 20,21 * * ?")
     public void pushIdvivoToLocal(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.IDVIVO.name())) {
@@ -58,7 +58,7 @@ public class ToolVivoSchedule {
         }
     }
 
-    @Scheduled(cron = "0 0 0/1 * * ?")
+    @Scheduled(cron = "0 30 20,21 * * ?")
     public void pushVivoToLocal(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXVIVO.name())) {
@@ -69,7 +69,7 @@ public class ToolVivoSchedule {
         }
     }
 
-    @Scheduled(cron = "0 0,30 23 * * ?")
+    @Scheduled(cron = "0 0 22 * * ?")
     public void pushIdvivoData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.IDVIVO.name())) {
@@ -80,7 +80,7 @@ public class ToolVivoSchedule {
         }
     }
 
-    @Scheduled(cron = "0 0 0/1 * * ?")
+    @Scheduled(cron = "0 0 22 * * ?")
     public void pushVivoData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXVIVO.name())) {
@@ -91,14 +91,21 @@ public class ToolVivoSchedule {
         }
     }
 
-    @Scheduled(cron = "0 0/30 * * * ?")
+    @Scheduled(cron = "0 0 23 * * ?")
+    public void pushIdvivoStoreDataToFactory(){
+        List<String> companyNameList = Arrays.asList(companyNames);
+        if(companyNameList.contains(CompanyNameEnum.IDVIVO.name())) {
+            String date=LocalDateUtils.format(LocalDate.now());
+            toolVivoClient.pushStoreDataToFactory(CompanyNameEnum.IDVIVO.name(),date);
+        }
+    }
+
+    @Scheduled(cron = "0 0 23 * * ?")
     public void pushVivoStoreDataToFactory(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXVIVO.name())) {
-            logger.info("11111111");
             String date=LocalDateUtils.format(LocalDate.now());
             toolVivoClient.pushStoreDataToFactory(CompanyNameEnum.JXVIVO.name(),date);
-            logger.info("0000000000");
         }
     }
 
