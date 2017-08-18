@@ -126,7 +126,11 @@ Vue.directive('permit', function (el, binding) {
         el.style.display=""
     }
 })
-
+Vue.directive('title', {
+    inserted: function (el, binding) {
+        document.title = binding.value
+    }
+})
 //router.afterEach(transition => {
 //NProgress.done();
 //});

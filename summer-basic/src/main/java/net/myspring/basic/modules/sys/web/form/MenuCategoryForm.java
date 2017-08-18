@@ -16,8 +16,17 @@ public class MenuCategoryForm extends BaseForm<MenuCategory> {
     private Integer sort;
     private String remarks;
     private String code;
+    private String icon;
     private String backendModuleId;
     private List<BackendModuleDto> backendModuleList= Lists.newArrayList();
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 
     public String getCode() {
         return code;

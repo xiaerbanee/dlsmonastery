@@ -1,5 +1,6 @@
 <template>
 	<el-row class="container">
+		<div v-title="'基础-'+account.companyName"></div>
 		<el-col :span="24" class="header">
 			<el-col :span="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
 				{{collapsed?'':sysName}}
