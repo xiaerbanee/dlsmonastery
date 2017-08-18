@@ -163,4 +163,17 @@ class FutureCustomerRepository @Autowired constructor(val namedParameterJdbcTemp
         """)
         return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertyRowMapper(SStores::class.java))
     }
+
+    fun findImooCustomer():MutableList<SCustomerDto>{
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+                de.id as customerId,
+                de.name as customerName,
+                "M13A00" as agentCode
+            FROM
+                crm_depot de
+            LEFT JOIN crm_depot_store st ON de.depot_store_id = st.id
+            WHERE st.joint_level = '二级'
+        """,BeanPropertyRowMapper(SCustomerDto::class.java))
+    }
 }

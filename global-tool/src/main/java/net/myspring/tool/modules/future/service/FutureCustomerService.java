@@ -44,6 +44,11 @@ public class FutureCustomerService {
         return customerDtoList;
     }
 
+    public List<SCustomerDto> getImooCustomers(){
+        List<SCustomerDto> sCustomerDtoList = futureCustomerRepository.findImooCustomer();
+        return sCustomerDtoList;
+    }
+
     public Map<String,CustomerDto> getCustomerDtoMap(){
         List<CustomerDto> customerDtoList = getOppoCustomers();
 
