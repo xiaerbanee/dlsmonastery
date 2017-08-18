@@ -110,7 +110,7 @@
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
                 util.closeAndBackToPage(this.$router,"accountChangeList")
-                this.$router.push({name:'accountChangeList',query:util.getQuery("accountChangeList")})
+
           }).catch( ()=> {
               that.submitDisabled = false;
             });
