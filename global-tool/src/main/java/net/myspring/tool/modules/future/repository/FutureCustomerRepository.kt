@@ -68,7 +68,7 @@ class FutureCustomerRepository @Autowired constructor(val namedParameterJdbcTemp
             SELECT
                 de.area_id AS customerId,
                 de.NAME AS customerName,
-                de.province_id AS zoneId,
+                de.office_id AS zoneId,
                 :date AS recordDate,
                 1 AS customerLevel,
                 '' AS customerStr1,
@@ -84,7 +84,7 @@ class FutureCustomerRepository @Autowired constructor(val namedParameterJdbcTemp
                 SELECT
                     de.id AS customerId,
                     de.NAME AS customerName,
-                    de.province_id AS zoneId,
+                    de.n AS zoneId,
                     :date AS recordDate,
                     2 AS customerLevel,
                     de.area_type AS customerStr1,
@@ -92,7 +92,7 @@ class FutureCustomerRepository @Autowired constructor(val namedParameterJdbcTemp
                 FROM
                     crm_depot de
                 WHERE
-                    de.area_id IS NOT NULL OR de.area_id <> ''
+                    (de.area_id IS NOT NULL OR de.area_id <> '')
                     AND de.id IN (
                         SELECT
                             depot_id
