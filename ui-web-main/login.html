@@ -124,7 +124,7 @@
 			if(res.success){
 					$.get('/api/basic/hr/account/getAccountInfo', (res) => {
 						localStorage.setItem('menus',JSON.stringify(res.menus))
-
+						localStorage.setItem('authorityList',JSON.stringify(res.authorityList))
 						location.reload();
 					});
 				}else{
