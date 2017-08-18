@@ -73,7 +73,7 @@
     import Vue from 'vue';
     import suKeepAlive from 'components/common/su-keep-alive.vue';
     import { mapState } from 'vuex'
-    import img from '../assets/user.png'
+    import img from '../assets/kingdee.jpg'
 	export default {
         components:{
             suKeepAlive,
