@@ -14,6 +14,9 @@
         <el-form-item label="Code" prop="code">
           <el-input v-model="inputForm.code"></el-input>
         </el-form-item>
+        <el-form-item label="图标" prop="icon">
+          <el-input v-model="inputForm.icon"></el-input>
+        </el-form-item>
         <el-form-item :label="$t('menuCategoryForm.sort')"  prop="sort">
           <el-input v-model.number="inputForm.sort"></el-input>
         </el-form-item>
