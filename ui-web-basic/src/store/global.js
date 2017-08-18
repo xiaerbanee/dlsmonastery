@@ -1,9 +1,5 @@
 const getTabs = function () {
   var tabs = new Map();
-  let local = window.localStorage.getItem("globalManager_tabs");
-  if(local != null) {
-    tabs = new Map(JSON.parse(local));
-  }
   return tabs;
 }
 const getLang = function () {
@@ -57,7 +53,6 @@ export default {
       if(tabArray.length>=8) {
         tabArray = tabArray.splice(tabArray.length-8);
       }
-      localStorage.setItem('globalManager_tabs', JSON.stringify(tabArray))
       state.tabs = new Map(tabArray);
     },
       setLang(state,lang){
