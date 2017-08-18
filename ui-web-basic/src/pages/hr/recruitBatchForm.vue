@@ -51,7 +51,7 @@
             axios.post('/api/basic/hr/recruit/update',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
-              this.$router.push({name:'recruitList',query:util.getQuery("recruitList")})
+                util.closeAndBackToPage(this.$router,"recruitList")
             }).catch(function () {
               that.submitDisabled = false;
             });

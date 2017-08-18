@@ -56,7 +56,7 @@
                 Object.assign(this.$data, this.getData());
                 this.initPage();
               }else{
-                this.$router.push({name:'dictEnumList',query:util.getQuery("dictEnumList"), params:{_closeFrom:true}})
+                  util.closeAndBackToPage(this.$router,"dictEnumList")
               }
             }).catch(function () {
               that.submitDisabled = false;

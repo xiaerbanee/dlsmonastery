@@ -83,7 +83,7 @@
                 this.initPage();
               }else{
                 this.submitDisabled = false;
-                this.$router.push({name:'salaryTemplateList',query:util.getQuery("salaryTemplateList")});
+                  util.closeAndBackToPage(this.$router,"salaryTemplateList")
               }
             }).catch(function () {
               that.submitDisabled = false;
@@ -123,7 +123,6 @@
         } else {
           axios.get('/api/basic/salary/salaryTemplate/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
             axios.get('/api/basic/salary/salaryTemplate/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-              console.log(response.data,"findOne");
               this.inputForm=response.data;
             });
           });

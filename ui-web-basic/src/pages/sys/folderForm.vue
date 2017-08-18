@@ -50,7 +50,7 @@
               this.$message(response.data.message);
               Object.assign(this.$data,this.getData());
               if(!that.isCreate){
-                this.$router.push({name:'folderList',query:util.getQuery("folderList"),params:{_closeFrom:true}});
+                  util.closeAndBackToPage(this.$router,"folderList")
               }
             }).catch(function () {
               that.submitDisabled = false;

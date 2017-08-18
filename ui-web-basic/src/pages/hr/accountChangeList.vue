@@ -87,7 +87,6 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("accountChangeList",submitData);
         axios.get('/api/basic/hr/accountChange?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -165,7 +164,6 @@
       this.initPromise = axios.get('/api/basic/hr/accountChange/getQuery').then((response) =>{
         that.formData=response.data;
         console.log(this.formData.extra.typeList);
-        util.copyValue(that.$route.query,that.formData);
       });
     },activated() {
       this.initPromise.then(()=> {

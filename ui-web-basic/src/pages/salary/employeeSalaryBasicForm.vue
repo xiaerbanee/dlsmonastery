@@ -56,7 +56,7 @@
                 Object.assign(this.$data, this.getData());
                 this.initPage();
               }else{
-                this.$router.push({name:'employeeSalaryBasicList',query:util.getQuery("employeeSalaryBasicList"), params:{_closeFrom:true}})
+                  util.closeAndBackToPage(this.$router,"employeeSalaryBasicList")
               }
             }).catch(function () {
               that.submitDisabled = false;

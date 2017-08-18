@@ -77,7 +77,7 @@
                 Object.assign(this.$data, this.getData());
                 this.initPage();
               }else{
-                this.$router.push({name:'recruitEnumList',query:util.getQuery("recruitEnumList"), params:{_closeFrom:true}})
+                  util.closeAndBackToPage(this.$router,"recruitEnumList")
               }
             }).catch(function () {
               that.submitDisabled = false;

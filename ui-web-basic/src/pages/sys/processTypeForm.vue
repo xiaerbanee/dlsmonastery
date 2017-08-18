@@ -100,7 +100,7 @@
                 this.initPage();
               }else{
                 this.submitDisabled = false;
-                this.$router.push({name:'processTypeList',query:util.getQuery("processTypeList")});
+                  util.closeAndBackToPage(this.$router,"processTypeList")
               }
             }).catch(function () {
               that.submitDisabled = false;

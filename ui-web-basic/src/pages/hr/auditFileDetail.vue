@@ -88,11 +88,7 @@
           if (valid) {
             axios.post('/api/basic/hr/auditFile/audit', qs.stringify(this.submitData)).then((response) => {
               this.$message(response.data.message);
-              this.$router.push({
-                name: 'auditFileList',
-                query: util.getQuery("auditFileList"),
-                params: {_closeFrom: true}
-              })
+                util.closeAndBackToPage(this.$router,"auditFileList")
             }).catch(function () {
               this.submitDisabled = false;
             });
@@ -116,7 +112,6 @@
     created(){
         axios.get('/api/basic/hr/auditFile/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
-          console.log(response.data)
           if(this.inputForm.attachment != null) {
              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
                this.fileList= response.data;

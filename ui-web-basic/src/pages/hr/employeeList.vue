@@ -118,7 +118,6 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("employeeList",submitData);
         submitData.leaveDateMonth=util.formatLocalDate(this.formData.leaveDateMonth);
         axios.get('/api/basic/hr/employee?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
@@ -162,7 +161,6 @@
       that.pageHeight = 0.74*window.innerHeight;
       this.initPromise = axios.get('/api/basic/hr/employee/getQuery').then((response) =>{
         that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
       });
     },activated() {
       this.initPromise.then(()=> {

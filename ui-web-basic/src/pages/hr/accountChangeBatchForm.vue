@@ -62,7 +62,7 @@
               }
               if(!this.isCreate) {
                 this.submitDisabled = false;
-                this.$router.push({name: 'accountChangeList', query: util.getQuery("accountChangeList")})
+                  util.closeAndBackToPage(this.$router,"accountChangeList")
               } else{
                 Object.assign(this.$data, this.getData())
                 this.initPage();

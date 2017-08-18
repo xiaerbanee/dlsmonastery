@@ -108,7 +108,7 @@
             axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeForm, {allowDots: true})).then((response)=> {
               this.$message("员工"+response.data.message);
                  Object.assign(this.$data, this.getData());
-                  this.$router.push({name:'home', params:{_closeFrom:true}})
+                util.closeAndBackToPage(this.$router,"home")
               }).catch(function () {
                 that.submitDisabled = false;
             });

@@ -53,7 +53,6 @@
           this.inputForm.folderFileId = util.getFolderFileIdStr(this.fileList);
           form.validate((valid) => {
             if (valid) {
-              console.log(this.inputForm);
               var submitData=util.deleteExtra(this.inputForm);
               submitData.yearMonth=util.formatLocalMonth(this.inputForm.yearMonth)
               axios.post('/api/basic/hr/dutyWorktime/import', qs.stringify(submitData)).then((response)=> {

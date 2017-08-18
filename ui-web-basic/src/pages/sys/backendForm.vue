@@ -50,7 +50,7 @@
                 Object.assign(this.$data,this.getData());
                 this.initPage();
               }else{
-                this.$router.push({name:'backendList',query:util.getQuery("backendList"), params:{_closeFrom:true}})
+                  util.closeAndBackToPage(this.$router,"backendList")
               }
             }).catch( ()=> {
               that.submitDisabled = false;
