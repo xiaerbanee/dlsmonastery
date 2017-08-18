@@ -25,7 +25,7 @@ public class ToolVivoSchedule {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Scheduled(cron = "0 0 2-18 * * ?")
+    @Scheduled(cron = "0 30 2-18 * * ?")
     public void pullIdvivoData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.IDVIVO.name())) {
@@ -36,7 +36,7 @@ public class ToolVivoSchedule {
         }
     }
 
-    @Scheduled(cron = "0 0 2-18 * * ?")
+    @Scheduled(cron = "0 30 2-18 * * ?")
     public void pullVivoData(){
         List<String> companyNameList = Arrays.asList(companyNames);
         if(companyNameList.contains(CompanyNameEnum.JXVIVO.name())) {
