@@ -82,7 +82,7 @@
                   if(this.isCreate){
                     form.resetFields();
                   } else {
-                    this.$router.push({name:'reportScoreList',query:util.getQuery("reportScoreList"), params:{_closeFrom:true}})
+                    util.closeAndBackToPage(this.$router,'reportScoreList')
                   }
                 }
               }).catch(function () {

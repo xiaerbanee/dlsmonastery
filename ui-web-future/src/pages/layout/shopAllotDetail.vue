@@ -114,7 +114,7 @@
               this.$message(response.data.message);
               this.submitDisabled = false;
               if(response.data.success) {
-                this.$router.push({name: 'shopAllotList', query: util.getQuery("shopAllotList"), params:{_closeFrom:true}});
+                util.closeAndBackToPage(this.$router,'shopAllotList')
               }
             }).catch( () => {
               this.submitDisabled = false;

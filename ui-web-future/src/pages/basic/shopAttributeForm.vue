@@ -93,7 +93,7 @@
               this.$message(response.data.message);
             Object.assign(this.$data, this.getData());
               if(!this.isCreate){
-                this.$router.push({name:'shopAttributeList',query:util.getQuery("shopAttributeList"),params:{_closeFrom:true}})
+                util.closeAndBackToPage(this.$router,'shopAttributeList')
               }
             }).catch(function () {
               that.submitDisabled = false;

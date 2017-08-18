@@ -180,7 +180,7 @@
             axios.post('/api/ws/future/crm/goodsOrder/bill', qs.stringify(submitData, {allowDots:true})).then((response)=> {
               util.setLatestGoodsOrderBillDate(this.inputForm.billDate);
               this.$message(response.data.message);
-              this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList"), params:{_closeFrom:true}});
+              util.closeAndBackToPage(this.$router,'goodsOrderList')
             }).catch( () => {
               this.submitDisabled = false;
             });

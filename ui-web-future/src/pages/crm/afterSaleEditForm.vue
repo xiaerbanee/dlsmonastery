@@ -201,7 +201,7 @@
             axios.post('/api/ws/future/crm/afterSale/update', qs.stringify(this.inputForm, {allowDots: true})).then((response) => {
               this.$message(response.data.message);
               if (response.data.success) {
-                this.$router.push({name: 'afterSaleList', query: util.getQuery("afterSaleList"),params:{_closeFrom:true}})
+                util.closeAndBackToPage(this.$router,'afterSaleList')
                 Object.assign(this.$data, this.getData());
               }
               this.submitDisabled = false;

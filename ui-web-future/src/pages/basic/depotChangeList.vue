@@ -82,7 +82,6 @@
         this.pageLoading = true;
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
-        util.setQuery("depotChangeList",submitData);
         axios.get('/api/ws/future/crm/depotChange',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -120,7 +119,6 @@
       }
     },created () {
          this.pageHeight = 0.74*window.innerHeight;
-        util.copyValue(this.$route.query,this.formData);
         this.initPromise = axios.get('/api/ws/future/crm/depotChange/getQuery').then((response) =>{
         this.formData=response.data;
       });

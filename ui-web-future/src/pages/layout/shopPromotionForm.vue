@@ -111,7 +111,7 @@
               this.$message(response.data.message);
               if(response.data.success) {
                 if (!this.isCreate) {
-                  this.$router.push({name: 'shopPromotionList', query: util.getQuery("shopPromotionList"), params:{_closeFrom:true}})
+                  util.closeAndBackToPage(this.$router,'shopPromotionList')
                 }else{
                   Object.assign(this.$data, this.getData());
                   this.initPage();

@@ -63,7 +63,7 @@
                   this.initPage();
                 }
                 else{
-                  this.$router.push({name:'shopAdTypeList',query:util.getQuery("shopAdTypeList"),params:{_closeFrom:true}})
+                  util.closeAndBackToPage(this.$router,'shopAdTypeList')
                 }
               }).catch(()=> {
                   this.submitDisabled = false;

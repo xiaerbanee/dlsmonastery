@@ -69,7 +69,6 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("reportScoreAreaList",submitData);
         axios.get('/api/ws/future/crm/reportScoreArea',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;

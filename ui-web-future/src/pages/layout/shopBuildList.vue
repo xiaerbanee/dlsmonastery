@@ -119,7 +119,6 @@
         this.pageLoading = true;
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
-        util.setQuery("shopBuildList",submitData);
         axios.get('/api/ws/future/layout/shopBuild?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -193,7 +192,6 @@
       that.pageHeight = 0.74*window.innerHeight;
       this.initPromise = axios.get('/api/ws/future/layout/shopBuild/getQuery').then((response) =>{
         this.formData = response.data;
-         util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

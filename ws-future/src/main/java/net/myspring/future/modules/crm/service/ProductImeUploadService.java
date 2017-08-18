@@ -157,7 +157,6 @@ public class ProductImeUploadService {
         List<ProductImeDto> productImeDtoList = productImeRepository.findDtoListByImeList(imeList);
         cacheUtils.initCacheInput(productImeDtoList);
         Map<String, ProductImeDto> imeMap = CollectionUtil.extractToMap(productImeDtoList, "ime");
-        List<String> filterDepotIds = depotManager.getFilterDepotIds(true,RequestUtils.getAccountId());
         for(String ime:imeList){
             ProductImeDto productImeDto = imeMap.get(ime);
             if(productImeDto == null) {
@@ -167,12 +166,9 @@ public class ProductImeUploadService {
                     sb.append("串码：").append(ime).append("未上报，不能退回；");
                 }else if(AuditStatusEnum.已通过.name().equals(productImeDto.getProductImeUploadStatus())) {
                     sb.append("串码：").append(ime).append("的上报记录已经审核通过，不能退回；");
-                } else if (CollectionUtil.isNotEmpty(RequestUtils.getOfficeIdList())) {
-                    if(!filterDepotIds.contains(productImeDto.getProductImeUploadShopId())){
-                        sb.append("您没有串码：").append(ime).append("所在门店的上报退回权限；");
-                    }
+                } else if (!depotManager.isAccess(productImeDto.getProductImeUploadShopId(), false, RequestUtils.getAccountId())) {
+                    sb.append("您没有串码：").append(ime).append("所在门店的上报退回权限；");
                 }
-
             }
         }
 

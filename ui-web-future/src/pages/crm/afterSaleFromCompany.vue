@@ -179,7 +179,7 @@
             axios.post('/api/ws/future/crm/afterSale/fromCompany',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
               if (response.data.success) {
-                this.$router.push({name: 'afterSaleList', query: util.getQuery("afterSaleList"),params:{_closeFrom:true}})
+                util.closeAndBackToPage(this.$router,'afterSaleList')
               }
               this.submitDisabled = false;
             });

@@ -119,7 +119,6 @@
         this.formVisible = false;
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
-        util.setQuery("productList",submitData);
         axios.get('/api/ws/future/basic/product/filter',{params:submitData}).then((response) => {
           this.settings.data  = response.data;
           for (let index in this.settings.data) {
@@ -152,7 +151,6 @@
         this.pageHeight = window.outerHeight - 320;
         axios.get('/api/ws/future/basic/product/getQuery').then((response) => {
           this.formData = response.data;
-          util.copyValue(this.$route.query, this.formData);
         });
       }
     },created() {
