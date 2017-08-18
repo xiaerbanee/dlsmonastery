@@ -53,7 +53,7 @@ Vue.component('img-previewer',imgPreviewer);
 // set locales
 Vue.locale('zh-cn',locale.zhCn);
 Vue.locale("id",locale.id);
-Vue.config.lang = "zh-cn";
+Vue.config.lang = store.state.global.lang;
 
 //NProgress.configure({ showSpinner: false });
 
@@ -106,7 +106,35 @@ Vue.directive('title', {
     inserted: function (el, binding) {
         document.title = binding.value
     }
-})
+});
+
+
+axios.interceptors.response.use((resp) => {
+    return resp;
+}, (error) => {
+    if (error.response) {
+
+        switch (error.response.status) {
+            case 401:
+                store.dispatch('clearGlobal');
+                window.location.assign('/');
+                break;
+            case 404:
+                if(error.response.request.responseURL.indexOf("login")>=0){
+                    store.dispatch('clearGlobal');
+                    window.location.assign('/');
+                    break;
+                }
+            case 500:
+                ElementUI.Message.error({
+                    title: 'System Error',
+                    message:error.response.data
+                });
+        }
+    }
+    return Promise.reject(error)
+});
+
 //router.afterEach(transition => {
 //NProgress.done();
 //});
@@ -118,5 +146,5 @@ new Vue({
   store,
   //components: { App }
   render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');
 
