@@ -161,7 +161,7 @@ public class ProductImeSaleService {
             } else {
                 if(productIme.getProductImeSaleId() ==null) {
                     sb.append("串码：").append(ime).append("还未被核销，不能退回；");
-                } else if(!accountDepotIdList.contains(productIme.getDepotId())){
+                } else if(!RequestUtils.getAdmin() && !accountDepotIdList.contains(productIme.getDepotId())){
                     sb.append("您没有串码：").append(ime).append("所在门店的核销退回权限；");
                 }
                 if(productIme.getProductImeUploadId() != null) {
@@ -188,8 +188,8 @@ public class ProductImeSaleService {
             ProductIme productIme = imeMap.get(ime);
             checkProductImeForSaleBack(ime, productIme);
 
-            if(!accountDepotIdList.contains(productIme.getDepotId())){
-                throw new ServiceException("您没有串码："+ime+"所在门店的核销撤回权限；");
+            if(!RequestUtils.getAdmin() && !accountDepotIdList.contains(productIme.getDepotId())){
+                throw new ServiceException("您没有串码："+ime+"所在门店的核销退回权限；");
             }
 
             ProductImeSale productImeSale = saleMap.get(productIme.getProductImeSaleId());
@@ -285,7 +285,7 @@ public class ProductImeSaleService {
     @Transactional
     public void saleIme(ProductImeSaleForm productImeSaleForm) {
 
-        if(!depotManager.isAccess(productImeSaleForm.getSaleShopId(), false, RequestUtils.getAccountId())) {
+        if(StringUtils.isNotBlank(productImeSaleForm.getSaleShopId()) && !depotManager.isAccess(productImeSaleForm.getSaleShopId(), false, RequestUtils.getAccountId())) {
             Depot saleShop = depotRepository.findOne(productImeSaleForm.getSaleShopId());
             throw new ServiceException("您没有门店："+saleShop.getName()+"的核销权限，请选择您管辖的门店进行核销；");
         }
@@ -304,19 +304,70 @@ public class ProductImeSaleService {
             checkProductImeForSale(ime, productIme);
 
             Depot productImeDepot = depotMap.get(productIme.getDepotId());
-            checkSaleShopId(productImeSaleForm.getSaleShopId(), productIme, productImeDepot, chainDepotMap.get(productImeDepot.getChainId()));
+            String saleShopId = decideSaleShopId(productImeSaleForm, productIme, productImeDepot,  chainDepotMap.get(productImeDepot.getChainId()));
 
             Product product = productMap.get(productIme.getProductId());
             Integer credit = (product.getRetailPrice() != null ? product.getRetailPrice().intValue()/1000 : 0);
             leftCredit = leftCredit + credit;
 
-            ProductImeSale productImeSale = saveProductImeSale(productImeSaleForm, productIme, credit, leftCredit);
+            ProductImeSale productImeSale = new ProductImeSale();
+            productImeSale.setEmployeeId(RequestUtils.getEmployeeId());
+            productImeSale.setProductImeId(productIme.getId());
+            productImeSale.setShopId(saleShopId);
+            productImeSale.setIsBack(false);
+            productImeSale.setRemarks(productImeSaleForm.getRemarks());
+            productImeSale.setBuyer(productImeSaleForm.getBuyer());
+            productImeSale.setBuyerAge(productImeSaleForm.getBuyerAge());
+            productImeSale.setBuyerSex(productImeSaleForm.getBuyerSex());
+            productImeSale.setBuyerPhone(productImeSaleForm.getBuyerPhone());
+            productImeSale.setCredit(credit);
+            productImeSale.setLeftCredit(leftCredit);
+            productImeSaleRepository.save(productImeSale);
 
             productIme.setProductImeSaleId(productImeSale.getId());
-            productIme.setDepotId(productImeSaleForm.getSaleShopId());
-            productIme.setRetailShopId(productImeSaleForm.getSaleShopId());
+            productIme.setDepotId(saleShopId);
+            productIme.setRetailShopId(saleShopId);
             productImeRepository.save(productIme);
         }
+    }
+
+    private String decideSaleShopId(ProductImeSaleForm productImeSaleForm, ProductIme productIme, Depot productImeDepot, List<Depot> depots) {
+
+        if(StringUtils.isNotBlank(productImeDepot.getDepotStoreId())){
+            throw new ServiceException(String.format("串码%s所在位置为仓库，不能核销", productIme.getIme()));
+        }
+
+        List<String> possibleSaleDepotIds = getPossibleSaleDepotIds(productIme, productImeDepot, depots);
+
+        if(CollectionUtil.isEmpty(possibleSaleDepotIds)){
+            throw new ServiceException(String.format("本帐号没有串码%s所在门店或者所在连锁体系中任何门店的核销权限。", productIme.getIme()));
+        }else if(StringUtils.isNotBlank(productImeSaleForm.getSaleShopId())){
+            if(possibleSaleDepotIds.contains(productImeSaleForm.getSaleShopId())){
+                return productImeSaleForm.getSaleShopId();
+            }
+            throw new ServiceException(String.format("不能将串码%s核销在所选门店。", productIme.getIme()));
+        }else if(possibleSaleDepotIds.size() == 1){
+            return possibleSaleDepotIds.get(0);
+        }else{
+            throw new ServiceException(String.format("串码%s可以被核销在多个门店，系统无法确认该核销在哪个门店。请单独核销该串码，并指定核销门店", productIme.getIme()));
+        }
+    }
+
+    private List<String> getPossibleSaleDepotIds(ProductIme productIme, Depot productImeDepot, List<Depot> depots) {
+        List<String> possibleProductImeSaleDepotIds;
+        if(StringUtils.isBlank(productImeDepot.getChainId())){
+            possibleProductImeSaleDepotIds = Lists.newArrayList(productIme.getDepotId());
+        }else{
+            possibleProductImeSaleDepotIds = CollectionUtil.extractToList(depots, "id");
+        }
+
+        if(RequestUtils.getAdmin()){
+            return possibleProductImeSaleDepotIds;
+        }
+
+        List<String> possibleSaleDepotIds = depotManager.getFilterDepotIds(false, RequestUtils.getAccountId());
+        possibleSaleDepotIds.retainAll(possibleProductImeSaleDepotIds);
+        return possibleSaleDepotIds;
     }
 
     private Map<String, List<Depot>> getChainDepotMap(Collection<Depot> depots) {
@@ -328,39 +379,6 @@ public class ProductImeSaleService {
         }
 
         return new HashMap<>();
-    }
-
-    private ProductImeSale saveProductImeSale(ProductImeSaleForm productImeSaleForm, ProductIme productIme, Integer credit, Integer leftCredit) {
-        ProductImeSale productImeSale = new ProductImeSale();
-        productImeSale.setEmployeeId(RequestUtils.getEmployeeId());
-        productImeSale.setProductImeId(productIme.getId());
-        productImeSale.setShopId(productImeSaleForm.getSaleShopId());
-        productImeSale.setIsBack(false);
-        productImeSale.setRemarks(productImeSaleForm.getRemarks());
-        productImeSale.setBuyer(productImeSaleForm.getBuyer());
-        productImeSale.setBuyerAge(productImeSaleForm.getBuyerAge());
-        productImeSale.setBuyerSex(productImeSaleForm.getBuyerSex());
-        productImeSale.setBuyerPhone(productImeSaleForm.getBuyerPhone());
-        productImeSale.setCredit(credit);
-        productImeSale.setLeftCredit(leftCredit);
-        productImeSaleRepository.save(productImeSale);
-        return productImeSale;
-    }
-
-    private void checkSaleShopId(String saleShopId, ProductIme productIme, Depot productImeDepot, List<Depot> chainDepotList) {
-        if(StringUtils.isNotBlank(productImeDepot.getDepotStoreId())) {
-            throw new ServiceException("串码：" + productIme.getIme() + "的所属地点为："+productImeDepot.getName()+"，不是门店，无法核销；");
-        }
-        if(StringUtils.isBlank(productImeDepot.getChainId())){
-            if(!saleShopId.equals(productIme.getDepotId())){
-                throw new ServiceException("串码：" + productIme.getIme() + "所在门店不是连锁体系，只能被核销在其所属门店："+productImeDepot.getName());
-            }
-        }else{
-            List<String> productImeAllowSaleDepotIdList = CollectionUtil.extractToList(chainDepotList, "id");
-            if(!productImeAllowSaleDepotIdList.contains(saleShopId)){
-                throw new ServiceException("串码：" + productIme.getIme() + "所在门店为"+productImeDepot.getName()+"，是一个连锁体系，该串码只能被核销在该连锁体系内");
-            }
-        }
     }
 
     private void checkProductImeForSaleBack(String ime, ProductIme productIme) {

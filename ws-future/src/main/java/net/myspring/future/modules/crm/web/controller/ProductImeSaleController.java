@@ -99,9 +99,6 @@ public class ProductImeSaleController {
         if(CollectionUtil.isEmpty(imeList)){
             throw new ServiceException("没有输入任何有效的串码");
         }
-        if(StringUtils.isBlank(productImeSaleForm.getSaleShopId())){
-            throw new ServiceException("核销门店不可以为空");
-        }
 
         productImeSaleService.saleIme(productImeSaleForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
