@@ -3,7 +3,7 @@
         <head-tab active="index"></head-tab>
         <el-row :gutter="20">
             <el-col :span="16">
-                <full-calendar class="test-fc"  first-day='0' lang="zh"  @eventClick="eventClick" @dayClick="dayClick" @moreClick="moreClick">
+                <full-calendar class="test-fc"  :events="fcEvents" first-day='0' lang="zh"  @changeMonth="changeMonth"  @eventClick="eventClick" @dayClick="dayClick" @moreClick="moreClick">
                     <template slot="fc-event-card" scope="row">
                         <p><i class="fa"></i>{{row.scoped.title}}</p>
                     </template>
@@ -37,9 +37,14 @@
     import fullCalendar from 'vue-fullcalendar';
     export default {
         data() {
-            return {};
+            return {
+                fcEvents: [],
+            };
         },
         methods: {
+            changeMonth(start, end, current) {
+               return this.fcEvents;
+            },
             eventClick(event, jsEvent, pos) {
             },
             dayClick(day, jsEvent) {
