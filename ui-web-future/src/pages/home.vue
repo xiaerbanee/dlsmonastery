@@ -85,7 +85,7 @@
                 code:'',
 			    backend:{},
                 activeModule:'',
-				sysName:'FUTURE',
+				sysName:'BUSINESS',
 				collapsed:true,
 				sysUserName: '',
 				sysUserAvatar: img
