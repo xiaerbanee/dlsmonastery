@@ -57,11 +57,9 @@
 			<section class="content-container">
 				<div class="grid-content bg-purple-light">
 					<el-col :span="24" class="content-wrapper">
-						<transition name="fade" mode="out-in">
-							<su-keep-alive>
+						<su-keep-alive>
 							<router-view></router-view>
-							</su-keep-alive>
-						</transition>
+						</su-keep-alive>
 					</el-col>
 				</div>
 			</section>
