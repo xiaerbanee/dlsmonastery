@@ -6,7 +6,13 @@ const getTabs = function () {
   }
   return tabs;
 }
-
+const getLang = function () {
+    var local = window.localStorage.getItem("lang");
+    if(!local) {
+        local = "zh-cn";
+    }
+    return local;
+}
 const getMenus = function () {
   var local = window.localStorage.getItem("menus");
   if(local) {
@@ -40,6 +46,7 @@ const getAuthorityList = function () {
 export default {
   state: {
     tabs: getTabs(),
+    lang: getLang(),
     menus:getMenus(),
     account:getAccount(),
     authorityList:getAuthorityList()
@@ -52,6 +59,10 @@ export default {
       }
       localStorage.setItem('tool_tabs', JSON.stringify(tabArray))
       state.tabs = new Map(tabArray);
+    },
+    setLang(state,lang){
+        localStorage.setItem('lang', lang)
+        state.lang = lang;
     },
     setMenus(state,menus) {
       localStorage.setItem('menus', JSON.stringify(menus))
@@ -94,6 +105,9 @@ export default {
       commit('setMenus', []);
       commit('setAccount', {});
       commit('setAuthorityList', []);
-    }
+    },
+      setLang({ commit, state }, lang) {
+          commit('setLang', lang);
+      },
   }
 }

@@ -20,6 +20,7 @@
 				</el-row>
 			</el-col>
 			<el-col :span="4" class="userinfo">
+				<span class="inter"><a href="javscript:void(0);" @click="changeLang('zh-cn')">中文</a> / <a href="javscript:void(0);" @click="changeLang('id')">Indonesia</a></span>
 				<el-dropdown trigger="hover">
 					<span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar" /> {{account.loginName}}</span>
 					<el-dropdown-menu slot="dropdown">
@@ -91,7 +92,8 @@
 			}
 		},computed: mapState({
             account: state => state.global.account,
-            menus: state => state.global.menus
+            menus: state => state.global.menus,
+            lang: state => state.global.lang,
         }),
 		methods: {
             jump(m,e){
@@ -113,6 +115,11 @@
                     });
                 }).catch(() => {});
             },
+				changeLang(lang) {
+					this.$store.dispatch('setLang',lang);
+					Vue.config.lang = lang;
+					this.$router.push({ name: "index"});
+				},
 			//折叠导航栏
 			collapse:function(){
 				this.collapsed=!this.collapsed;
@@ -306,5 +313,8 @@
 			color:#184E7E;
 		}
 	}
-
+	.inter a{
+		color:#fff;
+		text-decoration: none;
+	}
 </style>

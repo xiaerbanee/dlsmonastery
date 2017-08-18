@@ -53,7 +53,7 @@ Vue.component('img-previewer',imgPreviewer);
 // set locales
 Vue.locale('zh-cn',locale.zhCn);
 Vue.locale("id",locale.id);
-Vue.config.lang = "zh-cn";
+Vue.config.lang = store.state.global.lang;
 
 //NProgress.configure({ showSpinner: false });
 
