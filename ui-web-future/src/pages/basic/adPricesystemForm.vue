@@ -60,7 +60,7 @@
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }else {
-                  this.$router.push({name: 'adPricesystemList', query: util.getQuery("adPricesystemList"),params:{_closeFrom:true}})
+                  util.closeAndBackToPage(this.$router,'adPricesystemList')
                 }
               }else {
                 this.$message({

@@ -136,7 +136,7 @@
                   this.initPage();
                 }
                 else{
-                  this.$router.push({name: 'shopBuildList', query: util.getQuery("shopBuildList"), params:{_closeFrom:true}})
+                  util.closeAndBackToPage(this.$router,'shopBuildList')
                 }
               }
             }).catch(() => {

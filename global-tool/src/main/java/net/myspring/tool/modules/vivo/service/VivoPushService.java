@@ -10,9 +10,7 @@ import net.myspring.tool.common.client.OfficeClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
-import net.myspring.tool.common.enums.AgentCodeEnum;
 import net.myspring.tool.modules.future.dto.OfficeDto;
-import net.myspring.tool.common.utils.CacheUtils;
 import net.myspring.tool.modules.vivo.domain.*;
 import net.myspring.tool.modules.vivo.dto.*;
 import net.myspring.tool.modules.vivo.repository.*;
@@ -61,8 +59,6 @@ public class VivoPushService {
     @Autowired
     private SStoresRepository sStoresRepository;
     @Autowired
-    private CacheUtils cacheUtils;
-    @Autowired
     private RedisTemplate redisTemplate;
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
@@ -86,10 +82,6 @@ public class VivoPushService {
         //一代仓库上抛
         pushSStoreData(pushToLocalDto.getsStoresList());
     }
-
-
-
-
 
     @Transactional
     public  List<SZones> pushVivoZonesData(String companyName){

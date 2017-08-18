@@ -169,7 +169,6 @@
         this.pageLoading = true;
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
-        util.setQuery("depotShopList",submitData);
         axios.get('/api/ws/future/basic/depotShop',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -223,7 +222,6 @@
        this.pageHeight = 0.74*window.innerHeight;
       this.initPromise = axios.get('/api/ws/future/basic/depotShop/getQuery').then((response) =>{
         this.formData = response.data;
-        util.copyValue(this.$route.query,this.formData);
       });
       this.initPromise =axios.get('/api/basic/sys/office/findByOfficeRuleName').then((response) =>{
         this.areaList=response.data;

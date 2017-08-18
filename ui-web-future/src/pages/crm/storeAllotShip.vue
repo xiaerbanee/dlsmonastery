@@ -113,7 +113,7 @@
       },doSubmit(){
         axios.post('/api/ws/future/crm/storeAllot/ship', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
           this.$message(response.data.message);
-          this.$router.push({name:'storeAllotList',query:util.getQuery("storeAllotList"), params:{_closeFrom:true}});
+          util.closeAndBackToPage(this.$router,'storeAllotList')
         }).catch(()=> {
           this.submitDisabled = false;
         });

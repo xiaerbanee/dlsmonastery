@@ -86,7 +86,7 @@
                     Object.assign(this.$data, this.getData());
                     this.initPage();
                   }else{
-                    this.$router.push({name: 'shopAllotList', query: util.getQuery("shopAllotList"), params:{_closeFrom:true}});
+                    util.closeAndBackToPage(this.$router,'shopAllotList')
                   }
                 }
               }).catch(() => {

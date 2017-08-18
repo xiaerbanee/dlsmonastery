@@ -57,7 +57,7 @@
             axios.post('/api/ws/future/basic/accountDepot/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               if(response.data.success) {
-                  this.$router.push({name: 'depotShopList', query: util.getQuery("depotShopList"), params:{_closeFrom:true}});
+                  util.closeAndBackToPage(this.$router,'depotShopList')
               }
             }).catch(() => {
               this.submitDisabled = false;

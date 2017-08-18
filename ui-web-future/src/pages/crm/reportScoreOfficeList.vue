@@ -76,7 +76,6 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("reportScoreOfficeList",submitData);
         axios.get('/api/ws/future/crm/reportScoreOffice',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -105,7 +104,6 @@
       axios.get('/api/ws/future/crm/reportScoreOffice/getQuery').then((response) =>{
         that.formData=response.data;
         console.log(that.formData)
-        util.copyValue(that.$route.query,that.formData);
         that.pageRequest();
       });
     }

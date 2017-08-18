@@ -144,7 +144,6 @@
         this.pageLoading = true;
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
-        util.setQuery("expressOrderList",submitData);
         axios.get('/api/ws/future/crm/expressOrder?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -187,7 +186,6 @@
         if(!this.formData.extendType){
           this.formData.extendType = '手机订单';
         }
-        util.copyValue(this.$route.query, this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

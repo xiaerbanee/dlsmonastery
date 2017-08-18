@@ -62,7 +62,7 @@
               axios.post('/api/ws/future/crm/expressOrder/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
                 //快递打印功能只能修改
-                this.$router.push({name:'expressOrderList',query:util.getQuery("expressOrderList"), params:{_closeFrom:true}})
+                util.closeAndBackToPage(this.$router,'expressOrderList')
               }).catch( () => {
                 this.submitDisabled = false;
               });

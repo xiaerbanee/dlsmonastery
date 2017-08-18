@@ -70,7 +70,7 @@
               this.$message(response.data.message);
               if(response.data.success){
                 if (!this.isCreate) {
-                  this.$router.push({name: 'demoPhoneList', query: util.getQuery("demoPhoneList"), params:{_closeFrom:true}})
+                  util.closeAndBackToPage(this.$router,'demoPhoneList')
                 } else {
                   Object.assign(this.$data, this.getData());
                   this.initPage();

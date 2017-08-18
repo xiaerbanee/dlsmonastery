@@ -56,7 +56,7 @@
             axios.post('/api/ws/future/crm/priceChange/save',qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(!that.isCreate){
-                this.$router.push({name:'priceChangeList',query:util.getQuery("priceChangeList"), params:{_closeFrom:true}})
+                util.closeAndBackToPage(this.$router,'priceChangeList')
               }else{
                 Object.assign(this.$data, this.getData());
                 this.initPage();

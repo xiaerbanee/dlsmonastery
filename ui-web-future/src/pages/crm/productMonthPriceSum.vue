@@ -73,7 +73,6 @@
         this.pageLoading = true;
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
-        util.setQuery("productMonthPriceSum", submitData);
         axios.get('/api/ws/future/crm/productMonthPriceSum', {params: submitData}).then((response) => {
           this.tableHeaders = response.data.header;
           this.tableDatas = response.data.data;
@@ -125,7 +124,6 @@
       this.pageHeight = window.outerHeight - 325;
       axios.get('/api/ws/future/crm/productMonthPriceSum/getQuery').then((response) => {
         this.formData = response.data;
-        util.copyValue(this.$route.query, this.formData);
         this.pageRequest();
       });
     }

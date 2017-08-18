@@ -201,7 +201,6 @@
         })
       },getTableData(){
         let submitData = util.deleteExtra(this.formData);
-        util.setQuery("vivoPlantProductsList",submitData);
         axios.get('/api/global/tool/factory/vivo/vivoPlantProducts/findAll', {params: submitData}).then((response) => {
           this.settings.data = response.data;
           console.log(response.data.length);
