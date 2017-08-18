@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-date-picker  v-model="innerDateRange"  :editable=false  :disabled="disabled"  type="daterange"  :placeholder="请选择日期"  align="right"  @change="onChange" :picker-options="pickerDateOption"></el-date-picker>
+    <el-date-picker  v-model="innerDateRange"  :editable=false  :disabled="disabled"  type="daterange" :placeholder="$t('su_date_ranger_picker.selectDateRange')" clearable  align="right"  @change="onChange" :picker-options="pickerDateOption"></el-date-picker>
   </div>
 </template>
 <script>

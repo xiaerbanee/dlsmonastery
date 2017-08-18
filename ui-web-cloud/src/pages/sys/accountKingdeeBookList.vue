@@ -114,7 +114,7 @@
       }
     },created () {
       let that = this;
-      that.pageHeight = 0.75*window.innerHeight;
+      that.pageHeight = 0.74*window.innerHeight;
       that.initPromise = axios.get('/api/global/cloud/sys/accountKingdeeBook/getQuery').then((response) =>{
         that.formData = response.data;
         util.copyValue(that.$route.query,that.formData);

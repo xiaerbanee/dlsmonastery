@@ -4,7 +4,7 @@
       <div class="el-tabs__nav-wrap">
         <div class="el-tabs__nav-scroll">
           <div class="el-tabs__nav">
-            <div class="el-tabs__item" :class="homeActive" data-tab-name="home" @click.stop="headTabClick">{{$t('head_tab.home')}}</div>
+            <div class="el-tabs__item" :class="indexActive" data-tab-name="index" @click.stop="headTabClick">首页</div>
             <div  class="el-tabs__item is-closable"  :class="tabItem.class" v-for="tabItem in tabList"   :key="tabItem.name" :data-tab-name="tabItem.name" @click.stop="headTabClick" >
               {{$t('menus.menu.' + tabItem.name)}}<span class="el-icon-close" :data-tab-name="tabItem.name" @click.stop="headTabRemove"></span>
             </div>
@@ -24,8 +24,8 @@
         currentActive:this.active
       }
     },computed: {
-        homeActive:function () {
-          if(this.active=="home") {
+        indexActive:function () {
+          if(this.active=="index") {
               return "is-active";
           } else {
               return "";
@@ -38,7 +38,7 @@
         }
         let name=event.target.dataset.tabName;
         let keep = false;
-        if(name!="home"){
+        if(name!="index"){
           var query = this.tabs.get(name);
           keep = true;
         }
@@ -49,7 +49,7 @@
         var list = this.getTabList();
         this.$store.dispatch('setTabs',this.tabs);
         if(list.length==0) {
-          this.$router.push({ name: "home"})
+          this.$router.push({ name: "index"})
         } else {
           var tabItem = list[list.length-1];
           if(this.currentActive == tabItem.name) {

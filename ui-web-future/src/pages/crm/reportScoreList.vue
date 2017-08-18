@@ -76,7 +76,6 @@
           this.searchText = util.getSearchText(this.$refs.searchDialog);
         })
       },   tableRowClassName(row, index) {
-        console.log(row.scoreDate+":"+row.cardQtyDiff)
         if (row.cardQtyDiff>10) {
           return "danger-row";
         }
@@ -117,7 +116,7 @@
       }
     },created () {
       const that = this;
-      that.pageHeight = 0.75*window.innerHeight;
+      that.pageHeight = 0.74*window.innerHeight;
       axios.get('/api/ws/future/crm/reportScore/getQuery').then((response) =>{
       that.formData=response.data;
       that.formData.sort="scoreDate,desc";

@@ -72,7 +72,7 @@
         <el-table-column prop="productTypeName" label="型号" sortable width="300" v-if="'型号'==formData.sumType"></el-table-column>
         <el-table-column prop="qty" :label="'数量('+page.sum+')'"  sortable></el-table-column>
         <el-table-column prop="percent" label="占比(%)"></el-table-column>
-        <el-table-column :label="$t('employeeList.operation')" width="140">
+        <el-table-column label="操作" width="140">
           <template scope="scope">
             <el-button size="small" @click="nextLevel(scope.row.productTypeId,scope.row.officeId,scope.row.depotId)">详细</el-button>
           </template>
@@ -227,7 +227,7 @@
         })
       }
     },created () {
-      this.pageHeight = 0.75*window.innerHeight;
+      this.pageHeight = 0.74*window.innerHeight;
       axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
         this.formData = response.data;
         this.formData.scoreType=this.formData.scoreType?"1":"0";

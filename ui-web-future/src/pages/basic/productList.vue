@@ -149,7 +149,7 @@
       }
     },created () {
         let that = this;
-        that.pageHeight = 0.75*window.innerHeight;
+        that.pageHeight = 0.74*window.innerHeight;
         this.initPromise = axios.get('/api/ws/future/basic/product/getQuery').then((response) =>{
           this.formData = response.data;
           util.copyValue(this.$route.query,this.formData);
