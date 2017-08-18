@@ -21,4 +21,7 @@ public interface ToolVivoClient {
     @RequestMapping(method = RequestMethod.GET, value = "/factory/vivo/pushFactoryData")
     String pushFactoryData(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "date") String date);
 
+    @RequestMapping(method = RequestMethod.GET, value = "/factory/vivo/pushStoreDataToFactory")
+    String pushStoreDataToFactory(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "date") String date);
+
 }

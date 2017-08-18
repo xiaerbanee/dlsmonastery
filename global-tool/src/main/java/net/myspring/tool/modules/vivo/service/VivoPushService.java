@@ -16,6 +16,7 @@ import net.myspring.tool.common.utils.CacheUtils;
 import net.myspring.tool.modules.vivo.domain.*;
 import net.myspring.tool.modules.vivo.dto.*;
 import net.myspring.tool.modules.vivo.repository.*;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -88,6 +89,8 @@ public class VivoPushService {
 
 
 
+
+
     @Transactional
     public  List<SZones> pushVivoZonesData(String companyName){
         logger.info("机构数据同步开始"+ LocalDateTime.now());
@@ -137,7 +140,6 @@ public class VivoPushService {
                 sCustomerDto.setAgentCode(mainCode);
             }
         }
-        logger.info("CompanyName:"+DbContextHolder.get().getCompanyName());
         List<SCustomers> sCustomersList = Lists.newArrayList();
         for(SCustomerDto futureCustomerDto :futureCustomerDtoList){
             if (StringUtils.isBlank(futureCustomerDto.getAgentCode())){
@@ -240,17 +242,26 @@ public class VivoPushService {
 
         logger.info("一代库库存数据同步开始"+LocalDateTime.now());
         sPlantStockStoresRepository.deleteByAccountDate(dateStart,dateEnd);
-        sPlantStockStoresRepository.batchSave(sPlantStockStoresList);
+        List<List<SPlantStockStores>> SPlantStockStoreLists = CollectionUtil.splitList(sPlantStockStoresList,2000);
+        for (List<SPlantStockStores> sPlantStockStores : SPlantStockStoreLists){
+            sPlantStockStoresRepository.batchSave(sPlantStockStores);
+        }
         logger.info("一代库库存数据同步完成"+LocalDateTime.now());
 
         logger.info("二代库库存数据同步开始"+LocalDateTime.now());
         sPlantStockSupplyRepository.deleteByAccountDate(dateStart,dateEnd);
-        sPlantStockSupplyRepository.batchSave(sPlantStockSupplyList);
+        List<List<SPlantStockSupply>> sPlantStockSupplyLists = CollectionUtil.splitList(sPlantStockSupplyList,2000);
+        for (List<SPlantStockSupply> sPlantStockSupplies : sPlantStockSupplyLists){
+            sPlantStockSupplyRepository.batchSave(sPlantStockSupplies);
+        }
         logger.info("二代库库存数据同步完成"+LocalDateTime.now());
 
         logger.info("经销商库存数据同步开始"+LocalDateTime.now());
         sPlantStockDealerRepository.deleteByAccountDate(dateStart,dateEnd);
-        sPlantStockDealerRepository.batchSave(sPlantStockDealerList);
+        List<List<SPlantStockDealer>> SPlantStockDealerLists = CollectionUtil.splitList(sPlantStockDealerList,2000);
+        for (List<SPlantStockDealer> sPlantStockDealers : SPlantStockDealerLists){
+            sPlantStockDealerRepository.batchSave(sPlantStockDealers);
+        }
         logger.info("经销商库存数据同步完成"+LocalDateTime.now());
         logger.info("一代、二代、经销商库存数据同步完成:"+LocalDateTime.now());
     }
@@ -309,15 +320,22 @@ public class VivoPushService {
                     }
                     sProductItem000.setStatusInfo(StringUtils.getFormatId(sPlantCustomerStockDetailDto.getCustomerId(), agentCode + "C", "00000"));
                 }
+                sProductItem000.setIsUpLoad("0");
                 sProductItem000.setStatus("在渠道中");
                 sProductItem000.setUpdateTime(date);
                 sProductItem000List.add(sProductItem000);
             }
         }
-        sProductItemStocksRepository.deleteByUpdateTime(date,LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1)));
-        sProductItemStocksRepository.batchSave(sProductItemStocksList);
-        sProductItem000Repository.deleteByUpdateTime(date,LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1)));
-        sProductItem000Repository.batchSave(sProductItem000List);
+        sProductItemStocksRepository.deleteAll();
+        List<List<SProductItemStocks>> SProductItemStockLists = CollectionUtil.splitList(sProductItemStocksList,2000);
+        for (List<SProductItemStocks> sProductItemStocks :SProductItemStockLists){
+            sProductItemStocksRepository.batchSave(sProductItemStocks);
+        }
+        sProductItem000Repository.deleteAll();
+        List<List<SProductItem000>> SProductItem000Lists = CollectionUtil.splitList(sProductItem000List,2000);
+        for (List<SProductItem000> sProductItem000s : SProductItem000Lists){
+            sProductItem000Repository.batchSave(sProductItem000s);
+        }
         logger.info("库存串码明细数据同步完成:"+LocalDateTime.now());
     }
 
@@ -430,17 +448,10 @@ public class VivoPushService {
         return StringUtils.getFormatId(id,mainCode,"0000");
     }
 
-    public VivoPushDto getPushFactoryDate(String date,String companyName) {
+    public VivoPushDto getPushFactoryDate(String date) {
         String dateStart = date;
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<String> agentCodeList = Lists.newArrayList();
-        if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
-            agentCodeList.add(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0]);
-        }else if (CompanyNameEnum.IDVIVO.name().equals(DbContextHolder.get().getCompanyName())){
-            agentCodeList = officeClient.findDistinctAgentCode(companyName);
-        }else {
-            return null;
-        }
+        List<String> agentCodeList = getAgentCodeList();
         logger.info("数据准备开始:"+LocalDateTime.now());
         VivoPushDto vivoPushDto = new VivoPushDto();
         vivoPushDto.setsZonesList(sZonesRepository.findByAgentCodeIn(agentCodeList));
@@ -449,7 +460,7 @@ public class VivoPushService {
         vivoPushDto.setsPlantStockDealerList(sPlantStockDealerRepository.findByDateAndAgentCodeIn(dateStart,dateEnd,agentCodeList));
         vivoPushDto.setsPlantStockStoresList(sPlantStockStoresRepository.findByDateAndAgentCodeIn(dateStart,dateEnd,agentCodeList));
         vivoPushDto.setsPlantStockSupplyList(sPlantStockSupplyRepository.findByDateAndAgentCodeIn(dateStart,dateEnd,agentCodeList));
-        vivoPushDto.setsProductItem000List(sProductItem000Repository.findByAgentCodeIn(agentCodeList));
+//        vivoPushDto.setsProductItem000List(sProductItem000Repository.findByAgentCodeIn(agentCodeList));
         vivoPushDto.setsProductItemStocksList(sProductItemStocksRepository.findByAgentCodeIn(agentCodeList));
         vivoPushDto.setsStoresList(sStoresRepository.findByAgentCodeIn(agentCodeList));
         if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
@@ -461,16 +472,9 @@ public class VivoPushService {
 
     @FactoryDataSource
     @Transactional
-    public void pushFactoryData(VivoPushDto vivoPushDto,String date,String companyName){
+    public void pushFactoryData(VivoPushDto vivoPushDto,String date){
         logger.info("开始上抛数据:"+LocalDateTime.now());
-        List<String> agentCodeList = Lists.newArrayList();
-        if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
-            agentCodeList.add(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0]);
-        }else if (CompanyNameEnum.IDVIVO.name().equals(DbContextHolder.get().getCompanyName())){
-            agentCodeList = AgentCodeEnum.getList();
-        }else {
-            return;
-        }
+        List<String> agentCodeList = getAgentCodeList();
         String dateSart = date;
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         for (String agentCode : agentCodeList){
@@ -482,7 +486,7 @@ public class VivoPushService {
             List<SPlantStockDealer> sPlantStockDealerList = Lists.newArrayList();
             List<SPlantStockStores> sPlantStockStoresList = Lists.newArrayList();
             List<SPlantStockSupply> sPlantStockSupplyList = Lists.newArrayList();
-            List<SProductItem000> sProductItem000List = Lists.newArrayList();
+//            List<SProductItem000> sProductItem000List = Lists.newArrayList();
             List<SProductItemLend> sProductItemLendList = Lists.newArrayList();
             List<SProductItemStocks> sProductItemStocksList = Lists.newArrayList();
             List<SStores> sStoresList = Lists.newArrayList();
@@ -520,11 +524,11 @@ public class VivoPushService {
                 }
             }
 
-            for (SProductItem000 sProductItem000 : vivoPushDto.getsProductItem000List()){
-                if (agentCode.equals(sProductItem000.getAgentCode())){
-                    sProductItem000List.add(sProductItem000);
-                }
-            }
+//            for (SProductItem000 sProductItem000 : vivoPushDto.getsProductItem000List()){
+//                if (agentCode.equals(sProductItem000.getAgentCode())){
+//                    sProductItem000List.add(sProductItem000);
+//                }
+//            }
 
             for (SProductItemStocks sProductItemStocks : vivoPushDto.getsProductItemStocksList()){
                 if (agentCode.equals(sProductItemStocks.getAgentCode())){
@@ -583,8 +587,8 @@ public class VivoPushService {
             logger.info("上抛二代库库存数据结束:"+LocalDateTime.now());
 
             logger.info("上抛库存串码明细数据开始:"+LocalDateTime.now());
-            sProductItem000Repository.deleteByAgentCode(agentCode);
-            sProductItem000Repository.batchSaveToFactory(agentCode,sProductItem000List);
+//            sProductItem000Repository.deleteByAgentCode(agentCode);
+//            sProductItem000Repository.batchSaveToFactory(agentCode,sProductItem000List);
             sProductItemStocksRepository.deleteByAgentCode(agentCode);
             sProductItemStocksRepository.batchSaveToFactory(agentCode,sProductItemStocksList);
             logger.info("上抛库存串码明细数据结束:"+LocalDateTime.now());
@@ -603,5 +607,56 @@ public class VivoPushService {
         }
         logger.info("上抛数据完成:"+LocalDateTime.now());
     }
+
+    @LocalDataSource
+    @Transactional
+    public List<SProductItem000> getStoreData(){
+        List<String> agentCodeList = getAgentCodeList();
+        List<SProductItem000> sProductItem000List = sProductItem000Repository.findByIsUploadAndAgentCodeIn(agentCodeList);
+        return sProductItem000List;
+    }
+
+    @Transactional
+    @FactoryDataSource
+    public void pushStoreDataToFactory(int count,List<SProductItem000> sProductItem000List){
+        List<String> agentCodeList = getAgentCodeList();
+        for (String agentCode : agentCodeList){
+
+            List<SProductItem000> sProductItem000s = Lists.newArrayList();
+
+            for (SProductItem000 sProductItem000 : sProductItem000List){
+                if (agentCode.equals(sProductItem000.getAgentCode())){
+                    sProductItem000s.add(sProductItem000);
+                }
+            }
+
+            //全量数据上抛,第一次抛数据之前把数据删掉。
+            if (count == 0){
+                sProductItem000Repository.deleteByAgentCode(agentCode);
+            }
+            sProductItem000Repository.batchSaveToFactory(agentCode,sProductItem000List);
+        }
+    }
+
+    @LocalDataSource
+    @Transactional
+    public void updateStoreData(List<SProductItem000> sProductItem000List){
+        List<String> idList = CollectionUtil.extractToList(sProductItem000List,"id");
+        sProductItem000Repository.updateIsUploadById(idList);
+    }
+
+    private List<String> getAgentCodeList(){
+        List<String> agentCodeList = Lists.newArrayList();
+        if (CompanyNameEnum.JXVIVO.name().equals(DbContextHolder.get().getCompanyName())){
+            agentCodeList.add(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue().split(CharConstant.COMMA)[0]);
+            agentCodeList.add("M13E00");
+        }else if (CompanyNameEnum.IDVIVO.name().equals(DbContextHolder.get().getCompanyName())){
+            agentCodeList = officeClient.findDistinctAgentCode(DbContextHolder.get().getCompanyName());
+        }else {
+            return null;
+        }
+        return agentCodeList;
+    }
+
 
 }
