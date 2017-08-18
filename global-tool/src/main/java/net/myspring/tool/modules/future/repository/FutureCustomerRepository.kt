@@ -84,7 +84,7 @@ class FutureCustomerRepository @Autowired constructor(val namedParameterJdbcTemp
                 SELECT
                     de.id AS customerId,
                     de.NAME AS customerName,
-                    de.n AS zoneId,
+                    de.office_id AS zoneId,
                     :date AS recordDate,
                     2 AS customerLevel,
                     de.area_type AS customerStr1,
