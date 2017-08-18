@@ -59,7 +59,7 @@
         font-size: 14px;
     }
 
-    .item {
+    .text.item {
         padding: 18px 0;
     }
     .clearfix:before,
