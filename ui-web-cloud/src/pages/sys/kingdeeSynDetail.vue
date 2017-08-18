@@ -42,7 +42,6 @@
       initPage(){
         axios.get('/api/global/cloud/sys/kingdeeSyn/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.kingdeeSyn = response.data;
-          console.log(this.kingdeeSyn)
         });
       }
     },created(){

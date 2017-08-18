@@ -22,7 +22,16 @@ public class ProductQuery extends BaseQuery {
     private Boolean allowOrder;
     private String outGroupName;  //产品类型
     private String netType;  //网络制式
+    private String expiryDateRemarks;//截止日期备注
     private List<String> ids= Lists.newArrayList();
+
+    public String getExpiryDateRemarks() {
+        return expiryDateRemarks;
+    }
+
+    public void setExpiryDateRemarks(String expiryDateRemarks) {
+        this.expiryDateRemarks = expiryDateRemarks;
+    }
 
     public Boolean getVisible() {
         return visible;

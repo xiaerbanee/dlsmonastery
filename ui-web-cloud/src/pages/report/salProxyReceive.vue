@@ -1,24 +1,26 @@
-<style>
-</style>
 <template>
   <div>
     <head-tab active="salProxyReceive"></head-tab>
-    <div>
-      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
-        <el-form-item label="开始日期"  prop="dateStart">
-          <date-picker v-model="formData.dateStart"></date-picker>
-        </el-form-item>
-        <el-form-item label="结束日期"  prop="dateEnd">
-          <date-picker v-model="formData.dateEnd"></date-picker>
-        </el-form-item>
-        <el-button type="primary" @click="search()" icon="search">搜索</el-button>
-        <el-tooltip class="item" effect="dark" content="请在右边选择导出数据的日期，再点击导出" placement="top-start">
-          <el-button type="primary" @click="exportData()" icon="export">导出</el-button>
-        </el-tooltip>
-        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
-      </el-form>
+      <el-row :gutter="20">
+          <el-form :model="formData" method="get" ref="inputForm" :rules="rules">
+              <el-col :span="6">
+                  <el-form-item label="开始日期"  prop="dateStart">
+                      <date-picker v-model="formData.dateStart"></date-picker>
+                  </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                  <el-form-item label="结束日期"  prop="dateEnd">
+                    <date-picker v-model="formData.dateEnd"></date-picker>
+                  </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                  <el-button type="primary" @click="search()" icon="search">搜索</el-button>
+                  <el-button type="primary" @click="exportData()" icon="upload">导出</el-button>
+              </el-col>
+          </el-form>
+      </el-row>
+      <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
     </div>
-  </div>
 </template>
 <style>
   @import "~handsontable/dist/handsontable.full.css";
@@ -36,7 +38,7 @@
           manualColumnResize:true,
           filters: true,
           dropdownMenu: true,
-         contextMenu: util.contextMenu(this.$store.state.global.lang),
+           contextMenu: util.contextMenu(this.$store.state.global.lang),
           stretchH: 'all',
           height: 650,
           fixedRowsTop:0,

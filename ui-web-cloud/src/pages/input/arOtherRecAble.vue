@@ -1,15 +1,19 @@
 <template>
   <div>
     <head-tab active="arOtherRecAble"></head-tab>
-    <div>
-      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
-        <el-form-item label="日期"  prop="billDate">
-          <date-picker v-model="formData.billDate"></date-picker>
-        </el-form-item>
-        <el-button type="primary" :disabled="submitDisabled"  @click="formSubmit" icon="check">保存</el-button>
-        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
+    <el-row :gutter="20">
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules">
+        <el-col :span="6">
+          <el-form-item label="日期"  prop="billDate">
+            <date-picker v-model="formData.billDate"></date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-button type="primary" :disabled="submitDisabled"  @click="formSubmit" icon="check">保存</el-button>
+        </el-col>
       </el-form>
-    </div>
+    </el-row>
+    <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
   </div>
 </template>
 <style>
@@ -46,7 +50,7 @@
               {type: "autocomplete", strict: true, allowEmpty: false, expenseTypeName:[],source: this.expenseTypeName},
               {type: "autocomplete", strict: true, allowEmpty: false, customerForName:[],source: this.customerForName},
             ],
-           contextMenu: util.contextMenu(this.$store.state.global.lang),
+             contextMenu: util.contextMenu(this.$store.state.global.lang),
             afterChange: function (changes, source) {
               if (source !== 'loadData') {
                 var data = table.getData();

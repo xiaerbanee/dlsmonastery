@@ -70,6 +70,9 @@ class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
             WHERE
                 t1.enabled=1
         """)
+        if(CollectionUtil.isNotEmpty(shopAdQuery.idList)){
+            sb.append(""" and t1.id in (:idList) """)
+        }
         if (StringUtils.isNotEmpty(shopAdQuery.shopAdTypeId)) {
             sb.append("""  and t1.shop_ad_type_id = :shopAdTypeId """)
         }
@@ -97,9 +100,6 @@ class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
         if(shopAdQuery.doorType != null && shopAdQuery.doorType){
             sb.append(""" and type.door_type = 1 """)
         }
-        if (shopAdQuery.ids != null) {
-            sb.append("""  and t1.id in (:ids) """)
-        }
         if (StringUtils.isNotEmpty(shopAdQuery.areaId)) {
             sb.append("""  and depot.area_id = :areaId """)
         }
@@ -107,13 +107,13 @@ class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
             sb.append("""  and t1.created_date  >= :createdDateStart """)
         }
         if (shopAdQuery.createdDateEnd != null) {
-            sb.append("""  and t1.created_date  < :createdDateEnd""")
+            sb.append("""  and t1.created_date  < :createdDateEnd """)
         }
         if (shopAdQuery.lastModifiedDateStart != null) {
             sb.append("""  and t1.last_modified_date  >= :lastModifiedDateStart """)
         }
         if (shopAdQuery.lastModifiedDateEnd != null) {
-            sb.append("""  and t1.last_modified_date  < :lastModifiedDateEnd""")
+            sb.append("""  and t1.last_modified_date  < :lastModifiedDateEnd """)
         }
         if (CollectionUtil.isNotEmpty(shopAdQuery.depotIdList)) {
             sb.append("""  and depot.id in (:depotIdList) """)
