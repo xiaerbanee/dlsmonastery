@@ -64,7 +64,7 @@
 					<input type="password" name="password" class="form-control" placeholder="请输入密码">
 				</div>
 				<div class="form-group">
-					<button class="btn btn-block btn-info">登录</button>
+					<button class="btn btn-block btn-info btn-login">登录</button>
 				</div>
 			</div>
    		</div>
@@ -85,24 +85,26 @@
 				})
 			});
 		//login when click
-		$('button').on({
-			click:login
+		$('button').on('click',(e) => {
+			return login(e);
 		})
 		//login when press enter
 		$("input[name='password']").on({
 			keypress(e){
 				if(e.keyCode === 13){
-					login();
+					login(e);
 				}
 			}
 		})
 	})
 	//login
-	function login(){
+	function login(e){
 		let username = $("input[name='username']").val();
 		let password = $("input[name='password']").val();
 		let companyName = $('select').val();
-		let form  = {username,password,companyName}
+		let form  = {username,password,companyName};
+		$('.btn-login').text('登录中');
+		$('.btn-login').attr('disabled',true)
 		//validate the form data
 		try{
 			for(let key in form){
@@ -114,21 +116,28 @@
 			switch (e){
 				case 'username is empty':
 					swal('请输入用户名!','','error');
+					$('.btn-login').text('登录');
+					$('.btn-login').attr('disabled',false)
 					break;
 				case 'password is empty':
 					swal('请输入密码!','','error');
+					$('.btn-login').text('登录');
+					$('.btn-login').attr('disabled',false)
 					break;
 			}
 		}
+
 		$.post('/user/login',form, (res) => {
 			if(res.success){
 					$.get('/api/basic/hr/account/getAccountInfo', (res) => {
 						localStorage.setItem('menus',JSON.stringify(res.menus))
-
+						localStorage.setItem('authorityList',JSON.stringify(res.authorityList))
 						location.reload();
 					});
 				}else{
 					swal('用户名或者密码错误!','','error');
+					$('.btn-login').text('登录');
+					$('.btn-login').attr('disabled',false)
 				}
 		});
 	}

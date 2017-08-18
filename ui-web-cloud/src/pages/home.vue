@@ -152,6 +152,7 @@
                             }
                         }
                         that.$router.push({path: "/index"});
+                        that.$store.dispatch('setTabs',new Map());
                     }
                 } else {
                     that.$store.dispatch('clearGlobal');
@@ -278,7 +279,7 @@
 				// top: 0px;
 				// bottom: 0px;
 				// left: 230px;
-
+				overflow: auto;
 				padding: 20px;
 				.breadcrumb-container {
 					//margin-bottom: 15px;
