@@ -154,8 +154,6 @@
                                 this.activeModule = backend.backendModuleList[0].code;
                             }
                         }
-                        that.$router.push({path: "/index"});
-                        that.$store.dispatch('setTabs',new Map());
                     }
                 } else {
                     that.$store.dispatch('clearGlobal');
