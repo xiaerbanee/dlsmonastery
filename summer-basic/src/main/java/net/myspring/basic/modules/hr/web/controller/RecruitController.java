@@ -6,15 +6,20 @@ import net.myspring.basic.modules.hr.service.AccountService;
 import net.myspring.basic.modules.hr.service.RecruitEnumService;
 import net.myspring.basic.modules.hr.service.RecruitService;
 import net.myspring.basic.modules.hr.web.form.RecruitForm;
+import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
 import net.myspring.basic.modules.hr.web.query.RecruitQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.excel.ExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping(value = "hr/recruit")
@@ -39,6 +44,14 @@ public class RecruitController {
         recruitQuery.getExtra().put("secondAppointByList",accountService.findByIds(recruitEnumService.findValueByCategory((RecruitTypeEnum.复试人.name()))));
         return recruitQuery;
     }
+
+    @RequestMapping(value = "exportReport",method = RequestMethod.GET)
+    public ModelAndView exportReport(RecruitQuery recruitQuery) throws IOException {
+
+        return new ModelAndView(new ExcelView(),"simpleExcelBook",recruitService.exportReport(recruitQuery));
+    }
+
+
 
     @RequestMapping(value = "getForm")
     public RecruitForm findForm(RecruitForm recruitForm){

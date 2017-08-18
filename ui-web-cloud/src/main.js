@@ -12,6 +12,7 @@ import Vuex from 'vuex'
 //import 'nprogress/nprogress.css'
 import router from './router'
 import 'font-awesome/css/font-awesome.min.css'
+import fullCalendar from 'vue-fullcalendar'
 
 import VueI18n from 'vue-i18n';
 
@@ -39,7 +40,7 @@ Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
 
-
+Vue.component('full-calendar', fullCalendar);
 Vue.component('pageable', pageable);
 Vue.component('head-tab', headTab);
 Vue.component('search-tag', searchTag);

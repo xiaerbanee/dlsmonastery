@@ -445,7 +445,28 @@ util.moneyFormatter = function(row,col){
     return row[pro];
   }
 
-}
+};
+
+util.countTotal = function(fn,cols){
+    const a = 'label';
+    const b = {
+        domProps: {
+            innerHTML: `${cols.column.label} (合计:${util.countByProp(cols)})`,
+        }
+    };
+    return fn(a,b);
+};
+
+util.countByProp = function(columns){
+    const prop = columns.column.property;
+    const data = columns.store.states.data;
+    let sum = 0;
+    data.forEach((col) => {
+        sum += col[prop];
+    });
+    return sum;
+};
+
 util.contextMenu = function(lang){
     let menus = {
         items:{
@@ -459,11 +480,37 @@ util.contextMenu = function(lang){
                 name:"删除行"
             }
         }
-    }
+    };
     if(lang === 'id'){
         return true;
     }else{
         return menus;
     }
-}
+};
+
+util.contextMenu = function(lang){
+    let menus = {
+        items:{
+            "row_above":{
+                name:'插入行(上方)'
+            },
+            "row_below":{
+                name:'插入行(下方)'
+            },
+            "remove_row":{
+                name:"删除行"
+            }
+        }
+    };
+    if(lang === 'id'){
+        return true;
+    }else{
+        return menus;
+    }
+};
+
+util.closeAndBackToPage = function (route, toRouteName) {
+    route.push({name:toRouteName,query:util.getQuery(toRouteName), params:{_closeFrom:true, _keep:true}});
+};
+
 export default util;

@@ -21,14 +21,60 @@ public class RecruitQuery extends BaseQuery {
     private String firstAppointBy;
     private String secondAppointBy;
     private Boolean onJob;
+    private String inviteDate;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    private String type;
+
+
+    private LocalDate inviteDateStart;
+    private LocalDate inviteDateEnd;
     private LocalDate firstAppointDateStart;
     private LocalDate firstAppointDateEnd;
+
+
     private LocalDate secondAppointDateStart;
     private LocalDate secondAppointDateEnd;
     private LocalDate auditAppointDateStart;
     private LocalDate auditAppointDateEnd;
     private LocalDate entryAppointDateStart;
     private LocalDate entryAppointDateEnd;
+
+    public String getInviteDate() {
+        return inviteDate;
+    }
+
+    public void setInviteDate(String inviteDate) {
+        this.inviteDate = inviteDate;
+    }
+
+    public LocalDate getInviteDateStart() {
+        if(StringUtils.isNotBlank(inviteDate)) {
+            return LocalDateUtils.parse(inviteDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        }
+        return null;    }
+
+
+
+    public LocalDate getInviteDateEnd() {
+        if(StringUtils.isNotBlank(inviteDate)) {
+            return LocalDateUtils.parse(inviteDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        }
+        return null;
+    }
+
+
+    public void setInviteDateEnd(LocalDate inviteDateEnd) {
+        this.inviteDateEnd = inviteDateEnd;
+    }
+
 
     public String getName() {
         return name;
@@ -117,9 +163,7 @@ public class RecruitQuery extends BaseQuery {
         }
         return null;    }
 
-    public void setFirstAppointDateStart(LocalDate firstAppointDateStart) {
-        this.firstAppointDateStart = firstAppointDateStart;
-    }
+
 
     public LocalDate getFirstAppointDateEnd() {
         if(StringUtils.isNotBlank(firstAppointDate)) {
@@ -128,6 +172,10 @@ public class RecruitQuery extends BaseQuery {
         return null;
     }
 
+
+    public void setFirstAppointDateStart(LocalDate firstAppointDateStart) {
+        this.firstAppointDateStart = firstAppointDateStart;
+    }
     public void setFirstAppointDateEnd(LocalDate firstAppointDateEnd) {
         this.firstAppointDateEnd = firstAppointDateEnd;
     }
