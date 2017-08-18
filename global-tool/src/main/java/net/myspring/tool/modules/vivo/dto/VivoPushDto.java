@@ -1,20 +1,21 @@
 package net.myspring.tool.modules.vivo.dto;
 
+import com.google.common.collect.Lists;
 import net.myspring.tool.modules.vivo.domain.*;
 
 import java.util.List;
 
 public class VivoPushDto {
-    private List<SCustomers> sCustomersList;
-    private List<SPlantEndProductSale> sPlantEndProductSaleList;
-    private List<SPlantStockDealer> sPlantStockDealerList;
-    private List<SPlantStockStores> sPlantStockStoresList;
-    private List<SPlantStockSupply> sPlantStockSupplyList;
-    private List<SProductItem000> sProductItem000List;
-    private List<SProductItemLend> sProductItemLendList;
-    private List<SProductItemStocks> sProductItemStocksList;
-    private List<SStores> sStoresList;
-    private List<SZones> sZonesList;
+    private List<SCustomers> sCustomersList = Lists.newArrayList();
+    private List<SPlantEndProductSale> sPlantEndProductSaleList = Lists.newArrayList();
+    private List<SPlantStockDealer> sPlantStockDealerList = Lists.newArrayList();
+    private List<SPlantStockStores> sPlantStockStoresList = Lists.newArrayList();
+    private List<SPlantStockSupply> sPlantStockSupplyList = Lists.newArrayList();
+    private List<SProductItem000> sProductItem000List = Lists.newArrayList();
+    private List<SProductItemLend> sProductItemLendList = Lists.newArrayList();
+    private List<SProductItemStocks> sProductItemStocksList = Lists.newArrayList();
+    private List<SStores> sStoresList = Lists.newArrayList();
+    private List<SZones> sZonesList = Lists.newArrayList();
 
     public List<SCustomers> getsCustomersList() {
         return sCustomersList;

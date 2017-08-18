@@ -1,5 +1,6 @@
 package net.myspring.tool.modules.vivo.web.controller;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.enums.CompanyNameEnum;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.utils.RequestUtils;
@@ -7,6 +8,7 @@ import net.myspring.tool.modules.future.service.FutureCustomerService;
 import net.myspring.tool.modules.future.service.FutureDemoPhoneService;
 import net.myspring.tool.modules.future.service.FutureProductImeSaleService;
 import net.myspring.tool.modules.future.service.FutureProductImeService;
+import net.myspring.tool.modules.vivo.domain.SProductItem000;
 import net.myspring.tool.modules.vivo.dto.*;
 import net.myspring.tool.modules.vivo.service.VivoPushService;
 import org.apache.commons.lang.StringUtils;
@@ -16,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @RestController
@@ -58,7 +62,7 @@ public class VivoPushController {
             pushToLocalDto.setVivoCustomerSaleImeiDtoList(futureProductImeSaleService.getProductImeSaleData(date));
             pushToLocalDto.setsStoresList(futureCustomerService.findIDvivoStore());
         }else {
-            logger.info("同步数据失败至中转库失败！");
+            logger.info("同步数据失败至中转库失败");
             return "数据同步失败";
         }
         logger.info("获取业务数据结束:"+LocalDateTime.now());
@@ -71,12 +75,34 @@ public class VivoPushController {
     @RequestMapping(value = "pushFactoryData")
     public String pushFactoryData(String companyName,String date){
         logger.info("上抛数据至工厂开始:"+LocalDateTime.now());
-        if (StringUtils.isBlank(RequestUtils.getCompanyName())){
-            DbContextHolder.get().setCompanyName(companyName);
-        }
-        VivoPushDto vivoPushDto = vivoPushService.getPushFactoryDate(date,companyName);
-        vivoPushService.pushFactoryData(vivoPushDto,date,companyName);
+        DbContextHolder.get().setCompanyName(companyName);
+        VivoPushDto vivoPushDto = vivoPushService.getPushFactoryDate(date);
+        vivoPushService.pushFactoryData(vivoPushDto,date);
         logger.info("上抛数据至工厂完成:"+LocalDateTime.now());
+        return "数据上抛成功";
+    }
+
+    //渠道库存明细数据上抛
+    @RequestMapping(value = "pushStoreDataToFactory")
+    public String pushStoreDataToFactory(String companyName){
+        logger.info("开始上抛渠道库存明细数据");
+        DbContextHolder.get().setCompanyName(companyName);
+        try{
+            int count = 0;
+            while(true){
+                List<SProductItem000> sProductItem000List = vivoPushService.getStoreData();
+                if (sProductItem000List.size() == 0){
+                    break;
+                }
+                vivoPushService.pushStoreDataToFactory(count,sProductItem000List);
+                vivoPushService.updateStoreData(sProductItem000List);
+                count += sProductItem000List.size();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return "数据上抛失败";
+        }
+        logger.info("成功上抛渠道库存明细数据");
         return "数据上抛成功";
     }
 
