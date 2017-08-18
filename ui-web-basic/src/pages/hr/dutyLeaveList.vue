@@ -8,13 +8,13 @@
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('dutyLeaveList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData"  :label-width="formLabelWidth">
-              <el-form-item :label="$t('dutyLeaveList.dutyDate')">
+              <el-form-item :label="$t('dutyLeaveList.dutyDate')" prop="dutyDate">
                 <date-range-picker v-model="formData.dutyDate"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('dutyLeaveList.leaveType')">
-                <dict-enum-select v-model="formData.extra.leaveType" category="请假类型" />
+              <el-form-item :label="$t('dutyLeaveList.leaveType')" prop="leaveDate">
+                <dict-enum-select v-model="formData.leaveType" category="请假类型" />
               </el-form-item>
-              <el-form-item :label="$t('dutyLeaveList.dateType')">
+              <el-form-item :label="$t('dutyLeaveList.dateType')" prop="dateType">
                 <el-select v-model="formData.dateType" filterable clearable :placeholder="$t('dutyLeaveList.inputKey')">
                   <el-option v-for="item in formData.extra.dateList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>

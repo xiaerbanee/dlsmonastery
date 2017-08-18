@@ -17,8 +17,8 @@
             <el-form-item :label="$t('accountForm.confirmPassword')" prop="confirmPassword">
               <el-input v-model="inputForm.confirmPassword" type="password"></el-input>
             </el-form-item>
-            <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('accountForm.save')}}</el-button>
+            <el-form-item label="绑定门店" prop="depotIdList">
+              <depot-select v-model="depotIdList" category="shop" :multiple="true"></depot-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -31,9 +31,6 @@
             <el-form-item label="数据部门" prop="officeIdList">
               <office-select v-model="inputForm.officeIdList" :multiple="true"></office-select>
             </el-form-item>
-            <el-form-item label="绑定门店" prop="depotIdList">
-              <depot-select v-model="depotIdList" category="shop" :multiple="true"></depot-select>
-            </el-form-item>
             <el-form-item :label="$t('accountForm.position')" prop="positionId">
               <el-select v-model="inputForm.positionId"  filterable :placeholder="$t('accountForm.selectGroup')" :clearable=true :disabled="!isCreate&&!hasPermit">
                 <el-option v-for="position in inputForm.extra.positionDtoList" :key="position.id" :label="position.name" :value="position.id"></el-option>
@@ -41,6 +38,9 @@
             </el-form-item>
             <el-form-item :label="$t('accountForm.remarks')" prop="remarks">
               <el-input v-model="inputForm.remarks"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('accountForm.save')}}</el-button>
             </el-form-item>
           </el-col>
         </el-row>
