@@ -153,6 +153,7 @@
                             }
                         }
                         that.$router.push({path: "/index"});
+                        that.$store.dispatch('setTabs',new Map());
                     }
                 } else {
                     that.$store.dispatch('clearGlobal');
