@@ -466,4 +466,9 @@ util.contextMenu = function(lang){
         return menus;
     }
 }
+
+util.closeAndBackToPage = function (router, toRouteName) {
+    router.push({name:toRouteName,query:util.getQuery(toRouteName), params:{_closeFrom:true, _keep:true}});
+
+};
 export default util;

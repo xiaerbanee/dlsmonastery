@@ -94,12 +94,6 @@ class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
         if (shopAdQuery.specialArea != null && !shopAdQuery.specialArea) {
             sb.append("""  and t1.special_area = 0 """)
         }
-        if(shopAdQuery.doorType == null || !shopAdQuery.doorType){
-            sb.append(""" and type.door_type is null or type.door_type = 0 """)
-        }
-        if(shopAdQuery.doorType != null && shopAdQuery.doorType){
-            sb.append(""" and type.door_type = 1 """)
-        }
         if (StringUtils.isNotEmpty(shopAdQuery.areaId)) {
             sb.append("""  and depot.area_id = :areaId """)
         }
@@ -120,6 +114,12 @@ class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
         }
         if (CollectionUtil.isNotEmpty(shopAdQuery.officeIdList)) {
             sb.append("""  and depot.office_id in (:officeIdList) """)
+        }
+        if(shopAdQuery.doorType == null){
+            sb.append(""" and type.door_type is null or type.door_type = 0 """)
+        }
+        if(shopAdQuery.doorType != null && shopAdQuery.doorType){
+            sb.append(""" and type.door_type = 1 """)
         }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())

@@ -38,7 +38,6 @@
           manualColumnResize:true,
           filters: true,
           dropdownMenu: true,
-           contextMenu: util.contextMenu(this.$store.state.global.lang),
           stretchH: 'all',
           height: 650,
           fixedRowsTop:0,

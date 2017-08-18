@@ -166,6 +166,9 @@
 		top: 0px;
 		bottom: 0px;
 		width: 100%;
+		aside,.logo{
+			transition: .1s ease;
+		}
 		.header {
 			height: 60px;
 			line-height: 60px;
@@ -270,7 +273,7 @@
 				// top: 0px;
 				// bottom: 0px;
 				// left: 230px;
-				overflow-y: scroll;
+
 				padding: 20px;
 				.breadcrumb-container {
 					//margin-bottom: 15px;
