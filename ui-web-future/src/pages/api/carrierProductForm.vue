@@ -58,7 +58,7 @@
                 Object.assign(this.$data, this.getData());
                 this.initPage();
               }else{
-                this.$router.push({name:'carrierProductList',query:util.getQuery("carrierProductList"), params:{_closeFrom:true}})
+                util.closeAndBackToPage(this.$router,'carrierProductList')
               }
             }).catch(function () {
               that.submitDisabled = false;

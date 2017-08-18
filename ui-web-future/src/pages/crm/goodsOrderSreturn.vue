@@ -95,7 +95,7 @@
              submitData.goodsOrderDetailFormList = goodsOrderDetailFormList;
              axios.post('/api/ws/future/crm/goodsOrderShip/sreturn',qs.stringify(submitData, {allowDots:true})).then((response)=> {
                this.$message(response.data.message);
-               this.$router.push({name:'goodsOrderShipList',query:util.getQuery("goodsOrderShipList"), params:{_closeFrom:true}})
+               util.closeAndBackToPage(this.$router,'goodsOrderShipList')
              }).catch(() => {
                this.submitDisabled = false;
              });

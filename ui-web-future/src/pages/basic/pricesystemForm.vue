@@ -73,7 +73,7 @@
                 Object.assign(this.$data,this.getData());
                 this.initPage();
               }else {
-                this.$router.push({name:'pricesystemList',query:util.getQuery("pricesystemList"),params:{_closeFrom:true}})
+                util.closeAndBackToPage(this.$router,'pricesystemList')
               }
             }).catch( ()=> {
               this.submitDisabled = false;

@@ -17,7 +17,7 @@
         <el-table-column prop="remarks" :label="$t('folderList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('folderList.operation')" width="140">
           <template scope="scope">
-              <el-button size="small" @click.native="itemAction(scope.row.id,'修改')" v-permit="'sys:folder:edit'">修改</el-button>
+              <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'sys:folder:edit'">{{$t('folderList.edit')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -58,7 +58,7 @@
       },itemAdd(){
         this.$router.push({ name: 'folderForm'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'folderForm', query: { id: id }})
         }
       }

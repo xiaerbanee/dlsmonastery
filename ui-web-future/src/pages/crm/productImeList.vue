@@ -136,7 +136,6 @@
         this.pageLoading = true;
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
-        util.setQuery("productImeList",submitData);
         axios.get('/api/ws/future/crm/productIme?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -187,7 +186,6 @@
       this.pageHeight = window.outerHeight -320;
       this.initPromise=axios.get('/api/ws/future/crm/productIme/getQuery').then((response) =>{
         this.formData=response.data;
-        util.copyValue(this.$route.query, this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

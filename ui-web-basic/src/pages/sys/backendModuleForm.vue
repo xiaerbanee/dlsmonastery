@@ -9,8 +9,8 @@
         <el-form-item :label="$t('backendModuleForm.name')" prop="name">
           <el-input v-model.number="inputForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="所属项目" prop="backendId">
-          <el-select v-model="inputForm.backendId" filterable placeholder="所属项目">
+        <el-form-item :label="$t('backendModuleForm.backendId')" prop="backendId">
+          <el-select v-model="inputForm.backendId" filterable :placeholder="$t('backendModuleForm.selectGroup')">
             <el-option v-for="item in inputForm.extra.backendList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>

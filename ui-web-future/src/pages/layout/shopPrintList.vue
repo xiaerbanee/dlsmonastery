@@ -90,7 +90,6 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("shopPrintList",submitData);
         axios.get('/api/ws/future/layout/shopPrint',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -127,7 +126,6 @@
       that.pageHeight = 0.74*window.innerHeight;
       this.initPromise = axios.get('/api/ws/future/layout/shopPrint/getQuery').then((response) =>{
         this.formData=response.data;
-        util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

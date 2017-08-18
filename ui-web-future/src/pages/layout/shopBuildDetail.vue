@@ -120,7 +120,7 @@
             axios.post('/api/ws/future/layout/shopBuild/audit', qs.stringify(util.deleteExtra(this.formData))).then((response)=> {
               this.$message(response.data.message);
               if(response.data.success){
-                this.$router.push({name:'shopBuildList',query:util.getQuery("shopBuildList"),params:{_closeFrom:true}})
+                util.closeAndBackToPage(this.$router,'shopBuildList')
               }
             }).catch( ()=> {
               this.submitDisabled = false;

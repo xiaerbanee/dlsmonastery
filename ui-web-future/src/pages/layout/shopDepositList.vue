@@ -93,7 +93,6 @@
         this.pageLoading = true;
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
-        util.setQuery("shopDepositList",submitData);
 
         axios.get('/api/ws/future/layout/shopDeposit?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
@@ -125,7 +124,6 @@
     },created () {
       this.initPromise = axios.get('/api/ws/future/layout/shopDeposit/getQuery').then((response) =>{
         this.formData=response.data;
-        util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

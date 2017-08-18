@@ -155,7 +155,6 @@
         this.pageLoading = true;
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
-        util.setQuery("adApplyList", submitData);
         //this.getTotalQty(submitData);
         axios.get('/api/ws/future/layout/adApply/getCountQty',{params:submitData}).then((response) => {
           this.totalQty=response.data;
@@ -221,7 +220,6 @@
       that.pageHeight = window.outerHeight -380;
       this.initPromise = axios.get('/api/ws/future/layout/adApply/getQuery').then((response)=>{
         that.formData = response.data;
-        util.copyValue(that.$route.query,that.formData);
       });
     },activated(){
       this.getAllowOrderProductCode();

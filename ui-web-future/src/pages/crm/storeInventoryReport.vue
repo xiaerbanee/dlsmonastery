@@ -88,7 +88,6 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("storeInventoryReport",submitData);
         axios.get('/api/ws/future/basic/depotStore/storeReport?'+qs.stringify(submitData)).then((response) => {
           this.depotStoreList = response.data.list;
           this.sum=response.data.sum;
@@ -125,7 +124,6 @@
       axios.get('/api/ws/future/basic/depotStore/getReportQuery').then((response) => {
         this.formData = response.data;
         this.formData.scoreType=this.formData.scoreType?"1":"0";
-        util.copyValue(this.$route.query, this.formData);
         this.initPage();
       })
     }

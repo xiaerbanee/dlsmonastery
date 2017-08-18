@@ -8,7 +8,7 @@
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('accountWeixinList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" :label-width="formLabelWidth">
-          <el-form-item label="名称">
+          <el-form-item :label="$t('accountWeixinList.name')">
             <el-input v-model="formData.accountName" auto-complete="off" :placeholder="$t('accountWeixinList.likeSearch')"></el-input>
           </el-form-item>
         </el-form>
