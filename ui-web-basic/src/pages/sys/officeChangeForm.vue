@@ -16,10 +16,10 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="总旧点位" >
+        <el-form-item :label="$t('officeChangeForm.oldPoint')" >
           <span id="oldPoint"></span>
         </el-form-item>
-        <el-form-item label="总新点位">
+        <el-form-item :label="$t('officeChangeForm.newPoint')">
           <span  id="newPoint"></span>
         </el-form-item>
         <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>

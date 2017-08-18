@@ -8,7 +8,9 @@ export default{
     month: "月份",
     productName: "项目",
     productValue: "值",
-    loading: "拼命加载中"
+    loading: "拼命加载中",
+      inputPassword:"请输入用户密码",
+      operation: "操作",
   },
   salaryForm:{
     salaryForm:"工资条添加",

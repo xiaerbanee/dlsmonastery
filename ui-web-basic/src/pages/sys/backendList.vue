@@ -10,7 +10,7 @@
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('backendList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" :label-width="formLabelWidth">
               <el-form-item :label="$t('backendModuleList.name')">
-                <el-input v-model="formData.name" auto-complete="off" placeholder="输入关键字搜索"></el-input>
+                <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('backendList.likeSearch')"></el-input>
               </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -26,8 +26,8 @@
         <el-table-column prop="createdDate" :label="$t('backendList.createdDate')"></el-table-column>
         <el-table-column fixed="right" :label="$t('backendList.operation')" width="140">
           <template scope="scope">
-            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'sys:backend:edit'">修改</el-button></div>
-            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'sys:backend:delete'">删除</el-button></div>
+            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'sys:backend:edit'">{{$t('backendList.edit')}}</el-button></div>
+            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'sys:backend:delete'">{{$t('backendList.delete')}}</el-button></div>
 </template>
         </el-table-column>
       </el-table>

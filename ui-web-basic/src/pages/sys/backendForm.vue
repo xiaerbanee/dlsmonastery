@@ -33,8 +33,8 @@
             extra:{}
           },
           rules: {
-            name: [{ required: true, message: this.$t('backendModuleForm.prerequisiteMessage')}],
-            code: [{ required: true, message: this.$t('backendModuleForm.prerequisiteMessage')}]
+            name: [{ required: true, message: this.$t('backendForm.prerequisiteMessage')}],
+            code: [{ required: true, message: this.$t('backendForm.prerequisiteMessage')}]
           }
         }
       },

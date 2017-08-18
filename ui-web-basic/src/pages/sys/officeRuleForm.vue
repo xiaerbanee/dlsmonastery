@@ -5,7 +5,7 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-row :gutter = "15">
           <el-col :span="15">
-            <el-form-item label="上级" prop="parentId">
+            <el-form-item :label="$t('officeRuleForm.parentId')" prop="parentId">
               <el-select v-model="inputForm.parentId" filterable>
                 <el-option v-for="item in inputForm.extra.officeRuleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
@@ -16,10 +16,10 @@
             <el-form-item :label="$t('officeRuleForm.code')" prop="code">
               <el-input v-model="inputForm.code"></el-input>
             </el-form-item>
-            <el-form-item label="是否有点位" prop="hasPoint">
+            <el-form-item :label="$t('officeRuleForm.hasPoint')" prop="hasPoint">
               <bool-radio-group v-model="inputForm.hasPoint"></bool-radio-group>
             </el-form-item>
-            <el-form-item label="备注" prop="remark">
+            <el-form-item :label="$t('officeRuleForm.remarks')" prop="remark">
               <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
             <el-form-item>

@@ -5,8 +5,8 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus"  v-permit="'hr:officeChange:edit'">{{$t('officeChangeList.add')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search" >{{$t('officeChangeList.filter')}}</el-button>
-        <el-button type="primary" @click="batchPass" icon="check">批量通过</el-button>
-        <el-button type="primary" @click="batchNoPass" icon="close">批量打回</el-button>
+        <el-button type="primary" @click="batchPass" icon="check">{{$t('officeChangeList.batchPass')}}</el-button>
+        <el-button type="primary" @click="batchNoPass" icon="close">{{$t('officeChangeList.batchBack')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('officeChangeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -37,9 +37,9 @@
         <el-table-column  prop="processStatus" :label="$t('officeChangeList.processStatus')" sortable ></el-table-column>
         <el-table-column :label="$t('officeChangeList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'detail')" v-permit="'hr:officeChange:view'" >详细</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:officeChange:delete'" v-if="scope.row.processStatus !== '已通过' &&scope.row.processStatus !== '未通过'">删除</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'audit')" v-permit="'hr:officeChange:audit'" v-if="scope.row.processStatus !== '已通过' &&scope.row.processStatus !== '未通过'">审核</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'detail')" v-permit="'hr:officeChange:view'" >{{$t('officeChangeList.detail')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:officeChange:delete'" v-if="scope.row.processStatus !== '已通过' &&scope.row.processStatus !== '未通过'">{{$t('officeChangeList.delete')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'audit')" v-permit="'hr:officeChange:audit'" v-if="scope.row.processStatus !== '已通过' &&scope.row.processStatus !== '未通过'">{{$t('officeChangeList.audit')}}</el-button>
           </template>
         </el-table-column>
       </el-table>

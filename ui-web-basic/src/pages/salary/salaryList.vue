@@ -4,16 +4,16 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:salary:edit'">{{$t('dictEnumList.add')}}</el-button>
-        <el-input v-model="formData.password" placeholder="请输入用户密码 " style="width:160px" type="password"></el-input>
+        <el-input v-model="formData.password" :placeholder="$t('salaryList.inputPassword')" style="width:160px" type="password"></el-input>
         <el-button type="primary"@click="pageRequest" icon="search">{{$t('dictEnumList.filter')}}</el-button>
       </el-row>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('dictEnumList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('salaryList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="officeName" :label="$t('salaryList.officeName')" sortable width="150"></el-table-column>
         <el-table-column prop="employeeName" :label="$t('salaryList.employeeName')"></el-table-column>
         <el-table-column prop="month" :label="$t('salaryList.month')"></el-table-column>
         <el-table-column prop="projectName" :label="$t('salaryList.productName')"></el-table-column>
         <el-table-column prop="projectValue" :label="$t('salaryList.productValue')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('dictEnumList.operation')" width="140">
+        <el-table-column fixed="right" :label="$t('salaryList.operation')" width="140">
         </el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
