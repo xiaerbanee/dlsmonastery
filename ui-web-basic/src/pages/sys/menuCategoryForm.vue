@@ -3,7 +3,7 @@
     <head-tab active="menuCategoryForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-        <el-form-item label="所属模块" prop="backendModuleId">
+        <el-form-item :label="$t('menuCategoryForm.backendModuleId')" prop="backendModuleId">
           <el-select v-model="inputForm.backendModuleId" clearable>
             <el-option v-for="item in inputForm.extra.backendModuleList" :key="item.id" :label="$t('menus.backendModule.'+item.code)" :value="item.id"></el-option>
           </el-select>

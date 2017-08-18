@@ -5,7 +5,7 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row :gutter="20">
           <el-col :span="10">
-            <el-form-item label="员工名称" prop="employeeId">
+            <el-form-item :label="$t('accountForm.employeeId')" prop="employeeId">
               <employee-select v-model="inputForm.employeeId" :disabled="!isCreate"></employee-select>
             </el-form-item>
             <el-form-item :label="$t('accountForm.loginName')" prop="loginName">
@@ -17,7 +17,7 @@
             <el-form-item :label="$t('accountForm.confirmPassword')" prop="confirmPassword">
               <el-input v-model="inputForm.confirmPassword" type="password"></el-input>
             </el-form-item>
-            <el-form-item label="绑定门店" prop="depotIdList">
+            <el-form-item :label="$t('accountForm.depotIdList')" prop="depotIdList">
               <depot-select v-model="depotIdList" category="shop" :multiple="true"></depot-select>
             </el-form-item>
           </el-col>
@@ -28,7 +28,7 @@
             <el-form-item :label="$t('accountForm.leader')" prop="leaderId">
               <account-select v-model="inputForm.leaderId" :disabled="!isCreate&&!hasPermit"></account-select>
             </el-form-item>
-            <el-form-item label="数据部门" prop="officeIdList">
+            <el-form-item :label="$t('accountForm.dataScopeOffice')" prop="officeIdList">
               <office-select v-model="inputForm.officeIdList" :multiple="true"></office-select>
             </el-form-item>
             <el-form-item :label="$t('accountForm.position')" prop="positionId">
