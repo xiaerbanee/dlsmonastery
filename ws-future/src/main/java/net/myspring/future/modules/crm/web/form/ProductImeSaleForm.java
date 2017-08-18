@@ -3,18 +3,14 @@ package net.myspring.future.modules.crm.web.form;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.ProductImeSale;
-import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
-import org.springframework.web.util.HtmlUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class ProductImeSaleForm extends BaseForm<ProductImeSale> {
-    //TODO shopId也不再使用了，等小程序改了之后应该去掉
-    private String shopId;
+
     private String saleShopId;
     private String imeStr;
     private String buyer;
@@ -22,35 +18,12 @@ public class ProductImeSaleForm extends BaseForm<ProductImeSale> {
     private String buyerSex;
     private String buyerPhone;
 
-    //TODO 下面這兩個參數不再使用，等小程序改了之后应该去掉
-    private String productImeSaleDetailStr;
-    private List<ProductImeSaleDetailForm> productImeSaleDetailList;
-
-    public List<ProductImeSaleDetailForm> getProductImeSaleDetailList() {
-        if(CollectionUtil.isEmpty(productImeSaleDetailList)&&StringUtils.isNotBlank(productImeSaleDetailStr)){
-            this.productImeSaleDetailList= ObjectMapperUtils.readValueToBeanList(HtmlUtils.htmlUnescape(productImeSaleDetailStr),ProductImeSaleDetailForm.class);
-        }
-        return productImeSaleDetailList;
-    }
-
     public String getSaleShopId() {
         return saleShopId;
     }
 
     public void setSaleShopId(String saleShopId) {
         this.saleShopId = saleShopId;
-    }
-
-    public String getProductImeSaleDetailStr() {
-        return productImeSaleDetailStr;
-    }
-
-    public void setProductImeSaleDetailStr(String productImeSaleDetailStr) {
-        this.productImeSaleDetailStr = productImeSaleDetailStr;
-    }
-
-    public void setProductImeSaleDetailList(List<ProductImeSaleDetailForm> productImeSaleDetailList) {
-        this.productImeSaleDetailList = productImeSaleDetailList;
     }
 
     public List<String> getImeList(){
@@ -100,11 +73,4 @@ public class ProductImeSaleForm extends BaseForm<ProductImeSale> {
         this.buyerPhone = buyerPhone;
     }
 
-    public String getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
-    }
 }
