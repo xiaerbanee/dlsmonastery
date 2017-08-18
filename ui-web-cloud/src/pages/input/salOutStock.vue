@@ -1,20 +1,26 @@
 <template>
   <div>
     <head-tab active="salOutStock"></head-tab>
-    <div>
-      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
-        <el-form-item label="仓库"   prop="stockNumber">
-          <el-select v-model="formData.stockNumber" filterable placeholder="请输入关键词" >
-            <el-option v-for="item in stockList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="日期"  prop="billDate">
-          <date-picker v-model="formData.billDate"></date-picker>
-        </el-form-item>
-        <el-button type="primary" :disabled="submitDisabled" @click="formSubmit" icon="check">保存</el-button>
-        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
+    <el-row :gutter="20">
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules">
+        <el-col :span="6">
+          <el-form-item label="仓库"   prop="stockNumber">
+            <el-select v-model="formData.stockNumber" filterable placeholder="请输入关键词" >
+              <el-option v-for="item in stockList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="日期"  prop="billDate">
+            <date-picker v-model="formData.billDate"></date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit" icon="check">保存</el-button>
+        </el-col>
       </el-form>
-    </div>
+    </el-row>
+    <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
   </div>
 </template>
 <style>
@@ -49,7 +55,7 @@
               {type: "numeric", allowEmpty: false},
               {type: "text", allowEmpty: true, strict: true }
             ],
-            contextMenu: util.contextMenu(this.$store.state.global.lang),
+             contextMenu: util.contextMenu(this.$store.state.global.lang),
             afterChange: function (changes, source) {
               if (source !== 'loadData') {
                 for (let i = changes.length - 1; i >= 0; i--) {

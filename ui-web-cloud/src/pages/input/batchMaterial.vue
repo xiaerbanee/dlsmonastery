@@ -1,12 +1,16 @@
 <template>
   <div>
     <head-tab active="batchMaterial"></head-tab>
-    <div>
-      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
-        <el-button type="primary" :disabled="submitDisabled" @click="formSubmit" icon="check">保存</el-button>
-        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px;"></div>
+    <el-row :gutter="20">
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules">
+        <el-col :span="6">
+          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit" icon="check">保存</el-button>
+        </el-col>
       </el-form>
-    </div>
+    </el-row>
+    <el-row style="margin-top: 20px">
+     <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
+    </el-row>
   </div>
 </template>
 <style>
@@ -40,7 +44,7 @@
               {type: "autocomplete", allowEmpty: false, strict: true, materialGroupNameList:[], source: this.materialGroupNameList},
               {type: "autocomplete", allowEmpty: false, strict: true, materialCategoryNameList:[], source: this.materialCategoryNameList}
             ],
-           contextMenu: util.contextMenu(this.$store.state.global.lang),
+             contextMenu: util.contextMenu(this.$store.state.global.lang),
           },
           formData:{
             json:[],

@@ -1,6 +1,10 @@
 import babelpolyfill from 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
+
+import VueQuillEditor from 'vue-quill-editor'
+import VueProgressBar from 'vue-progressbar'
+
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 //import './assets/theme/theme-green/index.css'
@@ -38,6 +42,7 @@ Vue.use(VueI18n);
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
+Vue.use(VueQuillEditor);
 
 
 Vue.component('pageable', pageable);
@@ -49,6 +54,15 @@ Vue.component('search-dialog', searchDialog);
 Vue.component('su-alert', suAlert);
 Vue.component('su-select', suSelect);
 Vue.component('img-previewer',imgPreviewer);
+// progressBar
+const options = {
+    color: 'rgb(143, 255, 199)',
+    failedColor: 'red',
+    thickness: '3px'
+}
+
+Vue.use(VueProgressBar, options)
+
 
 // set locales
 Vue.locale('zh-cn',locale.zhCn);
@@ -58,6 +72,7 @@ Vue.config.lang = "zh-cn";
 //NProgress.configure({ showSpinner: false });
 
 router.beforeEach((to, from, next) => {
+    router.app.$Progress.start()
     if(to.params._closeFrom){
         store.dispatch('closeTab', from.name);
     }
@@ -75,7 +90,13 @@ router.beforeEach((to, from, next) => {
             router.push({ name: 'login' });
         }
     }
-})
+});
+
+router.afterEach(route => {
+    window.scrollTo(0, 0)
+    router.app.$Progress.finish()
+});
+
 
 
 window.qs = qs;
@@ -103,9 +124,6 @@ Vue.directive('permit', function (el, binding) {
     }
 })
 
-//router.afterEach(transition => {
-//NProgress.done();
-//});
 
 new Vue({
   //el: '#app',

@@ -3,8 +3,8 @@ server:
 
 
 ribbon:
-  ReadTimeout: 1800000
-  ConnectTimeout: 1800000
+  ReadTimeout: 6000000
+  ConnectTimeout: 6000000
 
 security:
   oauth2:

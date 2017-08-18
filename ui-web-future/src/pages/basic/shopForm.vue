@@ -82,7 +82,7 @@
           <el-input v-model="inputForm.remarks"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary"  :disabled="submitDisabled" @click="formSubmit()">{{$t('dictMapForm.save')}}</el-button>
+          <el-button type="primary"  :disabled="submitDisabled" @click="formSubmit()">{{$t('shopForm.save')}}</el-button>
         </el-form-item>
           </el-col>
         </el-row>
@@ -106,7 +106,7 @@
       getData() {
           var checkShop=(ruel,value,callback)=>{
               if(value==""){
-                  return callback(new Error(this.$t('dictMapForm.prerequisiteMessage')))
+                  return callback(new Error(this.$t('shopForm.prerequisiteMessage')))
               }else{
                   if(value===this.shopName) {
                     return callback();
@@ -130,13 +130,13 @@
         },
         remoteLoading:false,
         rules: {
-          depotShopId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
+          depotShopId: [{ required: true, message: this.$t('shopForm.prerequisiteMessage')}],
           name: [{ required: true,validator:checkShop}],
-          officeId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          contator: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          mobilePhone: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          address: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          isHidden: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
+          officeId: [{ required: true, message: this.$t('shopForm.prerequisiteMessage')}],
+          contator: [{ required: true, message: this.$t('shopForm.prerequisiteMessage')}],
+          mobilePhone: [{ required: true, message: this.$t('shopForm.prerequisiteMessage')}],
+          address: [{ required: true, message: this.$t('shopForm.prerequisiteMessage')}],
+          isHidden: [{ required: true, message: this.$t('shopForm.prerequisiteMessage')}],
         }
       }
     },

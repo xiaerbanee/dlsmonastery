@@ -57,11 +57,9 @@
 			<section class="content-container">
 				<div class="grid-content bg-purple-light">
 					<el-col :span="24" class="content-wrapper">
-						<transition name="fade" mode="out-in">
-							<su-keep-alive>
+						<su-keep-alive>
 							<router-view></router-view>
-							</su-keep-alive>
-						</transition>
+						</su-keep-alive>
 					</el-col>
 				</div>
 			</section>
@@ -73,6 +71,7 @@
     import Vue from 'vue';
     import suKeepAlive from 'components/common/su-keep-alive.vue';
     import { mapState } from 'vuex'
+    import img from '../assets/user.png'
 	export default {
         components:{
             suKeepAlive,
@@ -85,7 +84,7 @@
 				sysName:'CLOUD',
 				collapsed:true,
 				sysUserName: '',
-				sysUserAvatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png',
+				sysUserAvatar: img,
 				form: {
 					name: '',
 					region: '',
@@ -303,11 +302,16 @@
 		.el-menu-item{
 			color:#fff;
 		}
-		.el-menu-item:hover{
+		.el-menu-item:hover,.el-menu-item.is-active{
 			background: none;
 			color:#184E7E;
 			border-bottom: 5px solid #184E7E;
 		}
+		.el-menu-item.is-active{
+			color:#184E7E;
+			border-bottom: none;
+		}
+
 	}
 
 </style>

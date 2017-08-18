@@ -206,6 +206,7 @@
       that.initPromise = axios.get('/api/global/cloud/kingdee/bdCustomer/getQueryForCustomerReceive').then((response) =>{
         that.formData = response.data;
         util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
       });
     }
   };
