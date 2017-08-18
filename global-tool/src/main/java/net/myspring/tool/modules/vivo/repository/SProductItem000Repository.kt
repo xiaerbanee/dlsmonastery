@@ -28,8 +28,8 @@ class SProductItem000Repository @Autowired constructor(val namedParameterJdbcTem
     fun batchSave(sProductItem000M13e00List:MutableList<SProductItem000>):IntArray{
         val sb = StringBuilder()
         sb.append("""
-            INSERT INTO vivo_push_productitem000(CompanyID,ProductID,ProductNo,StoreID,CustomerID,SubCustomerID,Status,StatusInfo,IsReturnProfit,IsLock,Remark,UpdateTime,AgentCode)
-            VALUES (:companyId,:productId,:productNo,:storeId,:customerId,:subCustomerId,:status,:statusInfo,:isReturnProfit,:isLock,:remark,:updateTime,:agentCode)
+            INSERT INTO vivo_push_productitem000(CompanyID,ProductID,ProductNo,StoreID,CustomerID,SubCustomerID,Status,StatusInfo,IsReturnProfit,IsLock,Remark,UpdateTime,AgentCode,IsUpload)
+            VALUES (:companyId,:productId,:productNo,:storeId,:customerId,:subCustomerId,:status,:statusInfo,:isReturnProfit,:isLock,:remark,:updateTime,:agentCode,:isUpLoad)
         """)
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sProductItem000M13e00List.toTypedArray()))
     }

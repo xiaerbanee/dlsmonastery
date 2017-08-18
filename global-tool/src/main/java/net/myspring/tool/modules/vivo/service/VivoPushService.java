@@ -297,7 +297,6 @@ public class VivoPushService {
                 sProductItemStocks.setStatusInfo(agentCode+"K0000");
                 sProductItemStocks.setAgentCode(agentCode);
                 sProductItemStocks.setUpdateTime(date);
-                sProductItemStocks.setIsUpload("0");
                 sProductItemStocksList.add(sProductItemStocks);
             } else {
                 SProductItem000 sProductItem000 = new SProductItem000();
@@ -321,6 +320,7 @@ public class VivoPushService {
                     }
                     sProductItem000.setStatusInfo(StringUtils.getFormatId(sPlantCustomerStockDetailDto.getCustomerId(), agentCode + "C", "00000"));
                 }
+                sProductItem000.setIsUpLoad("0");
                 sProductItem000.setStatus("在渠道中");
                 sProductItem000.setUpdateTime(date);
                 sProductItem000List.add(sProductItem000);
@@ -330,7 +330,6 @@ public class VivoPushService {
         List<List<SProductItemStocks>> SProductItemStockLists = CollectionUtil.splitList(sProductItemStocksList,2000);
         for (List<SProductItemStocks> sProductItemStocks :SProductItemStockLists){
             sProductItemStocksRepository.batchSave(sProductItemStocks);
-
         }
         sProductItem000Repository.deleteAll();
         List<List<SProductItem000>> SProductItem000Lists = CollectionUtil.splitList(sProductItem000List,2000);
