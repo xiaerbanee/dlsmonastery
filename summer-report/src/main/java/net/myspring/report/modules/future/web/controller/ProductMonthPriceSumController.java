@@ -1,5 +1,7 @@
 package net.myspring.report.modules.future.web.controller;
 
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.report.common.utils.RequestUtils;
 import net.myspring.report.modules.future.client.OfficeClient;
 import net.myspring.report.modules.future.dto.DepotDto;
@@ -38,5 +40,16 @@ public class ProductMonthPriceSumController {
         String accountId= RequestUtils.getAccountId();
         productMonthPriceSumQuery.setDepotIdList(depotService.findByAccountId(accountId).stream().map(DepotDto::getId).collect(Collectors.toList()));
         return new ModelAndView(new ExcelView(), "simpleExcelBook", productMonthPriceService.export(productMonthPriceSumQuery));
+    }
+
+    @RequestMapping(value = "uploadAudit")
+    public RestResponse uploadAudit(ProductMonthPriceSumQuery productMonthPriceSumQuery) {
+        if (StringUtils.isBlank(productMonthPriceSumQuery.getMonth())) {
+            productMonthPriceSumQuery.setMonth(LocalDateUtils.format(LocalDate.now().minusMonths(1),"yyyy-MM"));
+        }
+        String accountId= RequestUtils.getAccountId();
+        productMonthPriceSumQuery.setDepotIdList(depotService.findByAccountId(accountId).stream().map(DepotDto::getId).collect(Collectors.toList()));
+        productMonthPriceService.uploadAudit(productMonthPriceSumQuery);
+        return new RestResponse("审批成功", ResponseCodeEnum.audited.name());
     }
 }

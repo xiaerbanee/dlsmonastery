@@ -26,12 +26,69 @@ public class ProductMonthPriceSumDto  extends DataDto{
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "saleName")
     private String employeeSaleName;
     private String productImeId;
+    private String productTypeName;
+    private String ime;
+    private String productName;
     private String productTypeId;
     private String saleShopId;
+    @CacheInput(inputKey = "depots",inputInstance = "saleShopId",outputInstance = "name")
+    private String saleShopName;
     private String goodsOrderShopId;
+    @CacheInput(inputKey = "depots",inputInstance = "goodsOrderShopId",outputInstance = "name")
+    private String goodsOrderShopName;
     private Integer qty;
     private String accountShopIds;
     private List<String> accountShopIdList= Lists.newArrayList();
+    @CacheInput(inputKey = "depots",inputInstance = "accountShopIdList",outputInstance = "name")
+    private List<String> accountShopName=Lists.newArrayList();
+
+    public List<String> getAccountShopName() {
+        return accountShopName;
+    }
+
+    public void setAccountShopName(List<String> accountShopName) {
+        this.accountShopName = accountShopName;
+    }
+
+    public String getProductTypeName() {
+        return productTypeName;
+    }
+
+    public void setProductTypeName(String productTypeName) {
+        this.productTypeName = productTypeName;
+    }
+
+    public String getIme() {
+        return ime;
+    }
+
+    public void setIme(String ime) {
+        this.ime = ime;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getSaleShopName() {
+        return saleShopName;
+    }
+
+    public void setSaleShopName(String saleShopName) {
+        this.saleShopName = saleShopName;
+    }
+
+    public String getGoodsOrderShopName() {
+        return goodsOrderShopName;
+    }
+
+    public void setGoodsOrderShopName(String goodsOrderShopName) {
+        this.goodsOrderShopName = goodsOrderShopName;
+    }
 
     public Integer getQty() {
         return qty;

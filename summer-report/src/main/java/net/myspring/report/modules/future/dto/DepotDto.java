@@ -3,8 +3,7 @@ package net.myspring.report.modules.future.dto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
 import net.myspring.common.enums.CompanyNameEnum;
-import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.report.common.utils.RequestUtils;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
