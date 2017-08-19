@@ -17,6 +17,7 @@ import net.myspring.report.modules.future.service.ProductImeService;
 import net.myspring.report.modules.future.web.query.ReportQuery;
 import net.myspring.util.excel.ExcelView;
 import net.myspring.util.excel.SimpleExcelBook;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,8 +77,11 @@ public class ProductImeController {
         if("按串码".equals(reportQuery.getExportType())){
             reportQuery.setIsDetail(true);
         }
-        reportQuery.setOfficeIds(officeClient.getChildOfficeIds(reportQuery.getOfficeId()));
-        reportQuery.setOfficeId(null);
+        if(StringUtils.isNotBlank(reportQuery.getOfficeId())){
+            reportQuery.setOfficeIds(officeClient.getChildOfficeIds(reportQuery.getOfficeId()));
+            reportQuery.getOfficeIds().add(reportQuery.getOfficeId());
+            reportQuery.setOfficeId(null);
+        }
         List<DepotReportDto> depotReportList=depotShopService.getProductImeReportList(reportQuery);
         SimpleExcelBook simpleExcelBook = productImeService.getFolderFileId(depotReportList,reportQuery);
         ExcelView excelView = new ExcelView();

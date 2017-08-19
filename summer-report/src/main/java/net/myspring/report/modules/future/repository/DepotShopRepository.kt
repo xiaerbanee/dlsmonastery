@@ -72,11 +72,11 @@ class DepotShopRepository @Autowired constructor(val namedParameterJdbcTemplate:
         if (StringUtils.isNotBlank(reportQuery.depotId)) {
             sb.append(""" and t6.id=:depotId """)
         }
-        if(reportQuery.isDetail==null||!reportQuery.isDetail){
+        if((reportQuery.isDetail==null||!reportQuery.isDetail)&&StringUtils.isBlank(reportQuery.exportType)){
             sb.append(""" group by t1.depot_id""")
         }
         if(StringUtils.isNotBlank(reportQuery.exportType)&&reportQuery.exportType=="按数量"){
-            sb.append(""" ,t5.id""")
+            sb.append(""" group by t1.depot_id,t5.id order by t6.area_id,t6.office_id,t6.id""")
         }
         print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
@@ -141,11 +141,11 @@ class DepotShopRepository @Autowired constructor(val namedParameterJdbcTemplate:
         if (StringUtils.isNotBlank(reportQuery.depotId)) {
             sb.append(""" and t6.id=:depotId """)
         }
-        if(reportQuery.isDetail==null||!reportQuery.isDetail){
+        if((reportQuery.isDetail==null||!reportQuery.isDetail)&&StringUtils.isBlank(reportQuery.exportType)){
             sb.append(""" group by t1.depot_id""")
         }
         if(StringUtils.isNotBlank(reportQuery.exportType)&&reportQuery.exportType=="按数量"){
-            sb.append(""" ,t5.id""")
+            sb.append("""group by t1.depot_id,t5.id order by t5.area_id,t5.office_id,t5.id""")
         }
         print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
@@ -207,11 +207,11 @@ class DepotShopRepository @Autowired constructor(val namedParameterJdbcTemplate:
         if (StringUtils.isNotBlank(reportQuery.depotId)) {
             sb.append(""" and t4.id=:depotId """)
         }
-        if(reportQuery.isDetail==null||!reportQuery.isDetail){
+        if((reportQuery.isDetail==null||!reportQuery.isDetail)&&StringUtils.isBlank(reportQuery.exportType)){
             sb.append(""" group by t1.depot_id""")
         }
         if(StringUtils.isNotBlank(reportQuery.exportType)&&(reportQuery.exportType=="按数量"||reportQuery.exportType=="按合计")){
-            sb.append(""" ,t3.id""")
+            sb.append(""" group by t1.depot_id,t3.id order by t4.area_id,t4.office_id,t1.depot_id,t3.id""")
         }
         print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
@@ -274,11 +274,11 @@ class DepotShopRepository @Autowired constructor(val namedParameterJdbcTemplate:
         if (StringUtils.isNotBlank(reportQuery.depotId)) {
             sb.append(""" and t5.id=:depotId """)
         }
-        if(reportQuery.isDetail==null||!reportQuery.isDetail){
+        if((reportQuery.isDetail==null||!reportQuery.isDetail)&&StringUtils.isBlank(reportQuery.exportType)){
             sb.append(""" group by t1.shop_id""")
         }
         if(StringUtils.isNotBlank(reportQuery.exportType)&&reportQuery.exportType=="按数量"){
-            sb.append(""" ,t4.id""")
+            sb.append(""" group by t1.shop_id,t4.id order by t5.area_id,t5.office_id,t5.id""")
         }
         print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))

@@ -17,7 +17,7 @@ class DepotStoreRepository @Autowired constructor(val namedParameterJdbcTemplate
     fun findStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append("""   SELECT t4.id as depotId,t4.area_id,t4.office_id,t4.name as 'depotName'',t2.name as 'productName', COUNT(t1.id) AS qty""")
+            sb.append("""   SELECT t4.id as depotId,t4.area_id,t4.office_id,t4.name as 'depotName',t2.name as 'productName', COUNT(t1.id) AS qty""")
         }else if(reportQuery.isDetail){
             sb.append("""
                SELECT t2.id as 'productId',t2.name as 'productName',t1.ime,t4.name as 'depotName'
@@ -66,14 +66,11 @@ class DepotStoreRepository @Autowired constructor(val namedParameterJdbcTemplate
         if (StringUtils.isNotBlank(reportQuery.depotId)) {
             sb.append(""" and t4.id=:depotId """)
         }
-        if(reportQuery.isDetail==null||!reportQuery.isDetail){
+        if((reportQuery.isDetail==null||!reportQuery.isDetail)&&StringUtils.isBlank(reportQuery.exportType)){
             sb.append(""" group by t1.depot_id""")
-        }
-        if(reportQuery.isDetail!=null&&reportQuery.isDetail){
-            sb.append(""" group by t1.depot_id,t2.id""")
         }
         if(StringUtils.isNotBlank(reportQuery.exportType)&&reportQuery.exportType=="按合计"){
-            sb.append(""" group by t1.depot_id""")
+            sb.append(""" group by t1.depot_id,t2.id order by t1.depot_id,t2.id""")
         }
         print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
