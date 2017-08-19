@@ -222,7 +222,7 @@ public class OppoPullService {
         }
     }
 
-    public void pullExperienceShops(){
+    public String pullExperienceShops(){
         String url = "http://so5.opposales.com:808/HttpFX/GetSecondLvlInfo.ashx";
         try{
             final MediaType XML = MediaType.parse("application/xml; charset=utf-8");
@@ -238,8 +238,9 @@ public class OppoPullService {
         }catch (Exception e){
             logger.info("调用工厂接口异常"+LocalDateTime.now());
             e.printStackTrace();
-            return;
+            return "调用工厂接口异常";
         }
+        return "成功获取体验店数据";
     }
 
     @LocalDataSource

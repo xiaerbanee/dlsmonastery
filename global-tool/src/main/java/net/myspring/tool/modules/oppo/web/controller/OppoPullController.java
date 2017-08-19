@@ -58,8 +58,8 @@ public class OppoPullController {
 
     @RequestMapping(value = "pullExperienceShops")
     public String pullExperienceShops(){
-        oppoPullService.pullExperienceShops();
-        return "下拉工厂体验店接口数据成功";
+        String result = oppoPullService.pullExperienceShops();
+        return result;
     }
 
     @RequestMapping(value = "getSendImeList")
