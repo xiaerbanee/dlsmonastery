@@ -1,6 +1,7 @@
 package net.myspring.report.modules.future.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.report.common.utils.CacheUtils;
 import net.myspring.report.modules.future.client.OfficeClient;
 import net.myspring.report.modules.future.dto.DepotReportDto;
@@ -58,8 +59,14 @@ public class DepotStoreService {
     }
 
     public Map<String,Integer> getReportDetail(ReportQuery reportQuery) {
+        Map<String,Integer> map= Maps.newHashMap();
         List<DepotReportDto> depotReportList = depotStoreRepository.findStoreReport(reportQuery);
-        Map<String,Integer> map=depotReportList.stream().collect(Collectors.toMap(DepotReportDto::getProductName,DepotReportDto::getQty));
+        for(DepotReportDto depotReportDto:depotReportList){
+            if(!map.containsKey(depotReportDto.getProductName())){
+                map.put(depotReportDto.getProductName(),0);
+            }
+            map.put(depotReportDto.getProductName(),map.get(depotReportDto.getProductName())+1);
+        }
         return map;
     }
 
@@ -71,6 +78,7 @@ public class DepotStoreService {
         simpleExcelColumns.add(new SimpleExcelColumn("depotName", "仓库"));
         simpleExcelColumns.add(new SimpleExcelColumn("productName", "货品"));
         if("按串码".equals(reportQuery.getExportType())){
+            reportQuery.setIsDetail(true);
             simpleExcelColumns.add(new SimpleExcelColumn("ime", "串码"));
         }else  if("按合计".equals(reportQuery.getExportType())){
             simpleExcelColumns.add(new SimpleExcelColumn("qty", "数量"));
