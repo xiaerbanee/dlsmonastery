@@ -11,6 +11,7 @@ import net.myspring.future.modules.basic.service.DepotStoreService;
 import net.myspring.future.modules.basic.web.form.ClientForm;
 import net.myspring.future.modules.basic.web.query.ClientQuery;
 import net.myspring.future.modules.basic.web.query.ReceivableQuery;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -102,4 +104,15 @@ public class ClientController {
         return clientService.findReceivableList(pageable, receivableQuery, false);
     }
 
+    @RequestMapping(value="receivableExportDetail")
+    public ModelAndView receivableExportDetail(ReceivableQuery receivableQuery) {
+        receivableQuery.setDepotIdList(depotService.filterDepotIds());
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", clientService.receivableExportDetail(receivableQuery));
+    }
+
+    @RequestMapping(value="receivableExportAllDepots")
+    public ModelAndView receivableExportAllDepots(ReceivableQuery receivableQuery) {
+        receivableQuery.setDepotIdList(depotService.filterDepotIds());
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", clientService.receivableExportAllDepots(receivableQuery));
+    }
 }

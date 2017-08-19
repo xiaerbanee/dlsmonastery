@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +39,8 @@ public class OppoPullService {
     private OppoPlantSendImeiPpselRepository oppoPlantSendImeiPpselRepository;
     @Autowired
     private OppoPlantProductItemelectronSelRepository oppoPlantProductItemelectronSelRepository;
+    @Autowired
+    private OppoPlantDeptRepository oppoPlantDeptRepository;
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -243,7 +244,6 @@ public class OppoPullService {
         }
     }
 
-    @LocalDataSource
     public void pullExperienceShops(){
         String url = "http://so5.opposales.com:808/HttpFX/GetSecondLvlInfo.ashx";
         try{
@@ -284,7 +284,34 @@ public class OppoPullService {
         return oppoPlantProductItemelectronSels;
     }
 
-    private void  saveDeptData(String result){
+    @LocalDataSource
+    @Transactional
+    public void saveDeptData(String result){
+        Map<String,Object> resultMap = ObjectMapperUtils.readValue(result,HashMap.class);
+        List<Map<String,Object>> data= (List<Map<String, Object>>) resultMap.get("data");
 
+        List<OppoPlantDept> oppoPlantDeptList = Lists.newArrayList();
+        for(Map<String,Object> map : data){
+            OppoPlantDept oppoPlantDept = new OppoPlantDept();
+            oppoPlantDept.setDeptCode(map.get("DEPTCODE").toString());
+            oppoPlantDept.setDeptDesrc(map.get("DEPTDESCR").toString());
+            oppoPlantDept.setDeptLvl(map.get("DEPTLVL").toString());
+            oppoPlantDeptList.add(oppoPlantDept);
+        }
+
+        List<OppoPlantDept> localOppoPlantDeptList = oppoPlantDeptRepository.findAll();
+        List<String> deptCodeList = Lists.newArrayList();
+        if (CollectionUtil.isNotEmpty(localOppoPlantDeptList)){
+            deptCodeList = CollectionUtil.extractToList(localOppoPlantDeptList,"deptCode");
+        }
+
+        List<OppoPlantDept> list = Lists.newArrayList();
+        for (OppoPlantDept oppoPlantDept : oppoPlantDeptList){
+            if (deptCodeList.contains(oppoPlantDept.getDeptId())){
+                continue;
+            }
+            list.add(oppoPlantDept);
+        }
+        oppoPlantDeptRepository.save(list);
     }
  }
