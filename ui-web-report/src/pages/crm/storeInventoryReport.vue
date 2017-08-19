@@ -88,7 +88,7 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        axios.get('/api/report/basic/depotStore/storeReport?'+qs.stringify(submitData)).then((response) => {
+        axios.get('/api/report/crm/depotStore/storeReport?'+qs.stringify(submitData)).then((response) => {
           this.depotStoreList = response.data.list;
           this.sum=response.data.sum;
           this.pageLoading = false;
@@ -99,7 +99,7 @@
       },storeDetail(row, event, column){
         this.formData.isDetail=true;
         this.formData.depotId=row.depotId;
-        axios.post('/api/report/basic/depotStore/storeReportDetail',qs.stringify(util.deleteExtra(this.formData))).then((response) => {
+        axios.post('/api/report/crm/depotStore/storeReportDetail',qs.stringify(util.deleteExtra(this.formData))).then((response) => {
           let productList=response.data;
           let productDetail=[];
           if(productList){
@@ -115,12 +115,12 @@
       },exportData(command) {
         util.confirmBeforeExportData(this).then(() => {
             this.formData.exportType=command;
-            window.location.href='/api/report/basic/depotStore/export?'+qs.stringify(util.deleteExtra(this.formData));
+            window.location.href='/api/report/crm/depotStore/export?'+qs.stringify(util.deleteExtra(this.formData));
             this.formData.exportType=null;
         }).catch(()=>{});
         }
     },created () {
-      axios.get('/api/report/basic/depotStore/getReportQuery').then((response) => {
+      axios.get('/api/report/crm/depotStore/getReportQuery').then((response) => {
         this.formData = response.data;
         this.formData.scoreType=this.formData.scoreType?"1":"0";
         this.initPage();

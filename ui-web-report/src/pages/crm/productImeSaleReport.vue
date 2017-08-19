@@ -147,7 +147,7 @@
             this.pageLoading = false;
           })
         }else {
-          axios.post('/api/report/basic/depotShop/depotReportDate',qs.stringify(submitData)).then((response) => {
+          axios.post('/api/report/crm/depotShop/depotReportDate',qs.stringify(submitData)).then((response) => {
             this.page = response.data;
             this.pageLoading = false;
           })
@@ -175,7 +175,7 @@
           }else{
             this.formData.isDetail=true;
             this.formData.depotId=depotId;
-            axios.post('/api/report/basic/depotShop/depotReportDetail',qs.stringify(util.deleteExtra(this.formData))).then((response) => {
+            axios.post('/api/report/crm/depotShop/depotReportDetail',qs.stringify(util.deleteExtra(this.formData))).then((response) => {
               this.depotReportList=response.data.depotReportList;
               this.sum=response.data.sum;
               let productQtyMap=response.data.productQtyMap;
@@ -188,6 +188,7 @@
               }
               this.detailVisible=true;
             })
+              this.formData.depotId="";
           }
         }
       },preLevel(){
@@ -206,8 +207,6 @@
         this.formData.exportType=command;
         window.location.href="/api/report/crm/productIme/exportReport?"+qs.stringify(util.deleteExtra(this.formData));
         this.formData.exportType=null;
-      },saleReportGrid(){
-
       },detail(){
         this.detailVisible=true;
         this.formData.depotId=null;
