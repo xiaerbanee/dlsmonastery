@@ -29,7 +29,7 @@ public class UserService {
     private AccountWeixinDtoRepository accountWeixinDtoRepository;
 
     public Map<String, Object> login(String username, String password, String weixinCode, String accountId,String companyName) {
-        String url = "http://localhost:10000/login";
+        String url = "http://localhost:2100/login";
         Map<String, Object> map = Maps.newHashMap();
         Boolean success = true;
         OkHttpClient client = new OkHttpClient.Builder().connectTimeout(3, TimeUnit.SECONDS).readTimeout(3, TimeUnit.SECONDS).cookieJar(new CookieJar() {

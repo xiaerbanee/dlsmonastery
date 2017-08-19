@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * Created by liuj on 2017/5/12.
  */
 @RestController
-@RequestMapping(value = "basic/depotStore")
+@RequestMapping(value = "crm/depotStore")
 public class DepotStoreController {
 
     @Autowired
@@ -64,8 +64,6 @@ public class DepotStoreController {
 
     @RequestMapping(value = "export")
     public ModelAndView export(ReportQuery reportQuery) {
-        ReportQuery depotStoreQuery;
-        depotStoreQuery = reportQuery;
         String accountId=RequestUtils.getAccountId();
         reportQuery.setDepotIdList(depotService.findByAccountId(accountId).stream().map(DepotDto::getId).collect(Collectors.toList()));
         return new ModelAndView(new ExcelView(), "simpleExcelBook", depotStoreService.export(reportQuery));
