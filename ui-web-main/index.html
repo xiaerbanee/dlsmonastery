@@ -281,7 +281,17 @@
 </body>
 <script type="text/javascript">
 $(function(){
-    //check login
+	$.ajaxSetup({
+			   contentType:"application/x-www-form-urlencoded;charset=utf-8",
+			   complete:function(XMLHttpRequest,textStatus){
+			   },
+			   statusCode: {
+			     401: function() {
+			         clearGalobal();
+			         location.href = 'login.html';
+			     }
+			   }
+			});
     $.get('/user/isLogin', (res) => {
         if(!res){
         	location.href = 'login.html';
@@ -340,9 +350,7 @@ $(function(){
 			 	$.post('/user/logout', (res) => {
 			 		if(res){
 			 			$.post('/logout',(res) => {
-			 				localStorage.removeItem('account');
-			 				localStorage.removeItem('menus');
-			 				localStorage.removeItem('authorityList')
+			 				clearGalobal();
 							location.reload();
 						});
 			 		}	
@@ -376,6 +384,11 @@ function getMenus(){
 		let tag = `<li class='moduler'><a href='${path}' target="_blank">${name}</a></li>`;
 		$('.menus').append(tag)
 	})
+}
+function clearGalobal(){
+	localStorage.removeItem('account');
+	localStorage.removeItem('menus');
+	localStorage.removeItem('authorityList')
 }
 </script>
 </html>
