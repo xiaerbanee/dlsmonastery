@@ -295,7 +295,7 @@ $(function(){
                 $('.expiredHour').text(res.expiredHour + "小时");
                 localStorage.setItem('account',JSON.stringify(res.account))
                 //get infos
-                let accountInfo = JSON.parse(localStorage.getItem('account'));
+                var accountInfo = JSON.parse(localStorage.getItem('account'));
                 //set infos
                 $('.company div').eq(2).text(accountInfo.companyName);
                 $('.name div').eq(2).text(accountInfo.employeeName);
@@ -352,9 +352,9 @@ $(function(){
 	getMenus();
 })
 function getMenus(){
-	let menus = JSON.parse(localStorage.getItem('menus'));
-	let path = '';
-	let name = '';
+	var menus = JSON.parse(localStorage.getItem('menus'));
+	var path = '';
+	var name = '';
 	menus.forEach( function (item) {
 		name = item.name;
 		switch(item.code){
@@ -371,7 +371,7 @@ function getMenus(){
 				path = '/cloud';
 				break;
 		}
-		let tag = "<li class='moduler'><a href='"+ path + "' target=\"_blank\">"+ name+ "</a></li>";
+		var tag = "<li class='moduler'><a href='"+ path + "' target=\"_blank\">"+ name+ "</a></li>";
 		$('.menus').append(tag)
 	})
 }
