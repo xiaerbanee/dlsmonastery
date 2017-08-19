@@ -132,9 +132,9 @@
         this.$router.push({ name: 'shopAllotForm'})
       },print(id, action){
         if(action==="returnPrint") {
-          window.open('/#/future/layout/shopAllotShipPrint?printType=returnPrint&id=' + id, '', '');
+          window.open('/future/#/layout/shopAllotShipPrint?printType=returnPrint&id=' + id, '', '');
         } else if(action==="salePrint") {
-          window.open('/#/future/layout/shopAllotShipPrint?printType=salePrint&id=' + id, '', '');
+          window.open('/future/#/layout/shopAllotShipPrint?printType=salePrint&id=' + id, '', '');
         }
       },itemAction:function(id, action){
         if(action==="edit") {

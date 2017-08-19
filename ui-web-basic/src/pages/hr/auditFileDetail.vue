@@ -98,7 +98,7 @@
         })
       },
       print(){
-        window.open('/#/basic/hr/auditFilePrint?id=' + this.$route.query.id);
+        window.open('/basic/#/hr/auditFilePrint?id=' + this.$route.query.id);
       },collectAuditFile(collectStatus){
         var that=this;
         axios.get('/api/basic/hr/auditFileCollect/collect?auditFileId='+this.inputForm.id+'&collect='+collectStatus).then((response) => {

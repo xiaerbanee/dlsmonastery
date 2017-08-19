@@ -230,9 +230,9 @@
           });
         }).catch(()=>{});
       }else if(action === "print"){
-        window.open('/#/future/crm/goodsOrderPrint?id=' + id);
+        window.open('/future/#/crm/goodsOrderPrint?id=' + id);
       }else if(action === "shipPrint"){
-         window.open('/#/future/crm/goodsOrderShipPrint?id=' + id);
+         window.open('/future/#/crm/goodsOrderShipPrint?id=' + id);
       }
     },editPullStatus(row){
       this.detailVisible=true;
