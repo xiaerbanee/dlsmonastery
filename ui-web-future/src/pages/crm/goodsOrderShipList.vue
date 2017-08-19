@@ -181,9 +181,9 @@
       }else if(action ==="sreturn"){
         this.$router.push({name:'goodsOrderSreturn',query:{id:id}})
       }else if(action==="print"){
-        window.open("/#/future/crm/goodsOrderPrint?id="+id);
+        window.open("/future/#/crm/goodsOrderPrint?id="+id);
       }else if(action==="shipPrint"){
-        window.open("/#/future/crm/goodsOrderShipPrint?id="+id);
+        window.open("/future/#/crm/goodsOrderShipPrint?id="+id);
       }
     },itemShip(businessId){
       this.$router.push({name:'goodsOrderShip',query:{businessId:businessId}});

@@ -1,68 +1,73 @@
 <template>
-	<el-row class="container">
-		<div v-title="'金蝶-'+account.companyName"></div>
-		<el-col :span="24" class="header">
-			<el-col :span="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
-				{{collapsed?'':sysName}}
+	<div v-if="!$route.meta.hidden">
+		<el-row class="container">
+			<div v-title="'金蝶-'+account.companyName"></div>
+			<el-col :span="24" class="header">
+				<el-col :span="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
+					{{collapsed?'':sysName}}
+				</el-col>
+				<el-col :span="10">
+					<el-row>
+						<el-col :span="2">
+							<div class="tools" @click.prevent="collapse">
+								<i class="fa fa-align-justify"></i>
+							</div>
+						</el-col>
+						<el-col :span="22">
+							<el-menu theme="light"  class="menus" mode="horizontal" >
+								<el-menu-item :index="index+''" :key="item.code" v-for="(item,index) in backend.backendModuleList"  :data-code="item.code" @click.native="changeModule">{{item.name}}</el-menu-item>
+							</el-menu>
+						</el-col>
+					</el-row>
+				</el-col>
+				<el-col :span="4" class="userinfo">
+					<span class="el-dropdown-link userinfo-inner">{{account.loginName}}</span>
+					<span>/</span>
+					<span  @click="logout()" class="logout">退出登录</span>
+				</el-col>
 			</el-col>
-			<el-col :span="10">
-				<el-row>
-					<el-col :span="2">
-						<div class="tools" @click.prevent="collapse">
-							<i class="fa fa-align-justify"></i>
-						</div>
-					</el-col>
-					<el-col :span="22">
-						<el-menu theme="light"  class="menus" mode="horizontal" >
-							<el-menu-item :index="index+''" :key="item.code" v-for="(item,index) in backend.backendModuleList"  :data-code="item.code" @click.native="changeModule">{{item.name}}</el-menu-item>
-						</el-menu>
-					</el-col>
-				</el-row>
-			</el-col>
-			<el-col :span="4" class="userinfo">
-				<span class="el-dropdown-link userinfo-inner">{{account.loginName}}</span>
-				<span>/</span>
-				<span  @click="logout()" class="logout">退出登录</span>
-			</el-col>
-		</el-col>
-		<el-col :span="24" class="main">
-			<aside :class="collapsed?'menu-collapsed':'menu-expanded'">
-				<!--导航菜单-未折叠-->
-				<el-menu :default-active="$route.path" class="el-menu-vertical-demo" unique-opened  v-show="!collapsed">
-					<template v-for="(module,i) in backend.backendModuleList" v-if="module.code == activeModule">
-						<template v-for="(item,index) in module.menuCategoryList">
-							<el-submenu :index="index+''">
-								<template slot="title"><i :class="'fa fa-'+item.icon"></i>{{item.name}}</template>
-								<el-menu-item v-for="(menu,index) in item.menuList" :index="menu.code" :key="menu.code" :data-code="menu.code" :class="code === menu.code?'is-active':''"   @click="jump(menu,$event)">{{menu.name}}</el-menu-item>
-							</el-submenu>
-						</template>
-					</template>
-				</el-menu>
-				<!--导航菜单-折叠后-->
-				<ul class="el-menu el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">
-					<template v-for="modules in backend.backendModuleList" v-if="modules.code == activeModule">
-						<li v-for="(module,i) in modules.menuCategoryList"  class="el-submenu item">
-							<template >
-								<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(i,true)" @mouseout="showMenu(i,false)"><i :class="'fa fa-'+module.icon"></i></div>
-								<ul class="el-menu submenu" :class="'submenu-hook-'+i" @mouseover="showMenu(i,true)" @mouseout="showMenu(i,false)">
-									<li v-for="menu in module.menuList"  :key="menu.code" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==menu.path?'is-active':''" @click="$router.push({name:menu.code})">{{menu.name}}</li>
-								</ul>
+			<el-col :span="24" class="main">
+				<aside :class="collapsed?'menu-collapsed':'menu-expanded'">
+					<!--导航菜单-未折叠-->
+					<el-menu :default-active="$route.path" class="el-menu-vertical-demo" unique-opened  v-show="!collapsed">
+						<template v-for="(module,i) in backend.backendModuleList" v-if="module.code == activeModule">
+							<template v-for="(item,index) in module.menuCategoryList">
+								<el-submenu :index="index+''">
+									<template slot="title"><i :class="'fa fa-'+item.icon"></i>{{item.name}}</template>
+									<el-menu-item v-for="(menu,index) in item.menuList" :index="menu.code" :key="menu.code" :data-code="menu.code" :class="code === menu.code?'is-active':''"   @click="jump(menu,$event)">{{menu.name}}</el-menu-item>
+								</el-submenu>
 							</template>
-						</li>
-					</template>
-				</ul>
-			</aside>
-			<section class="content-container">
-				<div class="grid-content bg-purple-light">
-					<el-col :span="24" class="content-wrapper">
-						<su-keep-alive>
-							<router-view></router-view>
-						</su-keep-alive>
-					</el-col>
-				</div>
-			</section>
-		</el-col>
-	</el-row>
+						</template>
+					</el-menu>
+					<!--导航菜单-折叠后-->
+					<ul class="el-menu el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">
+						<template v-for="modules in backend.backendModuleList" v-if="modules.code == activeModule">
+							<li v-for="(module,i) in modules.menuCategoryList"  class="el-submenu item">
+								<template >
+									<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(i,true)" @mouseout="showMenu(i,false)"><i :class="'fa fa-'+module.icon"></i></div>
+									<ul class="el-menu submenu" :class="'submenu-hook-'+i" @mouseover="showMenu(i,true)" @mouseout="showMenu(i,false)">
+										<li v-for="menu in module.menuList"  :key="menu.code" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==menu.path?'is-active':''" @click="$router.push({name:menu.code})">{{menu.name}}</li>
+									</ul>
+								</template>
+							</li>
+						</template>
+					</ul>
+				</aside>
+				<section class="content-container">
+					<div class="grid-content bg-purple-light">
+						<el-col :span="24" class="content-wrapper">
+							<su-keep-alive>
+								<router-view></router-view>
+							</su-keep-alive>
+						</el-col>
+					</div>
+				</section>
+			</el-col>
+		</el-row>
+	</div>
+	<div v-else>
+		<router-view></router-view>
+	</div>
 </template>
 
 <script>
