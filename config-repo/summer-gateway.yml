@@ -27,6 +27,7 @@ zuul:
     ws-future: /api/ws/future/**
     global-tool: /api/global/tool/**
     global-cloud: /api/global/cloud/**
+    summer-report: /api/report/**
 
 security:
   oauth2:
