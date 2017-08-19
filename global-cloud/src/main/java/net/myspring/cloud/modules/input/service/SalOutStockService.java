@@ -70,7 +70,7 @@ public class SalOutStockService {
                 KingdeeFormIdEnum.AR_receivable.name());
         kingdeeSynExtendDto = kingdeeManager.save(kingdeeSynExtendDto);
         if (!kingdeeSynExtendDto.getSuccess()){
-            throw new ServiceException("销售入库单："+kingdeeSynExtendDto.getResult());
+            throw new ServiceException("销售出库单："+kingdeeSynExtendDto.getResult());
         }
         return kingdeeSynExtendDto;
     }
