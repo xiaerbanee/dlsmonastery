@@ -5,17 +5,14 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
-import net.myspring.tool.common.utils.HmacUtils;
 import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.modules.oppo.dto.OppoPlantSendImeiPpselDto;
 import net.myspring.tool.modules.oppo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.text.MD5Utils;
+import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +39,8 @@ public class OppoPullService {
     private OppoPlantSendImeiPpselRepository oppoPlantSendImeiPpselRepository;
     @Autowired
     private OppoPlantProductItemelectronSelRepository oppoPlantProductItemelectronSelRepository;
+    @Autowired
+    private OppoPlantDeptRepository oppoPlantDeptRepository;
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -63,28 +63,6 @@ public class OppoPullService {
     public List<OppoPlantProductItemelectronSel> getOppoPlantProductItemelectronSels(String agentCode,String passWord,String date){
         return  oppoPlantProductItemelectronSelRepository.plantProductItemelectronSel(agentCode,passWord, LocalDateUtils.format(LocalDateUtils.parse(date).minusDays(1)));
     }
-
-
-    @FactoryDataSource
-    public List<OppoPlantProductSel>  plantProductSel(String companyId, String password, String branchId) {
-        return oppoPlantProductSelRepository.plantProductSel(companyId, password, branchId);
-    }
-
-    @FactoryDataSource
-    public List<OppoPlantAgentProductSel> plantAgentProductSel(String companyId, String password, String branchId) {
-        return oppoPlantAgentProductSelRepository.plantAgentProductSel(companyId, password, branchId);
-    }
-
-    @FactoryDataSource
-    public List<OppoPlantSendImeiPpsel> plantSendImeiPPSel(String companyId, String password, String dateTime) {
-        return oppoPlantSendImeiPpselRepository.plantSendImeiPPSel(companyId, password, dateTime);
-    }
-
-    @FactoryDataSource
-    public List<OppoPlantProductItemelectronSel> plantProductItemelectronSel(String companyId, String password, String date) {
-        return  oppoPlantProductItemelectronSelRepository.plantProductItemelectronSel(companyId, password, date);
-    }
-
 
     @LocalDataSource
     @Transactional
@@ -244,25 +222,25 @@ public class OppoPullService {
         }
     }
 
-    @LocalDataSource
-    public void pullExperienceShops(){
-        String key = MD5Utils.encode("oppozmd9988");
-        String timestamp = String.valueOf(System.currentTimeMillis()/1000L);
-        String aValue = "80b7703608064d45b85c788b2cabe6ae"+"&"+timestamp;
-        String aKey = "a4Gs#vHnmlr54PzdBT3";
-        String identity = HmacUtils.hmacSign(aValue,aKey);
-        String url = "http://so5.opposales.com:808/HttpInfos/StoreList.ashx?key="+key+"&timestamp="+timestamp+"&identity="+identity;
-        System.err.println(url);
+    public String pullExperienceShops(){
+        String url = "http://so5.opposales.com:808/HttpFX/GetSecondLvlInfo.ashx";
         try{
+            final MediaType XML = MediaType.parse("application/xml; charset=utf-8");
             OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder().url(url).build();
+            String xml = "<?xml version='1.0' encoding='UTF-8'?><OPPO><deptcode>M13A00</deptcode><key>5B70B2906A4780CD</key><activeTime>" +
+                    LocalDateTime.now() + "</activeTime><OPPOIdentity>c5c8d8af187edd24ebeebb6cd2201acf</OPPOIdentity></OPPO>";
+            RequestBody body = RequestBody.create(XML,xml);
+            Request request = new Request.Builder().url(url).post(body).build();
             Response response = client.newCall(request).execute();
-            response.body().string();
+            String data = response.body().string();
+            saveDeptData(data);
             response.close();
         }catch (Exception e){
             logger.info("调用工厂接口异常"+LocalDateTime.now());
             e.printStackTrace();
+            return "调用工厂接口异常";
         }
+        return "成功获取体验店数据";
     }
 
     @LocalDataSource
@@ -283,5 +261,36 @@ public class OppoPullService {
         String companyName = DbContextHolder.get().getCompanyName();
         List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoPlantProductItemelectronSelRepository.findSynList(dateStart, dateEnd, mainCodes, companyName);
         return oppoPlantProductItemelectronSels;
+    }
+
+    @LocalDataSource
+    @Transactional
+    public void saveDeptData(String result){
+        Map<String,Object> resultMap = ObjectMapperUtils.readValue(result,HashMap.class);
+        List<Map<String,Object>> data= (List<Map<String, Object>>) resultMap.get("data");
+
+        List<OppoPlantDept> oppoPlantDeptList = Lists.newArrayList();
+        for(Map<String,Object> map : data){
+            OppoPlantDept oppoPlantDept = new OppoPlantDept();
+            oppoPlantDept.setDeptCode(map.get("DEPTCODE").toString());
+            oppoPlantDept.setDeptDesrc(map.get("DEPTDESCR").toString());
+            oppoPlantDept.setDeptLvl(map.get("DEPTLVL").toString());
+            oppoPlantDeptList.add(oppoPlantDept);
+        }
+
+        List<OppoPlantDept> localOppoPlantDeptList = oppoPlantDeptRepository.findAll();
+        List<String> deptCodeList = Lists.newArrayList();
+        if (CollectionUtil.isNotEmpty(localOppoPlantDeptList)){
+            deptCodeList = CollectionUtil.extractToList(localOppoPlantDeptList,"deptCode");
+        }
+
+        List<OppoPlantDept> list = Lists.newArrayList();
+        for (OppoPlantDept oppoPlantDept : oppoPlantDeptList){
+            if (deptCodeList.contains(oppoPlantDept.getDeptId())){
+                continue;
+            }
+            list.add(oppoPlantDept);
+        }
+        oppoPlantDeptRepository.save(list);
     }
  }
