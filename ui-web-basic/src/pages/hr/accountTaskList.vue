@@ -27,7 +27,7 @@
         <el-table-column prop="lastModifiedDate" :label="$t('accountTaskList.lastModifiedDate')"></el-table-column>
         <el-table-column fixed="right" :label="$t('accountTaskList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.extendId,scope.row.name,'audit')">审核</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.extendId,scope.row.name,'audit')">{{$t(accountTaskList.audit)}}</el-button>
           </template>
         </el-table-column>
       </el-table>
