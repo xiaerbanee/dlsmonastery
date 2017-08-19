@@ -282,17 +282,17 @@
 <script type="text/javascript">
 $(function(){
     //check login
-    $.get('/user/isLogin', (res) => {
+    $.get('/user/isLogin', function(res){
         if(!res){
         	location.href = 'login.html';
     	}else{
 			//get duties
-            $.get('/api/basic/hr/account/home', (res) => {
-                $('.dutySize').text(`${res.dutySize}条`);
-                $('.auditFileSize').text(`${res.auditFileSize}条`);
-                $('.overtimeHour').text(`${res.overtimeHour}小时`);
-                $('.annualHour').text(`${res.annualHour}小时`);
-                $('.expiredHour').text(`${res.expiredHour}小时`);
+            $.get('/api/basic/hr/account/home', function(res){
+                $('.dutySize').text("${res.dutySize}条");
+                $('.auditFileSize').text("${res.auditFileSize}条");
+                $('.overtimeHour').text("${res.overtimeHour}小时");
+                $('.annualHour').text("${res.annualHour}小时");
+                $('.expiredHour').text("${res.expiredHour}小时");
                 localStorage.setItem('account',JSON.stringify(res.account))
                 //get infos
                 let accountInfo = JSON.parse(localStorage.getItem('account'));
@@ -317,14 +317,12 @@ $(function(){
                 },
                 height:730,
                 textColor:'white',
-                firstDay:0,
-                moreClick(day, events, jsEvent) {
-                }
+                firstDay:0
             })
 		}
     });
 	//logout
-	$('.btn-logout').on('click',() => {
+	$('.btn-logout').on('click',function(res){
 		swal({
 		  title: "确认注销吗？",
 		  text: "",
@@ -337,9 +335,9 @@ $(function(){
 		},
 		function(isConfirm){
 		  if (isConfirm) {
-			 	$.post('/user/logout', (res) => {
+			 	$.post('/user/logout', function(res){
 			 		if(res){
-			 			$.post('/logout',(res) => {
+			 			$.post('/logout',function(res){
 			 				localStorage.removeItem('account');
 			 				localStorage.removeItem('menus');
 			 				localStorage.removeItem('authorityList')
@@ -357,7 +355,7 @@ function getMenus(){
 	let menus = JSON.parse(localStorage.getItem('menus'));
 	let path = '';
 	let name = '';
-	menus.forEach( (item) => {
+	menus.forEach( function (item) {
 		name = item.name;
 		switch(item.code){
 			case 'basicManager':
@@ -373,7 +371,7 @@ function getMenus(){
 				path = '/cloud';
 				break;
 		}
-		let tag = `<li class='moduler'><a href='${path}' target="_blank">${name}</a></li>`;
+		let tag = "<li class='moduler'><a href='"+ path + "' target=\"_blank\">"+ name+ "</a></li>";
 		$('.menus').append(tag)
 	})
 }

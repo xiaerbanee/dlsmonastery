@@ -73,43 +73,41 @@
 <script type="text/javascript">
 	$(function(){
 		//check login
-		$.get('/user/isLogin', (res) => {
-		    if(res){
+		$.get("/user/isLogin", function(res){
+			if(res){
 				location.href = 'index.html';
 			}
 		});
 		//get company names
-		$.get('/user/getCompanyNames',(res) => {
+		$.get('/user/getCompanyNames',function(res){
 			res.forEach(function(item){
-					$('.com_selecter').append(`<option>${item}</option>`)
-				})
-			});
+				$('.com_selecter').append("<option>" + item + "</option>");
+			})
+		});
 		//login when click
-		$('button').on('click',(e) => {
+		$('button').on('click',function(e){
 			return login(e);
 		})
 		//login when press enter
-		$("input[name='password']").on({
-			keypress(e){
-				if(e.keyCode === 13){
-					login(e);
-				}
-			}
-		})
+		$("input[name='password']").on("keypress",function(e){
+            if(e.keyCode === 13){
+                login(e);
+            }
+        });
 	})
 	//login
 	function login(e){
-		let username = $("input[name='username']").val();
-		let password = $("input[name='password']").val();
-		let companyName = $('select').val();
-		let form  = {username,password,companyName};
+		var username = $("input[name='username']").val();
+        var password = $("input[name='password']").val();
+        var companyName = $('select').val();
+        var form  = {username:username,password:password,companyName:companyName};
 		$('.btn-login').text('登录中');
 		$('.btn-login').attr('disabled',true)
 		//validate the form data
 		try{
-			for(let key in form){
+			for(var key in form){
 				if(form[key].trim() === ''){
-					throw `${key} is empty`
+					throw  key + ' is empty'
 				}
 			}
 		}catch(e){
@@ -127,12 +125,12 @@
 			}
 		}
 
-		$.post('/user/login',form, (res) => {
+		$.post('/user/login',form, function(res){
 			if(res.success){
-					$.get('/api/basic/hr/account/getAccountInfo', (res) => {
+					$.get('/api/basic/hr/account/getAccountInfo', function(res){
 						localStorage.setItem('menus',JSON.stringify(res.menus))
 						localStorage.setItem('authorityList',JSON.stringify(res.authorityList))
-						location.reload();
+						location.href="index.html"
 					});
 				}else{
 					swal('用户名或者密码错误!','','error');
