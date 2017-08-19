@@ -1,6 +1,7 @@
 package net.myspring.report.modules.future.web.query;
 
-import net.myspring.future.common.query.BaseQuery;
+
+import net.myspring.report.common.query.BaseQuery;
 
 /**
  * Created by Lenovo on 2017/5/17.

@@ -2,13 +2,12 @@ package net.myspring.report.modules.future.dto;
 
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
-import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-public class ProductTypeDto extends DataDto<ProductType> {
+public class ProductTypeDto extends DataDto {
 
     private String name;
     private String reportName;

@@ -15,11 +15,24 @@ import java.lang.StringBuilder
 class ProductMonthPriceSumRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
     fun findReportData(productMonthPriceSumQuery: ProductMonthPriceSumQuery):MutableList<ProductMonthPriceSumDto>{
         val sb = StringBuilder();
-        sb.append("""
+        if(productMonthPriceSumQuery==null||!productMonthPriceSumQuery.isDetail){
+            sb.append("""
                 SELECT
                     t1.*, t2.office_id,t2.area_id,count(*) qty
+            """)
+        }
+        if(productMonthPriceSumQuery!=null&&productMonthPriceSumQuery.isDetail){
+            sb.append("""
+                SELECT
+                    t1.*, t2.office_id,t2.area_id,t3.ime,t4.name as productName,t5.name as productTypeName,t2.name as shopName
+            """)
+        }
+        sb.append("""
                 FROM
                     crm_product_ime_upload t1 left join crm_depot t2 on t1.shop_id=t2.id  and t2.enabled = 1
+                    left join crm_product_ime t3 on t1.product_ime_id=t3.id and t3.enabled=1
+                    left join crm_product t4 on t3.product_id=t4.id
+                    left join crm_product_type t5 on t4.product_type_id=t5.id
                where
 	                t1.enabled = 1
                 AND
@@ -34,7 +47,14 @@ class ProductMonthPriceSumRepository @Autowired constructor(val namedParameterJd
         if (CollectionUtil.isNotEmpty(productMonthPriceSumQuery.depotIdList)) {
             sb.append("""  and t1.depot_id in (:depotIdList) """)
         }
-        sb.append(""" GROUP BY t1.shop_id,t1.employee_id,t1.product_type_id """)
+        if(productMonthPriceSumQuery==null||!productMonthPriceSumQuery.isDetail){
+            sb.append(""" GROUP BY t1.shop_id,t1.employee_id,t1.product_type_id """)
+        }
+        if(productMonthPriceSumQuery!=null&&productMonthPriceSumQuery.isDetail){
+            sb.append("""
+               order by t1.shop_id,t1.employee_id,t1.product_type_id
+            """)
+        }
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productMonthPriceSumQuery), BeanPropertyRowMapper(ProductMonthPriceSumDto::class.java))
     }
 }
