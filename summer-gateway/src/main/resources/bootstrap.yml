@@ -16,4 +16,4 @@ spring:
 server:
   port : 443
   http:
-    port : 8899
+    port : 10000
