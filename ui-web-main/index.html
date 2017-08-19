@@ -288,11 +288,11 @@ $(function(){
     	}else{
 			//get duties
             $.get('/api/basic/hr/account/home', function(res){
-                $('.dutySize').text("${res.dutySize}条");
-                $('.auditFileSize').text("${res.auditFileSize}条");
-                $('.overtimeHour').text("${res.overtimeHour}小时");
-                $('.annualHour').text("${res.annualHour}小时");
-                $('.expiredHour').text("${res.expiredHour}小时");
+                $('.dutySize').text(res.dutySize + "条");
+                $('.auditFileSize').text(res.auditFileSize +"条");
+                $('.overtimeHour').text(res.overtimeHour + "小时");
+                $('.annualHour').text(res.annualHour + "小时");
+                $('.expiredHour').text(res.expiredHour + "小时");
                 localStorage.setItem('account',JSON.stringify(res.account))
                 //get infos
                 let accountInfo = JSON.parse(localStorage.getItem('account'));
